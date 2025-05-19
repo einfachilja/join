@@ -9,6 +9,10 @@
   margin: auto;
 }
 
+a {
+  color: #28abe2;
+}
+
 body {
   font-family: "Inter", "sans-serif";
   background-color: #f4f4f4;
@@ -19,6 +23,10 @@ body {
 
 h1 {
   font-size: 40px;
+  text-decoration: underline;
+  text-decoration-color: #28abe2;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 9px;
 }
 
 header {
@@ -61,7 +69,7 @@ nav {
 
 .form-container {
   background-color: white;
-  height: 300px;
+  min-height: 300px;
   width: 400px;
   display: flex;
   flex-direction: column;
@@ -69,14 +77,21 @@ nav {
   align-items: center;
   gap: 16px;
   border-radius: 16px;
-  padding: 8px;
+  padding: 24px 8px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  position: relative;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 input {
@@ -89,7 +104,17 @@ input {
 }
 
 input:focus {
-  outline: 1px solid #0000003b;
+  outline: 1px solid #28abe2;
+}
+
+.input-icon {
+  position: absolute;
+  right: 8px;
+  height: 16px;
+}
+
+.checkbox:checked {
+  background-color: black;
 }
 
 .btn-container {
@@ -134,4 +159,27 @@ footer {
   gap: 16px;
   width: 100%;
   padding: 24px;
+}
+
+.checkbox {
+  height: 13px;
+  width: 13px;
+}
+
+.checkbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+span {
+  font-size: 12px;
+}
+
+.back {
+  position: absolute;
+  left: 16px;
+  top: 60px;
+  height: 24px;
 }
