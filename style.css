@@ -30,7 +30,7 @@ header {
 }
 
 .logo {
-  height: 80px;
+  height: 96px;
   cursor: pointer;
 }
 
@@ -46,6 +46,10 @@ nav {
   padding: 8px 12px 8px 12px;
   border-radius: 8px;
   font-weight: bold;
+}
+
+.signup-btn:hover {
+  background-color: #28abe2;
 }
 
 .section-login {
@@ -66,6 +70,7 @@ nav {
   gap: 16px;
   border-radius: 16px;
   padding: 8px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 form {
@@ -97,10 +102,14 @@ input:focus {
   border: none;
   background-color: black;
   color: white;
-  padding: 12px;
+  padding: 12px 20px;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #28abe2;
 }
 
 .guest-login-btn {
@@ -111,6 +120,11 @@ input:focus {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.guest-login-btn:hover {
+  color: #28abe2;
+  border: 1px solid #28abe2;
 }
 
 footer {
