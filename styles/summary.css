@@ -3,20 +3,17 @@ h1 {
 }
 
 .content-container {
-  padding-left: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
+  padding-top: 100px;
+  padding-left: 100px;
 }
 
 .summary-headline {
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding-bottom: 24px;
 }
 
 .summary-body {
   display: flex;
-  justify-content: center;
-  gap: 24px;
+  gap: 48px;
 }

@@ -31,8 +31,7 @@ header {
   width: calc(100% - 232px);
   margin-left: 232px;
   margin-top: 96px;
-  display: flex;
-  align-items: center;
+  background-color: #F6F7F8;
 }
 
 .help-icon {

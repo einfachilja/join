@@ -1,0 +1,10 @@
+.content-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 48px;
+}
+
+.content {
+    padding-top: 100px;
+    padding-left: 100px;
+}
