@@ -1,0 +1,22 @@
+h1 {
+  font-size: 64px;
+}
+
+.content-container {
+  padding-left: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.summary-headline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-body {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
