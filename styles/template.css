@@ -11,6 +11,7 @@
 body {
     font-family: Inter-Normal;
     margin: 0;
+    background-color: hsl(210, 13%, 97%);
 }
 
 .desktop-menu{
@@ -92,4 +93,53 @@ button p{
 
 .desktop-footer button p{
     color: hsla(0, 0%, 66%, 1);
+}
+
+
+
+
+
+
+
+
+.header{
+    height: 96px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+    background-color: hsla(0, 0%, 100%, 1);
+    box-shadow: 0 4px 4px hsla(0, 0%, 0%, 0.1);
+    position: fixed;
+    padding-top: 20px;
+    padding-left: 348px;
+    padding-right: 40px;
+    padding-bottom: 20px;
+    z-index: 1000; 
+}
+
+.header-title{
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    color: hsla(0, 0%, 0%, 1);
+    width: 319px;
+    height: 24px;
+}
+
+.user-profile{
+    position: fixed;
+    right: 0;
+    margin-right: 40px;
+    width: 56px;
+    height: 56px;
+    gap: 16px;
+    color: hsl(198, 76%, 52%);
+    background-color: hsla(210, 13%, 97%, 1);
+    border: 3px solid hsla(215, 26%, 22%, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
 }
