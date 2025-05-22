@@ -22,16 +22,22 @@ header {
   left: 0;
   right: 0;
   top: 0;
-  padding: 24px 24px 24px 300px;
+  padding: 24px 24px 24px 256px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  z-index: -1;
+}
+
+.container {
+  display: flex;
+  width: 100%;
 }
 
 .content {
-  padding: 16px;
+  padding: 24px;
   width: calc(100% - 232px);
-  margin-left: 232px;
-  margin-top: 96px;
   background-color: #F6F7F8;
+  margin-top: 96px;
+  z-index: -2;
 }
 
 .help-icon {
@@ -58,10 +64,8 @@ header {
 
 aside {
   background-color: #2a3647;
-  width: 232px;
-  position: absolute;
-  top: 0;
-  left: 0;
+  width: 232px; 
+  z-index: 0;
 }
 
 .nav-container {
@@ -69,7 +73,7 @@ aside {
   flex-direction: column;
   align-items: center;
   gap: 160px;
-  width: 100%;
+
 }
 
 nav {
