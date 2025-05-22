@@ -20,6 +20,10 @@ a{
 .legal-notice-frame{
     width: 371px !important;
 }
+
+.privacy-policy-frame{
+    width: 419px !important;
+}
 h1{
     font-weight: 700;
     font-size: 61px;
@@ -110,6 +114,7 @@ main{
     height: 1024px;
     margin-top: 32px;
     margin-left: 328px;
+    margin-right: 96px;
 }
 
 .how-to-use-it-section {
@@ -122,9 +127,22 @@ main{
     gap: 35px;
 }
 
+.help-last-section {
+    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+.help-bottom-line{
+    padding-bottom: 32px;
+
+}
+
 .last-section {
     gap: 16px;
     display: flex;
     flex-direction: column;
     margin-top: 16px;
+    padding-bottom: 32px;
 }
