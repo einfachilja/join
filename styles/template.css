@@ -33,6 +33,20 @@ body {
     height: 121.97px;
 }
 
+.logo-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 110px;
+}
+
+.logo-container button{
+    background-color: rgba(240, 248, 255, 0);
+    border: none;
+    display: flex;
+    align-items: center;
+}
+
 .menu{
     width: 232px;
     height: 229px;
