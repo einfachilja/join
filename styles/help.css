@@ -1,4 +1,11 @@
+@font-face {
+    font-family: Inter-Normal;;
+    src: url(/fonts/Inter-VariableFont_opsz\,wght.ttf);
+}
 
+html{
+    font-family: Inter-Normal;
+}
 
 .join{
     color: hsl(198, 76%, 52%);
