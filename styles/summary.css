@@ -1,0 +1,8 @@
+@font-face {
+    font-family: Inter-Normal;;
+    src: url(/fonts/Inter-VariableFont_opsz\,wght.ttf);
+}
+
+html{
+    font-family: Inter-Normal;
+}
