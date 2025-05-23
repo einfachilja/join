@@ -1,0 +1,215 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  overflow: auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Logo Section */
+.logo-section {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  z-index: 999;
+}
+
+.logo-image {
+  width: 100px;
+  height: 100px;
+}
+
+/* Main Page Layout */
+.register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgb(246,247,248);
+  min-height: 100vh;
+}
+
+.register-container {
+  display: flex;
+  position: fixed;
+  max-width: 500px;
+  width: 90%;
+  top: 10%;
+  border-radius: 30px;
+  gap: 32px;
+  padding: 48px 88px 48px 88px;
+  flex-direction: column;
+  box-shadow: 0px 0px 14px 3px rgba(0, 0, 0, 0.039);
+  background-color: white;
+}
+
+.back-arrow {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+/* Header */
+.register-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.title-group {
+  text-align: center;
+}
+
+.register-title {
+  font-weight: 700;
+  font-size: clamp(40px, 4vw, 61px);
+}
+
+.title-underline {
+  width: 140px;
+}
+
+/* Form */
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.submit-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 65px;
+  gap: 35px;
+}
+
+#register-btn:disabled {
+  background-color: rgb(209, 209, 209);
+  color: rgb(138, 138, 138);
+  cursor: not-allowed;
+}
+
+#register-btn:not(:disabled) {
+  background-color: rgb(42,54,71);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.register-button {
+  width: 125px;
+  height: 80%;
+  border-radius: 8px;
+  background: rgb(42,54,71);
+  color: white;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 25px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+.register-button:hover {
+  background-color: rgb(41, 171, 226);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  height: 45px;
+  padding: 12px 38px 12px 21px;
+  border-radius: 10px;
+  border: 1px solid;
+  opacity: 0.5;
+  box-sizing: border-box;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+input:focus-visible {
+  outline: none;
+  border: 2px solid rgb(41, 171, 226);
+  opacity: 1;
+}
+
+/* Error message */
+.error-message {
+  color: red;
+  font-size: 16px;
+  margin-top: 4px;
+  margin-left: 4px;
+  height: 18px;
+  visibility: hidden;
+}
+
+.error-message.visible {
+  visibility: visible;
+}
+
+/* Input icons */
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  pointer-events: none;
+}
+
+.input-icon-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Privacy */
+.privacy-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
+.checkbox {
+  height: 15px;
+  width: 15px;
+}
+
+/* Footer */
+footer {
+  justify-content: center;
+  display: flex;
+  position: absolute;
+  bottom: 5px;
+  width: 246px;
+  height: 35px;
+  gap: 16px;
+  opacity: 0.5;
+}
+
+.footer-link {
+  text-decoration: none;
+  color: rgb(168, 168, 168);
+}
+
+.footer-link:hover {
+  font-weight: 700;
+  color:rgb(41, 171, 226);
+}
