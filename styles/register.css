@@ -13,14 +13,14 @@ a {
 /* Logo Section */
 .logo-section {
   position: absolute;
-  top: 10%;
-  left: 5%;
+  top: 80px;
+  left: 77px;
   z-index: 999;
 }
 
 .logo-image {
-  width: 100px;
-  height: 100px;
+  width: 100.03px;
+  height: 121.97px;
 }
 
 /* Main Page Layout */
@@ -54,10 +54,10 @@ a {
 
 /* Header */
 .register-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
+    display: flex;
+    justify-content: start;
+    align-items: baseline;
+    gap: 40px;
 }
 
 .title-group {
@@ -199,8 +199,7 @@ footer {
   display: flex;
   position: absolute;
   bottom: 5px;
-  width: 246px;
-  height: 35px;
+  width: 100%;
   gap: 16px;
   opacity: 0.5;
 }
@@ -216,4 +215,40 @@ footer {
 }
 
 
+#message-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(42, 54, 71); 
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
 
+#message-box.visible {
+  display: block;
+  animation: fadeInOut 2s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}

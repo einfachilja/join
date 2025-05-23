@@ -1,0 +1,250 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ========== Logo Section ========== */
+.logo-section {
+  position: absolute;
+  top: 80px;
+  left: 77px;
+  z-index: 999;
+}
+
+.logo-image {
+  width: 100.03px;
+  height: 121.97px;
+}
+
+/* ========== Loader ========== */
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(246,247,248);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 1s ease-in-out;
+}
+
+#message-box {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  border-radius: 8px;
+  background: rgb(42, 54, 71);
+  color: white;
+  font-size: clamp(13px, 2.5vw, 20px);
+  font-weight: 700;
+  line-height: 50px;
+  padding: 0 15px;
+  text-align: center;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.d-none {
+  display: none;
+}
+
+/* ========== Layout ========== */
+/* Zentrierung */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: rgb(246,247,248);
+}
+
+/* Kompakte Box */
+.log-in-container {
+  position: relative;
+  max-width: 500px;
+  width: 90%;
+  border-radius: 30px;
+  padding: 48px 88px;
+  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 0 14px 3px rgba(0, 0, 0, 0.039);
+}
+
+/* ========== Headline ========== */
+.login-container-headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.login-headline {
+  font-weight: 700;
+  font-size: clamp(40px, 4vw, 61px);
+}
+
+.blue-line {
+  width: 140px;
+}
+
+/* ========== Form ========== */
+.log-in-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  height: 45px;
+  padding: 12px 38px 12px 21px;
+  border-radius: 10px;
+  border: 1px solid;
+  opacity: 0.5;
+}
+
+input:focus-visible {
+  outline: none;
+  border: 2px solid rgb(41,171,226);
+  opacity: 1;
+}
+
+.input-icon,
+.input-icon-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+}
+
+.toggle-password {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* ========== Error Message ========== */
+.error-message {
+  color: red;
+  font-size: 16px;
+  margin-top: 4px;
+  margin-left: 4px;
+  height: 18px;
+  visibility: hidden;
+}
+
+.error-message.visible {
+  visibility: visible;
+}
+
+/* ========== Buttons ========== */
+.submit-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 32px;
+  padding-top: 40px;
+}
+
+.log-in-button,
+.guest-log-in-button,
+.register-button {
+  height: 45px;
+  border-radius: 8px;
+  font-size: 21px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  padding: 0 20px;
+}
+
+.log-in-button {
+  background: rgb(42,54,71);
+  color: white;
+}
+
+.log-in-button:hover {
+  background-color: rgb(41,171,226);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.guest-log-in-button {
+  border: 1px solid black;
+  background-color: white;
+}
+
+.guest-log-in-button:hover {
+  border-color: rgb(41,171,226);
+  color: rgb(41,171,226);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.register-button {
+  background: rgb(42,54,71);
+  color: white;
+}
+
+.register-button:hover {
+  background-color: rgb(41,171,226);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* ========== Registrierung unten ========== */
+.register-container {
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 16px;
+  z-index: 10;
+}
+
+/* ========== Footer ========== */
+footer {
+  justify-content: center;
+  display: flex;
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+  gap: 16px;
+  opacity: 0.5;
+}
+
+.footer-link {
+  text-decoration: none;
+  color: #a8a8a8;
+}
+
+.footer-link:hover {
+  font-weight: 700;
+  color: rgb(41,171,226);
+}

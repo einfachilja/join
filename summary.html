@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Summary</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./styles/template.css" />
+    <link rel="stylesheet" href="./styles/help.css" />
+    <link rel="stylesheet" href="./styles/summary.css" />
+    <link rel="shortcut icon" href="./assets/img/logo.svg" type="image/x-icon" />
+  </head>
+  <body>
+    <div class="body">
+      <div class="desktop-menu">
+        <div>
+          <img class="logo" src="./assets/img/logo.svg" alt="logo" />
+        </div>
+        <div class="menu">
+          <a href="./summary.html">
+            <button>
+              <img src="./assets/icons/summary.svg" alt="" />
+              <p>Summary</p>
+            </button>
+          </a>
+
+          <a href="./add-task.html">
+            <button>
+              <img src="./assets/icons/add-task.svg" alt="" />
+              <p>Add Task</p>
+            </button>
+          </a>
+
+          <a href="./board.html">
+            <button>
+              <img src="./assets/icons/board.svg" alt="" />
+              <p>Board</p>
+            </button>
+          </a>
+
+          <a href="./contacts.html">
+            <button>
+              <img src="./assets/icons/contacts.svg" alt="" />
+              <p>Contacts</p>
+            </button>
+          </a>
+        </div>
+        <div class="desktop-footer">
+          <div class="desktop-footer-content">
+            <a href="./Privacy-Policy.html">
+              <button><p>Privacy Policy</p></button>
+            </a>
+
+            <a href="./legal-notice.html">
+              <button><p>Legal notice</p></button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="body-right">
+        <div class="header">
+          <span class="header-title">Kanban Project Management Tool</span>
+          <div class="header-right">
+            <div onclick="openSubMenu()" class="user-profile"><b>SM</b></div>
+            <a class="help-img" href="./help.html">
+              <img src="./assets/img/help.svg" alt="" />
+            </a>
+          </div>
+        </div>
+        <div id="sub_menu" class="d_none sub_menu">
+          <a href="./legal-notice.html"><p class="sub-menu-content">Legal Notice</p></a>
+          <a href="./Privacy-Policy.html"><p class="sub-menu-content">Privacy Policy</p></a>
+          <a href="./register.html"><p class="sub-menu-content">Log out</p></a>
+        </div>
+
+              <main class="main">
+        <div class="summary-container">
+          <div class="summary-header">
+            <h1>Join 360</h1>
+            <img src="./assets/icons/summary-line.png" alt="">
+            <span class="summary-subtitle">Key Metrics at a Glance</span>
+          </div>
+          <div class="summary-main">
+            <div class="card-container">
+              <div class="card-container-left">
+                <div class="card-box-top">
+                  <div class="card-top">
+                    <div class="summary-to-do-icon"></div>
+                    <div class="card-top-text">
+                      <div class="summary-card-number">1</div>
+                      <div class="summary-card-text">To-Do</div>
+                    </div>
+                  </div>
+                  <div class="card-top">
+                    <div class="summary-done-icon"></div>
+                    <div class="card-top-text">
+                      <div class="summary-card-number">1</div>
+                      <div class="summary-card-text">Done</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-box-center">
+                  <div class="card-center">
+                    <div class="card-center-left">
+                      <img src="./assets/icons/summary-urgent.png" alt="">
+                      <div class="card-center-text">
+                        <div class="summary-card-number">5</div>
+                        <div class="summary-card-text">Tasks<br>in Board</div>
+                      </div>
+                    </div>
+                    <img src="./assets/icons/summary-center-line.png" alt="">
+                    <div class="card-center-right">
+                      <span class="summary-date">October 16, 2022</span>
+                      <span class="summary-date-subline">Upcoming Deadline</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-box-bottom">
+                  <div class="card-bottom">
+                    <div class="summary-card-number">5</div>
+                    <div class="summary-card-text">Tasks<br>in Board</div>
+                  </div>
+                  <div class="card-bottom">
+                    <div class="summary-card-number">2</div>
+                    <div class="summary-card-text">Tasks<br>in Progress</div>
+                  </div>
+                  <div class="card-bottom">
+                    <div class="summary-card-number">2</div>
+                    <div class="summary-card-text">Awaiting<br>Feedback</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-container-right">
+                <span id="greets" class="greets"></span>
+              </div>
+            </div>
+          </div>
+      </main>
+      </div>
+    </div>
+    <script src="./scripts/desktop-template.js"></script>
+  </body>
+</html>

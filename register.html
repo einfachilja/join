@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register-Join</title>
     <link rel="stylesheet" href="./styles/register.css" />
-    <link rel="stylesheet" href="./styles/register-responsive.css" />
     <link
       rel="shortcut icon"
       href="./assets/img/2. log-sign-page/Capa 1.png"
@@ -15,16 +14,16 @@
   <body>
 
     <section class="logo-section">
-      <img class="logo-image" src="./assets/img/2. log-sign-page/Capa 1.png" alt="Logo" />
+      <img class="logo-image" src="./assets/img/2. log-sign-page/join-logo.svg" alt="Logo" />
     </section>
 
     <section class="register-page">
       <div class="register-container">
         <div class="register-header">
-          <a href="./index.html">
+          <a href="./log-in.html">
             <img
               class="back-arrow"
-              src="./assets/img/2. log-sign-page/arrow-left-line.png"
+              src="./assets/img/2. log-sign-page/arrow-left-line.svg"
               alt="back-arrow"
             />
           </a>
@@ -32,7 +31,7 @@
             <h1 class="register-title">Sign Up</h1>
             <img
               class="title-underline"
-              src="./assets/img/2. log-sign-page/blue-line.png"
+              src="./assets/img/2. log-sign-page/blue-line.svg"
               alt="blue-line"
             />
           </div>
@@ -50,7 +49,7 @@
               />
               <img
                 class="input-icon"
-                src="./assets/img/2. log-sign-page/person.png"
+                src="./assets/img/2. log-sign-page/person-icon.svg"
                 alt="User Icon"
               />
             </label>
@@ -68,7 +67,7 @@
               />
               <img
                 class="input-icon"
-                src="./assets/img/2. log-sign-page/mail.png"
+                src="./assets/img/2. log-sign-page/mail-icon.svg"
                 alt="E-Mail Icon"
               />
             </label>
@@ -88,7 +87,7 @@
               />
               <img
                 class="input-icon-password toggle-password"
-                src="./assets/img/2. log-sign-page/lock.png"
+                src="./assets/img/2. log-sign-page/lock-icon.svg"
                 alt="Password Icon"
                 data-target="password"
               />
@@ -109,7 +108,7 @@
               />
               <img
                 class="input-icon-password toggle-password"
-                src="./assets/img/2. log-sign-page/lock.png"
+                src="./assets/img/2. log-sign-page/lock-icon.svg"
                 alt="Password Icon"
                 data-target="confirm-password"
               />
@@ -124,7 +123,7 @@
             <input id="privacy-policy" class="checkbox" type="checkbox" />
             <span>
               I accept the
-              <a href="./html/Privacy-Policy.html">Privacy Police</a>
+              <a href="NOCH HINZUFÜGEN">Privacy Police</a>
             </span>
           </div>
 
@@ -144,13 +143,15 @@
 
       <!-- Footer -->
       <footer>
-        <a class="footer-link" href="./html/Privacy-Policy.html">Privacy Police</a>
-        <a class="footer-link" href="./html/legal-notice.html">Legal notice</a>
+        <a class="footer-link" href="NOCH HINZUFÜGEN">Privacy Police</a>
+        <a class="footer-link" href="NOCH HINZUFÜGEN">Legal notice</a>
       </footer>
     </section>
 
+    <div id="message-box" class="d-none"></div>
+
+    <script src="./scripts/firebase.js"></script>
     <script src="./scripts/register.js"></script>
+   
   </body>
 </html>
-
-

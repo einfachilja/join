@@ -87,6 +87,10 @@ function checkFormValidity() {
 
 /* Starts the registration process */
 function registerUser() {
+  const name = document.getElementById("first-name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
   const emailValid = isEmailValid(); 
   const passwordValid = isPasswordValid(); 
   const match = doPasswordsMatch();
@@ -96,10 +100,37 @@ function registerUser() {
     return;
   }
 
-  // All validations passed – redirect ->
-  window.location.href = "./index.html"; // MUSS NOCH GEÄNDERT WERDEN
+  saveUser(name, email, password);
 }
 
+/* Saves a new user to the Firebase Realtime Database + Displays a message */
+function saveUser(name, email, password) {
+  fetch(userfirebaseURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password}),
+  })
+    .then(() => {
+      showMessage("You Signed Up successfully", true);
+      setTimeout(() => window.location.href = "./index.html", 2000);
+    })
+    .catch(console.error);
+}
+
+/* Displays a message */
+function showMessage(message, isSuccess = false) {
+  const messageBox = document.getElementById("message-box");
+
+  messageBox.textContent = message;
+  messageBox.style.backgroundColor = isSuccess ? "rgb(42, 54, 71)" : "rgb(220, 53, 69)";
+  messageBox.classList.add("visible");
+  messageBox.classList.remove("d-none");
+
+  setTimeout(() => {
+    messageBox.classList.remove("visible");
+    messageBox.classList.add("d-none");
+  }, 2000);
+}
 
 /* Handles input in the email field */
 function handleEmailInput() {

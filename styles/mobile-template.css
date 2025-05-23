@@ -1,0 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: Inter-Normal;
+  src: url(/fonts/Inter-VariableFont_opsz\,wght.ttf);
+}
+
+html {
+  font-family: Inter-Normal;
+}
+
+body {
+  font-family: Inter-Normal;
+  margin: 0;
+  background-color: hsl(210, 13%, 97%);
+}
+
+.mobile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: hsla(0, 0%, 100%, 1);
+  box-shadow: 0 4px 4px hsla(0, 0%, 0%, 0.1);
+  padding: 20px 16px;
+}
+
+.logo-mobile {
+  width: 40px;
+}
+
+.user-profile {
+  width: 40px;
+  height: 40px;
+  color: hsl(198, 76%, 52%);
+  background-color: hsla(210, 13%, 97%, 1);
+  border: 3px solid hsla(215, 26%, 22%, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.mobile-menu {
+  background-color: hsla(215, 26%, 22%, 1);
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #CDCDCD
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 110px;
+}
+
+.logo-container button {
+  background-color: rgba(240, 248, 255, 0);
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  height: 80px;
+  gap: 15px;
+  display: flex;
+}
+
+button img {
+  width: 30px;
+  height: 30px;
+}
+
+button p {
+  color: hsla(0, 0%, 80%, 1);
+}
+
+.desktop-footer {
+  display: flex;
+  flex-direction: column;
+  height: 317px;
+  width: fill;
+}
+
+.desktop-footer-content {
+  padding-top: 130px;
+}
+
+.desktop-footer button {
+  background-color: rgba(240, 248, 255, 0);
+  border: none;
+  width: 121px;
+  height: 35px;
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.desktop-footer button p {
+  color: hsla(0, 0%, 66%, 1);
+}
