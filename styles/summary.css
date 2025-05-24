@@ -74,7 +74,7 @@ html {
 }
 
 .summary-to-do-icon {
-  background-image: url("/assets/icons/summary-to-do-icon.png");
+  background-image: url("/assets/icons/summary-to-do-icon.svg");
   background-size: cover;
   background-position: center;
   height: 70px;
@@ -90,11 +90,11 @@ html {
 }
 
 .card-top:hover .summary-to-do-icon {
-  background-image: url("/assets/icons/summary-to-do-icon-hover.png");
+  background-image: url("/assets/icons/summary-to-do-icon-hover.svg");
 }
 
 .summary-done-icon {
-  background-image: url("/assets/icons/summary-done-icon.png");
+  background-image: url("/assets/icons/summary-done-icon.svg");
   background-size: cover;
   background-position: center;
   height: 70px;
@@ -102,7 +102,7 @@ html {
 }
 
 .card-top:hover .summary-done-icon {
-  background-image: url("/assets/icons/summary-done-icon-hover.png");
+  background-image: url("/assets/icons/summary-done-icon-hover.svg");
 }
 
 .card-top-text {
@@ -125,16 +125,16 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  transition: all 100ms ease-in-out;
 }
 
 .card-center:hover {
   cursor: pointer;
   color: #ffffff;
-  background-color: #2a3647;
-  box-shadow: 0 4px 4px 0 rgb(0, 0, 0, 0.25);
-  transform: scale(1.0286, 1.095);
+    background-color: #2a3647;
+  transform: scale(1.05);
+  transition: 100ms ease-in-out;
 }
+
 
 .card-center-left {
   display: flex;

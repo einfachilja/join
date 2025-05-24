@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join Sign up</title>
-    <link rel="shortcut icon" href="./assets/img/join-logo-dark.png" type="image/x-icon">
+    <link rel="shortcut icon" href="./assets/img/join-logo-dark.svg" type="image/x-icon">
     <link rel="stylesheet" href="./styles/fonts.css">
     <link rel="stylesheet" href="style.css">
     <script src="./scripts/register.js"></script>
@@ -14,33 +14,37 @@
 <body>
 
     <header class="max-width">
-        <a href="index.html"><img class="logo" src="./assets/img/join-logo-dark.png" alt=""></a>
+        <a href="index.html"><img class="logo" src="./assets/img/join-logo-dark.svg" alt=""></a>
     </header>
 
     <section class="section-login">
         <div class="form-container">
-            <a  href="index.html"><img class="arrow-back" src="./assets/icons/arrow-left-line-icon.png" alt=""></a>
-            <h1>Sign up</h1>
+            <a href="index.html"><img class="arrow-back" src="./assets/icons/arrow-left-line-icon.svg" alt=""></a>
+            <div class="form-header">
+                <h1>Sign up</h1>
+                <img src="./assets/icons/signup-line-icon.svg" alt="">
+            </div>
             <form onsubmit="registerUser('/users'); return false">
                 <div class="input-group">
-                <input type="text" id="username" placeholder="Name" required>
-                <img class="input-icon" src="./assets/icons/person-icon.png" alt="">
+                    <input type="text" id="username" placeholder="Name" required>
+                    <img class="input-icon" src="./assets/icons/person-icon.svg" alt="">
                 </div>
                 <div class="input-group">
-                <input type="email" id="email" placeholder="Email" required>
-                <img class="input-icon" src="./assets/icons/mail-icon.png" alt="">
+                    <input type="email" id="email" placeholder="Email" required>
+                    <img class="input-icon" src="./assets/icons/mail-icon.svg" alt="">
                 </div>
                 <div class="input-group">
-                <input type="password" id="password" placeholder="Password" required>
-                <img class="input-icon" src="./assets/icons/lock-icon.png" alt="">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <img class="input-icon" src="./assets/icons/lock-icon.svg" alt="">
                 </div>
                 <div class="input-group">
-                <input type="password" id="confirm_password" placeholder="Confirm Password" required>
-                <img class="input-icon" src="./assets/icons/lock-icon.png" alt="">
+                    <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+                    <img class="input-icon" src="./assets/icons/lock-icon.svg" alt="">
                 </div>
                 <div class="checkbox-container">
                     <input class="checkbox" type="checkbox" required>
-                    <span>I accept the <a class="privacy-policy-link" href="#">Privacy Policy</a></span>
+                    <span>I accept the <a class="privacy-policy-link" href="privacy_policy.html">Privacy
+                            Policy</a></span>
                 </div>
                 <div class="btn-container">
                     <button class="login-btn">Sign up</button>
