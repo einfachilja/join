@@ -5,19 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join Summary</title>
-    <link rel="shortcut icon" href="./assets/img/join-logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="./assets/img/join-logo-dark.png" type="image/x-icon">
     <link rel="stylesheet" href="./styles/summary.css">
     <link rel="stylesheet" href="./styles/desktop.css">
     <link rel="stylesheet" href="./styles/fonts.css">
+    <script src="scripts/summary.js"></script>
 
 </head>
 
-<body>
+<body onload="greetUser()">
 
     <header>
         <p>Kanban Project Management Tool</p>
         <div class="user-container">
-            <img class="help-icon" src="./assets/icons/help.png" alt="">
+            <img class="help-icon" src="./assets/icons/help-icon.png" alt="">
             <span class="user-icon">G</span>
         </div>
     </header>
@@ -27,10 +28,10 @@
             <div class="nav-container">
                 <img class="logo" src="./assets/img/join-logo-white.png" alt="">
                 <div class="nav-box">
-                    <a href="summary.html"><img src="./assets/icons/summary.png" alt="">Summary</a>
-                    <a href="add_task.html"><img src="./assets/icons/add_task.png" alt="">Add Task</a>
-                    <a href="board.html"><img src="./assets/icons/board.png" alt="">Board</a>
-                    <a href="contacs.html"><img src="./assets/icons/contacts.png" alt="">Contacts</a>
+                    <a href="summary.html"><img src="./assets/icons/summary-icon.png" alt="">Summary</a>
+                    <a href="add_task.html"><img src="./assets/icons/add-task-icon.png" alt="">Add Task</a>
+                    <a href="board.html"><img src="./assets/icons/board-icon.png" alt="">Board</a>
+                    <a href="contacs.html"><img src="./assets/icons/contacts-icon.png" alt="">Contacts</a>
                 </div>
             </div>
             <div class="nav-box-privacy-legal">
@@ -41,16 +42,65 @@
     </aside>
 
     <section class="content">
-        <div class="content-container">
-            <div class="summary-headline">
-                <img src="./assets/img/Frame 40.png" alt="">
+        <div class="summary-container">
+            <div class="summary-header">
+                <h1>Join 360</h1>
+                <img src="./assets/icons/summary-line-icon.png" alt="">
+                <span class="summary-subtitle">Key Metrics at a Glance</span>
             </div>
-            <div class="summary-body">
-                <div>
-                    <img style="height: 400px;" src="./assets/img/Frame 70.png" alt="">
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <img style="height: 48px;" src="./assets/img/Frame 69.png" alt="">
+            <div class="summary-main">
+                <div class="card-container">
+                    <div class="card-container-left">
+                        <div class="card-box-top">
+                            <div class="card-top">
+                                <div class="summary-to-do-icon"></div>
+                                <div class="card-top-text">
+                                    <div class="summary-card-number">1</div>
+                                    <div class="summary-card-text">To-Do</div>
+                                </div>
+                            </div>
+                            <div class="card-top">
+                                <div class="summary-done-icon"></div>
+                                <div class="card-top-text">
+                                    <div class="summary-card-number">1</div>
+                                    <div class="summary-card-text">Done</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-box-center">
+                            <div class="card-center">
+                                <div class="card-center-left">
+                                    <img src="./assets/icons/summary-urgent-icon.png" alt="">
+                                    <div class="card-center-text">
+                                        <div class="summary-card-number">5</div>
+                                        <div class="summary-card-text">Tasks<br>in Board</div>
+                                    </div>
+                                </div>
+                                <img src="./assets/icons/summary-center-line-icon.png" alt="">
+                                <div class="card-center-right">
+                                    <span class="summary-date">October 16, 2022</span>
+                                    <span class="summary-date-subline">Upcoming Deadline</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-box-bottom">
+                            <div class="card-bottom">
+                                <div class="summary-card-number">5</div>
+                                <div class="summary-card-text">Tasks<br>in Board</div>
+                            </div>
+                            <div class="card-bottom">
+                                <div class="summary-card-number">2</div>
+                                <div class="summary-card-text">Tasks<br>in Progress</div>
+                            </div>
+                            <div class="card-bottom">
+                                <div class="summary-card-number">2</div>
+                                <div class="summary-card-text">Awaiting<br>Feedback</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container-right">
+                        <span id="greets" class="greets"></span>
+                    </div>
                 </div>
             </div>
         </div>
