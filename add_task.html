@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join Add Task</title>
-    <link rel="shortcut icon" href="./assets/img/join-logo-dark.png" type="image/x-icon">
     <link rel="stylesheet" href="./styles/desktop.css">
     <link rel="stylesheet" href="./styles/fonts.css">
-
+    <link rel="stylesheet" href="./styles/add_task.css">
+    <link rel="shortcut icon" href="/assets/img/join-logo-dark.png" type="image/x-icon">
 </head>
 
 <body>
@@ -21,33 +21,62 @@
         </div>
     </header>
 
-    <aside>
-        <nav>
-            <div class="nav-container">
-                <img class="logo" src="./assets/img/join-logo-white.png" alt="">
-                <div class="nav-box">
-                    <a href="summary.html"><img src="./assets/icons/summary-icon.png" alt="">Summary</a>
-                    <a href="add_task.html"><img src="./assets/icons/add-task-icon.png" alt="">Add Task</a>
-                    <a href="board.html"><img src="./assets/icons/board-icon.png" alt="">Board</a>
-                    <a href="contacs.html"><img src="./assets/icons/contacts-icon.png" alt="">Contacts</a>
-                    <link rel="stylesheet" href="./styles/add_task.css">
-                </div>
-            </div>
-            <div class="nav-box-privacy-legal">
-                <a href="privacy_policy.html">Privacy Policy</a>
-                <a href="legal_notice.html">Legal Notice</a>
-            </div>
-        </nav>
-    </aside>
+    <div class="container">
 
-    <section class="content">
-        <img src="./assets/img/Frame 41.png" alt="">
-        <img style="height: 350px; padding-bottom: 24px;" src="./assets/img/Group 66.png" alt="">
-        <div class="content-footer">
-            <img style="height: 16px;" src="./assets/img/_This field is required.png" alt="">
-            <img style="height: 32px; padding-right: 128px;" src="./assets/img/Frame 27.png" alt="">
-        </div>
-    </section>
+        <aside>
+            <nav>
+                <div class="nav-container">
+                    <img class="logo" src="/assets/img/join-logo-white.png" alt="">
+                    <div class="nav-box">
+                        <a href="/summary.html"><img src="/assets/icons/summary-icon.png" alt="">Summary</a>
+                        <a href="/add_task.html"><img src="/assets/icons/add-task-icon.png" alt="">Add Task</a>
+                        <a href="/board.html"><img src="/assets/icons/board-icon.png" alt="">Board</a>
+                        <a href="/contacs.html"><img src="/assets/icons/contacts-icon.png" alt="">Contacts</a>
+                    </div>
+                </div>
+                <div class="nav-box-privacy-legal">
+                    <a href="/privacy_policy.html">Privacy Policy</a>
+                    <a href="/legal_notice.html">Legal Notice</a>
+                </div>
+            </nav>
+        </aside>
+
+        <section class="content">
+            <div class="add-task-container">
+                <div class="add-task-header">
+                    <h1>Add Task</h1>
+                </div>
+                <div class="add-task-main">
+                    <div class="add-task-main-left">
+                        <label for="title">Title*</label>
+                        <input type="text" id="title" placeholder="Enter a title">
+                        <label for="description">Description</label>
+                        <textarea name="" id="description" placeholder="Enter a Description"></textarea>
+                        <label for="date">Due date*</label>
+                        <input type="date" placeholder="dd/mm/yyyy">
+                    </div>
+                    <div class="add-task-main-right">
+                        <label for="title">Title*</label>
+                        <input type="text" id="title" placeholder="Enter a title">
+                        <label for="description">Description</label>
+                        <textarea name="" id="description" placeholder="Enter a Description"></textarea>
+                        <label for="date">Due date*</label>
+                        <input type="date" placeholder="dd/mm/yyyy">
+                    </div>
+                </div>
+                <div class="add-task-footer">
+                    <span>*This field is required</span>
+                    <div>
+                        <button>Clear</button>
+                        <button>Create Task</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
 </body>
 
 </html>
