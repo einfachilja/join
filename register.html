@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="./assets/img/join-logo.png" type="image/x-icon">
     <link rel="stylesheet" href="./styles/fonts.css">
     <link rel="stylesheet" href="style.css">
+    <script src="./scripts/register.js"></script>
 </head>
 
 <body>
@@ -20,9 +21,9 @@
         <div class="form-container">
             <a  href="index.html"><img class="arrow-back" src="./assets/icons/arrow-left-line.png" alt=""></a>
             <h1>Sign up</h1>
-            <form>
+            <form onsubmit="registerUser('/users'); return false">
                 <div class="input-group">
-                <input type="text" id="name" placeholder="Name" required>
+                <input type="text" id="username" placeholder="Name" required>
                 <img class="input-icon" src="./assets/icons/person.png" alt="">
                 </div>
                 <div class="input-group">
