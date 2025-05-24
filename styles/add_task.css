@@ -5,8 +5,8 @@
 }
 
 .content {
-  padding-top: 100px;
-  padding-left: 100px;
+  max-width: 1440px;
+  font-size: 20px;
 }
 
 .add-task-main {
@@ -18,7 +18,96 @@
   flex-direction: column;
 }
 
+.title {
+  height: 48px;
+  width: 440px;
+  border-radius: 10px;
+  border: 1px solid #d1d1d1;
+  padding: 12px 21px;
+}
+
+.description {
+  width: 440px;
+  height: 120px;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 18px 16px;
+  border: 1px solid #d1d1d1;
+}
+
+.date {
+  width: 440px;
+  height: 48px;
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid #d1d1d1;
+}
+
 .add-task-main-right {
   display: flex;
   flex-direction: column;
+}
+
+.add-task-priority-btn {
+  height: 48px;
+  width: 110px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-task-priority-box {
+  display: flex;
+  gap: 16px;
+}
+
+.add-task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-task-footer-box {
+  display: flex;
+  gap: 16px;
+}
+
+.add-task-clear-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f6f7f8;
+  height: 56px;
+  width: 110px;
+  border-radius: 10px;
+  border: 1px solid #2a3647;
+  padding: 16px;
+  color: #2a3647;
+  font-size: 20px;
+  font-weight: 400;
+  gap: 4px;
+}
+
+.add-task-create-task-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a3647;
+  height: 56px;
+  width: 180px;
+  border-radius: 10px;
+  border: 1px solid #2a3647;
+  padding: 16px;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  gap: 4px;
+}
+
+.add-task-separator {
+  margin-left: 40px;
+  margin-right: 40px;
 }

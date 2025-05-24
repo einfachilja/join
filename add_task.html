@@ -49,26 +49,40 @@
                 <div class="add-task-main">
                     <div class="add-task-main-left">
                         <label for="title">Title*</label>
-                        <input type="text" id="title" placeholder="Enter a title">
+                        <input class="title" type="text" id="title" placeholder="Enter a title">
                         <label for="description">Description</label>
-                        <textarea name="" id="description" placeholder="Enter a Description"></textarea>
+                        <textarea class="description" name="" id="description" placeholder="Enter a Description"></textarea>
                         <label for="date">Due date*</label>
-                        <input type="date" placeholder="dd/mm/yyyy">
+                        <input class="date" type="date">
                     </div>
+
+                    <img class="add-task-separator" src="./assets/icons/add-task-line-icon.png" alt="">
+
                     <div class="add-task-main-right">
-                        <label for="title">Title*</label>
-                        <input type="text" id="title" placeholder="Enter a title">
-                        <label for="description">Description</label>
-                        <textarea name="" id="description" placeholder="Enter a Description"></textarea>
-                        <label for="date">Due date*</label>
-                        <input type="date" placeholder="dd/mm/yyyy">
+                        <label for="title">Priority</label>
+                        <div class="add-task-priority-box">
+                            <div class="add-task-priority-btn">Urgent <img
+                                    src="./assets/icons/add-task-priority-urgent-icon.png" alt=""></div>
+                            <div class="add-task-priority-btn">Urgent <img
+                                    src="./assets/icons/add-task-priority-urgent-icon.png" alt=""></div>
+                            <div class="add-task-priority-btn">Urgent <img
+                                    src="./assets/icons/add-task-priority-urgent-icon.png" alt=""></div>
+                        </div>
+                        <label for="assignet">Assigned to</label>
+                        <input type="text" id="assignet" placeholder="Select contacts to assign">
+                        <label for="category">Category*</label>
+                        <input type="text" id="category" placeholder="Select task category">
+                        <label for="subtask">Category*</label>
+                        <input type="text" id="subtask" placeholder="Add new subtask">
+
+
                     </div>
                 </div>
                 <div class="add-task-footer">
                     <span>*This field is required</span>
-                    <div>
-                        <button>Clear</button>
-                        <button>Create Task</button>
+                    <div class="add-task-footer-box">
+                        <button class="add-task-clear-btn">Clear <img src="./assets/icons/add-task-clear-btn-icon.svg" alt=""></button>
+                        <button class="add-task-create-task-btn">Create Task <img src="./assets/icons/add-task-create-task-btn-icon.png" alt=""></button>
                     </div>
                 </div>
 
