@@ -70,15 +70,15 @@ h1 {
 }
 
 .board-add-task-btn {
-  background-color: #2a3647;
   width: 160px;
-  height: 48px;
-  border-radius: 10px;
-  padding: 8px 16px 8px 16px;
+  height: 56px;
   gap: 4px;
-  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  background-color: #2a3647;
+  border: 1px solid #2a3647;
   color: #ffffff;
-  font-size: 24px;
+  font-size: 21px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -86,7 +86,10 @@ h1 {
 
 .board-add-task-btn:hover {
   background-color: #29abe2;
+  box-shadow: 0px 4px 4px 0px #00000040;
   cursor: pointer;
+  border: 1px solid #29abe2;
+  font-size: 21px;
 }
 
 .board-main {
