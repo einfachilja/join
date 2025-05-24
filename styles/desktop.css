@@ -24,7 +24,6 @@ header {
   top: 0;
   padding: 24px 24px 24px 256px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  z-index: -1;
 }
 
 .container {
@@ -37,7 +36,6 @@ header {
   width: calc(100% - 232px);
   background-color: #F6F7F8;
   margin-top: 96px;
-  z-index: -2;
 }
 
 .help-icon {
@@ -65,7 +63,7 @@ header {
 aside {
   background-color: #2a3647;
   width: 232px; 
-  z-index: 0;
+  z-index: 99;
 }
 
 .nav-container {

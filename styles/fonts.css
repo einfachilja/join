@@ -2,3 +2,7 @@
   font-family: "Inter";
   src: url(../assets/fonts/Inter-VariableFont.ttf);
 }
+
+h1 {
+  font-size: 61px;
+}

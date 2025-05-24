@@ -90,7 +90,7 @@ html {
 }
 
 .card-top:hover .summary-to-do-icon {
-  background-image: url("/assets/icons/summary-to-do-hover.png");
+  background-image: url("/assets/icons/summary-to-do-icon-hover.png");
 }
 
 .summary-done-icon {
@@ -102,7 +102,7 @@ html {
 }
 
 .card-top:hover .summary-done-icon {
-  background-image: url("/assets/icons/summary-done-hover.png");
+  background-image: url("/assets/icons/summary-done-icon-hover.png");
 }
 
 .card-top-text {

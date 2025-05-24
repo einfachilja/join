@@ -1,0 +1,9 @@
+.help-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.help-container {
+    max-width: 1440px;
+}
