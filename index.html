@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="./assets/img/join-logo-dark.svg" type="image/x-icon">
     <link rel="stylesheet" href="./styles/fonts.css">
     <link rel="stylesheet" href="./style.css">
+    <script src="./scripts/login.js"></script>
 </head>
 
 <body>
@@ -21,7 +22,7 @@
     </header>
 
     <section class="section-login">
-        <div class="form-container">
+        <div class="form-container-login">
             <div class="form-header">
                 <h1>Log in</h1>
                 <img src="./assets/icons/login-line-icon.svg" alt="">
@@ -36,7 +37,7 @@
                     <img class="input-icon" src="./assets/icons/lock-icon.svg" alt="">
                 </div>
                 <div class="btn-container">
-                    <button class="login-btn">Log in</button>
+                    <button onclick="loginUser('/users')" class="login-btn">Log in</button>
                     <a href="summary.html" class="guest-login-btn">Guest Log in</a>
                 </div>
             </form>

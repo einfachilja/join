@@ -3,11 +3,11 @@ const BASE_URL = "https://join-1f08e-default-rtdb.europe-west1.firebasedatabase.
 // <== Diese Funktion registriert einen neuen Benutzer, indem sie dessen Benutzernamen, E-Mail und Passwort an eine Firebase Realtime Database sendet. ==>
 async function registerUser(path = "") {
 
-  let username = document.getElementById("username").value;
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-  let password2 = document.getElementById("password2").value;
-  let checkbox = document.getElementById("checkbox").checked;
+  let username = document.getElementById("username").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let password = document.getElementById("password").value.trim();
+  let password2 = document.getElementById("password2").value.trim();
+  let checkbox = document.getElementById("checkbox").checked.trim();
 
   // <== Überprüfen, ob alle Validierungen bestanden wurden ==>
   let isUsernameValid = checkUsername(username);
