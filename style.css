@@ -24,10 +24,6 @@ body {
   color: #000000;
 }
 
-h1 {
-  font-size: 61px;
-}
-
 header {
   display: flex;
   justify-content: space-between;
@@ -66,7 +62,7 @@ nav {
   flex: 1;
 }
 
-.form-container {
+.form-container-login {
   background-color: white;
   min-height: 450px;
   width: 650px;
@@ -83,19 +79,15 @@ nav {
 
 .form-container-register {
   background-color: white;
-  height: 630px;
   width: 600px;
+  gap: 32px;
+  border-radius: 30px;
+  padding: 48px 88px;
+  box-shadow: 0px 0px 14px 3px #0000000A;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 32px;
-  border-radius: 30px;
-  padding-top: 48px;
-  padding-right: 88px;
-  padding-bottom: 48px;
-  padding-left: 88px;
-  box-shadow: 0px 0px 14px 3px #0000000a;
   position: relative;
 }
 
@@ -109,7 +101,6 @@ nav {
 form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
 
 .input-group {
@@ -125,7 +116,12 @@ input {
   border: 1px solid #d1d1d1;
   font-family: "Inter", "sans-serif";
   padding: 12px 21px;
-  border: 1px solid #d1d1d1;
+  font-size: 20px;
+}
+
+input::placeholder {
+  color: #D1D1D1;
+
 }
 
 input:focus {
@@ -209,7 +205,7 @@ span {
 .arrow-back {
   position: absolute;
   left: 32px;
-  top: 136px;
+  top: 110px;
   height: 32px;
 }
 
@@ -219,4 +215,54 @@ span {
 
 .content-legal-notice {
   text-align: center;
+}
+
+.overlay-success-registration {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-content {
+  width: 312px;
+  height: 74px;
+  border-radius: 20px;
+  padding-right: 25px;
+  padding-left: 25px;
+  background-color: #2A3647;
+  box-shadow: 0px 0px 4px 0px #00000026;
+  font-family: Inter;
+  font-weight: 300;
+  font-size: 20px;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.d-none {
+  display: none;
+}
+
+.error-message-container {
+  height: 20px;
+}
+
+.error-message {
+  color: red;
+}
+
+.error_checkbox {
+  display: flex;
+  justify-content: center;
+}
+
+.accept-privacy-policy {
+  font-size: 16px;
 }

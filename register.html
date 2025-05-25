@@ -25,33 +25,60 @@
                 <img src="./assets/icons/signup-line-icon.svg" alt="">
             </div>
             <form onsubmit="registerUser('/users'); return false">
+
                 <div class="input-group">
-                    <input type="text" id="username" placeholder="Name" required>
+                    <input type="text" id="username" placeholder="Name" onkeyup="checkUsername(username.value)">
                     <img class="input-icon" src="./assets/icons/person-icon.svg" alt="">
                 </div>
+                <div class="error-message-container">
+                    <span class="error-message" id="error_username"></span>
+                </div>
+
                 <div class="input-group">
-                    <input type="email" id="email" placeholder="Email" required>
+                    <input type="text" id="email" placeholder="Email" onkeyup="checkEmail(email.value)">
                     <img class="input-icon" src="./assets/icons/mail-icon.svg" alt="">
                 </div>
+                <div class="error-message-container">
+                    <span class="error-message" id="error_email"></span>
+                </div>
+
                 <div class="input-group">
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" id="password" placeholder="Password" onkeyup="checkPassword(password.value)">
                     <img class="input-icon" src="./assets/icons/lock-icon.svg" alt="">
                 </div>
+                <div class="error-message-container">
+                    <span class="error-message" id="error_password"></span>
+                </div>
+
                 <div class="input-group">
-                    <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+                    <input type="password" id="password2" placeholder="Confirm Password"
+                        onkeyup="checkPassword2(password2.value)">
                     <img class="input-icon" src="./assets/icons/lock-icon.svg" alt="">
                 </div>
-                <div class="checkbox-container">
-                    <input class="checkbox" type="checkbox" required>
-                    <span>I accept the <a class="privacy-policy-link" href="privacy_policy.html">Privacy
-                            Policy</a></span>
+                <div class="error-message-container">
+                    <span class="error-message" id="error_password2"></span>
                 </div>
-                <div class="btn-container">
-                    <button class="login-btn">Sign up</button>
-                </div>
+                <div>
+                    <div class="checkbox-container">
+                        <input id="checkbox" class="checkbox" type="checkbox">
+                        <span class="accept-privacy-policy">I accept the <a class="privacy-policy-link" href="privacy_policy.html">Privacy
+                                Policy</a></span>
+                    </div>
+                    <div class="error-message-container">
+                        <span class="error-message error_checkbox" id="error_checkbox"></span>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="login-btn">Sign up</button>
+                    </div>
             </form>
         </div>
     </section>
+
+    <div id="overlay_success_registration" class="overlay-success-registration d-none">
+        <div class="overlay-content">You Signed Up successfully
+        </div>
+    </div>
 
     <footer>
         <a href="privacy_policy.html">Privacy Policy</a>
