@@ -1,8 +1,75 @@
-@font-face {
-    font-family: Inter-Normal;;
-    src: url(./assets/fonts/Inter-VariableFont_opsz\,wght.ttf);
-}
+/* styles/add-task.css */
+/* Grundlayout der Modal-Box */
 
-html{
-    font-family: Inter-Normal;
-}
+.body-right {
+    margin-left: 232px; /* Breite der .desktop-menu */
+  }
+
+.add-task-modal {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 800px;
+    margin: 40px auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  /* Zwei-Spalten-Grid */
+  .form-cols {
+    display: flex;
+    gap: 32px;
+  }
+  /* Spalten fixieren */
+  .col-left, .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /* Buttons unten */
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  /* Input-Fehler */
+  .input-error {
+    border-color: #e74c3c;
+  }
+  /* Dropdown verstecken/zeigen */
+  .hidden { display: none; }
+  /* aktiver Priority-Button */
+  #prioGroup button.active {
+    background: #f1c40f;
+    color: #fff;
+  }
+  /* Standard-Reset für Listen */
+  ul { list-style: none; padding: 0; margin: 0; }
+  
+  /* in styles/template.css */
+header.header {
+    position: fixed;
+    top: 0;
+    left: 232px;   /* wieder die Sidebar-Breite */
+    right: 0;
+    height: 64px;  /* deine Header-Höhe */
+    background: #fff;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  main.main {
+    margin-top: 64px;    /* Platz für den Header */
+    padding: 24px;       /* optionaler Innenabstand */
+  }
+  
+  /* in styles/add-task.css */
+.add-task-modal {
+    position: relative;
+    z-index: 200;  /* höher als Header (100) und Sidebar (2000?) */
+    /* die restlichen Styles wie gehabt */
+  }
+  
