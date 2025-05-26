@@ -103,16 +103,40 @@ function registerUser() {
   saveUser(name, email, password);
 }
 
+// adds a random color to the user profile
+function addColorToUserProfile() {
+  const colors = [
+    "rgb(255, 122, 0)",
+    "rgb(255, 94, 179)",
+    "rgb(110, 82, 255)",
+    "rgb(147, 39, 255)",
+    "rgb(0, 190, 232)",
+    "rgb(31, 215, 193)",
+    "rgb(255, 116, 94)",
+    "rgb(255, 163, 94)",
+    "rgb(252, 113, 255)",
+    "rgb(255, 199, 1)",
+    "rgb(0, 56, 255)",
+    "rgb(195, 255, 43)",
+    "rgb(255, 230, 43)",
+    "rgb(255, 70, 70)",
+    "rgb(255, 187, 43)"
+  ];
+
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
 /* Saves a new user to the Firebase Realtime Database + Displays a message */
 function saveUser(name, email, password) {
+  const color = addColorToUserProfile();
   fetch(userfirebaseURL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password}),
+    body: JSON.stringify({ name, email, password,color}),
   })
     .then(() => {
       showMessage("You Signed Up successfully", true);
-      setTimeout(() => window.location.href = "./index.html", 2000);
+      setTimeout(() => window.location.href = "./summary.html", 2000);
     })
     .catch(console.error);
 }
