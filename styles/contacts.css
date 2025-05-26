@@ -1,8 +1,264 @@
 @font-face {
     font-family: Inter-Normal;;
-    src: url(./assets/fonts/Inter-VariableFont_opsz\,wght.ttf);
+    src: url(../assets/fonts/Inter-VariableFont_opsz\,wght.ttf);
 }
 
 html{
     font-family: Inter-Normal;
+}
+
+.main{
+    display: flex;
+    flex-direction: row;
+}
+
+.contacts-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    position: fixed;
+    left: 232px;
+    top: 140px;
+    background-color: hsla(0, 0%, 100%, 1);
+
+    height: calc(100vh - 140px); /* Gives it height so scrolling can occur */
+    width: 456px; /* Matches header width */
+    overflow: hidden;
+
+    padding-top: 15px;
+}
+
+.all-contacts {
+    overflow-y: auto;
+    flex-grow: 1;
+    width: 100%;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contacts-list-header {
+    position: sticky;
+    top: 0;
+    background-color: hsla(0, 0%, 100%, 1);
+    height: 101px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1; /* Ensures it stays above scrolled content */
+}
+
+.contacts-list-header button{
+    background-color: hsla(215, 26%, 22%, 1);
+    width: 352px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid hsla(215, 26%, 22%, 1);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    gap: 16px;
+    color: hsla(0, 0%, 100%, 1);
+    font-weight: 700px;
+    font-size: 21px;
+    line-height: 120%;
+    letter-spacing: 0%;
+}
+
+.contact{
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    padding-top: 15px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 15px;
+    border-radius: 10px;
+    width: 352px;
+    height: 78px;
+}
+
+.profile-icon{
+    border-radius: 45px;
+    height: 42px;
+    width: 42px;
+    color: hsla(0, 0%, 100%, 1);
+    background-color: blueviolet;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.name-and-email{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.contact-name{
+    color: hsla(0, 0%, 0%, 1);
+}
+
+
+.my-contact-info{
+    position: fixed;
+    right: 20px;
+    top: 140px;
+    
+    display: flex;
+    flex-direction: column;
+
+}
+
+.header-div{
+    display: flex;
+    align-items: center;
+    width: 569px;
+    height: 73px;
+    position: fixed;
+    top: 206px;
+    left: 743px;
+    gap: 30px;
+}
+
+.Contacts-span{
+    font-weight: 700;
+    font-size: 61px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    color: hsla(0, 0%, 0%, 1);
+}
+
+.blue-line{
+    height: 59px;
+    border: 3px;
+}
+
+.better-with-a-team-span{
+    font-weight: 400;
+    font-size: 27px;
+    color: hsla(215, 26%, 22%, 1);
+}
+
+.my-contact-information-section{
+    position: fixed;
+    top: 311px;
+    left: 750px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px !important;
+    
+    
+}
+
+.profile-badge-and-name{
+    height: 120px;
+    width: 452px;
+    gap: 54px;
+
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.my-profile-icon{
+    width: 120px;
+    height: 120px;
+    border-radius: 70px;
+    color: hsla(0, 0%, 100%, 1);
+    background-color: rgb(150, 226, 43);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 47px;
+}
+
+.name-section{
+    width: 278px;
+    height: 88px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.edit-delete-section{
+    display: flex;
+    align-items: center;
+    
+    height: 24px;
+    width: 159px;
+
+    gap: 17px;
+    
+}
+
+.edit-delete-sub-section{
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.user-name{
+    height: 56px;
+    width: 278px;
+    font-weight: 500;
+    font-size: 47px;
+}
+
+
+.Contact-information-div{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 59px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.email-and-phone-section{
+    width: 146px;
+    height: 128px;
+    gap: 22px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.email-and-phone-sub-section{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.alphabet{
+    display: flex;
+    width: 352px;
+    height: 58px;
+    padding-left: 36px;
+    padding-right: 36px;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    gap: 8px;
+    color: hsla(0, 0%, 0%, 1);
+    font-size: 20px;
+    font-weight: 400;
+
+    flex-direction: column;
+
+}
+
+.alphabet-devider{
+    width: 352px;
+    height: 1px;
+    border-radius: 3px;
+    background-color: hsla(0, 0%, 82%, 1);
 }

@@ -1,5 +1,5 @@
 /* ========== GLOBAL ========== */
-const LOGIN_SUCCESSFUL = "./index.html";
+const LOGIN_SUCCESSFUL = "./summary.html";
 
 /* ========== INIT ========== */
 window.onload = function () {
