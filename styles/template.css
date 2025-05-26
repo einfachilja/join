@@ -63,7 +63,6 @@ body {
 .menu button{
     width: 232px;
     height: 46px;
-    border-radius: 8px;
     padding-top: 8px;
     padding-right: 53px;
     padding-bottom: 8px;
@@ -74,6 +73,14 @@ body {
     align-items: center;
     background-color: rgba(240, 248, 255, 0);
     border: none;
+}
+
+.menu button:hover{
+    background-color: hsl(216, 36%, 26%);
+}
+
+.menu button.active{
+    background-color: hsl(219, 67%, 12%);
 }
 
 button img{
@@ -89,17 +96,17 @@ button p{
     display: flex;
     flex-direction: column;
     height: 317px;
-    width: fill; 
 }
 
 .desktop-footer-content{
     padding-top: 130px;
+    width: 100%;
 }
 
 .desktop-footer button{
     background-color: rgba(240, 248, 255, 0);
     border: none;
-    width: 121px;
+
     height: 35px;
     padding: 8px;
 
@@ -111,6 +118,14 @@ button p{
 
 .desktop-footer button p{
     color: hsla(0, 0%, 66%, 1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.desktop-footer button p:hover{
+    color: hsl(198, 76%, 52%);
+    transform: scale(1.1);
+    font-weight: 550;
+
 }
 
 .header{
@@ -153,6 +168,20 @@ button p{
     justify-content: center;
     align-items: center;
     border-radius: 30px;
+}
+
+.help-img{
+    position: fixed;
+    right: 0;
+    margin-right: 110px;
+    width: 32px;
+    height: 32px;
+    gap: 16px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.help-img:hover{
+    transform: scale(1.1);
 }
 
 .user-profile:hover{

@@ -46,30 +46,8 @@ h1{
 
 }
 
-.user-profile{
-    position: fixed;
-    right: 0;
-    margin-right: 40px;
-    width: 56px;
-    height: 56px;
-    gap: 16px;
-    color: hsl(198, 76%, 52%);
-    background-color: hsla(210, 13%, 97%, 1);
-    border: 3px solid hsla(215, 26%, 22%, 1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 30px;
-}
 
-.help-img{
-    position: fixed;
-    right: 0;
-    margin-right: 110px;
-    width: 32px;
-    height: 32px;
-    gap: 16px;
-}
+
 
 .arrow-left-section img {
     width: 37px;
