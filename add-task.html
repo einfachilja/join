@@ -5,17 +5,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Add Task | Join</title>
-  <!-- Grund-Layout -->
+  <!-- base styles -->
+  <link rel="stylesheet" href="./style.css"/>
+  <!-- layout & template -->
   <link rel="stylesheet" href="./styles/template.css"/>
-  <!-- Add-Task-spezifisch -->
+  <!-- add-task only -->
   <link rel="stylesheet" href="./styles/add-task.css"/>
-  <link rel="shortcut icon" href="./assets/img/logo.svg" type="image/svg+xml"/>
+  <link rel="shortcut icon" href="./assets/img/logo.svg" type="image/x-icon"/>
 </head>
 <body>
   <div class="body">
     <!-- Sidebar -->
     <div class="desktop-menu">
-      <img class="logo" src="./assets/img/logo.svg" alt="Join-Logo"/>
+      <img class="logo" src="./assets/img/logo.svg" alt="Join Logo"/>
       <nav class="menu">
         <a href="./summary.html"><button><img src="./assets/icons/summary.svg"/><p>Summary</p></button></a>
         <a href="./add-task.html"><button class="active"><img src="./assets/icons/add-task.svg"/><p>Add Task</p></button></a>
@@ -23,18 +25,18 @@
         <a href="./contacts.html"><button><img src="./assets/icons/contacts.svg"/><p>Contacts</p></button></a>
       </nav>
       <div class="desktop-footer">
-        <a href="./Privacy-Policy.html"><p>Privacy Policy</p></a>
-        <a href="./legal-notice.html"><p>Legal Notice</p></a>
+        <a href="./Privacy-Policy.html"><button><p>Privacy Policy</p></button></a>
+        <a href="./legal-notice.html"><button><p>Legal Notice</p></button></a>
       </div>
     </div>
 
-    <!-- Hauptbereich -->
+    <!-- Main content -->
     <div class="body-right">
       <header class="header">
         <span>Kanban Project Management Tool</span>
         <div class="header-right">
           <div onclick="openSubMenu()" class="user-profile">SM</div>
-          <a href="./help.html"><img src="./assets/img/help.svg" alt="Hilfe"/></a>
+          <a href="./help.html"><img src="./assets/img/help.svg" alt="Help"/></a>
         </div>
       </header>
       <div id="sub_menu" class="sub_menu d_none">
@@ -48,7 +50,7 @@
           <h2>Add Task</h2>
           <form id="taskForm" onsubmit="return false;">
             <div class="form-cols">
-              <!-- linke Spalte -->
+              <!-- left column -->
               <div class="col-left">
                 <label for="title">Title*</label>
                 <input id="title" type="text" placeholder="e.g. Build UI" onchange="toggleCreateBtn()"/>
@@ -61,7 +63,7 @@
                        onblur="validateDate(); toggleCreateBtn();"/>
               </div>
 
-              <!-- rechte Spalte -->
+              <!-- right column -->
               <div class="col-right">
                 <label>Priority</label>
                 <div id="prioGroup">
@@ -103,7 +105,6 @@
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="./scripts/desktop-template.js"></script>
   <script src="./scripts/add-task.js"></script>
 </body>

@@ -1,8 +1,8 @@
 // scripts/add-task.js
-let selectedPriority = 'medium';
-const subtasks = [];
+let selectedPriority = 'medium';        // default priority
+const subtasks = [];                   // collected subtasks
 
-/** Button aktivieren, wenn Pflichtfelder ok sind */
+/** enable create button when required fields valid */
 function toggleCreateBtn() {
   const title = document.getElementById('title').value.trim();
   const due   = document.getElementById('dueDate').value.trim();
@@ -11,7 +11,7 @@ function toggleCreateBtn() {
   btn.disabled = !(title && isValidDate(due) && cat);
 }
 
-/** Prüft DD/MM/YYYY */
+/** check DD/MM/YYYY format */
 function isValidDate(str) {
   const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(str);
   if (!m) return false;
@@ -20,13 +20,13 @@ function isValidDate(str) {
   return dt.getFullYear() === y && dt.getMonth() === mo - 1 && dt.getDate() === d;
 }
 
-/** markiert fehlerhaftes Datum */
+/** mark invalid date */
 function validateDate() {
   const el = document.getElementById('dueDate');
   isValidDate(el.value.trim()) ? el.classList.remove('input-error') : el.classList.add('input-error');
 }
 
-/** Priority setzen */
+/** set priority */
 function setPriority(prio) {
   selectedPriority = prio;
   document.querySelectorAll('#prioGroup button').forEach(b => {
@@ -34,13 +34,13 @@ function setPriority(prio) {
   });
 }
 
-/** Dropdown umschalten */
+/** toggle assigned dropdown */
 function toggleDropdown(ev) {
   ev.stopPropagation();
   document.getElementById('assignedList').classList.toggle('hidden');
 }
 
-/** Subtask hinzufügen */
+/** add a new subtask */
 function addSubtask() {
   const inp = document.getElementById('subtaskInput');
   const txt = inp.value.trim();
@@ -52,7 +52,7 @@ function addSubtask() {
   inp.value = '';
 }
 
-/** Neues Task-Objekt bauen */
+/** build task object */
 function createTask() {
   const task = {
     title:       document.getElementById('title').value.trim(),
@@ -61,8 +61,8 @@ function createTask() {
     priority:    selectedPriority,
     category:    document.getElementById('category').value,
     subtasks:    [...subtasks]
-    // assignedTo: … später mit Firebase füllen
+    // assignedTo: … fill later with Firebase
   };
-  console.log('Task fertig:', task);
-  alert('Task in Konsole erstellt.');
+  console.log('Task ready:', task);
+  alert('Task logged to console.');
 }
