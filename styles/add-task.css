@@ -32,6 +32,14 @@ input, textarea, select {
 textarea { min-height: 120px; resize: vertical; }
 input::placeholder, textarea::placeholder { color: #AAA; }
 
+.priority {
+}
+
+.priority.active {
+  background-color: var(--color-primary);
+  color: white;
+}
+
 /* priority buttons */
 #prioGroup { display: flex; gap: 12px; }
 #prioGroup button {
