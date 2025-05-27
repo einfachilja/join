@@ -67,9 +67,13 @@
               <div class="col-right">
                 <label>Priority</label>
                 <div id="prioGroup">
-                  <button type="button" data-value="urgent" onclick="setPriority('urgent')">Urgent</button>
-                  <button type="button" data-value="medium" class="active" onclick="setPriority('medium')">Medium</button>
-                  <button type="button" data-value="low" onclick="setPriority('low')">Low</button>
+                  <!-- in add-task.html, unter <div id="prioGroup"> -->
+                    <button class="priority urgent" data-value="urgent"
+                      onclick="setPriority('urgent')">Urgent</button>
+                    <button class="priority medium active" data-value="medium"
+                      onclick="setPriority('medium')">Medium</button>
+                    <button class="priority low" data-value="low"
+                      onclick="setPriority('low')">Low</button>
                 </div>
 
                 <label>Assigned to</label>

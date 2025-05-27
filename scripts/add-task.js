@@ -1,6 +1,14 @@
-// scripts/add-task.js
-let selectedPriority = 'medium';        // default priority
-const subtasks = [];                   // collected subtasks
+let selectedPriority = 'medium';
+const subtasks = [];
+
+function setPriority(prio) {
+  selectedPriority = prio;
+  document.querySelectorAll('#prioGroup button').forEach(b => {
+    b.classList.toggle('active', b.dataset.value === prio);
+  });
+}
+
+setPriority('medium');
 
 /** enable create button when required fields valid */
 function toggleCreateBtn() {
@@ -24,14 +32,6 @@ function isValidDate(str) {
 function validateDate() {
   const el = document.getElementById('dueDate');
   isValidDate(el.value.trim()) ? el.classList.remove('input-error') : el.classList.add('input-error');
-}
-
-/** set priority */
-function setPriority(prio) {
-  selectedPriority = prio;
-  document.querySelectorAll('#prioGroup button').forEach(b => {
-    b.classList.toggle('active', b.dataset.value === prio);
-  });
 }
 
 /** toggle assigned dropdown */
