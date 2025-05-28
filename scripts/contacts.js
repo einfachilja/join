@@ -5,7 +5,7 @@ let contacts = [];
 function getRandomColor() {
   const colors = [
     "hsl(28, 100%, 50%)",
-    "hsl(120, 94.40%, 34.90%)",
+    "hsl(85, 76%, 53%)",
     "hsl(200, 100%, 50%)", 
     "hsl(328, 99%, 68%)",                
     "hsl(360, 99%, 64%)",
