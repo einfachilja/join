@@ -76,8 +76,7 @@ function overlayEditTemplate() {
                   <img src="./assets/img/logo.svg" alt="logo" />
                 </div>
                 <div class="add-new-contact-template-left-text">
-                  <h2>Add contact</h2>
-                  <p>Tasks are better with a team!</p>
+                  <h2>Edit contact</h2>
                 </div>
                 <div class="contact-template-vector"></div>
               </div>
