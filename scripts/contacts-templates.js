@@ -30,15 +30,15 @@ function overlayTemplate() {
                   <div class="add-new-contact-text">
                     <form class="add-contact-form">
                       <div class="input-group">
-                        <input type="email" placeholder="Name" required />
+                        <input id="new_contact_name" type="text" placeholder="Name" required />
                         <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
                       </div>
                       <div class="input-group">
-                        <input type="email" placeholder="Email" required />
+                        <input id="new_contact_email" type="email" placeholder="Email" required />
                         <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
                       </div>
                       <div class="input-group">
-                        <input type="tel" placeholder="Phone" required />
+                        <input id="new_contact_phone" type="tel" placeholder="Phone" required />
                         <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                       </div>
 
@@ -46,13 +46,13 @@ function overlayTemplate() {
                     <button
                       type="button"
                       class="cancel-btn"
-                      onclick="closeOverlay()"
+                      onclick="toggleOff()"
                     >
                       Cancel
                         <img class="icon-default" src="./assets/img/contacts-icons/iconoir_cancel.svg" alt="">
                         <img class="icon-hover" src="./assets/img/contacts-icons/iconoir_cancel_blue.svg" alt="">
                     </button>
-                    <button type="submit" class="create-btn">
+                    <button onclick="addNewContact()" type="submit" class="create-btn">
                       Create Contact
                       <img src="./assets/img/contacts-icons/check.svg" alt="">
                     </button>
@@ -65,7 +65,6 @@ function overlayTemplate() {
           </div>
           `;
 }
-
 
 function overlayEditTemplate() {
   return /*html*/ `
