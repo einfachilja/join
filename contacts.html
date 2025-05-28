@@ -223,7 +223,7 @@
               <span class="Contacts-span">Contacts</span>
               <img
                 class="blue-line"
-                src="./assets/img/contacts-icons/contact-info-blue-line.png"
+                src="./assets/img/contacts-icons/contact-info-blue-line.svg"
                 alt=""
               />
               <span class="better-with-a-team-span">Better with a team</span>
@@ -237,18 +237,17 @@
                   <span class="user-name">Tanja Wolf</span>
 
                   <div class="edit-delete-section">
-                    <div class="edit-delete-sub-section">
-                      <img src="./assets/img/contacts-icons/edit.png" alt="" />
+                    <button onclick="toggleEditOverlay()" class="edit-delete-sub-section">
+                      <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
+                      <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
                       <span>Edit</span>
-                    </div>
+                    </button>
 
-                    <div class="edit-delete-sub-section">
-                      <img
-                        src="./assets/img/contacts-icons/delete.png"
-                        alt=""
-                      />
+                    <button class="edit-delete-sub-section">
+                      <img class="icon-default" src="./assets/img/contacts-icons/delete.svg" />
+                      <img class="icon-hover" src="./assets/img/contacts-icons/delete-blue.svg" />
                       <span>Delete</span>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -270,8 +269,6 @@
               </div>
             </div>
           </div>
-
-          
         </main>
       </div>
     </div>

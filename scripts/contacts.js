@@ -18,6 +18,25 @@ function toggleOverlay() {
     }, 0);
 }
 
+function toggleEditOverlay() {
+    const overlayRef = document.getElementById('overlay');
+    overlayRef.innerHTML = ""; // Clear previous content
+    overlayRef.innerHTML += overlayEditTemplate(); // Inject template
+
+    overlayRef.classList.remove('d_none'); // Show overlay (transparent)
+    
+    // Fade in the overlay background
+    setTimeout(() => {
+        overlayRef.classList.add('active');
+    }, 0);
+
+    // Slide in the modal
+    setTimeout(() => {
+        const modal = document.querySelector('.add-new-contact-template');
+        if (modal) modal.classList.add('slide-in');
+    }, 0);
+}
+
 function dialogPrevention(event) {
     event.stopPropagation();
 }
