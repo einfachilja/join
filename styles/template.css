@@ -142,6 +142,7 @@ button p{
     padding-right: 40px;
     padding-bottom: 20px;
     z-index: 1000; 
+    top: 0;
 }
 
 .header-title{
