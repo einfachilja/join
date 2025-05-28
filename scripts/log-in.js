@@ -89,6 +89,7 @@ function checkLogin(users, email, password) {
   showMessage("Login successful!", true);
   sessionStorage.setItem("userName", user.name);
   sessionStorage.setItem("email", user.email); // SessionStorage für später relevant, wenn es auf die Join Main Seite geht.
+  sessionStorage.setItem("userColor", user.color);
 
   setTimeout(() => {
     window.location.href = LOGIN_SUCCESSFUL;
@@ -98,12 +99,12 @@ function checkLogin(users, email, password) {
 /* ========== GUEST LOGIN ========== */
 function guestLogin() {
   sessionStorage.setItem("userName", "Guest");
+  sessionStorage.setItem("userColor", "rgb(41, 171, 226)"); // Blau für Guest
   sessionStorage.setItem("email", "guest@join-test.de");
- // SessionStorage für später relevant, wenn es auf die Join Main Seite geht.
-  showMessage("You are logged in as a guest!", true);
 
+  showMessage("You are logged in as a guest!", true);
   setTimeout(() => {
-    window.location.href = LOGIN_SUCCESSFUL; 
+    window.location.href = "./summary.html";
   }, 2000);
 }
 

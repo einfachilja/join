@@ -195,3 +195,25 @@ html {
     font-weight: 200;
     text-align: center;
 }
+
+/*NEU HINZUGEFÜGT*/
+.welcome-message {
+  text-align: left; 
+  margin-top: 12px;
+  padding: 10px 0;
+}
+
+.welcome-message h2 {
+  font-size: 30px;
+  font-weight: 500;
+  color: rgb(42, 54, 71);
+  margin: 0 0 4px 0;
+  line-height: 1.1;
+}
+
+.welcome-message p {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
