@@ -5,15 +5,6 @@
   text-decoration: none;
 }
 
-@font-face {
-  font-family: Inter-Normal;
-  src: url(/fonts/Inter-VariableFont_opsz\,wght.ttf);
-}
-
-html {
-  font-family: Inter-Normal;
-}
-
 body {
   font-family: Inter-Normal;
   margin: 0;

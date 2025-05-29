@@ -1,17 +1,8 @@
-@font-face {
-    font-family: Inter-Normal;
-    src: url(./assets/fonts/Inter-VariableFont_opsz\,wght.ttf);
-}
-
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     text-decoration: none;
-}
-
-
-html {
-    font-family: Inter-Normal;
 }
 
 .summary-container {

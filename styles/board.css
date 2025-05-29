@@ -1,12 +1,9 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
 }
-
-html {
-    font-family: Inter-Normal;
-}
-
 .board-container {
     margin-left: 300px;
     margin-top: 200px;
