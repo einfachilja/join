@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Board</title>
+  <title>Join | Board</title>
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="./styles/template.css" />
   <link rel="stylesheet" href="./styles/help.css" />
   <link rel="stylesheet" href="./styles/board.css" />
   <link rel="stylesheet" href="./styles/fonts.css">
   <script src="./scripts/board.js"></script>
-  <link rel="shortcut icon" href="./assets/img/logo.svg" type="image/x-icon" />
+  <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
 </head>
 
 <body onload="updateHTML(); loadTasks()">
@@ -110,8 +110,8 @@
               <span class="board-main-box-title">To Do
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-              <div class="drag-area" id="open" ondrop="moveTo('open')"
-                ondragleave="removeHighlight('open')" ondragover="allowDrop(event); highlight('open')">
+              <div class="drag-area" id="open" ondrop="moveTo('open')" ondragleave="removeHighlight('open')"
+                ondragover="allowDrop(event); highlight('open')">
               </div>
             </div>
 
@@ -119,8 +119,8 @@
               <span class="board-main-box-title">In progress
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-              <div class="drag-area" id="progress" ondrop="moveTo('progress')"
-                ondragleave="removeHighlight('progress')" ondragover="allowDrop(event); highlight('progress')">
+              <div class="drag-area" id="progress" ondrop="moveTo('progress')" ondragleave="removeHighlight('progress')"
+                ondragover="allowDrop(event); highlight('progress')">
               </div>
             </div>
 
@@ -128,8 +128,8 @@
               <span class="board-main-box-title">Await Feedback
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-              <div class="drag-area" id="feedback" ondrop="moveTo('feedback')"
-                ondragleave="removeHighlight('feedback')" ondragover="allowDrop(event); highlight('feedback')">
+              <div class="drag-area" id="feedback" ondrop="moveTo('feedback')" ondragleave="removeHighlight('feedback')"
+                ondragover="allowDrop(event); highlight('feedback')">
               </div>
             </div>
 
@@ -137,8 +137,8 @@
               <span class="board-main-box-title">Done
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-              <div class="drag-area" id="closed" ondrop="moveTo('closed')"
-                ondragleave="removeHighlight('closed')" ondragover="allowDrop(event); highlight('closed')">
+              <div class="drag-area" id="closed" ondrop="moveTo('closed')" ondragleave="removeHighlight('closed')"
+                ondragover="allowDrop(event); highlight('closed')">
               </div>
             </div>
           </div>
