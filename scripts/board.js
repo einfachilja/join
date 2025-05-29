@@ -1,50 +1,33 @@
-let todos = [
-  {
-    id: 0,
-    subject: "User Story",
-    title: "Register",
-    category: "open",
-    description: "Create a register form...",
-    progress: "./assets/icons/Progress.png",
-    members: "./assets/icons/members.png",
-    priority: "./assets/icons/Priority-symbols.png",
-  },
-  {
-    id: 1,
-    subject: "Bug",
-    title: "Drag & Drop",
-    category: "progress",
-    description: "Solve bug with board drag & drop...",
-    progress: "./assets/icons/Progress.png",
-    members: "./assets/icons/members.png",
-    priority: "./assets/icons/Priority-symbols.png",
-  },
-  {
-    id: 2,
-    subject: "Feature",
-    title: "Create gighliting",
-    category: "feedback",
-    description: "Bla bla bla..",
-    progress: "./assets/icons/Progress.png",
-    members: "./assets/icons/members.png",
-    priority: "./assets/icons/Priority-symbols.png",
-  },
-  {
-    id: 3,
-    subject: "User Story",
-    title: "Contact & Imprint",
-    category: "closed",
-    description: "Create a contact form and imprint page...",
-    progress: "./assets/icons/Progress.png",
-    members: "./assets/icons/members.png",
-    priority: "./assets/icons/Priority-symbols.png",
-  },
-];
+let BASE_URL =
+  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
+
+let arrayTasks = [];
+
+async function loadTasks(path = "tasks") {
+  let response = await fetch(BASE_URL + path + ".json");
+  let responseJson = await response.json();
+
+  console.log(responseJson); // z.B. ein Objekt mit vielen Einträgen
+
+  arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
+    return { ...task, firebaseKey };
+  });
+
+  if (responseJson) {
+    for (const task of arrayTasks) {
+      console.log(task); // hier bekommst du jeden einzelnen Task
+    }
+  } else {
+    console.log("Keine Tasks gefunden");
+  }
+
+  updateHTML(arrayTasks);
+}
 
 let currentDraggedElement;
 
 function updateHTML() {
-  let open = todos.filter((t) => t["category"] == "open");
+  let open = arrayTasks.filter((t) => t["status"] == "open");
 
   document.getElementById("open").innerHTML = "";
 
@@ -53,7 +36,7 @@ function updateHTML() {
     document.getElementById("open").innerHTML += generateTodoHTML(element);
   }
 
-  let progress = todos.filter((t) => t["category"] == "progress");
+  let progress = arrayTasks.filter((t) => t["status"] == "progress");
   document.getElementById("progress").innerHTML = "";
 
   for (let index = 0; index < progress.length; index++) {
@@ -61,7 +44,7 @@ function updateHTML() {
     document.getElementById("progress").innerHTML += generateTodoHTML(element);
   }
 
-  let feedback = todos.filter((t) => t["category"] == "feedback");
+  let feedback = arrayTasks.filter((t) => t["status"] == "feedback");
   document.getElementById("feedback").innerHTML = "";
 
   for (let index = 0; index < feedback.length; index++) {
@@ -69,7 +52,7 @@ function updateHTML() {
     document.getElementById("feedback").innerHTML += generateTodoHTML(element);
   }
 
-  let closed = todos.filter((t) => t["category"] == "closed");
+  let closed = arrayTasks.filter((t) => t["status"] == "closed");
   document.getElementById("closed").innerHTML = "";
 
   for (let index = 0; index < closed.length; index++) {
@@ -78,21 +61,21 @@ function updateHTML() {
   }
 }
 
-function startDragging(id) {
-  currentDraggedElement = id;
+function startDragging(firebaseKey) {
+  currentDraggedElement = firebaseKey;
 }
 
 function generateTodoHTML(element) {
   return `
-    <div id="${element["id"]}" draggable="true" ondragstart="startDragging(${element["id"]})">
+    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')">
         <div class="card">
             <span class="card-category">${element["subject"]}</span>
             <span class="card-title">${element["title"]}</span>
             <span class="card-description">${element["description"]}</span>
             <img src="${element["progress"]}" alt="">
                 <div class="card-footer">
-                  <img src="${element["members"]}" alt="">
-                  <img src="${element["priority"]}" alt="">
+                  <div>${element["assignedTo"]}</div>
+                  <div>${element["priority"]}</div>
                 </div>
         </div>
     </div>`;
@@ -102,15 +85,20 @@ function allowDrop(ev) {
   ev.preventDefault();
 }
 
-function moveTo(category) {
-  todos[currentDraggedElement]["category"] = category;
-  updateHTML();
+function moveTo(status) {
+  let task = arrayTasks.find((t) => t.firebaseKey === currentDraggedElement);
+  if (task) {
+    task.status = status;
+    updateHTML();
+  } else {
+    console.warn("Task nicht gefunden für ID:", currentDraggedElement);
+  }
 }
 
-function highlight(category) {
-  document.getElementById(category).classList.add("drag-area-highlight");
+function highlight(status) {
+  document.getElementById(status).classList.add("drag-area-highlight");
 }
 
-function removeHighlight(category) {
-  document.getElementById(category).classList.remove("drag-area-highlight");
+function removeHighlight(status) {
+  document.getElementById(status).classList.remove("drag-area-highlight");
 }

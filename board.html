@@ -13,7 +13,7 @@
   <link rel="shortcut icon" href="./assets/img/logo.svg" type="image/x-icon" />
 </head>
 
-<body onload="updateHTML()">
+<body onload="updateHTML(); loadTasks()">
   <div class="body">
     <div class="desktop-menu">
       <div>
@@ -115,7 +115,7 @@
             </div>
 
             <div class="board-main-box">
-              <span class="board-main-box-title">In Progress
+              <span class="board-main-box-title">In progress
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="progress" ondrop="moveTo('progress')"
