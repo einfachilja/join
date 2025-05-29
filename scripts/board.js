@@ -72,7 +72,6 @@ function generateTodoHTML(element) {
             <span class="card-category">${element["subject"]}</span>
             <span class="card-title">${element["title"]}</span>
             <span class="card-description">${element["description"]}</span>
-            <img src="${element["progress"]}" alt="">
                 <div class="card-footer">
                   <div>${element["assignedTo"]}</div>
                   <div>${element["priority"]}</div>
