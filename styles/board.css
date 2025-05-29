@@ -102,6 +102,7 @@ html {
     display: flex;
     flex-direction: column;
     padding: 16px;
+    width: 350px;
 }
 
 .board-main-box-title {
@@ -153,4 +154,17 @@ html {
 .card:hover {
     cursor: pointer;
 
+}
+
+.drag-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 200px;
+    border-radius: 24px;
+    border: 1px dashed  #0000001a;
+}
+
+.drag-area-highlight {
+    background-color: rgba(0, 0, 0, 0.05);
 }
