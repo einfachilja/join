@@ -1,4 +1,9 @@
-let contacts = [];
+let contacts = [contacts({
+      name: newContactName,
+      email: newContactEmail,
+      phone: newContactPhone,
+      color: getRandomColor(), //
+    })];
 
 // Function to add a new contact
 

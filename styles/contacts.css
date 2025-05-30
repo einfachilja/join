@@ -40,7 +40,7 @@ html {
     padding: 32px 24px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .contacts-list-header {
@@ -77,15 +77,24 @@ html {
 
 .contact {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* ✅ aligns internal items to the left */
     gap: 35px;
-    padding-top: 15px;
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 15px;
+    padding: 15px 24px;
     border-radius: 10px;
-    width: 352px;
+    width: 100%; /* ✅ full width so it aligns to the container */
+    max-width: 352px; /* ✅ optional: prevent it from stretching too far */
     height: 78px;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: 400 !important;
+    text-align: left !important; /* ✅ important for aligning text */
+    line-height: 120%;
+}
+
+.contact:hover {
+    background: linear-gradient(180deg, hsla(0, 0%, 98%, 1), hsla(0, 0%, 94%, 1));
+    cursor: pointer;
 }
 
 .profile-icon {
@@ -102,7 +111,7 @@ html {
 .name-and-email {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 
 }
 
