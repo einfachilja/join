@@ -1,80 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Board</title>
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./styles/template.css" />
-    <link rel="stylesheet" href="./styles/help.css" />
-    <link rel="stylesheet" href="./styles/board.css" />
-    <link rel="shortcut icon" href="./assets/img/logo.svg" type="image/x-icon" />
-  </head>
-  <body>
-    <div class="body">
-      <div class="desktop-menu">
-        <div>
-          <img class="logo" src="./assets/img/logo.svg" alt="logo" />
-        </div>
-        <div class="menu">
-          <a href="./summary.html">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join | Board</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./styles/template.css" />
+  <link rel="stylesheet" href="./styles/help.css" />
+  <link rel="stylesheet" href="./styles/board.css" />
+  <link rel="stylesheet" href="./styles/fonts.css">
+  <script src="./scripts/board.js"></script>
+  <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
+</head>
+
+<body onload="updateHTML(); loadTasks()">
+  <div class="body">
+    <div class="desktop-menu">
+      <div>
+        <img class="logo" src="./assets/img/logo.svg" alt="logo" />
+      </div>
+      <div class="menu">
+        <a href="./summary.html">
+          <button>
+            <img src="./assets/icons/summary.svg" alt="" />
+            <p>Summary</p>
+          </button>
+        </a>
+
+        <a href="./add-task.html">
+          <button>
+            <img src="./assets/icons/add-task.svg" alt="" />
+            <p>Add Task</p>
+          </button>
+        </a>
+
+        <a href="./board.html">
+          <button class="active">
+            <img src="./assets/icons/board.svg" alt="" />
+            <p>Board</p>
+          </button>
+        </a>
+
+        <a href="./contacts.html">
+          <button>
+            <img src="./assets/icons/contacts.svg" alt="" />
+            <p>Contacts</p>
+          </button>
+        </a>
+      </div>
+      <div class="desktop-footer">
+        <div class="desktop-footer-content">
+          <a href="./Privacy-Policy.html">
             <button>
-              <img src="./assets/icons/summary.svg" alt="" />
-              <p>Summary</p>
+              <p>Privacy Policy</p>
             </button>
           </a>
 
-          <a href="./add-task.html">
+          <a href="./legal-notice.html">
             <button>
-              <img src="./assets/icons/add-task.svg" alt="" />
-              <p>Add Task</p>
+              <p>Legal notice</p>
             </button>
           </a>
-
-          <a href="./board.html">
-            <button class="active">
-              <img src="./assets/icons/board.svg" alt="" />
-              <p>Board</p>
-            </button>
-          </a>
-
-          <a href="./contacts.html">
-            <button>
-              <img src="./assets/icons/contacts.svg" alt="" />
-              <p>Contacts</p>
-            </button>
-          </a>
-        </div>
-        <div class="desktop-footer">
-          <div class="desktop-footer-content">
-            <a href="./Privacy-Policy.html">
-              <button><p>Privacy Policy</p></button>
-            </a>
-
-            <a href="./legal-notice.html">
-              <button><p>Legal notice</p></button>
-            </a>
-          </div>
         </div>
       </div>
+    </div>
 
-      <div class="body-right">
-        <div class="header">
-          <span class="header-title">Kanban Project Management Tool</span>
-          <div class="header-right">
-            <div onclick="openSubMenu()" class="user-profile"><b>SM</b></div>
-            <a class="help-img" href="./help.html">
-              <img src="./assets/img/help.svg" alt="" />
-            </a>
-          </div>
+    <div class="body-right">
+      <div class="header">
+        <span class="header-title">Kanban Project Management Tool</span>
+        <div class="header-right">
+          <div onclick="openSubMenu()" class="user-profile"><b>SM</b></div>
+          <a class="help-img" href="./help.html">
+            <img src="./assets/img/help.svg" alt="" />
+          </a>
         </div>
-        <div id="sub_menu" class="d_none sub_menu">
-          <a href="./legal-notice.html"><p class="sub-menu-content">Legal Notice</p></a>
-          <a href="./Privacy-Policy.html"><p class="sub-menu-content">Privacy Policy</p></a>
-          <a href="./log-in.html"><p class="sub-menu-content">Log out</p></a>
-        </div>
+      </div>
+      <div id="sub_menu" class="d_none sub_menu">
+        <a href="./legal-notice.html">
+          <p class="sub-menu-content">Legal Notice</p>
+        </a>
+        <a href="./Privacy-Policy.html">
+          <p class="sub-menu-content">Privacy Policy</p>
+        </a>
+        <a href="./log-in.html">
+          <p class="sub-menu-content">Log out</p>
+        </a>
+      </div>
 
-              <main class="main">
+      <main class="main">
 
         <div class="board-container">
           <div class="board-header">
@@ -96,97 +110,36 @@
               <span class="board-main-box-title">To Do
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-              <div class="card">
-                <span class="card-category">User Story</span>
-                <span class="card-title">Contact & Imprint</span>
-                <span class="card-description">Create a contact form and imprint page...</span>
-                <img src="./assets/icons/Progress.png" alt="">
-                <div class="card-footer">
-                  <img src="./assets/icons/members.png" alt="">
-                  <img src="./assets/icons/Priority-symbols.png" alt="">
-                </div>
+              <div class="drag-area" id="open" ondrop="moveTo('open')" ondragleave="removeHighlight('open')"
+                ondragover="allowDrop(event); highlight('open')">
               </div>
             </div>
 
             <div class="board-main-box">
-              <span class="board-main-box-title">In Progress
+              <span class="board-main-box-title">In progress
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-                            <div class="card">
-                <span class="card-category">User Story</span>
-                <span class="card-title">Contact & Imprint</span>
-                <span class="card-description">Create a contact form and imprint page...</span>
-                <img src="./assets/icons/Progress.png" alt="">
-                <div class="card-footer">
-                  <img src="./assets/icons/members.png" alt="">
-                  <img src="./assets/icons/Priority-symbols.png" alt="">
-                </div>
+              <div class="drag-area" id="progress" ondrop="moveTo('progress')" ondragleave="removeHighlight('progress')"
+                ondragover="allowDrop(event); highlight('progress')">
               </div>
-                            <div class="card">
-                <span class="card-category">User Story</span>
-                <span class="card-title">Contact & Imprint</span>
-                <span class="card-description">Create a contact form and imprint page...</span>
-                <img src="./assets/icons/Progress.png" alt="">
-                <div class="card-footer">
-                  <img src="./assets/icons/members.png" alt="">
-                  <img src="./assets/icons/Priority-symbols.png" alt="">
-                </div>
-              </div>
-                            <div class="card">
-                <span class="card-category">User Story</span>
-                <span class="card-title">Contact & Imprint</span>
-                <span class="card-description">Create a contact form and imprint page...</span>
-                <img src="./assets/icons/Progress.png" alt="">
-                <div class="card-footer">
-                  <img src="./assets/icons/members.png" alt="">
-                  <img src="./assets/icons/Priority-symbols.png" alt="">
-                </div>
-              </div>
-    
             </div>
 
             <div class="board-main-box">
-              <span class="board-main-box-title">Await feedback
+              <span class="board-main-box-title">Await Feedback
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-                            <div class="card">
-                <span class="card-category">User Story</span>
-                <span class="card-title">Contact & Imprint</span>
-                <span class="card-description">Create a contact form and imprint page...</span>
-                <img src="./assets/icons/Progress.png" alt="">
-                <div class="card-footer">
-                  <img src="./assets/icons/members.png" alt="">
-                  <img src="./assets/icons/Priority-symbols.png" alt="">
-                </div>
+              <div class="drag-area" id="feedback" ondrop="moveTo('feedback')" ondragleave="removeHighlight('feedback')"
+                ondragover="allowDrop(event); highlight('feedback')">
               </div>
-
             </div>
 
             <div class="board-main-box">
               <span class="board-main-box-title">Done
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-                            <div class="card">
-                <span class="card-category">User Story</span>
-                <span class="card-title">Contact & Imprint</span>
-                <span class="card-description">Create a contact form and imprint page...</span>
-                <img src="./assets/icons/Progress.png" alt="">
-                <div class="card-footer">
-                  <img src="./assets/icons/members.png" alt="">
-                  <img src="./assets/icons/Priority-symbols.png" alt="">
-                </div>
+              <div class="drag-area" id="closed" ondrop="moveTo('closed')" ondragleave="removeHighlight('closed')"
+                ondragover="allowDrop(event); highlight('closed')">
               </div>
-                            <div class="card">
-                <span class="card-category">User Story</span>
-                <span class="card-title">Contact & Imprint</span>
-                <span class="card-description">Create a contact form and imprint page...</span>
-                <img src="./assets/icons/Progress.png" alt="">
-                <div class="card-footer">
-                  <img src="./assets/icons/members.png" alt="">
-                  <img src="./assets/icons/Priority-symbols.png" alt="">
-                </div>
-              </div>
-  
             </div>
           </div>
 
@@ -194,10 +147,11 @@
 
 
       </main>
-      </div>
     </div>
+  </div>
 
-    <script src="./scripts/desktop-template.js"></script>
-    <script src="./scripts/help.js"></script>
-  </body>
+  <script src="./scripts/desktop-template.js"></script>
+  <script src="./scripts/help.js"></script>
+</body>
+
 </html>

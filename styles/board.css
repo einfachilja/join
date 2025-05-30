@@ -1,19 +1,9 @@
-@font-face {
-    font-family: Inter-Normal;
-    ;
-    src: url(./assets/fonts/Inter-VariableFont_opsz\,wght.ttf);
-}
-
-
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
 }
-
-html {
-    font-family: Inter-Normal;
-}
-
 .board-container {
     margin-left: 300px;
     margin-top: 200px;
@@ -102,6 +92,7 @@ html {
     display: flex;
     flex-direction: column;
     padding: 16px;
+    width: 350px;
 }
 
 .board-main-box-title {
@@ -153,4 +144,17 @@ html {
 .card:hover {
     cursor: pointer;
 
+}
+
+.drag-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 200px;
+    border-radius: 24px;
+    border: 1px dashed  #0000001a;
+}
+
+.drag-area-highlight {
+    background-color: rgba(0, 0, 0, 0.05);
 }

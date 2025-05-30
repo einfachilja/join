@@ -1,0 +1,8 @@
+@font-face {
+    font-family: Inter-Normal;
+    src: url("../assets/fonts/Inter-VariableFont.ttf");
+}
+
+html {
+    font-family: 'Inter-Normal', sans-serif;
+}

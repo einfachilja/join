@@ -1,8 +1,12 @@
 let confirmPasswordTouched = false;
 
+/* Alte Sessiondaten (von Gast) löschen*/
+sessionStorage.removeItem("userName");
+sessionStorage.removeItem("userColor");
+sessionStorage.removeItem("email");
 
 /* Validates the email input format */
-function isEmailValid() { 
+function isEmailValid() {
   const email = document.getElementById("email").value.trim();
   const error = document.getElementById("email-error");
 
@@ -16,9 +20,8 @@ function isEmailValid() {
   return valid;
 }
 
-
 /* Validates the password length */
-function isPasswordValid() { 
+function isPasswordValid() {
   const password = document.getElementById("password").value.trim();
   const error = document.getElementById("password-error");
 
@@ -32,9 +35,8 @@ function isPasswordValid() {
   return valid;
 }
 
-
 /* Validates that both passwords match */
-function doPasswordsMatch() { 
+function doPasswordsMatch() {
   const password = document.getElementById("password").value.trim();
   const confirm = document.getElementById("confirm-password").value.trim();
   const error = document.getElementById("confirm-password-error");
@@ -48,7 +50,6 @@ function doPasswordsMatch() {
   error.classList.toggle("visible", !matches);
   return matches;
 }
-
 
 /* Skips match check if fields aren't ready */
 function shouldSkipPasswordMatchCheck(password, confirm) {
@@ -91,8 +92,8 @@ function registerUser() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  const emailValid = isEmailValid(); 
-  const passwordValid = isPasswordValid(); 
+  const emailValid = isEmailValid();
+  const passwordValid = isPasswordValid();
   const match = doPasswordsMatch();
   const privacy = document.getElementById("privacy-policy").checked;
 
@@ -122,7 +123,6 @@ function addColorToUserProfile() {
     "rgb(255, 70, 70)",
     "rgb(255, 187, 43)"
   ];
-
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
@@ -132,9 +132,14 @@ function saveUser(name, email, password) {
   fetch(userfirebaseURL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password,color}),
+    body: JSON.stringify({ name, email, password, color }),
   })
     .then(() => {
+      // Session speichern, damit summary.js korrekt begrüßt
+      sessionStorage.setItem("userName", name);
+      sessionStorage.setItem("userColor", color);
+      sessionStorage.setItem("email", email);
+
       showMessage("You Signed Up successfully", true);
       setTimeout(() => window.location.href = "./summary.html", 2000);
     })
@@ -156,46 +161,31 @@ function showMessage(message, isSuccess = false) {
   }, 2000);
 }
 
-/* Handles input in the email field */
 function handleEmailInput() {
   isEmailValid();
   checkFormValidity();
 }
 
-
-/* Handles input in the password field */
 function handlePasswordInput() {
-  isPasswordValid(); 
+  isPasswordValid();
   doPasswordsMatch();
   checkFormValidity();
 }
 
-
-/* Handles input in the confirm-password field */
 function handleConfirmPasswordInput() {
   doPasswordsMatch();
   checkFormValidity();
 }
 
-
-/* Adds an input or change event listener */
 function addInputListener(id, handler, event = "input") {
   const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener(event, handler);
-  }
+  if (el) el.addEventListener(event, handler);
 }
-
-
-/* Adds a focus event listener */
 function addFocusListener(id, handler) {
   const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener("focus", handler);
-  }
+  if (el) el.addEventListener("focus", handler);
 }
 
-/* Initializes all listeners and setup */
 function init() {
   initInputValidation();
   initPasswordVisibilityToggle();
@@ -211,5 +201,4 @@ function initInputValidation() {
   addInputListener("privacy-policy", checkFormValidity, "change");
 }
 
-// Start everything
 init();
