@@ -115,9 +115,15 @@ function openBoardCard(firebaseKey) {
       <span class="overlay-card-category">${task.subject}</span>
       <span class="overlay-card-title">${task.title}</span>
       <span class="overlay-card-description">${task.description}</span>
-      <div class="card-footer">
-        <div>${task.assignedTo}</div>
-        <div>${task.priority}</div>
+      <span>Due date: ${task.dueDate}</span>
+      <span>Priority:${task.priority}</span>
+      <div>
+        <span>Assigned to:</span>
+      </div>
+
+      <div class="overlay-card-footer">
+        <div>Edit</div>
+        <div>Delete</div>
       </div>
     </div>`;
 
