@@ -4,6 +4,7 @@
     box-sizing: border-box;
     text-decoration: none;
 }
+
 .board-container {
     margin-left: 300px;
     margin-top: 200px;
@@ -152,9 +153,72 @@
     gap: 16px;
     min-height: 200px;
     border-radius: 24px;
-    border: 1px dashed  #0000001a;
+    border: 1px dashed #0000001a;
 }
 
 .drag-area-highlight {
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+.board-overlay {
+    background-color: #ffffff;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 3000;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.board-overlay-card {
+    height: 700px;
+    width: 500px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    padding: 48px 40px;
+    gap: 24px;
+    box-shadow: 0px 0px 4px 0px #00000029;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    /* Transition hier setzen */
+}
+
+/* Neu: Sichtbar machen durch reinsliden */
+.board-overlay-card-show {
+    transform: translateX(0);
+    transition: 175ms ease;
+}
+
+/* Optional: Kein Transition beim Verstecken */
+.board-overlay-card-hide {
+    transform: translateX(100%);
+    transition: 175ms ease;
+}
+
+.overlay-card-category {
+    background: #0038FF;
+    color: #ffffff;
+    width: 164px;
+    height: 36px;
+    border-radius: 8px;
+    padding: 4px 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+}
+
+.overlay-card-title {
+    font-size: 61px;
+    font-weight: 700;
+}
+
+.overlay-card-description {
+    font-size: 20px;
 }

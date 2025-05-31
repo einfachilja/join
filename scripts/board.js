@@ -52,12 +52,12 @@ function updateHTML() {
     document.getElementById("feedback").innerHTML += generateTodoHTML(element);
   }
 
-  let closed = arrayTasks.filter((t) => t["status"] == "closed");
-  document.getElementById("closed").innerHTML = "";
+  let done = arrayTasks.filter((t) => t["status"] == "done");
+  document.getElementById("done").innerHTML = "";
 
-  for (let index = 0; index < closed.length; index++) {
-    const element = closed[index];
-    document.getElementById("closed").innerHTML += generateTodoHTML(element);
+  for (let index = 0; index < done.length; index++) {
+    const element = done[index];
+    document.getElementById("done").innerHTML += generateTodoHTML(element);
   }
 }
 
@@ -67,7 +67,7 @@ function startDragging(firebaseKey) {
 
 function generateTodoHTML(element) {
   return `
-    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')">
+    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
             <span class="card-category">${element["subject"]}</span>
             <span class="card-title">${element["title"]}</span>
@@ -100,4 +100,36 @@ function highlight(status) {
 
 function removeHighlight(status) {
   document.getElementById(status).classList.remove("drag-area-highlight");
+}
+
+function openBoardCard(firebaseKey) {
+  document.getElementById('board_overlay').classList.remove('board-overlay-card-hide');
+  document.getElementById('board_overlay').classList.add('board-overlay-card-show');
+  let boardOverlayRef = document.getElementById('board_overlay');
+
+  const task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
+  console.log(task); // z. B. zur Kontrolle
+
+  boardOverlayRef.innerHTML = /*html*/ `
+    <div id="board_overlay_card" class="board-overlay-card" onclick="onclickProtection(event)">
+      <span class="overlay-card-category">${task.subject}</span>
+      <span class="overlay-card-title">${task.title}</span>
+      <span class="overlay-card-description">${task.description}</span>
+      <div class="card-footer">
+        <div>${task.assignedTo}</div>
+        <div>${task.priority}</div>
+      </div>
+    </div>`;
+
+  updateHTML();
+}
+
+function closeBoardCard() {
+  document.getElementById('board_overlay').classList.remove('board-overlay-card-show');
+  document.getElementById('board_overlay').classList.add('board-overlay-card-hide');
+  updateHTML();
+}
+
+function onclickProtection(event) {
+  event.stopPropagation();
 }
