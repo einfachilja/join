@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html">
 
 <head>
   <meta charset="UTF-8" />
@@ -110,8 +110,8 @@
               <span class="board-main-box-title">To do
                 <img src="./assets/icons/plus-button.png" alt="">
               </span>
-              <div class="drag-area" id="open" ondrop="moveTo('open')" ondragleave="removeHighlight('open')"
-                ondragover="allowDrop(event); highlight('open')">
+              <div class="drag-area" id="todo" ondrop="moveTo('todo')" ondragleave="removeHighlight('todo')"
+                ondragover="allowDrop(event); highlight('todo')">
               </div>
             </div>
 
@@ -145,11 +145,11 @@
         </div>
 
         <div id="board_overlay" class="board-overlay board-overlay-card-hide" onclick="closeBoardCard()">
-          </div>
         </div>
-
-      </main>
     </div>
+
+    </main>
+  </div>
   </div>
 
   <script src="./scripts/desktop-template.js"></script>

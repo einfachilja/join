@@ -1,4 +1,4 @@
-let BASE_URL =
+const BASE_URL =
   "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
 
 let arrayTasks = [];
@@ -7,15 +7,15 @@ async function loadTasks(path = "tasks") {
   let response = await fetch(BASE_URL + path + ".json");
   let responseJson = await response.json();
 
-  console.log(responseJson); // z.B. ein Objekt mit vielen Einträgen
+  // console.log(responseJson); // z.B. ein Objekt mit vielen Einträgen
 
   arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
     return { ...task, firebaseKey };
   });
 
   if (responseJson) {
-    for (const task of arrayTasks) {
-      console.log(task); // hier bekommst du jeden einzelnen Task
+    for (let task of arrayTasks) {
+      // console.log(task); // hier bekommst du jeden einzelnen Task
     }
   } else {
     console.log("Keine Tasks gefunden");
@@ -27,20 +27,20 @@ async function loadTasks(path = "tasks") {
 let currentDraggedElement;
 
 function updateHTML() {
-  let open = arrayTasks.filter((t) => t["status"] == "open");
+  let todo = arrayTasks.filter((t) => t["status"] == "todo");
 
-  document.getElementById("open").innerHTML = "";
+  document.getElementById("todo").innerHTML = "";
 
-  for (let index = 0; index < open.length; index++) {
-    const element = open[index];
-    document.getElementById("open").innerHTML += generateTodoHTML(element);
+  for (let index = 0; index < todo.length; index++) {
+    let element = todo[index];
+    document.getElementById("todo").innerHTML += generateTodoHTML(element);
   }
 
   let progress = arrayTasks.filter((t) => t["status"] == "progress");
   document.getElementById("progress").innerHTML = "";
 
   for (let index = 0; index < progress.length; index++) {
-    const element = progress[index];
+    let element = progress[index];
     document.getElementById("progress").innerHTML += generateTodoHTML(element);
   }
 
@@ -48,7 +48,7 @@ function updateHTML() {
   document.getElementById("feedback").innerHTML = "";
 
   for (let index = 0; index < feedback.length; index++) {
-    const element = feedback[index];
+    let element = feedback[index];
     document.getElementById("feedback").innerHTML += generateTodoHTML(element);
   }
 
@@ -56,7 +56,7 @@ function updateHTML() {
   document.getElementById("done").innerHTML = "";
 
   for (let index = 0; index < done.length; index++) {
-    const element = done[index];
+    let element = done[index];
     document.getElementById("done").innerHTML += generateTodoHTML(element);
   }
 }
@@ -69,12 +69,12 @@ function generateTodoHTML(element) {
   return `
     <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
-            <span class="card-category">${element["subject"]}</span>
-            <span class="card-title">${element["title"]}</span>
-            <span class="card-description">${element["description"]}</span>
+            <span class="card-category">${element.subject}</span>
+            <span class="card-title">${element.title}</span>
+            <span class="card-description">${element.description}</span>
                 <div class="card-footer">
-                  <div>${element["assignedTo"]}</div>
-                  <div>${element["priority"]}</div>
+                  <div>${element.assignedTo}</div>
+                  <div>${element.priority}</div>
                 </div>
         </div>
     </div>`;
@@ -105,10 +105,10 @@ function removeHighlight(status) {
 function openBoardCard(firebaseKey) {
   document.getElementById('board_overlay').classList.remove('board-overlay-card-hide');
   document.getElementById('board_overlay').classList.add('board-overlay-card-show');
+  document.getElementById('html').style.overflow = "hidden";
   let boardOverlayRef = document.getElementById('board_overlay');
 
-  const task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
-  console.log(task); // z. B. zur Kontrolle
+  let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
 
   boardOverlayRef.innerHTML = /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" onclick="onclickProtection(event)">
@@ -119,11 +119,18 @@ function openBoardCard(firebaseKey) {
       <span>Priority:${task.priority}</span>
       <div>
         <span>Assigned to:</span>
+          ${task.assignedTo}
       </div>
-
+      <div>
+        <span>Subtasks:</span>
+        <div>
+          ${task.subtask}
+        </div>
+      </div>
       <div class="overlay-card-footer">
-        <div>Edit</div>
-        <div>Delete</div>
+        <div onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
+        <img src="./assets/icons/board-separator-icon.svg" alt="">
+        <div><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
       </div>
     </div>`;
 
@@ -133,9 +140,31 @@ function openBoardCard(firebaseKey) {
 function closeBoardCard() {
   document.getElementById('board_overlay').classList.remove('board-overlay-card-show');
   document.getElementById('board_overlay').classList.add('board-overlay-card-hide');
+  document.getElementById('html').style.overflow = "";
   updateHTML();
 }
 
 function onclickProtection(event) {
   event.stopPropagation();
+}
+
+async function deleteTask(firebaseKey) {
+  try {
+    let response = await fetch(`${BASE_URL}tasks/${firebaseKey}.json`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Löschen fehlgeschlagen");
+    }
+
+    // Task aus arrayTasks entfernen
+    arrayTasks = arrayTasks.filter(task => task.firebaseKey !== firebaseKey);
+
+    // Overlay schließen und UI aktualisieren
+    closeBoardCard();
+    updateHTML();
+  } catch (error) {
+    console.error("Fehler beim Löschen des Tasks:", error);
+  }
 }
