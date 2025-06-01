@@ -1,31 +1,100 @@
-const BASE_URL =
-  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
+const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
 
 let arrayTasks = [];
 
+/* ========== LOAD TASKS FROM FIREBASE ========== */
 async function loadTasks(path = "tasks") {
   let response = await fetch(BASE_URL + path + ".json");
   let responseJson = await response.json();
 
-  // console.log(responseJson); // z.B. ein Objekt mit vielen Einträgen
-
   arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
     return { ...task, firebaseKey };
   });
-
-  if (responseJson) {
-    for (let task of arrayTasks) {
-      // console.log(task); // hier bekommst du jeden einzelnen Task
-    }
-  } else {
-    console.log("Keine Tasks gefunden");
-  }
-
   updateHTML(arrayTasks);
+}
+
+/* ========== DELETE TASK FROM FIREBASE ========== */
+async function deleteTask(firebaseKey) {
+  try {
+    let response = await fetch(`${BASE_URL}tasks/${firebaseKey}.json`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Löschen fehlgeschlagen");
+    }
+
+    // Task aus arrayTasks entfernen
+    arrayTasks = arrayTasks.filter(task => task.firebaseKey !== firebaseKey);
+
+    // Overlay schließen und UI aktualisieren
+    closeBoardCard();
+    updateHTML();
+    countTaskStatus(arrayTasks);
+  } catch (error) {
+    console.error("Fehler beim Löschen des Tasks:", error);
+  }
+}
+
+/* ========== MOVE TASK STATUS IN FIREBASE ========== */
+async function moveTo(status) {
+  let task = arrayTasks.find((t) => t.firebaseKey === currentDraggedElement);
+  if (task) {
+    task.status = status;
+
+    // Statusänderung in Firebase speichern
+    try {
+      await fetch(`${BASE_URL}tasks/${task.firebaseKey}.json`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: status })
+      });
+    } catch (error) {
+      console.error("Fehler beim Aktualisieren des Status in Firebase:", error);
+    }
+
+    updateHTML();
+  } else {
+    console.warn("Task nicht gefunden für ID:", currentDraggedElement);
+  }
 }
 
 let currentDraggedElement;
 
+function startDragging(firebaseKey) {
+  currentDraggedElement = firebaseKey;
+}
+
+function generateTodoHTML(element) {
+  return `
+    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
+        <div class="card">
+            <span class="card-category">${element.subject}</span>
+            <span class="card-title">${element.title}</span>
+            <span class="card-description">${element.description}</span>
+                <div class="card-footer">
+                  <div>${element.assignedTo}</div>
+                  <div>${element.priority}</div>
+                </div>
+        </div>
+    </div>`;
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function highlight(status) {
+  document.getElementById(status).classList.add("drag-area-highlight");
+}
+
+function removeHighlight(status) {
+  document.getElementById(status).classList.remove("drag-area-highlight");
+}
+
+/* ========== UPDATE BOARD PAGE ========== */
 function updateHTML() {
   let todo = arrayTasks.filter((t) => t["status"] == "todo");
 
@@ -61,47 +130,7 @@ function updateHTML() {
   }
 }
 
-function startDragging(firebaseKey) {
-  currentDraggedElement = firebaseKey;
-}
-
-function generateTodoHTML(element) {
-  return `
-    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
-        <div class="card">
-            <span class="card-category">${element.subject}</span>
-            <span class="card-title">${element.title}</span>
-            <span class="card-description">${element.description}</span>
-                <div class="card-footer">
-                  <div>${element.assignedTo}</div>
-                  <div>${element.priority}</div>
-                </div>
-        </div>
-    </div>`;
-}
-
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function moveTo(status) {
-  let task = arrayTasks.find((t) => t.firebaseKey === currentDraggedElement);
-  if (task) {
-    task.status = status;
-    updateHTML();
-  } else {
-    console.warn("Task nicht gefunden für ID:", currentDraggedElement);
-  }
-}
-
-function highlight(status) {
-  document.getElementById(status).classList.add("drag-area-highlight");
-}
-
-function removeHighlight(status) {
-  document.getElementById(status).classList.remove("drag-area-highlight");
-}
-
+/* ========== OPEN AND CLOSE OVERLAY ========== */
 function openBoardCard(firebaseKey) {
   document.getElementById('board_overlay').classList.remove('board-overlay-card-hide');
   document.getElementById('board_overlay').classList.add('board-overlay-card-show');
@@ -148,23 +177,17 @@ function onclickProtection(event) {
   event.stopPropagation();
 }
 
-async function deleteTask(firebaseKey) {
-  try {
-    let response = await fetch(`${BASE_URL}tasks/${firebaseKey}.json`, {
-      method: "DELETE",
-    });
+// function countTaskStatus(arrayTasks) {
 
-    if (!response.ok) {
-      throw new Error("Löschen fehlgeschlagen");
-    }
+//   let sumTotalTasks = arrayTasks.length;
+//   let sumStatusTodo = arrayTasks.filter((task) => task.status == "todo");
+//   let sumStatusInProgress = arrayTasks.filter((task) => task.status == "progress");
+//   let sumStatusAwaitFeedback = arrayTasks.filter((task) => task.status == "feedback");
+//   let sumStatusDone = arrayTasks.filter((task) => task.status == "done");
 
-    // Task aus arrayTasks entfernen
-    arrayTasks = arrayTasks.filter(task => task.firebaseKey !== firebaseKey);
-
-    // Overlay schließen und UI aktualisieren
-    closeBoardCard();
-    updateHTML();
-  } catch (error) {
-    console.error("Fehler beim Löschen des Tasks:", error);
-  }
-}
+//   console.log("Gesamt Tasks: ", sumTotalTasks);
+//   console.log("Todo-Tasks: ", sumStatusTodo.length);
+//   console.log("In Progress-Tasks: ", sumStatusInProgress.length);
+//   console.log("Await feedback-Tasks: ", sumStatusAwaitFeedback.length);
+//   console.log("Done-Tasks: ", sumStatusDone.length);
+// }
