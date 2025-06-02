@@ -63,7 +63,7 @@ function shouldSkipPasswordMatchCheck(password, confirm) {
 
 /* Toggles password visibility on lock icon click */
 function initPasswordVisibilityToggle() {
-  document.querySelectorAll(".toggle-password").forEach(icon => {
+  document.querySelectorAll(".toggle-password").forEach((icon) => {
     icon.addEventListener("click", () => {
       const targetId = icon.getAttribute("data-target");
       const input = document.getElementById(targetId);
@@ -82,7 +82,8 @@ function checkFormValidity() {
   const passwordsMatch = doPasswordsMatch();
   const privacyPolicy = document.getElementById("privacy-policy").checked;
 
-  const allValid = name && emailValid && passwordValid && passwordsMatch && privacyPolicy;
+  const allValid =
+    name && emailValid && passwordValid && passwordsMatch && privacyPolicy;
   document.getElementById("register-btn").disabled = !allValid;
 }
 
@@ -121,7 +122,7 @@ function addColorToUserProfile() {
     "rgb(195, 255, 43)",
     "rgb(255, 230, 43)",
     "rgb(255, 70, 70)",
-    "rgb(255, 187, 43)"
+    "rgb(255, 187, 43)",
   ];
   return colors[Math.floor(Math.random() * colors.length)];
 }
@@ -141,7 +142,7 @@ function saveUser(name, email, password) {
       sessionStorage.setItem("email", email);
 
       showMessage("You Signed Up successfully", true);
-      setTimeout(() => window.location.href = "./summary.html", 2000);
+      setTimeout(() => (window.location.href = "./summary.html"), 2000);
     })
     .catch(console.error);
 }
@@ -151,7 +152,9 @@ function showMessage(message, isSuccess = false) {
   const messageBox = document.getElementById("message-box");
 
   messageBox.textContent = message;
-  messageBox.style.backgroundColor = isSuccess ? "rgb(42, 54, 71)" : "rgb(220, 53, 69)";
+  messageBox.style.backgroundColor = isSuccess
+    ? "rgb(42, 54, 71)"
+    : "rgb(220, 53, 69)";
   messageBox.classList.add("visible");
   messageBox.classList.remove("d-none");
 
@@ -197,7 +200,7 @@ function initInputValidation() {
   addInputListener("email", handleEmailInput);
   addInputListener("password", handlePasswordInput);
   addInputListener("confirm-password", handleConfirmPasswordInput);
-  addFocusListener("confirm-password", () => confirmPasswordTouched = true);
+  addFocusListener("confirm-password", () => (confirmPasswordTouched = true));
   addInputListener("privacy-policy", checkFormValidity, "change");
 }
 

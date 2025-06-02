@@ -21,7 +21,6 @@ function initLoaderAnimation() {
   }, 500);
 }
 
-
 /* ========== VALIDATION ========== */
 function validateLoginEmail() {
   const emailInput = document.getElementById("email");
@@ -44,7 +43,9 @@ function validateLoginEmail() {
 function showMessage(message, isSuccess = false) {
   const messageBox = document.getElementById("message-box");
   messageBox.textContent = message;
-  messageBox.style.backgroundColor = isSuccess ? "rgb(42, 54, 71)" : "rgb(220, 53, 69)";
+  messageBox.style.backgroundColor = isSuccess
+    ? "rgb(42, 54, 71)"
+    : "rgb(220, 53, 69)";
   messageBox.classList.remove("d-none");
   messageBox.style.display = "block";
 
@@ -67,14 +68,14 @@ function login() {
 
 function fetchUsers(email, password) {
   fetch(userfirebaseURL)
-    .then(response => response.json())
-    .then(users => checkLogin(users, email, password))
+    .then((response) => response.json())
+    .then((users) => checkLogin(users, email, password))
     .catch(console.error);
 }
 
 function checkLogin(users, email, password) {
   const userList = Object.values(users || {});
-  const user = userList.find(u => u.email === email);
+  const user = userList.find((u) => u.email === email);
 
   if (!user) {
     showMessage("E-Mail address not found!", false);
@@ -110,7 +111,7 @@ function guestLogin() {
 
 /* ========== PASSWORD VISIBILITY ========== */
 function initPasswordVisibilityToggle() {
-  document.querySelectorAll(".toggle-password").forEach(icon => {
+  document.querySelectorAll(".toggle-password").forEach((icon) => {
     icon.addEventListener("click", () => {
       const targetId = icon.getAttribute("data-target");
       const input = document.getElementById(targetId);
@@ -146,4 +147,3 @@ function addInputListener(id, handler, event = "input") {
     el.addEventListener(event, handler);
   }
 }
-

@@ -1,4 +1,5 @@
-const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
+const BASE_URL =
+  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
 
 let arrayTasks = [];
 
@@ -25,7 +26,7 @@ async function deleteTask(firebaseKey) {
     }
 
     // Task aus arrayTasks entfernen
-    arrayTasks = arrayTasks.filter(task => task.firebaseKey !== firebaseKey);
+    arrayTasks = arrayTasks.filter((task) => task.firebaseKey !== firebaseKey);
 
     // Overlay schließen und UI aktualisieren
     closeBoardCard();
@@ -47,9 +48,9 @@ async function moveTo(status) {
       await fetch(`${BASE_URL}tasks/${task.firebaseKey}.json`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: status })
+        body: JSON.stringify({ status: status }),
       });
     } catch (error) {
       console.error("Fehler beim Aktualisieren des Status in Firebase:", error);
@@ -132,12 +133,16 @@ function updateHTML() {
 
 /* ========== OPEN AND CLOSE OVERLAY ========== */
 function openBoardCard(firebaseKey) {
-  document.getElementById('board_overlay').classList.remove('board-overlay-card-hide');
-  document.getElementById('board_overlay').classList.add('board-overlay-card-show');
-  document.getElementById('html').style.overflow = "hidden";
-  let boardOverlayRef = document.getElementById('board_overlay');
+  document
+    .getElementById("board_overlay")
+    .classList.remove("board-overlay-card-hide");
+  document
+    .getElementById("board_overlay")
+    .classList.add("board-overlay-card-show");
+  document.getElementById("html").style.overflow = "hidden";
+  let boardOverlayRef = document.getElementById("board_overlay");
 
-  let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
+  let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
 
   boardOverlayRef.innerHTML = /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" onclick="onclickProtection(event)">
@@ -169,9 +174,13 @@ function openBoardCard(firebaseKey) {
 }
 
 function closeBoardCard() {
-  document.getElementById('board_overlay').classList.remove('board-overlay-card-show');
-  document.getElementById('board_overlay').classList.add('board-overlay-card-hide');
-  document.getElementById('html').style.overflow = "";
+  document
+    .getElementById("board_overlay")
+    .classList.remove("board-overlay-card-show");
+  document
+    .getElementById("board_overlay")
+    .classList.add("board-overlay-card-hide");
+  document.getElementById("html").style.overflow = "";
   updateHTML();
 }
 
