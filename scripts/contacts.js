@@ -1,18 +1,11 @@
-let contacts = [contacts({
-      name: newContactName,
-      email: newContactEmail,
-      phone: newContactPhone,
-      color: getRandomColor(), //
-    })];
-
-// Function to add a new contact
+let contacts = [];
 
 function getRandomColor() {
   const colors = [
     "hsl(28, 100%, 50%)",
     "hsl(85, 76%, 53%)",
-    "hsl(200, 100%, 50%)", 
-    "hsl(328, 99%, 68%)",                
+    "hsl(200, 100%, 50%)",
+    "hsl(328, 99%, 68%)",
     "hsl(360, 99%, 64%)",
     "hsl(227, 100%, 50%)",
     "hsl(270, 100%, 58%)",
@@ -41,6 +34,7 @@ function addNewContact() {
 
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
+  contactListRef.innerHTML = '';
 
   // Step 1: Sort contacts alphabetically by first name
   contacts.sort((a, b) => {
