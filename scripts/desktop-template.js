@@ -5,25 +5,19 @@ function openSubMenu(){
 }
 
 function setUserInitials() {
-  const name = sessionStorage.getItem("userName") || "Guest";
-  const initialsElement = document.getElementById("user-initials");
+  const userName = sessionStorage.getItem("userName") || "Guest";
+  const initialsField = document.getElementById("user-initials");
+  const profileCircle = document.querySelector(".user-profile");
+  if (!initialsField || !profileCircle) return;
 
-  if (!initialsElement) return;
+  const nameParts = userName.trim().split(" ");
+  const initials = userName.toLowerCase() === "guest"
+    ? "G"
+    : (nameParts[0][0] + (nameParts.length > 1 ? nameParts.at(-1)[0] : "")).toUpperCase();
+  initialsField.textContent = initials;
 
-  if (name.toLowerCase() === "guest") {
-    initialsElement.textContent = "G";
-    return;
-  }
-
-  const parts = name.trim().split(" ").filter(Boolean);
-  
-  if (parts.length === 1) {
-    initialsElement.textContent = parts[0].charAt(0).toUpperCase();
-  } else {
-    const firstInitial = parts[0].charAt(0).toUpperCase();
-    const lastInitial = parts[parts.length - 1].charAt(0).toUpperCase();
-    initialsElement.textContent = firstInitial + lastInitial;
-  }
+  const userColor = sessionStorage.getItem("userColor");
+  if (userColor) initialsField.style.color = userColor;
 }
 
 window.addEventListener("load", () => {
