@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 function openSubMenu(){
     let supMenuRef = document.getElementById('sub_menu');
     supMenuRef.classList.toggle('d_none');
@@ -24,10 +23,3 @@ function setUserInitials() {
 window.addEventListener("load", () => {
   setUserInitials();
 });
-=======
-function openSubMenu() {
-  let supMenuRef = document.getElementById("sub_menu");
-  supMenuRef.classList.toggle("d_none");
-  supMenuRef.classList.toggle("sub-menu");
-}
->>>>>>> 56777d8 (chore: apply Prettier formatting to scripts)
