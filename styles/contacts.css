@@ -26,7 +26,6 @@
 .all-contacts {
     overflow-y: auto;
     flex-grow: 1;
-    width: 100%;
     padding: 32px 24px;
     display: flex;
     flex-direction: column;
@@ -73,7 +72,6 @@
     border-radius: 10px;
     width: 100%; /* ✅ full width so it aligns to the container */
     max-width: 352px; /* ✅ optional: prevent it from stretching too far */
-    height: 78px;
     background-color: transparent;
     border: none;
     font-size: 18px;
@@ -85,6 +83,15 @@
 .contact:hover {
     background: linear-gradient(180deg, hsla(0, 0%, 98%, 1), hsla(0, 0%, 94%, 1));
     cursor: pointer;
+}
+
+.open-contact{
+    background-color: hsl(216, 25%, 22%);
+    color: hsla(0, 0%, 100%, 1) !important;
+
+    .contact-name{
+        color: hsla(0, 0%, 100%, 1) !important;
+    }
 }
 
 .profile-icon {

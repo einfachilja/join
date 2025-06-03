@@ -34,7 +34,7 @@ function addNewContact() {
 
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
-  contactListRef.innerHTML = '';
+  contactListRef.innerHTML = "";
 
   // Step 1: Sort contacts alphabetically by first name
   contacts.sort((a, b) => {
@@ -69,7 +69,7 @@ function renderContacts() {
 
     // Add the contact HTML
     contactListRef.innerHTML += `
-    <div class="contact">
+    <div onclick="openThisContact()" class="contact" id="contact">
         <div class="profile-icon" style="background-color: ${contact.color};">${initials}</div>
         <div class="name-and-email">
             <div class="contact-name">${contact.name}</div>
@@ -78,6 +78,14 @@ function renderContacts() {
     </div>
 `;
   });
+}
+
+function openThisContact() {
+  let openThisContactRef = document.getElementById("contact");
+  openThisContactRef.classList.toggle("open-contact");
+
+  // open the info template of this contact 
+  let openThisContactRefTemplate += get
 }
 
 // overlay

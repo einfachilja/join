@@ -129,3 +129,9 @@ function overlayEditTemplate() {
           </div>
           `;
 }
+
+function getOpenContactTemplate(){
+  return /*html*/ `
+  
+    `
+}
