@@ -8,7 +8,7 @@ let assignedTo = null; // ID of selected contact
 
 /**
  * Set selected priority and update button classes.
- * English: sets the clicked priority button to active.
+ * sets the clicked priority button to active.
  */
 function setPriority(prio) {
   selectedPriority = prio;
@@ -19,7 +19,7 @@ function setPriority(prio) {
 
 /**
  * Toggle dropdown visibility for "Assigned to".
- * English: prevents event from bubbling and toggles class.
+ * prevents event from bubbling and toggles class.
  */
 function toggleDropdown(ev) {
   ev.stopPropagation();
@@ -28,7 +28,7 @@ function toggleDropdown(ev) {
 
 /**
  * Close the dropdown when clicking outside.
- * English: always hide the list.
+ * always hide the list.
  */
 function closeDropdown() {
   document.getElementById("assignedList").classList.add("hidden");
@@ -36,18 +36,18 @@ function closeDropdown() {
 
 /**
  * Fetch all contacts from Firebase and populate the dropdown.
- * English: transforms response into array and appends <li> items.
+ * transforms response into array and appends <li> items.
  */
 function populateContacts() {
   fetch(
-    "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users.json",
+    "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users.json"
   )
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
     })
     .then((data) => {
-      // English: convert object of users to array with id+name
+      // convert object of users to array with id+name
       contacts = Object.entries(data || {}).map(([id, user]) => ({
         id,
         name: user.name,
@@ -67,28 +67,28 @@ function populateContacts() {
 
 /**
  * Handle selecting a contact: set label and close dropdown.
- * English: update assignedTo and refresh create-button state.
+ * update assignedTo and refresh create-button state.
  */
 function selectContact(contact) {
   assignedTo = contact.id;
   const label = document.getElementById("assignedLabel");
-  label.textContent = contact.name; // English: show selected name
+  label.textContent = contact.name; // show selected name
   const arrow = document.createElement("span");
   arrow.className = "dropdown-arrow";
-  arrow.textContent = "⌄"; // English: re-add arrow icon
+  arrow.textContent = "⌄"; // re-add arrow icon
   label.appendChild(arrow);
   document.getElementById("assignedList").classList.add("hidden");
-  toggleCreateBtn(); // English: check if form can be submitted now
+  toggleCreateBtn(); // check if form can be submitted now
 }
 
 /**
  * Add a new subtask to the list and clear input.
- * English: push to array and append <li> element.
+ * push to array and append <li> element.
  */
 function addSubtask() {
   const inp = document.getElementById("subtaskInput");
   const txt = inp.value.trim();
-  if (!txt) return; // English: do nothing on empty
+  if (!txt) return; // do nothing on empty
   subtasks.push(txt);
   const li = document.createElement("li");
   li.textContent = txt;
@@ -98,7 +98,7 @@ function addSubtask() {
 
 /**
  * Validate the date input: if empty or invalid, add error class.
- * English: if type=date, only check non-empty; else regex.
+ * if type=date, only check non-empty; else regex.
  */
 function validateDate() {
   const el = document.getElementById("dueDate");
@@ -111,7 +111,7 @@ function validateDate() {
 
 /**
  * Check toggle of Create Task button.
- * English: enable only if title + date + category + assignedTo are set.
+ * enable only if title + date + category + assignedTo are set.
  */
 function toggleCreateBtn() {
   const title = document.getElementById("title").value.trim();
@@ -127,7 +127,7 @@ function toggleCreateBtn() {
 
 /**
  * Regex check for DD/MM/YYYY.
- * English: validate string matches logical calendar date.
+ * validate string matches logical calendar date.
  */
 function isValidDate(str) {
   const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(str);
@@ -141,7 +141,7 @@ function isValidDate(str) {
 
 /**
  * Build the task object and log to console.
- * English: simply assemble fields; actual push to backend not implemented here.
+ * simply assemble fields; actual push to backend not implemented here.
  */
 function createTask() {
   const task = {
@@ -154,9 +154,9 @@ function createTask() {
     subtasks: [...subtasks],
   };
   console.log("Task ready:", task);
-  alert("Task logged to console."); // English: user feedback
+  alert("Task logged to console."); // user feedback
 }
 
 // --- Initialize on load ---
-setPriority("medium"); // English: default priority selection
-populateContacts(); // English: fetch and render contacts dropdown
+setPriority("medium"); // default priority selection
+populateContacts(); // fetch and render contacts dropdown
