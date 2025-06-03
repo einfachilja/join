@@ -4,6 +4,8 @@
     text-decoration: none;
 }
 
+
+
 .board-container {
     margin-left: 300px;
     margin-top: 200px;
@@ -169,7 +171,7 @@
     top: 0;
     bottom: 0;
     z-index: 3000;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(22, 31, 44, 0.294);
     display: flex;
     align-items: center;
 }
@@ -191,13 +193,13 @@
 /* Neu: Sichtbar machen durch reinsliden */
 .board-overlay-card-show {
     transform: translateX(0);
-    transition: 175ms ease;
+    transition: transform 0.4s ease-in-out;
 }
 
 /* Optional: Kein Transition beim Verstecken */
 .board-overlay-card-hide {
     transform: translateX(100%);
-    transition: 175ms ease;
+    transition: transform 0.4s ease-in-out;
 }
 
 .overlay-card-category {
@@ -236,3 +238,8 @@
     gap: 8px;
     cursor: pointer;
 }
+
+.d-none {
+    display: none;
+}
+
