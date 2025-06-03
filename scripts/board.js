@@ -142,9 +142,9 @@ function openBoardCard(firebaseKey) {
   boardOverlayRef.innerHTML = /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" onclick="onclickProtection(event)">
       <span class="overlay-card-category">${task.subject}</span>
-      <span class="overlay-card-title">${task.title}</span>
-      <span class="overlay-card-description">${task.description}</span>
-      <span>Due date: ${task.dueDate}</span>
+      <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
+      <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
+      <span id="due_date">Due date: ${task.dueDate}</span>
       <span>Priority:${task.priority}</span>
       <div>
         <span>Assigned to:</span>
@@ -157,10 +157,12 @@ function openBoardCard(firebaseKey) {
         </div>
       </div>
       <div class="overlay-card-footer">
-        <div onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
+        <div id="delete_btn" onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
         <img src="./assets/icons/board-separator-icon.svg" alt="">
-        <div><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
+        <div id="edit_btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
+        <div onclick="saveEditTask('${task.firebaseKey}')"><img src="./assets/icons/board-edit-icon.svg" alt="">OK</div>
       </div>
+     
     </div>`;
 
   updateHTML();
@@ -176,6 +178,67 @@ function closeBoardCard() {
 function onclickProtection(event) {
   event.stopPropagation();
 }
+
+
+function editTask() {
+
+  document.getElementById("overlay_card_title").contentEditable = "true";
+  document.getElementById("overlay_card_title").style.border = "1px solid rgba(0, 0, 0, 0.1)";
+  document.getElementById("overlay_card_title").style.borderRadius = "10px";
+
+
+  document.getElementById("overlay_card_description").contentEditable = "true";
+  document.getElementById("overlay_card_description").style.border = "1px solid rgba(0, 0, 0, 0.1)";
+  document.getElementById("overlay_card_description").style.borderRadius = "10px";
+
+  document.getElementById("delete_btn").classList.add("d-none");
+  document.getElementById("edit_btn").classList.add("d-none");
+}
+
+/* ========== EDIT TASK IN FIREBASE ========== */
+async function saveEditTask(firebaseKey) {
+  let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
+  if (!task) {
+    console.warn("Task nicht gefunden für ID:", firebaseKey);
+    return;
+  }
+
+  document.getElementById("overlay_card_title").contentEditable = "false";
+  document.getElementById("overlay_card_description").contentEditable = "false";
+  document.getElementById("due_date").contentEditable = "false";
+
+  const newTitle = document.getElementById("overlay_card_title").innerHTML;
+  const newDescription = document.getElementById("overlay_card_description").innerHTML;
+  const newDueDate = document.getElementById("overlay_card_description").innerHTML;
+
+  const updatedTask = {
+    ...task,
+    title: newTitle,
+    description: newDescription,
+    // dueDate: newDueDate,
+    // priority: newPriority,
+    // assignedTo: newAssignedTo,
+    // subtask: newSubtask
+  };
+
+  try {
+    await fetch(`${BASE_URL}tasks/${firebaseKey}.json`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(updatedTask)
+    });
+
+    // Lokales Array aktualisieren
+    arrayTasks = arrayTasks.map(t => t.firebaseKey === firebaseKey ? updatedTask : t);
+    updateHTML();
+    openBoardCard(firebaseKey); // Overlay mit aktualisierten Daten neu laden
+  } catch (error) {
+    console.error("Fehler beim Bearbeiten des Tasks:", error);
+  }
+}
+
 
 // function countTaskStatus(arrayTasks) {
 
