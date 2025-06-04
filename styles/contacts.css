@@ -85,6 +85,12 @@
     cursor: pointer;
 }
 
+.contact.open-contact:hover {
+  background: hsl(216, 25%, 22%) !important;
+  color: hsla(0, 0%, 100%, 1) !important;
+  cursor: default;
+}
+
 .open-contact{
     background-color: hsl(216, 25%, 22%);
     color: hsla(0, 0%, 100%, 1) !important;

@@ -55,7 +55,6 @@ function renderContacts() {
     const nameParts = contact.name.trim().split(" ");
     const firstNameInitial = nameParts[0][0].toUpperCase();
 
-    // If we encounter a new initial, render an alphabet header
     if (firstNameInitial !== currentInitial) {
       currentInitial = firstNameInitial;
       contactListRef.innerHTML += `
@@ -66,23 +65,36 @@ function renderContacts() {
             `;
     }
 
-    // Extract initials for profile icon
     let initials = nameParts[0][0].toUpperCase();
     if (nameParts.length >= 2) {
       initials += nameParts[1][0].toUpperCase();
     }
 
-    // Add the contact HTML
     contactListRef.innerHTML += `
-    <div class="contact">
+    <div onclick="styleContactOnclick(this)" class="contact">
         <div class="profile-icon" style="background-color: ${contact.color};">${initials}</div>
         <div class="name-and-email">
             <div class="contact-name">${contact.name}</div>
-            <a href="mailto:${contact.email}">${contact.email}</a>
+            <a>${contact.email}</a>
         </div>
     </div>
 `;
   });
+}
+
+function styleContactOnclick(element) {
+  document.querySelectorAll('.contact.open-contact').forEach((element) => {
+    element.classList.remove('open-contact');
+  });
+
+  element.classList.add('open-contact');
+  showContactInfo();
+}
+
+function showContactInfo() {
+  let contactInfoRef = document.getElementById("open_contact_Template");
+  contactInfoRef.innerHTML = ""; 
+  contactInfoRef.innerHTML += getOpenContactTemplate(); 
 }
 
 // overlay
