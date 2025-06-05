@@ -1,0 +1,192 @@
+@media(max-width:520px) {
+    #content {
+        padding: 0 !important;
+    }
+
+    .add-task-title-input {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: start;
+    }
+
+    .add-task-title-input input {
+        width: 80%;
+    }
+
+    .add-task-title p {
+        width: 80%;
+    }
+
+    .add-task-description-div {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: start;
+    }
+    .add-task-description-div textarea{
+        width: 80% !important;
+    }
+    .add-task-description-div p{
+        width: 80%;
+    }
+    .assigned-div{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: start;
+    }
+    .assigned-div p {
+        width: 80%;
+    }
+    .input-container{
+        width: 80% !important;
+    }
+    .dropdown-menu{
+        width: 80% !important;
+    }
+    .prio-box-div{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: start;
+    }
+    .date-div{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: start;
+    }
+    .date-div p{
+        width: 80%;
+    }
+    .date-div input{
+        width: 80%;
+    }
+    .prio-box{
+        width: 80% !important;
+        text-align: center;
+    }
+    .prio-box-div p{
+        width: 80% !important;
+    }
+    .custom-select{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: start;
+    }
+    .custom-select select{
+        width: 80% !important;;
+    }
+    .custom-select-p{
+        width: 80% !important;;
+
+    }
+    .arrow-category-hover {
+        right: 53px !important;
+    }
+    .subtaks-container-div{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: start;
+    }
+    .subtaks-container-div p{
+        width: 80%;
+        padding-top: 50px;
+    }
+    .subtasks{
+        width: 80%;
+    }
+    .buttons-bottom-right{
+        width: 60%
+    }
+
+    .error-message{
+        width: 80%;
+    }
+}
+
+@media(max-width:400px) {
+    .add-task-title-input input {
+        width: 65%;
+    }
+
+    .add-task-title p {
+        width: 65%;
+    }
+    .add-task-description-div textarea{
+        width: 65% !important;
+    }
+    .add-task-description-div p{
+        width: 65%;
+    }
+    #description-input{
+        min-height: 90px;
+    }
+    .assigned-div p {
+        width: 65%;
+    }
+    .input-container{
+        width: 65% !important;
+    }
+    .dropdown-menu{
+        width: 65% !important;
+    }
+    .date-div p{
+        width: 65%;
+    }
+    .date-div input{
+        width: 65%;
+    }
+    .prio-box{
+        width: 65% !important;
+        text-align: center;
+    }
+    .prio-box-div p{
+        width: 65% !important;
+    }
+    .custom-select select{
+        width: 65% !important;;
+    }
+    .custom-select-p{
+        width: 65% !important;;
+
+    }
+    .arrow-category-hover {
+        right: 83px !important;
+    }
+    .subtaks-container-div p{
+        width: 65%;
+        padding-top: 50px;
+    }
+    .subtasks{
+        width: 65%;
+    }
+    .buttons-bottom-right{
+        width: 60%
+    }
+    .error-message{
+        width: 65%;
+    }
+    
+}
+@media (min-width: 2000px){
+  
+    
+}
