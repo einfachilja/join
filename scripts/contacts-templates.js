@@ -130,46 +130,52 @@ function overlayEditTemplate() {
           `;
 }
 
-function getOpenContactTemplate() {
+function getOpenContactTemplate(contact) {
+  const initials = contact.name
+    .split(" ")
+    .map(n => n[0].toUpperCase())
+    .join("")
+    .slice(0, 2);
+
   return /*html*/ `
-  <div  class="my-contact-information-section">
-              <div class="profile-badge-and-name">
-              <div class="my-profile-icon">TW</div>
+    <div class="my-contact-information-section">
+      <div class="profile-badge-and-name">
+        <div class="my-profile-icon" style="background-color: ${contact.color};">${initials}</div>
 
-              <div class="name-section">
-                <span class="user-name">Tanja Wolf</span>
+        <div class="name-section">
+          <span class="user-name">${contact.name}</span>
 
-                <div class="edit-delete-section">
-                  <button onclick="toggleEditOverlay()" class="edit-delete-sub-section">
-                    <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
-                    <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
-                    <span>Edit</span>
-                  </button>
+          <div class="edit-delete-section">
+            <button onclick="toggleEditOverlay()" class="edit-delete-sub-section">
+              <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
+              <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
+              <span>Edit</span>
+            </button>
 
-                  <button class="edit-delete-sub-section">
-                    <img class="icon-default" src="./assets/img/contacts-icons/delete.svg" />
-                    <img class="icon-hover" src="./assets/img/contacts-icons/delete-blue.svg" />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <button class="edit-delete-sub-section" onclick="deleteContact('${contact.firebaseKey}')">
+              <img class="icon-default" src="./assets/img/contacts-icons/delete.svg" />
+              <img class="icon-hover" src="./assets/img/contacts-icons/delete-blue.svg" />
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
-            <div class="Contact-information-div">
-              <span>Contact Information</span>
-            </div>
+      <div class="Contact-information-div">
+        <span>Contact Information</span>
+      </div>
 
-            <div class="email-and-phone-section">
-              <div class="email-and-phone-sub-section">
-                <div>Email</div>
-                <a href="mailto:wolf@gmail.com">wolf@gmail.com</a>
-              </div>
+      <div class="email-and-phone-section">
+        <div class="email-and-phone-sub-section">
+          <div>Email</div>
+          <a href="mailto:${contact.email}">${contact.email}</a>
+        </div>
 
-              <div class="email-and-phone-sub-section">
-                <div>Phone</div>
-                <a href="tel:0049 111111111">+49 111111111</a>
-              </div>
-            </div>
-            </div>
-    `;
+        <div class="email-and-phone-sub-section">
+          <div>Phone</div>
+          <a href="tel:${contact.phone}">${contact.phone}</a>
+        </div>
+      </div>
+    </div>
+  `;
 }

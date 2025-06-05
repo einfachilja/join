@@ -1,3 +1,5 @@
+const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
+
 let contacts = [];
 
 function getRandomColor() {
@@ -13,6 +15,7 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+/* ============== ADD CONTACTS ============== */
 function addNewContact() {
   const name = new_contact_name.value.trim();
   const email = new_contact_email.value.trim();
@@ -28,15 +31,26 @@ function addNewContact() {
   toggleOff();
 }
 
+/* ============== LOAD CONTACTS ============== */
 function loadContacts() {
   fetch("https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/contacts.json")
     .then(r => r.json())
     .then(d => {
-      contacts = Object.values(d || {});
+      contacts = [];
+
+      for (let key in d) {
+        contacts.push({ ...d[key], firebaseKey: key });
+      }
+
       renderContacts();
+    })
+    .catch(error => {
+      console.error("Failed to load contacts:", error);
     });
 }
 
+
+/* ============== RENDER CONTACTS ============== */
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
   contactListRef.innerHTML = '';
@@ -83,21 +97,45 @@ function renderContacts() {
 }
 
 function styleContactOnclick(element) {
-  document.querySelectorAll('.contact.open-contact').forEach((element) => {
-    element.classList.remove('open-contact');
+  document.querySelectorAll('.contact.open-contact').forEach((el) => {
+    el.classList.remove('open-contact');
   });
 
   element.classList.add('open-contact');
-  showContactInfo();
+
+  const name = element.querySelector('.contact-name').textContent;
+  const contact = contacts.find(c => c.name === name);
+  if (contact) showContactInfo(contact);
 }
 
-function showContactInfo() {
+function showContactInfo(contact) {
   let contactInfoRef = document.getElementById("open_contact_Template");
-  contactInfoRef.innerHTML = ""; 
-  contactInfoRef.innerHTML += getOpenContactTemplate(); 
+  contactInfoRef.innerHTML = getOpenContactTemplate(contact);
 }
 
-// overlay
+/* ========== DELETE TASK FROM FIREBASE ========== */
+async function deleteContact(firebaseKey) {
+  try {
+    let response = await fetch(`${BASE_URL}contacts/${firebaseKey}.json`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) throw new Error("Delete failed");
+
+    contacts = contacts.filter((c) => c.firebaseKey !== firebaseKey);
+
+    const contactInfoRef = document.getElementById("open_contact_Template");
+    if (contactInfoRef) {
+      contactInfoRef.innerHTML = "";
+    }
+    toggleOff();
+    loadContacts();
+  } catch (error) {
+    console.error("Error deleting contact:", error);
+  }
+}
+
+/* =================== OVERLAY ================== */
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = ""; // Clear previous content
