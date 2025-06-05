@@ -8,7 +8,6 @@ let assignedTo = null; // ID of selected contact
 
 /**
  * Set selected priority and update button classes.
- * sets the clicked priority button to active.
  */
 function setPriority(prio) {
   selectedPriority = prio;
@@ -19,7 +18,6 @@ function setPriority(prio) {
 
 /**
  * Toggle dropdown visibility for "Assigned to".
- * prevents event from bubbling and toggles class.
  */
 function toggleDropdown(ev) {
   ev.stopPropagation();
@@ -27,8 +25,7 @@ function toggleDropdown(ev) {
 }
 
 /**
- * Close the dropdown when clicking outside.
- * always hide the list.
+ * Close dropdown when clicking outside.
  */
 function closeDropdown() {
   document.getElementById("assignedList").classList.add("hidden");
@@ -36,7 +33,6 @@ function closeDropdown() {
 
 /**
  * Fetch all contacts from Firebase and populate the dropdown.
- * transforms response into array and appends <li> items.
  */
 function populateContacts() {
   fetch(
@@ -47,13 +43,23 @@ function populateContacts() {
       return res.json();
     })
     .then((data) => {
-      // convert object of users to array with id+name
       contacts = Object.entries(data || {}).map(([id, user]) => ({
         id,
         name: user.name,
       }));
+
       const ul = document.getElementById("assignedList");
-      ul.innerHTML = ""; // clear previous
+      ul.innerHTML = "";
+
+      if (contacts.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No contacts found.";
+        li.style.color = "#999";
+        li.style.pointerEvents = "none";
+        ul.appendChild(li);
+        return;
+      }
+
       contacts.forEach((c) => {
         const li = document.createElement("li");
         li.textContent = c.name;
@@ -66,29 +72,27 @@ function populateContacts() {
 }
 
 /**
- * Handle selecting a contact: set label and close dropdown.
- * update assignedTo and refresh create-button state.
+ * Handle selecting a contact.
  */
 function selectContact(contact) {
   assignedTo = contact.id;
   const label = document.getElementById("assignedLabel");
-  label.textContent = contact.name; // show selected name
+  label.textContent = contact.name;
   const arrow = document.createElement("span");
   arrow.className = "dropdown-arrow";
-  arrow.textContent = "⌄"; // re-add arrow icon
+  arrow.textContent = "⌄";
   label.appendChild(arrow);
   document.getElementById("assignedList").classList.add("hidden");
-  toggleCreateBtn(); // check if form can be submitted now
+  toggleCreateBtn();
 }
 
 /**
- * Add a new subtask to the list and clear input.
- * push to array and append <li> element.
+ * Add a new subtask.
  */
 function addSubtask() {
   const inp = document.getElementById("subtaskInput");
   const txt = inp.value.trim();
-  if (!txt) return; // do nothing on empty
+  if (!txt) return;
   subtasks.push(txt);
   const li = document.createElement("li");
   li.textContent = txt;
@@ -97,8 +101,7 @@ function addSubtask() {
 }
 
 /**
- * Validate the date input: if empty or invalid, add error class.
- * if type=date, only check non-empty; else regex.
+ * Validate the date input.
  */
 function validateDate() {
   const el = document.getElementById("dueDate");
@@ -110,8 +113,7 @@ function validateDate() {
 }
 
 /**
- * Check toggle of Create Task button.
- * enable only if title + date + category + assignedTo are set.
+ * Toggle create button activation.
  */
 function toggleCreateBtn() {
   const title = document.getElementById("title").value.trim();
@@ -119,15 +121,12 @@ function toggleCreateBtn() {
   const dueVal = dueEl.value;
   const cat = document.getElementById("category").value;
   const btn = document.getElementById("createBtn");
-
-  // for type=date, just require non-empty
   const dateOk = dueEl.type === "date" ? !!dueVal : isValidDate(dueVal);
   btn.disabled = !(title && dateOk && cat && assignedTo);
 }
 
 /**
- * Regex check for DD/MM/YYYY.
- * validate string matches logical calendar date.
+ * Regex date validation (optional fallback).
  */
 function isValidDate(str) {
   const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(str);
@@ -140,10 +139,26 @@ function isValidDate(str) {
 }
 
 /**
- * Build the task object and log to console.
- * simply assemble fields; actual push to backend not implemented here.
+ * Send task to backend (Firebase).
  */
-function createTask() {
+async function sendTaskToBackend(task) {
+  const response = await fetch(
+    "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+    {
+      method: "POST",
+      body: JSON.stringify(task),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.ok;
+}
+
+/**
+ * Create and submit the task.
+ */
+async function createTask() {
   const task = {
     title: document.getElementById("title").value.trim(),
     description: document.getElementById("description").value.trim(),
@@ -152,11 +167,36 @@ function createTask() {
     category: document.getElementById("category").value,
     assignedTo,
     subtasks: [...subtasks],
+    createdAt: new Date().toISOString(),
   };
+
   console.log("Task ready:", task);
-  alert("Task logged to console."); // user feedback
+
+  // --- OPTIONAL BACKEND SEND ---
+  const success = await sendTaskToBackend(task);
+  if (success) {
+    alert("Task successfully created!");
+    resetForm();
+  } else {
+    alert("Task could not be saved. Please try again.");
+  }
+}
+
+/**
+ * Reset all form inputs, dropdowns, and subtasks.
+ */
+function resetForm() {
+  document.getElementById("taskForm").reset();
+  document.getElementById("subtaskList").innerHTML = "";
+  subtasks.length = 0;
+  assignedTo = null;
+  selectedPriority = "medium";
+  setPriority("medium");
+  document.getElementById("assignedLabel").innerHTML =
+    "Select contacts <span class='dropdown-arrow'>⌄</span>";
+  toggleCreateBtn();
 }
 
 // --- Initialize on load ---
-setPriority("medium"); // default priority selection
-populateContacts(); // fetch and render contacts dropdown
+setPriority("medium");
+populateContacts();

@@ -1,18 +1,18 @@
+<!-- add-task.html -->
 <!DOCTYPE html>
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join | Add Task</title>
-    <!-- 1) Base styles -->
+    <!-- base styles -->
     <link rel="stylesheet" href="./style.css" />
-    <!-- 2) Template layouts (Sidebar, Header, etc.) -->
+    <!-- layout & template -->
     <link rel="stylesheet" href="./styles/template.css" />
-    <!-- 3) Help page styles (for header-right icons, submenu) -->
+    <!-- help styles -->
     <link rel="stylesheet" href="./styles/help.css" />
-    <!-- 4) Add-Task specific styles -->
+    <!-- add-task only -->
     <link rel="stylesheet" href="./styles/add-task.css" />
-    <!-- 5) Custom fonts -->
     <link rel="stylesheet" href="./styles/fonts.css" />
     <link
       rel="shortcut icon"
@@ -23,55 +23,70 @@
 
   <body onclick="closeDropdown()">
     <div class="body">
-      <!-- Sidebar -->
       <div class="desktop-menu">
-        <div>
-          <img class="logo" src="./assets/img/logo.svg" alt="Join Logo" />
-        </div>
+        <div><img class="logo" src="./assets/img/logo.svg" alt="logo" /></div>
         <div class="menu">
-          <a href="./summary.html">
-            <button>
-              <img src="./assets/icons/summary.svg" alt="Summary" />
+          <a href="./summary.html"
+            ><button>
+              <img src="./assets/icons/summary.svg" alt="" />
               <p>Summary</p>
-            </button>
-          </a>
-          <a href="./add-task.html">
-            <button class="active">
-              <img src="./assets/icons/add-task.svg" alt="Add Task" />
+            </button></a
+          >
+          <a href="./add-task.html"
+            ><button class="active">
+              <img src="./assets/icons/add-task.svg" alt="" />
               <p>Add Task</p>
-            </button>
-          </a>
-          <a href="./board.html">
-            <button>
-              <img src="./assets/icons/board.svg" alt="Board" />
+            </button></a
+          >
+          <a href="./board.html"
+            ><button>
+              <img src="./assets/icons/board.svg" alt="" />
               <p>Board</p>
-            </button>
-          </a>
-          <a href="./contacts.html">
-            <button>
-              <img src="./assets/icons/contacts.svg" alt="Contacts" />
+            </button></a
+          >
+          <a href="./contacts.html"
+            ><button>
+              <img src="./assets/icons/contacts.svg" alt="" />
               <p>Contacts</p>
-            </button>
-          </a>
+            </button></a
+          >
         </div>
         <div class="desktop-footer">
           <div class="desktop-footer-content">
-            <a href="./Privacy-Policy.html">
-              <button><p>Privacy Policy</p></button>
-            </a>
-            <a href="./legal-notice.html">
-              <button><p>Legal Notice</p></button>
-            </a>
+            <a href="./Privacy-Policy.html"
+              ><button>
+                <p>Privacy Policy</p>
+              </button></a
+            >
+            <a href="./legal-notice.html"
+              ><button>
+                <p>Legal notice</p>
+              </button></a
+            >
           </div>
         </div>
       </div>
 
-    <div class="body-right">
-      <div class="header">
-        <span class="header-title">Kanban Project Management Tool</span>
-        <div class="header-right">
-          <div onclick="openSubMenu()" class="user-profile"><b id="user-initials"></b></div>
-          <a class="help-img" href="./help.html"><img src="./assets/img/help.svg" alt="" /></a>
+      <div class="body-right">
+        <div class="header">
+          <span class="header-title">Kanban Project Management Tool</span>
+          <div class="header-right">
+            <div onclick="openSubMenu()" class="user-profile"><b>SM</b></div>
+            <a class="help-img" href="./help.html"
+              ><img src="./assets/img/help.svg" alt=""
+            /></a>
+          </div>
+        </div>
+        <div id="sub_menu" class="d_none sub_menu">
+          <a href="./legal-notice.html">
+            <p class="sub-menu-content">Legal Notice</p>
+          </a>
+          <a href="./Privacy-Policy.html">
+            <p class="sub-menu-content">Privacy Policy</p>
+          </a>
+          <a href="./log-in.html">
+            <p class="sub-menu-content">Log out</p>
+          </a>
         </div>
 
         <main class="main">
@@ -79,7 +94,7 @@
             <h2>Add Task</h2>
             <form id="taskForm" onsubmit="return false;">
               <div class="form-cols">
-                <!-- Left column -->
+                <!-- left column -->
                 <div class="col-left">
                   <label for="title">Title*</label>
                   <input
@@ -105,7 +120,7 @@
                   />
                 </div>
 
-                <!-- Right column -->
+                <!-- right column -->
                 <div class="col-right">
                   <label>Priority</label>
                   <div id="prioGroup">
@@ -114,21 +129,21 @@
                       data-value="urgent"
                       onclick="setPriority('urgent')"
                     >
-                      Urgent <img src="./assets/icons/urgent.svg" alt="!" />
+                      Urgent
                     </button>
                     <button
                       class="priority medium active"
                       data-value="medium"
                       onclick="setPriority('medium')"
                     >
-                      Medium <img src="./assets/icons/medium.svg" alt="=" />
+                      Medium
                     </button>
                     <button
                       class="priority low"
                       data-value="low"
                       onclick="setPriority('low')"
                     >
-                      Low <img src="./assets/icons/low.svg" alt="✓" />
+                      Low
                     </button>
                   </div>
 

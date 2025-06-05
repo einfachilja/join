@@ -1,4 +1,5 @@
-/* Fixed sidebar */
+/* styles/add-task.css */
+/* fixed sidebar */
 .desktop-menu {
   position: fixed;
   top: 0;
@@ -6,41 +7,40 @@
   width: 232px;
   height: 100vh;
 }
-
-/* Fixed header */
+/* fixed header */
 .body-right .header {
-  position: fixed;
-  top: 0;
-  left: 232px;
-  right: 0;
-  height: 80px;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 96px;
+  width: 100%;
   display: flex;
+  justify-content: space-between !important;
   align-items: center;
-  padding: 0 40px;
-  z-index: 10;
+  background-color: hsla(0, 0%, 100%, 1);
+  box-shadow: 0 4px 4px hsla(0, 0%, 0%, 0.1);
+  position: fixed;
+  padding: 20px 40px;
+  padding-left: 232px;
+  z-index: 1000;
+  top: 0;
 }
 
-/* Main content offset */
+/* content area offset */
 .body-right {
   margin-left: 232px;
   padding-top: 80px;
   background: #f6f7f8;
 }
-
-/* Center the modal */
+/* center main */
 .main {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 80px);
+  min-height: 100vh;
   padding: 0 40px;
   box-sizing: border-box;
-  margin-top: 0;
+  margin-top: 70px;
+  margin-left: 200px;
 }
-
-/* Modal box */
+/* modal */
 .add-task-modal {
   background: #fff;
   border-radius: 10px;
@@ -49,8 +49,8 @@
   max-width: 1040px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+/* two-column layout */
 
-/* Two-column layout */
 .form-cols {
   display: flex;
   gap: 40px;
@@ -63,14 +63,12 @@
   flex-direction: column;
   gap: 24px;
 }
-
-/* Labels & inputs */
+/* labels & inputs */
 label {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 8px;
 }
-
 input,
 textarea,
 select {
@@ -80,23 +78,23 @@ select {
   font-size: 16px;
   font-family: inherit;
 }
-
 textarea {
   min-height: 120px;
   resize: vertical;
 }
-
 input::placeholder,
 textarea::placeholder {
   color: #aaa;
 }
-
-/* Priority buttons */
+/* priority */
+.priority.active {
+  background-color: var(--color-primary);
+  color: white;
+}
 #prioGroup {
   display: flex;
   gap: 12px;
 }
-
 #prioGroup button {
   flex: 1;
   padding: 12px 0;
@@ -107,17 +105,14 @@ textarea::placeholder {
   cursor: pointer;
   font-size: 16px;
 }
-
 #prioGroup button.active {
   background: #ffa800;
   color: #fff;
 }
-
-/* Dropdown */
+/* dropdown */
 .dropdown {
   position: relative;
 }
-
 #assignedLabel {
   width: 100%;
   border: 1px solid #d1d1d1;
@@ -126,11 +121,9 @@ textarea::placeholder {
   cursor: pointer;
   position: relative;
 }
-
 .hidden {
   display: none;
 }
-
 #assignedList {
   position: absolute;
   top: 100%;
@@ -144,17 +137,14 @@ textarea::placeholder {
   margin-top: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Subtasks */
+/* subtasks */
 .subtask-input {
   display: flex;
   gap: 8px;
 }
-
 .subtask-input input {
   flex: 1;
 }
-
 .subtask-input button {
   width: 40px;
   background: #ffa800;
@@ -164,65 +154,60 @@ textarea::placeholder {
   font-size: 24px;
   cursor: pointer;
 }
-
 #subtaskList {
   list-style: none;
   margin-top: 12px;
   padding: 0;
 }
-
 #subtaskList li {
   padding: 8px 12px;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
   margin-bottom: 8px;
 }
-
-/* Form actions */
+/* form actions */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
   margin-top: 32px;
 }
-
 .form-actions button {
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
 }
-
 .form-actions button:first-child {
   background: transparent;
   border: 1px solid #2a3647;
   color: #2a3647;
 }
-
 .form-actions button#createBtn {
   background: #2a3647;
   color: #fff;
   border: none;
 }
-
 .form-actions button#createBtn:disabled {
   background: #aaa;
   cursor: not-allowed;
 }
-
-/* Error state */
+/* error state */
 .input-error {
   border-color: #e74c3c !important;
 }
-
-/* Responsive */
+label.error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}
+/* responsive */
 @media (max-width: 1040px) {
   .form-cols {
     flex-direction: column;
   }
 }
-
-/* Dropdown arrow */
+/* dropdown arrow */
 .dropdown-arrow {
   position: absolute;
   right: 16px;
@@ -230,29 +215,26 @@ textarea::placeholder {
   transform: translateY(-50%);
   pointer-events: none;
 }
-
-/* Date input arrow removal */
+/* date input */
 .date-input {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   position: relative;
   padding-right: 40px;
+  /* background-image: url("../assets/icons/calendar.svg"); */
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 20px 20px;
 }
-
 .date-input::-ms-expand {
   display: none;
 }
-
-/* Custom select arrow */
+/* custom select */
 .select-wrapper {
   position: relative;
   width: 100%;
 }
-
 .select-wrapper select {
   appearance: none;
   -webkit-appearance: none;
@@ -260,7 +242,6 @@ textarea::placeholder {
   padding-right: 40px;
   cursor: pointer;
 }
-
 .select-wrapper::after {
   content: "";
   position: absolute;
@@ -269,5 +250,6 @@ textarea::placeholder {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
+  /* background: url("../assets/icons/arrow_drop_down.svg") no-repeat center; */
   pointer-events: none;
 }
