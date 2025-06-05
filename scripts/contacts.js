@@ -96,6 +96,7 @@ function renderContacts() {
   });
 }
 
+/* ========== STYLE CONTACT BUTTON ONCLICK ========== */
 function styleContactOnclick(element) {
   document.querySelectorAll('.contact.open-contact').forEach((el) => {
     el.classList.remove('open-contact');
@@ -108,12 +109,13 @@ function styleContactOnclick(element) {
   if (contact) showContactInfo(contact);
 }
 
+/* ============= SHOW CONTACT TEMPLATE ============= */
 function showContactInfo(contact) {
   let contactInfoRef = document.getElementById("open_contact_Template");
   contactInfoRef.innerHTML = getOpenContactTemplate(contact);
 }
 
-/* ========== DELETE TASK FROM FIREBASE ========== */
+/* ========== DELETE Contact FROM FIREBASE ========== */
 async function deleteContact(firebaseKey) {
   try {
     let response = await fetch(`${BASE_URL}contacts/${firebaseKey}.json`, {
