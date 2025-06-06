@@ -38,7 +38,8 @@ function overlayTemplate() {
                         <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
                       </div>
                       <div class="input-group">
-                        <input id="new_contact_phone" type="tel" placeholder="Phone" required />
+                        <input id="new_contact_phone" pattern="\\+?[0-9 -]{7,}" type="tel" placeholder="Phone" required />
+
                         <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                       </div>
 
@@ -66,69 +67,71 @@ function overlayTemplate() {
           `;
 }
 
-function overlayEditTemplate() {
+function overlayEditTemplate(name, email, phone, firebaseKey) {
   return /*html*/ `
     <div class="add-new-contact-template-section" >
-            <div class="add-new-contact-template" onclick="dialogPrevention(event)">
-              <div class="add-new-contact-left-section">
-                <div class="logo-section">
-                  <img src="./assets/img/logo.svg" alt="logo" />
-                </div>
-                <div class="add-new-contact-template-left-text">
-                  <h2>Edit contact</h2>
-                </div>
-                <div class="contact-template-vector"></div>
-              </div>
-
-              <div class="add-new-contact-right-section">
-                <img onclick="toggleOff()"
-                  class="add-new-contact-template-x"
-                  src="./assets/img/contacts-icons/Close.svg"
-                  alt="X"
-                />
-
-                <main class="add-new-contact-right-section-main">
-                  <div class="new-contact-profile-icon">
-                    <img
-                      src="./assets/img/contacts-icons/add-new-contact-profile-pic.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="add-new-contact-text">
-                    <form class="add-contact-form">
-                      <div class="input-group">
-                        <input type="email" placeholder="Name" required />
-                        <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
-                      </div>
-                      <div class="input-group">
-                        <input type="email" placeholder="Email" required />
-                        <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
-                      </div>
-                      <div class="input-group">
-                        <input type="tel" placeholder="Phone" required />
-                        <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
-                      </div>
-
-                      <div class="form-buttons">
-                    <button
-                      type="button"
-                      class="delete-btn"
-                    >
-                      Delete
-                    </button>
-                    <button type="submit" class="save-btn">
-                      Save
-                      <img src="./assets/img/contacts-icons/check.svg" alt="">
-                    </button>
-                  </div>
-                    </form>
-                  </div>
-                </main>
-              </div>
-            </div>
+      <div class="add-new-contact-template" onclick="dialogPrevention(event)">
+        <div class="add-new-contact-left-section">
+          <div class="logo-section">
+            <img src="./assets/img/logo.svg" alt="logo" />
           </div>
-          `;
+          <div class="add-new-contact-template-left-text">
+            <h2>Edit contact</h2>
+          </div>
+          <div class="contact-template-vector"></div>
+        </div>
+
+        <div class="add-new-contact-right-section">
+          <img onclick="toggleOff()"
+            class="add-new-contact-template-x"
+            src="./assets/img/contacts-icons/Close.svg"
+            alt="X"
+          />
+
+          <main class="add-new-contact-right-section-main">
+            <div class="new-contact-profile-icon">
+              <img
+                src="./assets/img/contacts-icons/add-new-contact-profile-pic.svg"
+                alt=""
+              />
+            </div>
+            <div class="add-new-contact-text">
+              <form class="add-contact-form" onsubmit="saveEditContact(event, '${firebaseKey}')">
+                <div class="input-group">
+                  <input id="edit_contact_name" type="text" placeholder="Name" value="${name}" required />
+                  <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
+                </div>
+                <div class="input-group">
+                  <input id="edit_contact_email" type="email" placeholder="Email" value="${email}" required />
+                  <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
+                </div>
+                <div class="input-group">
+                  <input id="edit_contact_phone" type="tel" pattern="\\+?[0-9 -]{7,}" placeholder="Phone" value="${phone}" required />
+                  <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
+                </div>
+
+                <div class="form-buttons">
+                  <button
+                    type="button"
+                    class="delete-btn"
+                    onclick="deleteContact('${firebaseKey}')"
+                  >
+                    Delete
+                  </button>
+                  <button type="submit" class="save-btn">
+                    Save
+                    <img src="./assets/img/contacts-icons/check.svg" alt="">
+                  </button>
+                </div>
+              </form>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  `;
 }
+
 
 function getOpenContactTemplate(contact) {
   const initials = contact.name
@@ -146,7 +149,7 @@ function getOpenContactTemplate(contact) {
           <span class="user-name">${contact.name}</span>
 
           <div class="edit-delete-section">
-            <button onclick="toggleEditOverlay()" class="edit-delete-sub-section">
+            <button onclick='toggleEditOverlay(${JSON.stringify(contact)})' class="edit-delete-sub-section">
               <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
               <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
               <span>Edit</span>

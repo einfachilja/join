@@ -1,4 +1,5 @@
-const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
+const BASE_URL =
+  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
 
 let contacts = [];
 
@@ -16,44 +17,103 @@ function getRandomColor() {
 }
 
 /* ============== ADD CONTACTS ============== */
-function addNewContact() {
-  const name = new_contact_name.value.trim();
-  const email = new_contact_email.value.trim();
-  const phone = new_contact_phone.value.trim();
-  if (!name || !email || !phone) return;
+async function addNewContact() {
+
+  const name = document.getElementById("new_contact_name").value.trim();
+  const email = document.getElementById("new_contact_email").value.trim();
+  const phone = document.getElementById("new_contact_phone").value.trim();
+  if (
+    !name ||
+    !email ||
+    !phone ||
+    !isTelValid("new_contact_phone") ||
+    !isEmailValid("new_contact_email")
+  )
+    return;
 
   const contact = { name, email, phone, color: getRandomColor() };
-  fetch("https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/contacts.json", {
-    method: "POST",
-    body: JSON.stringify(contact)
-  }).then(loadContacts);
 
-  toggleOff();
+  try {
+    console.log("Contact to send:", contact);
+    await fetch(
+      "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/contacts.json",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contact),
+      }
+    );
+    await loadContacts();
+    toggleOff();
+  } catch (error) {
+    console.error("Failed to add contact:", error);
+  }
+}
+
+/* ============== SAVE EDIT CHANGES ============== */
+async function saveEditContact(event, firebaseKey) {
+  event.preventDefault();
+
+  const name = document.getElementById("edit_contact_name").value.trim();
+  const email = document.getElementById("edit_contact_email").value.trim();
+  const phone = document.getElementById("edit_contact_phone").value.trim();
+
+  if (
+    !name ||
+    !email ||
+    !phone ||
+    !isTelValid("edit_contact_phone") ||
+    !isEmailValid("edit_contact_email")
+  )
+    return;
+
+  const updatedContact = { name, email, phone };
+
+  try {
+    await fetch(`${BASE_URL}contacts/${firebaseKey}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedContact),
+    });
+    toggleOff();
+    await loadContacts();
+
+    const updated = contacts.find(c => c.firebaseKey === firebaseKey);
+    if (updated) {
+      showContactInfo(updated);
+    }
+  } catch (error) {
+    console.error("Failed to save contact:", error);
+  }
 }
 
 /* ============== LOAD CONTACTS ============== */
-function loadContacts() {
-  fetch("https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/contacts.json")
-    .then(r => r.json())
-    .then(d => {
-      contacts = [];
+async function loadContacts() {
+  try {
+    const response = await fetch(
+      "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/contacts.json"
+    );
+    const data = await response.json();
 
-      for (let key in d) {
-        contacts.push({ ...d[key], firebaseKey: key });
-      }
+    contacts = [];
 
-      renderContacts();
-    })
-    .catch(error => {
-      console.error("Failed to load contacts:", error);
-    });
+    for (let key in data) {
+      contacts.push({ ...data[key], firebaseKey: key });
+    }
+
+    renderContacts();
+  } catch (error) {
+    console.error("Failed to load contacts:", error);
+  }
 }
+
+/* ============== RENDER HELPER FUNCTIONS ============== */
 
 
 /* ============== RENDER CONTACTS ============== */
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
-  contactListRef.innerHTML = '';
+  contactListRef.innerHTML = "";
 
   // Step 1: Sort contacts alphabetically by first name
   contacts.sort((a, b) => {
@@ -98,14 +158,14 @@ function renderContacts() {
 
 /* ========== STYLE CONTACT BUTTON ONCLICK ========== */
 function styleContactOnclick(element) {
-  document.querySelectorAll('.contact.open-contact').forEach((el) => {
-    el.classList.remove('open-contact');
+  document.querySelectorAll(".contact.open-contact").forEach((el) => {
+    el.classList.remove("open-contact");
   });
 
-  element.classList.add('open-contact');
+  element.classList.add("open-contact");
 
-  const name = element.querySelector('.contact-name').textContent;
-  const contact = contacts.find(c => c.name === name);
+  const name = element.querySelector(".contact-name").textContent;
+  const contact = contacts.find((c) => c.name === name);
   if (contact) showContactInfo(contact);
 }
 
@@ -115,7 +175,7 @@ function showContactInfo(contact) {
   contactInfoRef.innerHTML = getOpenContactTemplate(contact);
 }
 
-/* ========== DELETE Contact FROM FIREBASE ========== */
+/* ========== DELETE Contact FROM FIREBASE ============== */
 async function deleteContact(firebaseKey) {
   try {
     let response = await fetch(`${BASE_URL}contacts/${firebaseKey}.json`, {
@@ -131,19 +191,53 @@ async function deleteContact(firebaseKey) {
       contactInfoRef.innerHTML = "";
     }
     toggleOff();
-    loadContacts();
+    await loadContacts();
   } catch (error) {
     console.error("Error deleting contact:", error);
+  }
+}
+
+/* ============= TEL VALIDATION ============= */
+function isTelValid(inputId = "new_contact_phone") {
+  const phoneInput = document.getElementById(inputId);
+  if (!phoneInput) return false;
+
+  const phoneValue = phoneInput.value.trim();
+  const phonePattern = /^\+?[0-9\s-]{7,}$/;
+
+  if (!phonePattern.test(phoneValue)) {
+    phoneInput.classList.add("invalid");
+    return false;
+  } else {
+    phoneInput.classList.remove("invalid");
+    return true;
+  }
+}
+
+/* ============= EMAIL VALIDATION ============= */
+function isEmailValid(inputId = "new_contact_email") {
+  const emailInput = document.getElementById(inputId);
+  if (!emailInput) return false;
+
+  const emailValue = emailInput.value.trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailPattern.test(emailValue)) {
+    emailInput.classList.add("invalid");
+    return false;
+  } else {
+    emailInput.classList.remove("invalid");
+    return true;
   }
 }
 
 /* =================== OVERLAY ================== */
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
-  overlayRef.innerHTML = ""; // Clear previous content
-  overlayRef.innerHTML += overlayTemplate(); // Inject template
+  overlayRef.innerHTML = ""; 
+  overlayRef.innerHTML += overlayTemplate(); 
 
-  overlayRef.classList.remove("d_none"); // Show overlay (transparent)
+  overlayRef.classList.remove("d_none"); 
 
   // Fade in the overlay background
   setTimeout(() => {
@@ -157,19 +251,21 @@ function toggleOverlay() {
   }, 0);
 }
 
-function toggleEditOverlay() {
+/* =================== EDIT OVERLAY ================== */
+function toggleEditOverlay(contact) {
   const overlayRef = document.getElementById("overlay");
-  overlayRef.innerHTML = ""; // Clear previous content
-  overlayRef.innerHTML += overlayEditTemplate(); // Inject template
+  overlayRef.innerHTML = ""; 
 
-  overlayRef.classList.remove("d_none"); // Show overlay (transparent)
+  overlayRef.innerHTML += overlayEditTemplate(
+    contact.name,
+    contact.email,
+    contact.phone,
+    contact.firebaseKey
+  );
 
-  // Fade in the overlay background
-  setTimeout(() => {
-    overlayRef.classList.add("active");
-  }, 0);
+  overlayRef.classList.remove("d_none"); 
 
-  // Slide in the modal
+  setTimeout(() => overlayRef.classList.add("active"), 0);
   setTimeout(() => {
     const modal = document.querySelector(".add-new-contact-template");
     if (modal) modal.classList.add("slide-in");
@@ -185,16 +281,15 @@ function toggleOff() {
   const modal = document.querySelector(".add-new-contact-template");
 
   if (modal) {
-    modal.classList.remove("slide-in"); // slide out modal
+    modal.classList.remove("slide-in"); 
   }
 
-  overlayRef.classList.remove("active"); // start fade out
+  overlayRef.classList.remove("active"); 
 
-  // Hide the overlay after both animations
   setTimeout(() => {
     overlayRef.classList.add("d_none");
-    overlayRef.innerHTML = ""; // optional: clean up
-  }, 280); // match fade + slide time
+    overlayRef.innerHTML = ""; 
+  }, 280); 
 }
 
 window.onload = loadContacts;
