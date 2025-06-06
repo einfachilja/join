@@ -23,6 +23,7 @@ async function loadTasks() {
   });
   console.log("Geladene Tasks:", arrayTasks);
   updateHTML(arrayTasks);
+  countTaskStatus(arrayTasks);
 }
 
 /* ========== DELETE TASK FROM FIREBASE ========== */
@@ -257,17 +258,6 @@ async function saveEditTask(taskKey) {
 }
 
 
-// function countTaskStatus(arrayTasks) {
 
-//   let sumTotalTasks = arrayTasks.length;
-//   let sumStatusTodo = arrayTasks.filter((task) => task.status == "todo");
-//   let sumStatusInProgress = arrayTasks.filter((task) => task.status == "progress");
-//   let sumStatusAwaitFeedback = arrayTasks.filter((task) => task.status == "feedback");
-//   let sumStatusDone = arrayTasks.filter((task) => task.status == "done");
 
-//   console.log("Gesamt Tasks: ", sumTotalTasks);
-//   console.log("Todo-Tasks: ", sumStatusTodo.length);
-//   console.log("In Progress-Tasks: ", sumStatusInProgress.length);
-//   console.log("Await feedback-Tasks: ", sumStatusAwaitFeedback.length);
-//   console.log("Done-Tasks: ", sumStatusDone.length);
-// }
+
