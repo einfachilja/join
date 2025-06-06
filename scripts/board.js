@@ -2,23 +2,33 @@ const BASE_URL =
   "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
 
 let arrayTasks = [];
-let firebaseKey = "guest";
+let firebaseKey = localStorage.getItem("firebaseKey");
+console.log("firebaseKey:", firebaseKey); // Debug-Ausgabe
 
 /* ========== LOAD TASKS FROM FIREBASE ========== */
 async function loadTasks() {
   let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`);
-  let responseJson = await response.json(); 
+  let responseJson = await response.json();
+
+  if (!responseJson) {
+    arrayTasks = [];
+    updateHTML([]);
+    return;
+  }
+
+  console.log(responseJson);
 
   arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
     return { ...task, firebaseKey };
   });
+  console.log("Geladene Tasks:", arrayTasks);
   updateHTML(arrayTasks);
 }
 
 /* ========== DELETE TASK FROM FIREBASE ========== */
-async function deleteTask(firebaseKey) {
+async function deleteTask(taskKey) {
   try {
-    let response = await fetch(`${BASE_URL}tasks/${firebaseKey}.json`, {
+    let response = await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
       method: "DELETE",
     });
 
@@ -26,13 +36,10 @@ async function deleteTask(firebaseKey) {
       throw new Error("Löschen fehlgeschlagen");
     }
 
-    // Task aus arrayTasks entfernen
-    arrayTasks = arrayTasks.filter((task) => task.firebaseKey !== firebaseKey);
+    arrayTasks = arrayTasks.filter((task) => task.firebaseKey !== taskKey);
 
-    // Overlay schließen und UI aktualisieren
     closeBoardCard();
     updateHTML();
-    countTaskStatus(arrayTasks);
   } catch (error) {
     console.error("Fehler beim Löschen des Tasks:", error);
   }
@@ -44,9 +51,8 @@ async function moveTo(status) {
   if (task) {
     task.status = status;
 
-    // Statusänderung in Firebase speichern
     try {
-      await fetch(`${BASE_URL}tasks/${task.firebaseKey}.json`, {
+      await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -206,10 +212,10 @@ function editTask() {
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
-async function saveEditTask(firebaseKey) {
-  let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
+async function saveEditTask(taskKey) {
+  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task) {
-    console.warn("Task nicht gefunden für ID:", firebaseKey);
+    console.warn("Task nicht gefunden für ID:", taskKey);
     return;
   }
 
@@ -219,7 +225,6 @@ async function saveEditTask(firebaseKey) {
 
   const newTitle = document.getElementById("overlay_card_title").innerHTML;
   const newDescription = document.getElementById("overlay_card_description").innerHTML;
-  const newDueDate = document.getElementById("overlay_card_description").innerHTML;
 
   const updatedTask = {
     ...task,
@@ -232,7 +237,7 @@ async function saveEditTask(firebaseKey) {
   };
 
   try {
-    await fetch(`${BASE_URL}tasks/${firebaseKey}.json`, {
+    await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -240,10 +245,12 @@ async function saveEditTask(firebaseKey) {
       body: JSON.stringify(updatedTask)
     });
 
+    console.log("task.firebaseKey:", task.firebaseKey);
+
     // Lokales Array aktualisieren
-    arrayTasks = arrayTasks.map(t => t.firebaseKey === firebaseKey ? updatedTask : t);
+    arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
     updateHTML();
-    openBoardCard(firebaseKey); // Overlay mit aktualisierten Daten neu laden
+    openBoardCard(taskKey); // Overlay mit aktualisierten Daten neu laden
   } catch (error) {
     console.error("Fehler beim Bearbeiten des Tasks:", error);
   }
