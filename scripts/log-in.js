@@ -1,14 +1,12 @@
-/* ========== GLOBAL ========== */
 const LOGIN_SUCCESSFUL = "./summary.html";
 
-/* ========== INIT ========== */
 window.onload = function () {
   initLoaderAnimation();
   initInputListeners();
   initPasswordVisibilityToggle();
 };
 
-/* ========== LOADER LOGO ANIMATION ========== */
+// Blendet den Loader nach kurzer Zeit aus
 function initLoaderAnimation() {
   const loader = document.getElementById("loader");
 
@@ -21,7 +19,7 @@ function initLoaderAnimation() {
   }, 500);
 }
 
-/* ========== VALIDATION ========== */
+// Prüft, ob die eingegebene E-Mail eine gültige Syntax hat
 function validateLoginEmail() {
   const emailInput = document.getElementById("email");
   const error = document.getElementById("login-email-error");
@@ -39,13 +37,13 @@ function validateLoginEmail() {
   }
 }
 
-/* ========== MESSAGE DISPLAY ========== */
+// Zeigt temporäre Erfolg- oder Fehlermeldungen an
 function showMessage(message, isSuccess = false) {
   const messageBox = document.getElementById("message-box");
   messageBox.textContent = message;
   messageBox.style.backgroundColor = isSuccess
-    ? "rgb(42, 54, 71)"
-    : "rgb(220, 53, 69)";
+    ? "rgb(42, 54, 71)"   // dunkelblau für Erfolg
+    : "rgb(220, 53, 69)"; // rot für Fehler
   messageBox.classList.remove("d-none");
   messageBox.style.display = "block";
 
@@ -55,17 +53,17 @@ function showMessage(message, isSuccess = false) {
   }, 2000);
 }
 
-/* ========== LOGIN PROCESS ========== */
+// Startet den Login-Prozess, sobald das Formular abgeschickt wird
 function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  const emailValid = validateLoginEmail();
-  if (!emailValid) return;
+  if (!validateLoginEmail()) return;
 
   fetchUsers(email, password);
 }
 
+// Holt alle registrierten User aus der Datenbank
 function fetchUsers(email, password) {
   fetch(userfirebaseURL)
     .then((response) => response.json())
@@ -73,35 +71,41 @@ function fetchUsers(email, password) {
     .catch(console.error);
 }
 
+// Überprüft Login-Daten gegen die Datenbank
 function checkLogin(users, email, password) {
-  const userList = Object.values(users || {});
-  const user = userList.find((u) => u.email === email);
+  const match = findUserWithKey(users, email);
+  if (!match) return showMessage("E-Mail address not found!", false);
 
-  if (!user) {
-    showMessage("E-Mail address not found!", false);
-    return;
-  }
+  const [firebaseKey, user] = match;
+  if (user.password !== password) return showMessage("Incorrect password!", false);
 
-  if (user.password !== password) {
-    showMessage("Incorrect password!", false);
-    return;
-  }
+  loginUser(user, firebaseKey);
+}
+
+// Findet den passenden Benutzer mit dessen Firebase-Key
+function findUserWithKey(users, email) {
+  return Object.entries(users || {}).find(([_, user]) => user.email === email);
+}
+
+// Führt alle Schritte nach erfolgreichem Login aus
+function loginUser(user, firebaseKey) {
+  sessionStorage.setItem("userName", user.name);
+  sessionStorage.setItem("email", user.email);
+  sessionStorage.setItem("userColor", user.color);
+  localStorage.setItem("firebaseKey", firebaseKey); // WICHTIG: Nutzer-spezifischer Zugriff später für Task und Contacts
 
   showMessage("Login successful!", true);
-  sessionStorage.setItem("userName", user.name);
-  sessionStorage.setItem("email", user.email); // SessionStorage für später relevant, wenn es auf die Join Main Seite geht.
-  sessionStorage.setItem("userColor", user.color);
-
   setTimeout(() => {
     window.location.href = LOGIN_SUCCESSFUL;
   }, 1500);
 }
 
-/* ========== GUEST LOGIN ========== */
+// Speichert eine Gast-Session ohne Registrierung
 function guestLogin() {
   sessionStorage.setItem("userName", "Guest");
-  sessionStorage.setItem("userColor", "rgb(41, 171, 226)"); // Blau für Guest
+  sessionStorage.setItem("userColor", "rgb(41, 171, 226)");
   sessionStorage.setItem("email", "guest@join-test.de");
+  localStorage.setItem("firebaseKey", "guest"); // wird genutzt, um Gast-Daten zuzuordnen
 
   showMessage("You are logged in as a guest!", true);
   setTimeout(() => {
@@ -109,7 +113,7 @@ function guestLogin() {
   }, 2000);
 }
 
-/* ========== PASSWORD VISIBILITY ========== */
+// Aktiviert Umschalten von Passwort-Sichtbarkeit
 function initPasswordVisibilityToggle() {
   document.querySelectorAll(".toggle-password").forEach((icon) => {
     icon.addEventListener("click", () => {
@@ -122,7 +126,7 @@ function initPasswordVisibilityToggle() {
   });
 }
 
-/* ========== EVENT LISTENERS ========== */
+// Initialisiert Event Listener für das Formular und den Gast-Login
 function initInputListeners() {
   const loginForm = document.querySelector(".log-in-form");
   const guestBtn = document.querySelector(".guest-log-in-button");
@@ -141,6 +145,7 @@ function initInputListeners() {
   addInputListener("email", validateLoginEmail);
 }
 
+// Vereinfachter EventListener-Wrapper für Inputs
 function addInputListener(id, handler, event = "input") {
   const el = document.getElementById(id);
   if (el) {
