@@ -134,7 +134,6 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">Done
-                <img src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="done" ondrop="moveTo('done')" ondragleave="removeHighlight('done')"
                 ondragover="allowDrop(event); highlight('done')">
@@ -143,14 +142,13 @@
           </div>
         </div>
 
-        <div id="board_overlay" class="board-overlay board-overlay-card-hide" onclick="closeBoardCard()">
+        <div id="board_overlay" class="board-overlay d-none" onclick="closeBoardCard()">
         </div>
     </div>
 
     </main>
   </div>
   </div>
-
 
   <script src="./scripts/desktop-template.js"></script>
   <script src="./scripts/help.js"></script>
