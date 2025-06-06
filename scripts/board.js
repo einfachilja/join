@@ -1,12 +1,13 @@
 const BASE_URL =
-  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
+  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
 
 let arrayTasks = [];
+let firebaseKey = "guest";
 
 /* ========== LOAD TASKS FROM FIREBASE ========== */
-async function loadTasks(path = "tasks") {
-  let response = await fetch(BASE_URL + path + ".json");
-  let responseJson = await response.json();
+async function loadTasks() {
+  let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`);
+  let responseJson = await response.json(); 
 
   arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
     return { ...task, firebaseKey };
