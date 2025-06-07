@@ -11,9 +11,10 @@
   <link rel="stylesheet" href="./styles/summary.css" />
   <link rel="stylesheet" href="./styles/fonts.css">
   <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
+
 </head>
 
-<body">
+<body onload="loadTasks()">
   <div class="body">
     <div class="desktop-menu">
       <div>
@@ -98,28 +99,28 @@
             <div class="card-container">
               <div class="card-container-left">
                 <div class="card-box-top">
-                  <div class="card-top">
+                  <a href="./board.html" class="card-top">
                     <div class="summary-to-do-icon"></div>
                     <div class="card-top-text">
-                      <div id="summary_card_number_todo" class="summary-card-number">1</div>
+                      <div id="summary_card_number_todo" class="summary-card-number"></div>
                       <div class="summary-card-text">To-Do</div>
                     </div>
-                  </div>
-                  <div class="card-top">
+                  </a>
+                  <a href="./board.html" class="card-top">
                     <div class="summary-done-icon"></div>
                     <div class="card-top-text">
-                      <div class="summary-card-number">1</div>
+                      <div id="summary_card_number_done" class="summary-card-number">1</div>
                       <div class="summary-card-text">Done</div>
                     </div>
-                  </div>
+                  </a>
                 </div>
                 <div class="card-box-center">
-                  <div class="card-center">
+                  <a href="./board.html" class="card-center">
                     <div class="card-center-left">
                       <img src="./assets/icons/summary-urgent.png" alt="">
                       <div class="card-center-text">
-                        <div class="summary-card-number">5</div>
-                        <div class="summary-card-text">Tasks<br>in Board</div>
+                        <div id="summary_card_number_priority_high" class="summary-card-number"></div>
+                        <div class="summary-card-text">Urgent</div>
                       </div>
                     </div>
                     <img src="./assets/icons/summary-center-line.png" alt="">
@@ -127,21 +128,21 @@
                       <span class="summary-date">October 16, 2022</span>
                       <span class="summary-date-subline">Upcoming Deadline</span>
                     </div>
-                  </div>
+                  </a>
                 </div>
                 <div class="card-box-bottom">
-                  <div class="card-bottom">
-                    <div class="summary-card-number">5</div>
+                  <a href="./board.html" class="card-bottom">
+                    <div id="summary_card_number_total" class="summary-card-number"></div>
                     <div class="summary-card-text">Tasks<br>in Board</div>
-                  </div>
-                  <div class="card-bottom">
-                    <div class="summary-card-number">2</div>
+                  </a>
+                  <a href="./board.html" class="card-bottom">
+                    <div id="summary_card_number_in_progress" class="summary-card-number"></div>
                     <div class="summary-card-text">Tasks<br>in Progress</div>
-                  </div>
-                  <div class="card-bottom">
-                    <div class="summary-card-number">2</div>
+                  </a>
+                  <a href="./board.html" class="card-bottom">
+                    <div id="summary_card_number_await_feedback" class="summary-card-number"></div>
                     <div class="summary-card-text">Awaiting<br>Feedback</div>
-                  </div>
+                  </a>
                 </div>
               </div>
               <div class="card-container-right">
@@ -156,10 +157,9 @@
       </main>
     </div>
   </div>
-  <script src="./scripts/board.js"></script>
-  <script src="./scripts/summary.js"></script>
-  <script src="./scripts/desktop-template.js"></script>
 
+  <script src="./scripts/desktop-template.js"></script>
+  <script src="./scripts/summary.js"></script>
 
 </body>
 

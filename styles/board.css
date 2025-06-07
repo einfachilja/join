@@ -4,8 +4,6 @@
     text-decoration: none;
 }
 
-
-
 .board-container {
     margin-left: 300px;
     margin-top: 200px;
@@ -119,10 +117,18 @@
 }
 
 .card-category {
-    background: #0038ff;
     border-radius: 8px;
     padding: 4px 16px;
     color: #ffffff;
+}
+
+.category-user {
+    background-color: #0038FF;
+}
+
+.category-technical {
+    background-color: #1FD7C1;
+    ;
 }
 
 .card-title {
@@ -162,7 +168,6 @@
 }
 
 .board-overlay {
-    background-color: #ffffff;
     height: 100vh;
     width: 100%;
     position: fixed;
@@ -186,24 +191,14 @@
     box-shadow: 0px 0px 4px 0px #00000029;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     transform: translateX(100%);
     /* Transition hier setzen */
 }
 
-/* Neu: Sichtbar machen durch reinsliden */
-.board-overlay-card-show {
-    transform: translateX(0);
-    transition: transform 0.4s ease-in-out;
-}
 
-/* Optional: Kein Transition beim Verstecken */
-.board-overlay-card-hide {
-    transform: translateX(100%);
-    transition: transform 0.4s ease-in-out;
-}
 
 .overlay-card-category {
-    background: #0038FF;
     color: #ffffff;
     width: 164px;
     height: 36px;
@@ -232,10 +227,35 @@
     gap: 12px;
 }
 
-.overlay-card-footer div {
+.delete-btn,
+.edit-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+}
+
+.delete-btn:hover,
+.edit-btn:hover {
+    cursor: pointer;
+    color: #29abe2;
+}
+
+.ok-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 16px;
+    gap: 4px;
+    background-color: #2A3647;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 25.2px;
+    color: #FFFFFF;
+}
+
+.ok-btn:hover {
+    background-color: #29abe2;
     cursor: pointer;
 }
 
@@ -243,3 +263,6 @@
     display: none;
 }
 
+.hallo {
+    background-color: #0038FF;
+}

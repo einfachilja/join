@@ -16,12 +16,9 @@ async function loadTasks() {
     return;
   }
 
-  console.log(responseJson);
-
   arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
     return { ...task, firebaseKey };
   });
-  console.log("Geladene Tasks:", arrayTasks);
   updateHTML(arrayTasks);
 }
 
@@ -76,10 +73,18 @@ function startDragging(firebaseKey) {
 }
 
 function generateTodoHTML(element) {
+
+  let categoryClass = "";
+  if (element.subject === "User Task") {
+    categoryClass = "category-user";
+  } else if (element.subject === "Technical Task") {
+    categoryClass = "category-technical";
+  }
+
   return `
     <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
-            <span class="card-category">${element.subject}</span>
+            <span class="card-category ${categoryClass}"  ${element.subject}">${element.subject}</span>
             <span class="card-title">${element.title}</span>
             <span class="card-description">${element.description}</span>
                 <div class="card-footer">
@@ -140,27 +145,36 @@ function updateHTML() {
 
 /* ========== OPEN AND CLOSE OVERLAY ========== */
 function openBoardCard(firebaseKey) {
-  document
-    .getElementById("board_overlay")
-    .classList.remove("board-overlay-card-hide");
-  document
-    .getElementById("board_overlay")
-    .classList.add("board-overlay-card-show");
-  document.getElementById("html").style.overflow = "hidden";
+
   let boardOverlayRef = document.getElementById("board_overlay");
 
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
 
-  boardOverlayRef.innerHTML = /*html*/ `
+  let categoryClass = "";
+  if (task.subject === "User Task") {
+    categoryClass = "category-user";
+  } else if (task.subject === "Technical Task") {
+    categoryClass = "category-technical";
+  }
+
+  document.getElementById("board_overlay").classList.remove("d-none");
+  document.getElementById("html").style.overflow = "hidden";
+
+  boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
+
+  updateHTML();
+}
+
+function getOpenBoardCardTemplate(categoryClass, task) {
+  return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" onclick="onclickProtection(event)">
-      <span class="overlay-card-category">${task.subject}</span>
+      <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.subject}</span>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span id="due_date">Due date: ${task.dueDate}</span>
-      <span>Priority:${task.priority}</span>
+      <span>Priority: ${task.priority}</span>
       <div>
-        <span>Assigned to:</span>
-          ${task.assignedTo}
+        Assigned to: <span>${task.assignedTo}</span>
       </div>
       <div>
         <span>Subtasks:</span>
@@ -168,25 +182,20 @@ function openBoardCard(firebaseKey) {
           ${task.subtask}
         </div>
       </div>
-      <div class="overlay-card-footer">
-        <div id="delete_btn" onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
-        <img src="./assets/icons/board-separator-icon.svg" alt="">
-        <div id="edit_btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
-        <div onclick="saveEditTask('${task.firebaseKey}')"><img src="./assets/icons/board-edit-icon.svg" alt="">OK</div>
+      <div id="overlay_card_footer" class="overlay-card-footer">
+        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
+        <img id="seperator" src="./assets/icons/board-separator-icon.svg" alt="">
+        <div id="edit_btn" class="edit-btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
+        <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok</div>
       </div>
      
     </div>`;
-
-  updateHTML();
 }
 
 function closeBoardCard() {
-  document
-    .getElementById("board_overlay")
-    .classList.remove("board-overlay-card-show");
-  document
-    .getElementById("board_overlay")
-    .classList.add("board-overlay-card-hide");
+  document.getElementById("board_overlay").classList.add("d-none");
+  document.getElementById("board_overlay_card").classList.remove("board-overlay-card-show");
+  document.getElementById("board_overlay_card").classList.add("board-overlay-card-hide");
   document.getElementById("html").style.overflow = "";
   updateHTML();
 }
@@ -198,17 +207,24 @@ function onclickProtection(event) {
 
 function editTask() {
 
+  document.getElementById("ok_btn").classList.remove("d-none");
+  document.getElementById("delete_btn").classList.add("d-none");
+  document.getElementById("edit_btn").classList.add("d-none");
+  document.getElementById("seperator").classList.add("d-none");
+  document.getElementById("overlay_card_category").classList.add("d-none");
+  
+
   document.getElementById("overlay_card_title").contentEditable = "true";
   document.getElementById("overlay_card_title").style.border = "1px solid rgba(0, 0, 0, 0.1)";
   document.getElementById("overlay_card_title").style.borderRadius = "10px";
-
 
   document.getElementById("overlay_card_description").contentEditable = "true";
   document.getElementById("overlay_card_description").style.border = "1px solid rgba(0, 0, 0, 0.1)";
   document.getElementById("overlay_card_description").style.borderRadius = "10px";
 
-  document.getElementById("delete_btn").classList.add("d-none");
-  document.getElementById("edit_btn").classList.add("d-none");
+  document.getElementById("due_date").contentEditable = "true";
+  document.getElementById("due_date").style.border = "1px solid rgba(0, 0, 0, 0.1)";
+  document.getElementById("due_date").style.borderRadius = "10px";
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
@@ -225,12 +241,13 @@ async function saveEditTask(taskKey) {
 
   const newTitle = document.getElementById("overlay_card_title").innerHTML;
   const newDescription = document.getElementById("overlay_card_description").innerHTML;
+  const newDueDate = document.getElementById("due_date").innerHTML;
 
   const updatedTask = {
     ...task,
     title: newTitle,
     description: newDescription,
-    // dueDate: newDueDate,
+    dueDate: newDueDate,
     // priority: newPriority,
     // assignedTo: newAssignedTo,
     // subtask: newSubtask
@@ -257,17 +274,6 @@ async function saveEditTask(taskKey) {
 }
 
 
-// function countTaskStatus(arrayTasks) {
 
-//   let sumTotalTasks = arrayTasks.length;
-//   let sumStatusTodo = arrayTasks.filter((task) => task.status == "todo");
-//   let sumStatusInProgress = arrayTasks.filter((task) => task.status == "progress");
-//   let sumStatusAwaitFeedback = arrayTasks.filter((task) => task.status == "feedback");
-//   let sumStatusDone = arrayTasks.filter((task) => task.status == "done");
 
-//   console.log("Gesamt Tasks: ", sumTotalTasks);
-//   console.log("Todo-Tasks: ", sumStatusTodo.length);
-//   console.log("In Progress-Tasks: ", sumStatusInProgress.length);
-//   console.log("Await feedback-Tasks: ", sumStatusAwaitFeedback.length);
-//   console.log("Done-Tasks: ", sumStatusDone.length);
-// }
+
