@@ -16,6 +16,8 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+let firebaseKey = localStorage.getItem("firebaseKey");
+
 /* ============== ADD CONTACTS ============== */
 function addNewContact() {
   const name = new_contact_name.value.trim();
@@ -24,7 +26,7 @@ function addNewContact() {
   if (!name || !email || !phone) return;
 
   const contact = { name, email, phone, color: getRandomColor() };
-  fetch("https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/guest/contacts.json", {
+  fetch(`https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`, {
     method: "POST",
     body: JSON.stringify(contact)
   }).then(loadContacts);
@@ -73,7 +75,7 @@ async function saveEditContact(event, firebaseKey) {
 async function loadContacts() {
   try {
     const response = await fetch(
-      "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/guest/contacts.json"
+      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`
     );
     const data = await response.json();
 
