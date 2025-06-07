@@ -10,10 +10,17 @@ let assignedTo = null; // ID of selected contact
  * Set selected priority and update button classes.
  */
 function setPriority(prio) {
+  // Entferne alle selected- und farbklassen
+  document.querySelectorAll(".button-prio").forEach((btn) => {
+    btn.classList.remove("selected", "urgent", "medium", "low");
+  });
+
+  // Markiere den ausgewählten Button
+  const selectedBtn = document.getElementById(prio);
+  selectedBtn.classList.add("selected", prio);
+
+  // Setze selectedPriority für späteres Abspeichern
   selectedPriority = prio;
-  document
-    .querySelectorAll("#prioGroup button")
-    .forEach((b) => b.classList.toggle("active", b.dataset.value === prio));
 }
 
 /**
@@ -197,6 +204,4 @@ function resetForm() {
   toggleCreateBtn();
 }
 
-// --- Initialize on load ---
-setPriority("medium");
-populateContacts();
+setPriority("medium"); // default-Auswahl
