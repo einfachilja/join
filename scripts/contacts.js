@@ -52,7 +52,7 @@ async function saveEditContact(event, firebaseKey) {
   const updatedContact = { name, email, phone };
 
   try {
-    await fetch(`${BASE_URL}contacts/${firebaseKey}.json`, {
+    await fetch(`${BASE_URL}users/guest/contacts/${firebaseKey}.json`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedContact),
