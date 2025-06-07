@@ -17,37 +17,19 @@ function getRandomColor() {
 }
 
 /* ============== ADD CONTACTS ============== */
-async function addNewContact() {
-
-  const name = document.getElementById("new_contact_name").value.trim();
-  const email = document.getElementById("new_contact_email").value.trim();
-  const phone = document.getElementById("new_contact_phone").value.trim();
-  if (
-    !name ||
-    !email ||
-    !phone ||
-    !isTelValid("new_contact_phone") ||
-    !isEmailValid("new_contact_email")
-  )
-    return;
+function addNewContact() {
+  const name = new_contact_name.value.trim();
+  const email = new_contact_email.value.trim();
+  const phone = new_contact_phone.value.trim();
+  if (!name || !email || !phone) return;
 
   const contact = { name, email, phone, color: getRandomColor() };
+  fetch("https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/guest/contacts.json", {
+    method: "POST",
+    body: JSON.stringify(contact)
+  }).then(loadContacts);
 
-  try {
-    console.log("Contact to send:", contact);
-    await fetch(
-      "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/contacts.json",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contact),
-      }
-    );
-    await loadContacts();
-    toggleOff();
-  } catch (error) {
-    console.error("Failed to add contact:", error);
-  }
+  toggleOff();
 }
 
 /* ============== SAVE EDIT CHANGES ============== */
@@ -91,7 +73,7 @@ async function saveEditContact(event, firebaseKey) {
 async function loadContacts() {
   try {
     const response = await fetch(
-      "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/contacts.json"
+      "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/guest/contacts.json"
     );
     const data = await response.json();
 
