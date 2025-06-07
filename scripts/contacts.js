@@ -35,7 +35,7 @@ function addNewContact() {
 }
 
 /* ============== SAVE EDIT CHANGES ============== */
-async function saveEditContact(event, firebaseKey) {
+async function saveEditContact(event, contactKey) {
   event.preventDefault();
 
   const name = document.getElementById("edit_contact_name").value.trim();
@@ -51,21 +51,29 @@ async function saveEditContact(event, firebaseKey) {
   )
     return;
 
-  const updatedContact = { name, email, phone };
+
+  const originalContact = contacts.find((c) => c.firebaseKey === contactKey);
+  const color = originalContact?.color || getRandomColor();
+
+  const updatedContact = { name, email, phone, color };
 
   try {
-    await fetch(`${BASE_URL}users/guest/contacts/${firebaseKey}.json`, {
+    await fetch(`${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedContact),
     });
-    toggleOff();
-    await loadContacts();
 
-    const updated = contacts.find(c => c.firebaseKey === firebaseKey);
-    if (updated) {
-      showContactInfo(updated);
+    if (originalContact) {
+      originalContact.name = name;
+      originalContact.email = email;
+      originalContact.phone = phone;
+      originalContact.color = color; 
     }
+
+    toggleOff();
+    renderContacts();
+    showContactInfo({ ...updatedContact, firebaseKey: contactKey });
   } catch (error) {
     console.error("Failed to save contact:", error);
   }
@@ -160,15 +168,15 @@ function showContactInfo(contact) {
 }
 
 /* ========== DELETE Contact FROM FIREBASE ============== */
-async function deleteContact(firebaseKey) {
+async function deleteContact(contactKey) {
   try {
-    let response = await fetch(`${BASE_URL}users/guest/contacts/${firebaseKey}.json`, {
+    let response = await fetch(`${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`, {
       method: "DELETE",
     });
 
     if (!response.ok) throw new Error("Delete failed");
 
-    contacts = contacts.filter((c) => c.firebaseKey !== firebaseKey);
+    contacts = contacts.filter((c) => c.contactKey !== contactKey);
 
     const contactInfoRef = document.getElementById("open_contact_Template");
     if (contactInfoRef) {
