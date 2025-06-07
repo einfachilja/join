@@ -123,27 +123,46 @@
                 <!-- right column -->
                 <div class="col-right">
                   <label>Priority</label>
-                  <div id="prioGroup">
+                  <div id="buttons-prio" class="priority-buttons">
                     <button
-                      class="priority urgent"
-                      data-value="urgent"
+                      id="urgent"
+                      class="button-prio priority-hover"
+                      type="button"
                       onclick="setPriority('urgent')"
                     >
                       Urgent
+                      <img
+                        id="icon-urgent"
+                        src="assets/icons/urgent.svg"
+                        alt="urgent icon"
+                      />
                     </button>
                     <button
-                      class="priority medium active"
-                      data-value="medium"
+                      id="medium"
+                      class="button-prio medium selected"
+                      type="button"
                       onclick="setPriority('medium')"
                     >
                       Medium
+                      <img
+                        id="icon-medium"
+                        class="icon-selected"
+                        src="assets/icons/medium.svg"
+                        alt="medium icon"
+                      />
                     </button>
                     <button
-                      class="priority low"
-                      data-value="low"
+                      id="low"
+                      class="button-prio priority-hover"
+                      type="button"
                       onclick="setPriority('low')"
                     >
                       Low
+                      <img
+                        id="icon-low"
+                        src="assets/icons/low.svg"
+                        alt="low icon"
+                      />
                     </button>
                   </div>
 
