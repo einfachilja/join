@@ -1,0 +1,60 @@
+@media(max-width: 1300px){
+
+    /* contact info section */
+    .contacts-list {
+        width: 360px;
+    }
+
+    .header-div {
+        top: 170px;
+        left: 620px;
+    }
+
+    .my-contact-information-section {
+        top: 280px;
+        left: 620px
+    }
+
+    .Contacts-span{
+        font-size: 40px;
+    }
+
+    .better-with-a-team-span{
+        font-size: 20px;
+    }
+
+    .user-name{
+        font-size: 28px;
+    }
+
+    .my-profile-icon{
+        font-size: 30px;
+        width: 80px;
+        height: 80px;
+    }
+
+    .contact-information-div{
+        font-size: 18px;
+    }
+
+    .email-and-phone-section{
+        font-size: 14px;
+    }
+
+
+    .contacts-list-header button {
+        width: 300px;
+    }
+
+    .alphabet{
+        width: 280px;
+    }
+
+    .contact {
+        width: 300px;
+    }
+
+    .alphabet-devider {
+        width: 300px;
+    }
+}
