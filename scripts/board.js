@@ -75,7 +75,7 @@ function startDragging(firebaseKey) {
 function generateTodoHTML(element) {
 
   let categoryClass = "";
-  if (element.subject === "User Task") {
+  if (element.subject === "User Story") {
     categoryClass = "category-user";
   } else if (element.subject === "Technical Task") {
     categoryClass = "category-technical";
@@ -151,7 +151,7 @@ function openBoardCard(firebaseKey) {
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
 
   let categoryClass = "";
-  if (task.subject === "User Task") {
+  if (task.subject === "User Story") {
     categoryClass = "category-user";
   } else if (task.subject === "Technical Task") {
     categoryClass = "category-technical";
