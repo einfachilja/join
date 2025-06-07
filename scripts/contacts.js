@@ -160,7 +160,7 @@ function showContactInfo(contact) {
 /* ========== DELETE Contact FROM FIREBASE ============== */
 async function deleteContact(firebaseKey) {
   try {
-    let response = await fetch(`${BASE_URL}contacts/${firebaseKey}.json`, {
+    let response = await fetch(`${BASE_URL}users/guest/contacts/${firebaseKey}.json`, {
       method: "DELETE",
     });
 
