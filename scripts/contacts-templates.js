@@ -28,7 +28,7 @@ function overlayTemplate() {
                     />
                   </div>
                   <div class="add-new-contact-text">
-                    <form class="add-contact-form">
+                    <form class="add-contact-form" onsubmit="addNewContact(event)">
                       <div class="input-group">
                         <input id="new_contact_name" type="text" placeholder="Name" required />
                         <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
@@ -53,7 +53,7 @@ function overlayTemplate() {
                         <img class="icon-default" src="./assets/img/contacts-icons/iconoir_cancel.svg" alt="">
                         <img class="icon-hover" src="./assets/img/contacts-icons/iconoir_cancel_blue.svg" alt="">
                     </button>
-                    <button onclick="addNewContact()" type="submit" class="create-btn">
+                    <button type="submit" class="create-btn">
                       Create Contact
                       <img src="./assets/img/contacts-icons/check.svg" alt="">
                     </button>

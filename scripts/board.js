@@ -241,7 +241,9 @@ async function saveEditTask(taskKey) {
 
   const newTitle = document.getElementById("overlay_card_title").innerHTML;
   const newDescription = document.getElementById("overlay_card_description").innerHTML;
-  const newDueDate = document.getElementById("due_date").innerHTML;
+  const rawDueDate = document.getElementById("due_date").innerHTML; /*NEU */
+  const match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/); /*NEU */
+  const newDueDate = match ? match[0] : ""; /*NEU */
 
   const updatedTask = {
     ...task,
