@@ -17,15 +17,12 @@
   background-color: hsla(0, 0%, 100%, 1);
   box-shadow: 0 4px 4px hsla(0, 0%, 0%, 0.1);
   position: fixed;
-  padding: 20px 40px;
-  padding-left: 232px;
   z-index: 1000;
   top: 0;
 }
 
 /* content area offset */
 .body-right {
-  margin-left: 232px;
   padding-top: 80px;
   background: #f6f7f8;
 }
