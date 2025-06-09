@@ -1,4 +1,4 @@
-@media(max-width: 1300px){
+@media(max-width: 1300px) {
 
     /* contact info section */
     .contacts-list {
@@ -15,29 +15,29 @@
         left: 620px
     }
 
-    .Contacts-span{
+    .Contacts-span {
         font-size: 40px;
     }
 
-    .better-with-a-team-span{
+    .better-with-a-team-span {
         font-size: 20px;
     }
 
-    .user-name{
+    .user-name {
         font-size: 28px;
     }
 
-    .my-profile-icon{
+    .my-profile-icon {
         font-size: 30px;
         width: 80px;
         height: 80px;
     }
 
-    .contact-information-div{
+    .contact-information-div {
         font-size: 18px;
     }
 
-    .email-and-phone-section{
+    .email-and-phone-section {
         font-size: 14px;
     }
 
@@ -46,7 +46,7 @@
         width: 300px;
     }
 
-    .alphabet{
+    .alphabet {
         width: 280px;
     }
 
@@ -59,9 +59,90 @@
     }
 }
 
-@media(max-width: 1040px){
+@media(max-width: 1232px) {
 
-    /* contact info section */
+    /* ====== ADD NEW CONTACT TEMPLATE ====== */
+    .add-new-contact-right-section-main {
+        gap: 20px;
+    }
+
+    .add-contact-form {
+        width: 260px;
+    }
+
+    .add-new-contact-template {
+        height: 400px;
+        width: 700px;
+    }
+
+    .add-new-contact-template-left-text h2 {
+        font-size: 30px !important;
+    }
+
+    .add-new-contact-template-left-text p {
+        font-size: 16px !important;
+    }
+
+    .new-contact-profile-icon {
+        height: 100px;
+        width: 100px;
+        padding-top: 65px;
+    }
+
+    .input-group {
+        width: 180px;
+        height: 15px;
+    }
+
+    .input-group input {
+        font-size: 14px;
+    }
+
+    .create-btn {
+        width: 100px;
+        height: 50px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .cancel-btn {
+        width: 90px;
+        height: 50px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .save-btn {
+        width: 90px;
+        font-size: 16px;
+    }
+
+    .delete-btn {
+        width: 90px;
+        padding: 10px;
+        display: block;
+        font-size: 16px;
+    }
+
+    .add-new-contact-template-x {
+        height: 30px;
+        margin-bottom: 40px;
+        margin-left: 320px;
+    }
+
+    .add-new-contact-right-section {
+        padding-bottom: 20px;
+    }
+
+
+
+
+}
+
+
+@media(max-width: 1040px) {
+
+    /* ====== CONTACT INFO SECTION ====== */
     .contacts-list {
         left: 0;
         top: 80px;
@@ -82,9 +163,39 @@
     }
 }
 
-@media(max-width: 800px){
-    .my-contact-info{
+@media(max-width: 800px) {
+    .my-contact-info {
         display: none;
+    }
+
+    .contacts-list-header {
+        display: none;
+    }
+
+    .contacts-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        position: fixed;
+        top: 70px;
+        height: calc(100vh - 160px);
+        width: 100%;
+    }
+
+    .all-contacts {
+        width: 100%;
+        overflow-y: auto;
+        flex-grow: 1;
+        padding: 32px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .add-new-contact-button {
+        display: flex;
     }
 
 }

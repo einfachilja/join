@@ -64,19 +64,46 @@
     letter-spacing: 0%;
 }
 
+.add-new-contact-button {
+    display: none;
+    position: absolute;
+    top: 758px;
+    width: 100%;
+    justify-content: flex-end;
+    margin-right: 40px;
+    
+}
+
+.add-new-contact-button button {
+    background-color: hsla(215, 26%, 22%, 1);
+    width: 56px;
+    height: 56px;
+    border: none;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 46px;
+    border: 1px solid hsla(215, 26%, 22%, 1);
+}
+
 .contact {
     display: flex;
-    justify-content: flex-start; /* ✅ aligns internal items to the left */
+    justify-content: flex-start;
+    /* ✅ aligns internal items to the left */
     gap: 35px;
     padding: 15px 24px;
     border-radius: 10px;
-    width: 100%; /* ✅ full width so it aligns to the container */
-    max-width: 352px; /* ✅ optional: prevent it from stretching too far */
+    width: 100%;
+    /* ✅ full width so it aligns to the container */
+    max-width: 352px;
+    /* ✅ optional: prevent it from stretching too far */
     background-color: transparent;
     border: none;
     font-size: 18px;
     font-weight: 400 !important;
-    text-align: left !important; /* ✅ important for aligning text */
+    text-align: left !important;
+    /* ✅ important for aligning text */
     line-height: 120%;
 }
 
@@ -86,16 +113,16 @@
 }
 
 .contact.open-contact:hover {
-  background: hsl(216, 25%, 22%) !important;
-  color: hsla(0, 0%, 100%, 1) !important;
-  cursor: default;
+    background: hsl(216, 25%, 22%) !important;
+    color: hsla(0, 0%, 100%, 1) !important;
+    cursor: default;
 }
 
-.open-contact{
+.open-contact {
     background-color: hsl(216, 25%, 22%);
     color: hsla(0, 0%, 100%, 1) !important;
 
-    .contact-name{
+    .contact-name {
         color: hsla(0, 0%, 100%, 1) !important;
     }
 }
@@ -229,21 +256,21 @@
     letter-spacing: 0%;
 }
 
-.edit-delete-sub-section:hover{
+.edit-delete-sub-section:hover {
     color: hsla(198, 76%, 52%, 1);
     scale: 1.05;
 }
 
 .edit-delete-sub-section .icon-hover {
-  display: none;
+    display: none;
 }
 
 .edit-delete-sub-section:hover .icon-default {
-  display: none;
+    display: none;
 }
 
 .edit-delete-sub-section:hover .icon-hover {
-  display: inline;
+    display: inline;
 }
 
 .user-name {
@@ -318,7 +345,7 @@
 }
 
 #overlay.active {
-  background-color: hsla(215, 33%, 13%, 0.294);
+    background-color: hsla(215, 33%, 13%, 0.294);
 }
 
 .d_none {
@@ -434,7 +461,7 @@
 
 }
 
-.add-new-contact-template-x:hover{
+.add-new-contact-template-x:hover {
     background-color: hsl(0, 0%, 93%);
     border-radius: 30px;
 }
@@ -470,7 +497,7 @@
     width: 360px;
 }
 
-.input-group:hover{
+.input-group:hover {
     border: 1px solid hsla(198, 76%, 52%, 1);
 }
 
@@ -493,7 +520,7 @@
     padding-top: 45px;
 }
 
-.cancel-btn{
+.cancel-btn {
     display: flex;
     align-items: center;
     width: 126px;
@@ -510,25 +537,25 @@
     background-color: hsl(0, 0%, 100%);
 }
 
-.cancel-btn:hover{
+.cancel-btn:hover {
     border: 2px solid hsla(198, 76%, 52%, 1);
     color: hsla(198, 76%, 52%, 1);
     box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
 }
 
 .cancel-btn img.icon-hover {
-  display: none;
+    display: none;
 }
 
 .cancel-btn:hover img.icon-default {
-  display: none;
+    display: none;
 }
 
 .cancel-btn:hover img.icon-hover {
-  display: inline;
+    display: inline;
 }
 
-.create-btn{
+.create-btn {
     display: flex;
     align-items: center;
     width: 214px;
@@ -545,13 +572,13 @@
 
 }
 
-.create-btn:hover{
+.create-btn:hover {
     background-color: hsla(198, 76%, 52%, 1);
     box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
     border: none;
 }
 
-.save-btn{
+.save-btn {
     display: flex;
     align-items: center;
     width: 110px;
@@ -567,13 +594,13 @@
     letter-spacing: 0%;
 }
 
-.save-btn:hover{
+.save-btn:hover {
     background-color: hsla(198, 76%, 52%, 1);
     box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
     border: none;
 }
 
-.delete-btn{
+.delete-btn {
     display: flex;
     align-items: center;
     width: 100px;
@@ -590,13 +617,13 @@
     background-color: hsl(0, 0%, 100%);
 }
 
-.delete-btn:hover{
+.delete-btn:hover {
     border: 2px solid hsla(198, 76%, 52%, 1);
     color: hsla(198, 76%, 52%, 1);
     box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
 }
 
-.form-buttons{
+.form-buttons {
     display: flex;
     align-items: center;
     gap: 24px;
@@ -604,7 +631,7 @@
     height: 57px;
 }
 
-.form-buttons button img{
+.form-buttons button img {
     width: 24px;
     height: 24px;
 }

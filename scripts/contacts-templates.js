@@ -21,8 +21,8 @@ function overlayTemplate() {
                 />
 
                 <main class="add-new-contact-right-section-main">
-                  <div class="new-contact-profile-icon">
-                    <img
+                  <div>
+                    <img class="new-contact-profile-icon"
                       src="./assets/img/contacts-icons/add-new-contact-profile-pic.svg"
                       alt=""
                     />
@@ -89,8 +89,8 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
           />
 
           <main class="add-new-contact-right-section-main">
-            <div class="new-contact-profile-icon">
-              <img
+            <div>
+              <img class="new-contact-profile-icon"
                 src="./assets/img/contacts-icons/add-new-contact-profile-pic.svg"
                 alt=""
               />
