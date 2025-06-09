@@ -58,3 +58,33 @@
         width: 300px;
     }
 }
+
+@media(max-width: 1040px){
+
+    /* contact info section */
+    .contacts-list {
+        left: 0;
+        top: 80px;
+    }
+
+    .header-div {
+        top: 110px;
+        left: 400px;
+    }
+
+    .my-contact-information-section {
+        top: 220px;
+        left: 400px;
+    }
+
+    .better-with-a-team-span {
+        font-size: 18px;
+    }
+}
+
+@media(max-width: 800px){
+    .my-contact-info{
+        display: none;
+    }
+
+}

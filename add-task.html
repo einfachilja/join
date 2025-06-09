@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join | Add Task</title>
     <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./styles/template.css" />
+    <!-- help styles -->
     <link rel="stylesheet" href="./styles/help.css" />
     <link rel="stylesheet" href="./styles/add-task.css" />
     <link rel="stylesheet" href="./styles/fonts.css" />
@@ -62,6 +62,11 @@
       <div class="body-right">
         <div class="header">
           <span class="header-title">Kanban Project Management Tool</span>
+          <img
+            class="logo-mobile"
+            src="./assets/icons/favicon.svg"
+            alt="logo"
+          />
           <div class="header-right">
             <div onclick="openSubMenu()" class="user-profile"><b>SM</b></div>
             <a class="help-img" href="./help.html"
@@ -202,6 +207,37 @@
             </form>
           </div>
         </main>
+        <footer>
+          <div class="mobile-menu">
+            <button>
+              <a href="./summary.html">
+                <img src="./assets/icons/summary.svg" alt="" />
+                <p>Summary</p>
+              </a>
+            </button>
+
+            <button>
+              <a href="./add-task.html" class="active">
+                <img src="./assets/icons/add-task.svg" alt="" />
+                <p>Add Task</p>
+              </a>
+            </button>
+
+            <button>
+              <a href="./board.html">
+                <img src="./assets/icons/board.svg" alt="" />
+                <p>Board</p>
+              </a>
+            </button>
+
+            <button>
+              <a href="./contacts.html">
+                <img src="./assets/icons/contacts.svg" alt="" />
+                <p>Contacts</p>
+              </a>
+            </button>
+          </div>
+        </footer>
       </div>
     </div>
 
