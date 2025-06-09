@@ -5,13 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join | Add Task</title>
-    <!-- base styles -->
     <link rel="stylesheet" href="./style.css" />
-    <!-- layout & template -->
     <link rel="stylesheet" href="./styles/template.css" />
-    <!-- help styles -->
     <link rel="stylesheet" href="./styles/help.css" />
-    <!-- add-task only -->
     <link rel="stylesheet" href="./styles/add-task.css" />
     <link rel="stylesheet" href="./styles/fonts.css" />
     <link
@@ -24,7 +20,7 @@
   <body onclick="closeDropdown()">
     <div class="body">
       <div class="desktop-menu">
-        <div><img class="logo" src="./assets/img/logo.svg" alt="logo" /></div>
+        <img class="logo" src="./assets/img/logo.svg" alt="logo" />
         <div class="menu">
           <a href="./summary.html"
             ><button>
@@ -54,14 +50,10 @@
         <div class="desktop-footer">
           <div class="desktop-footer-content">
             <a href="./Privacy-Policy.html"
-              ><button>
-                <p>Privacy Policy</p>
-              </button></a
+              ><button><p>Privacy Policy</p></button></a
             >
             <a href="./legal-notice.html"
-              ><button>
-                <p>Legal notice</p>
-              </button></a
+              ><button><p>Legal notice</p></button></a
             >
           </div>
         </div>
@@ -73,20 +65,19 @@
           <div class="header-right">
             <div onclick="openSubMenu()" class="user-profile"><b>SM</b></div>
             <a class="help-img" href="./help.html"
-              ><img src="./assets/img/help.svg" alt=""
+              ><img src="./assets/img/help.svg" alt="Help Icon"
             /></a>
           </div>
         </div>
+
         <div id="sub_menu" class="d_none sub_menu">
-          <a href="./legal-notice.html">
-            <p class="sub-menu-content">Legal Notice</p>
-          </a>
-          <a href="./Privacy-Policy.html">
-            <p class="sub-menu-content">Privacy Policy</p>
-          </a>
-          <a href="./log-in.html">
-            <p class="sub-menu-content">Log out</p>
-          </a>
+          <a href="./legal-notice.html"
+            ><p class="sub-menu-content">Legal Notice</p></a
+          >
+          <a href="./Privacy-Policy.html"
+            ><p class="sub-menu-content">Privacy Policy</p></a
+          >
+          <a href="./log-in.html"><p class="sub-menu-content">Log out</p></a>
         </div>
 
         <main class="main">
@@ -94,7 +85,7 @@
             <h2>Add Task</h2>
             <form id="taskForm" onsubmit="return false;">
               <div class="form-cols">
-                <!-- left column -->
+                <!-- left -->
                 <div class="col-left">
                   <label for="title">Title*</label>
                   <input
@@ -103,13 +94,11 @@
                     placeholder="e.g. Build UI"
                     onchange="toggleCreateBtn()"
                   />
-
                   <label for="description">Description</label>
                   <textarea
                     id="description"
                     placeholder="e.g. Implement form validations"
                   ></textarea>
-
                   <label for="dueDate">Due Date*</label>
                   <input
                     id="dueDate"
@@ -120,7 +109,7 @@
                   />
                 </div>
 
-                <!-- right column -->
+                <!-- right -->
                 <div class="col-right">
                   <label>Priority</label>
                   <div id="buttons-prio" class="priority-buttons">
@@ -133,13 +122,13 @@
                       Urgent
                       <img
                         id="icon-urgent"
-                        src="assets/icons/urgent.svg"
+                        src="./assets/icons/urgent.svg"
                         alt="urgent icon"
                       />
                     </button>
                     <button
                       id="medium"
-                      class="button-prio medium selected"
+                      class="button-prio priority-hover selected"
                       type="button"
                       onclick="setPriority('medium')"
                     >
@@ -147,7 +136,7 @@
                       <img
                         id="icon-medium"
                         class="icon-selected"
-                        src="assets/icons/medium.svg"
+                        src="./assets/icons/medium.svg"
                         alt="medium icon"
                       />
                     </button>
@@ -160,28 +149,24 @@
                       Low
                       <img
                         id="icon-low"
-                        src="assets/icons/low.svg"
+                        src="./assets/icons/low.svg"
                         alt="low icon"
                       />
                     </button>
                   </div>
 
                   <label>Assigned to</label>
-                  <div class="dropdown" onclick="toggleDropdown(event)">
-                    <div id="assignedLabel">
-                      Select contacts
-                      <span class="dropdown-arrow">⌄</span>
+                  <div class="assigned-input-wrapper">
+                    <div id="assigned-selected" class="assigned-selected">
+                      <span class="circle-icon">AA</span>
+                      <span class="assigned-name">Select contacts</span>
+                      <img
+                        src="./assets/icons/arrow_drop_down.svg"
+                        class="assigned-arrow"
+                        alt="arrow"
+                      />
                     </div>
-                    <ul id="assignedList" class="hidden"></ul>
-                  </div>
-
-                  <label for="category">Category*</label>
-                  <div class="select-wrapper">
-                    <select id="category" onchange="toggleCreateBtn()">
-                      <option value="" disabled selected>Select</option>
-                      <option value="User Story">User Story</option>
-                      <option value="Technical Task">Technical Task</option>
-                    </select>
+                    <ul id="assignedList" class="assigned-list hidden"></ul>
                   </div>
 
                   <label>Subtasks</label>

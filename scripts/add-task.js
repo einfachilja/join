@@ -1,101 +1,111 @@
-// scripts/add-task.js
-
-// state
-let selectedPriority = "medium"; // default priority
+// ====== STATE ======
+let selectedPriority = "medium";
 const subtasks = [];
-let contacts = []; // will hold fetched contacts
-let assignedTo = null; // ID of selected contact
+let contacts = [];
+let assignedTo = null;
 
-/**
- * Set selected priority and update button classes.
- */
+// ====== INIT ======
+window.addEventListener("DOMContentLoaded", () => {
+  populateContacts();
+  document
+    .getElementById("assigned-selected")
+    .addEventListener("click", toggleDropdown);
+});
+document.body.addEventListener("click", closeDropdown);
+
+// ====== PRIORITY BUTTONS ======
 function setPriority(prio) {
-  // Entferne alle selected- und farbklassen
   document.querySelectorAll(".button-prio").forEach((btn) => {
     btn.classList.remove("selected", "urgent", "medium", "low");
   });
-
-  // Markiere den ausgewählten Button
   const selectedBtn = document.getElementById(prio);
   selectedBtn.classList.add("selected", prio);
-
-  // Setze selectedPriority für späteres Abspeichern
   selectedPriority = prio;
 }
 
-/**
- * Toggle dropdown visibility for "Assigned to".
- */
+// ====== ASSIGNED TO DROPDOWN ======
 function toggleDropdown(ev) {
   ev.stopPropagation();
-  document.getElementById("assignedList").classList.toggle("hidden");
+  document.getElementById("assignedList")?.classList.toggle("hidden");
 }
 
-/**
- * Close dropdown when clicking outside.
- */
 function closeDropdown() {
-  document.getElementById("assignedList").classList.add("hidden");
+  document.getElementById("assignedList")?.classList.add("hidden");
 }
 
-/**
- * Fetch all contacts from Firebase and populate the dropdown.
- */
 function populateContacts() {
   fetch(
     "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users.json"
   )
-    .then((res) => {
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
-    })
+    .then((res) => res.json())
     .then((data) => {
-      contacts = Object.entries(data || {}).map(([id, user]) => ({
-        id,
-        name: user.name,
-      }));
+      contacts = Object.entries(data || {})
+        .filter(([_, user]) => user && user.name?.trim())
+        .map(([id, user]) => ({ id, name: user.name }));
 
       const ul = document.getElementById("assignedList");
       ul.innerHTML = "";
 
-      if (contacts.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "No contacts found.";
-        li.style.color = "#999";
-        li.style.pointerEvents = "none";
-        ul.appendChild(li);
-        return;
-      }
-
       contacts.forEach((c) => {
         const li = document.createElement("li");
-        li.textContent = c.name;
-        li.dataset.id = c.id;
-        li.onclick = () => selectContact(c);
+        li.classList.add("assigned-item");
+        li.setAttribute("data-id", c.id);
+        li.innerHTML = `
+          <span class="circle-icon">${getInitials(c.name)}</span>
+          <span class="assigned-name">${c.name}</span>
+        `;
+        li.addEventListener("click", () => selectContact(c));
         ul.appendChild(li);
       });
     })
     .catch((err) => console.error("Could not load contacts:", err));
 }
 
-/**
- * Handle selecting a contact.
- */
 function selectContact(contact) {
   assignedTo = contact.id;
-  const label = document.getElementById("assignedLabel");
-  label.textContent = contact.name;
-  const arrow = document.createElement("span");
-  arrow.className = "dropdown-arrow";
-  arrow.textContent = "⌄";
-  label.appendChild(arrow);
+
+  // Reset all items
+  document.querySelectorAll(".assigned-item").forEach((li) => {
+    li.classList.remove("selected");
+    li.querySelector(".assigned-check")?.remove();
+  });
+
+  // Mark selected
+  const matchingLi = [...document.querySelectorAll(".assigned-item")].find(
+    (li) => li.dataset.id === contact.id
+  );
+  if (matchingLi) {
+    matchingLi.classList.add("selected");
+    const checkIcon = document.createElement("img");
+    checkIcon.src = "./assets/icons/checked.svg";
+    checkIcon.alt = "checked";
+    checkIcon.classList.add("assigned-check");
+    matchingLi.appendChild(checkIcon);
+  }
+
+  // Update visual box
+  const wrapper = document.getElementById("assigned-selected");
+  wrapper.innerHTML = `
+    <span class="circle-icon">${getInitials(contact.name)}</span>
+    <span class="assigned-name">${contact.name}</span>
+  `;
+  wrapper.addEventListener("click", toggleDropdown);
+
   document.getElementById("assignedList").classList.add("hidden");
   toggleCreateBtn();
 }
 
-/**
- * Add a new subtask.
- */
+function getInitials(name) {
+  if (!name || typeof name !== "string") return "??";
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+}
+
+// ====== SUBTASKS ======
 function addSubtask() {
   const inp = document.getElementById("subtaskInput");
   const txt = inp.value.trim();
@@ -107,9 +117,7 @@ function addSubtask() {
   inp.value = "";
 }
 
-/**
- * Validate the date input.
- */
+// ====== DATE CHECK ======
 function validateDate() {
   const el = document.getElementById("dueDate");
   if (el.type === "date") {
@@ -119,22 +127,6 @@ function validateDate() {
   }
 }
 
-/**
- * Toggle create button activation.
- */
-function toggleCreateBtn() {
-  const title = document.getElementById("title").value.trim();
-  const dueEl = document.getElementById("dueDate");
-  const dueVal = dueEl.value;
-  const cat = document.getElementById("category").value;
-  const btn = document.getElementById("createBtn");
-  const dateOk = dueEl.type === "date" ? !!dueVal : isValidDate(dueVal);
-  btn.disabled = !(title && dateOk && cat && assignedTo);
-}
-
-/**
- * Regex date validation (optional fallback).
- */
 function isValidDate(str) {
   const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(str);
   if (!m) return false;
@@ -145,26 +137,19 @@ function isValidDate(str) {
   );
 }
 
-/**
- * Send task to backend (Firebase).
- */
-async function sendTaskToBackend(task) {
-  const response = await fetch(
-    "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
-    {
-      method: "POST",
-      body: JSON.stringify(task),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return response.ok;
+// ====== BUTTON ENABLE ======
+function toggleCreateBtn() {
+  const title = document.getElementById("title").value.trim();
+  const dueEl = document.getElementById("dueDate");
+  const catEl = document.getElementById("category");
+  const btn = document.getElementById("createBtn");
+  const dateOk =
+    dueEl.type === "date" ? !!dueEl.value : isValidDate(dueEl.value);
+  const categoryOk = catEl && catEl.value;
+  btn.disabled = !(title && dateOk && categoryOk && assignedTo);
 }
 
-/**
- * Create and submit the task.
- */
+// ====== CREATE TASK ======
 async function createTask() {
   const task = {
     title: document.getElementById("title").value.trim(),
@@ -177,9 +162,6 @@ async function createTask() {
     createdAt: new Date().toISOString(),
   };
 
-  console.log("Task ready:", task);
-
-  // --- OPTIONAL BACKEND SEND ---
   const success = await sendTaskToBackend(task);
   if (success) {
     alert("Task successfully created!");
@@ -189,9 +171,19 @@ async function createTask() {
   }
 }
 
-/**
- * Reset all form inputs, dropdowns, and subtasks.
- */
+async function sendTaskToBackend(task) {
+  const res = await fetch(
+    "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+    {
+      method: "POST",
+      body: JSON.stringify(task),
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  return res.ok;
+}
+
+// ====== RESET FORM ======
 function resetForm() {
   document.getElementById("taskForm").reset();
   document.getElementById("subtaskList").innerHTML = "";
@@ -199,9 +191,12 @@ function resetForm() {
   assignedTo = null;
   selectedPriority = "medium";
   setPriority("medium");
-  document.getElementById("assignedLabel").innerHTML =
-    "Select contacts <span class='dropdown-arrow'>⌄</span>";
   toggleCreateBtn();
-}
 
-setPriority("medium"); // default-Auswahl
+  const wrapper = document.getElementById("assigned-selected");
+  wrapper.innerHTML = `
+    <span class="circle-icon">AA</span>
+    <span class="assigned-name">Select contacts</span>
+  `;
+  wrapper.addEventListener("click", toggleDropdown);
+}

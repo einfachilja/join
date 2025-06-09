@@ -1,5 +1,4 @@
-/* styles/add-task.css */
-/* fixed sidebar */
+/* === Layout Grundstruktur === */
 .desktop-menu {
   position: fixed;
   top: 0;
@@ -7,15 +6,15 @@
   width: 232px;
   height: 100vh;
 }
-/* fixed header */
+
 .body-right .header {
   height: 96px;
   width: 100%;
   display: flex;
   justify-content: space-between !important;
   align-items: center;
-  background-color: hsla(0, 0%, 100%, 1);
-  box-shadow: 0 4px 4px hsla(0, 0%, 0%, 0.1);
+  background-color: #fff;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   padding: 20px 40px;
   padding-left: 232px;
@@ -23,33 +22,28 @@
   top: 0;
 }
 
-/* content area offset */
 .body-right {
   margin-left: 232px;
-  padding-top: 80px;
+  padding-top: 96px;
   background: #f6f7f8;
 }
-/* center main */
+
 .main {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   padding: 0 40px;
   box-sizing: border-box;
-  margin-top: 70px;
-  margin-left: 200px;
 }
-/* modal */
+
 .add-task-modal {
   background: #fff;
   border-radius: 10px;
-  margin: 60px auto;
   padding: 40px;
   max-width: 1040px;
+  width: 100%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
-/* two-column layout */
 
 .form-cols {
   display: flex;
@@ -63,12 +57,13 @@
   flex-direction: column;
   gap: 24px;
 }
-/* labels & inputs */
+
 label {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 8px;
 }
+
 input,
 textarea,
 select {
@@ -79,197 +74,37 @@ select {
   font-family: inherit;
 }
 
-.selected {
-  background-color: #ffa800;
-  color: white;
-}
-
-.icon-selected {
-  filter: invert(100%) sepia(0%) saturate(1%) hue-rotate(294deg)
-    brightness(500%) contrast(101%);
-}
-
 textarea {
   min-height: 120px;
   resize: vertical;
 }
+
 input::placeholder,
 textarea::placeholder {
   color: #aaa;
 }
-/* priority */
-.priority.active {
-  background-color: var(--color-primary);
-  color: white;
-}
-#prioGroup {
-  display: flex;
-  gap: 12px;
-}
-#prioGroup button {
-  flex: 1;
-  padding: 12px 0;
-  border: none;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  font-size: 16px;
-}
-#prioGroup button.active {
-  background: #ffa800;
-  color: #fff;
-}
-/* dropdown */
-.dropdown {
-  position: relative;
-}
-#assignedLabel {
-  width: 100%;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  padding: 12px 16px;
-  cursor: pointer;
-  position: relative;
-}
-.hidden {
-  display: none;
-}
-#assignedList {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  background: #fff;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  margin-top: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-/* subtasks */
-.subtask-input {
-  display: flex;
-  gap: 8px;
-}
-.subtask-input input {
-  flex: 1;
-}
-.subtask-input button {
-  width: 40px;
-  background: #ffa800;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-}
-#subtaskList {
-  list-style: none;
-  margin-top: 12px;
-  padding: 0;
-}
-#subtaskList li {
-  padding: 8px 12px;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-/* form actions */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: 32px;
-}
-.form-actions button {
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-}
-.form-actions button:first-child {
-  background: transparent;
-  border: 1px solid #2a3647;
-  color: #2a3647;
-}
-.form-actions button#createBtn {
-  background: #2a3647;
-  color: #fff;
-  border: none;
-}
-.form-actions button#createBtn:disabled {
-  background: #aaa;
-  cursor: not-allowed;
-}
-/* error state */
+
 .input-error {
   border-color: #e74c3c !important;
 }
+
 label.error {
   color: #e74c3c;
   font-size: 14px;
   margin-top: 4px;
 }
-/* responsive */
+
 @media (max-width: 1040px) {
   .form-cols {
     flex-direction: column;
   }
 }
-/* dropdown arrow */
-.dropdown-arrow {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-/* date input */
-.date-input {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  position: relative;
-  padding-right: 40px;
-  /* background-image: url("../assets/icons/calendar.svg"); */
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 20px 20px;
-}
-.date-input::-ms-expand {
-  display: none;
-}
-/* custom select */
-.select-wrapper {
-  position: relative;
-  width: 100%;
-}
-.select-wrapper select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 40px;
-  cursor: pointer;
-}
-.select-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  /* background: url("../assets/icons/arrow_drop_down.svg") no-repeat center; */
-  pointer-events: none;
-}
 
-/* === PRIORITY BUTTONS (Button-Gruppe Stil) === */
+/* === Priorität Buttons === */
 #buttons-prio {
-  height: 56px;
   display: flex;
   gap: 16px;
+  height: 56px;
 }
 
 .button-prio {
@@ -288,9 +123,18 @@ label.error {
   gap: 8px;
   cursor: pointer;
   box-shadow: 0 0 4px 0 #0000001a;
+  color: #2a3647;
+  transition: background-color 0.2s ease;
 }
 
-/* Farben bei aktivem Button */
+.button-prio img {
+  width: 20px;
+}
+
+.button-prio.selected img {
+  filter: brightness(0) invert(1);
+}
+
 .button-prio.urgent.selected {
   background-color: #ff3d00;
   color: white;
@@ -306,30 +150,196 @@ label.error {
   color: white;
 }
 
-/* Icons in aktiven Buttons invertieren */
-#buttons-prio img {
-  width: 20px;
-}
-
-.button-prio.selected img {
-  filter: brightness(0) invert(1);
-}
-
-/* Hover-Effekt für inaktive Buttons */
 .button-prio.priority-hover:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* === Subtasks === */
+.subtask-input {
+  display: flex;
+  gap: 8px;
+}
+
+.subtask-input input {
+  flex: 1;
+}
+
+.subtask-input button {
+  width: 40px;
+  background: #ffa800;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#subtaskList {
+  list-style: none;
+  margin-top: 12px;
+  padding: 0;
+}
+
+#subtaskList li {
+  padding: 8px 12px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+/* === Buttons unten === */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.form-actions button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-actions button:first-child {
+  background: transparent;
+  border: 1px solid #2a3647;
+  color: #2a3647;
+}
+
+.form-actions button#createBtn {
+  background: #2a3647;
+  color: #fff;
+  border: none;
+}
+
+.form-actions button#createBtn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* === Date input === */
+.date-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  padding-right: 40px;
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px 20px;
+}
+
+.date-input::-ms-expand {
+  display: none;
+}
+
+/* === ASSIGNED TO === */
+.assigned-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.assigned-input-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: url("../assets/icons/arrow_drop_down.svg") no-repeat center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.assigned-arrow {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* === Dropdownliste === */
+.assigned-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  background: white;
+  max-height: 240px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  position: absolute;
+  width: 100%;
+}
+
+/* === Einzelner Listeneintrag === */
+.assigned-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.assigned-item:hover {
   background-color: #f0f0f0;
 }
 
-.button-prio {
-  background-color: #ffffff;
+/* Initialen-Kreis */
+.circle-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #d1d1d1;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+/* Name neben Initialen */
+.assigned-name {
+  flex-grow: 1;
+}
+
+/* === Zustand: ausgewählt === */
+.assigned-item.selected {
+  background-color: #2a3647;
+  color: white;
+}
+
+.assigned-item.selected .assigned-name {
+  color: white;
+}
+
+.assigned-item.selected .circle-icon {
+  background-color: white;
   color: #2a3647;
-  border-right: 1px solid #d1d1d1;
 }
 
-.button-prio:last-child {
-  border-right: none;
-}
-
-.button-prio-hover:hover {
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+/* Haken */
+.assigned-check {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
 }
