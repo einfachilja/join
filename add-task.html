@@ -160,18 +160,40 @@
                     </button>
                   </div>
 
-                  <label>Assigned to</label>
-                  <div class="assigned-input-wrapper">
-                    <div id="assigned-selected" class="assigned-selected">
-                      <span class="circle-icon">AA</span>
-                      <span class="assigned-name">Select contacts</span>
-                      <img
-                        src="./assets/icons/arrow_drop_down.svg"
-                        class="assigned-arrow"
-                        alt="arrow"
+                  <div class="container-input-label custom-select">
+                    <label for="assigned-to" class="label-add-task"
+                      >Assigned to</label
+                    >
+                    <div id="container-input-assigned">
+                      <input
+                        id="assigned-to"
+                        type="text"
+                        name="assigned-to"
+                        placeholder="Select contacts to assign"
+                        size="10"
+                        onclick="toggleAssignOptions(); stopPropagation(event)"
+                        onkeyup="filterContacts()"
                       />
+                      <button
+                        class="button-dropdown"
+                        type="button"
+                        onclick="toggleAssignOptions(); toggleInputFocus(); stopPropagation(event)"
+                      >
+                        <img
+                          id="arrow-dropdown-assigned"
+                          src="../assets/icons/arrow_drop_down.svg"
+                          alt="icon-arrow-down"
+                        />
+                      </button>
                     </div>
-                    <ul id="assignedList" class="assigned-list hidden"></ul>
+                    <div id="container-dropdown">
+                      <div
+                        id="dropdown-assign"
+                        class="container-custom-select-options d-none"
+                        onmousedown="preventDefault(event)"
+                      ></div>
+                    </div>
+                    <div id="container-assigned-contacts"></div>
                   </div>
 
                   <label>Subtasks</label>
