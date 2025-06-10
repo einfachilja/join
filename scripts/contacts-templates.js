@@ -3,6 +3,11 @@ function overlayTemplate() {
     <div class="add-new-contact-template-section" >
             <div class="add-new-contact-template" onclick="dialogPrevention(event)">
               <div class="add-new-contact-left-section">
+                <img onclick="toggleOff()"
+                  class="add-new-contact-template-x-mobile"
+                  src="./assets/img/contacts-icons/close-white.svg"
+                  alt="X"
+                />
                 <div class="logo-section">
                   <img src="./assets/img/logo.svg" alt="logo" />
                 </div>
@@ -21,7 +26,7 @@ function overlayTemplate() {
                 />
 
                 <main class="add-new-contact-right-section-main">
-                  <div>
+                  <div class="new-contact-profile-icon-section">
                     <img class="new-contact-profile-icon"
                       src="./assets/img/contacts-icons/add-new-contact-profile-pic.svg"
                       alt=""
@@ -72,6 +77,11 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
     <div class="add-new-contact-template-section" >
       <div class="add-new-contact-template" onclick="dialogPrevention(event)">
         <div class="add-new-contact-left-section">
+          <img onclick="toggleOff()"
+            class="add-new-contact-template-x-mobile"
+            src="./assets/img/contacts-icons/close-white.svg"
+            alt="X"
+          />
           <div class="logo-section">
             <img src="./assets/img/logo.svg" alt="logo" />
           </div>
@@ -89,7 +99,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
           />
 
           <main class="add-new-contact-right-section-main">
-            <div>
+            <div class="new-contact-profile-icon-section">
               <img class="new-contact-profile-icon"
                 src="./assets/img/contacts-icons/add-new-contact-profile-pic.svg"
                 alt=""
@@ -132,30 +142,35 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
   `;
 }
 
-
 function getOpenContactTemplate(contact) {
   const initials = contact.name
     .split(" ")
-    .map(n => n[0].toUpperCase())
+    .map((n) => n[0].toUpperCase())
     .join("")
     .slice(0, 2);
 
   return /*html*/ `
     <div class="my-contact-information-section">
       <div class="profile-badge-and-name">
-        <div class="my-profile-icon" style="background-color: ${contact.color};">${initials}</div>
+        <div class="my-profile-icon" style="background-color: ${
+          contact.color
+        };">${initials}</div>
 
         <div class="name-section">
           <span class="user-name">${contact.name}</span>
 
           <div class="edit-delete-section">
-            <button onclick='toggleEditOverlay(${JSON.stringify(contact)})' class="edit-delete-sub-section">
+            <button onclick='toggleEditOverlay(${JSON.stringify(
+              contact
+            )})' class="edit-delete-sub-section">
               <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
               <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
               <span>Edit</span>
             </button>
 
-            <button class="edit-delete-sub-section" onclick="deleteContact('${contact.firebaseKey}')">
+            <button class="edit-delete-sub-section" onclick="deleteContact('${
+              contact.firebaseKey
+            }')">
               <img class="icon-default" src="./assets/img/contacts-icons/delete.svg" />
               <img class="icon-hover" src="./assets/img/contacts-icons/delete-blue.svg" />
               <span>Delete</span>
