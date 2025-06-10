@@ -51,7 +51,8 @@
     }
 
     .contact {
-        width: 300px;
+        width: 275px;
+        font-size: 16px;
     }
 
     .alphabet-devider {
@@ -323,9 +324,11 @@
     }
 
     .contact {
-        padding: 10px 6px;
+        padding: 10px 10px;
         gap: 25px;
         font-size: 16px;
+        width: 260px;
+        margin-left: 0px;
     }
 
     .alphabet {

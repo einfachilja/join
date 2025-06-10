@@ -67,10 +67,10 @@
 .add-new-contact-button {
     display: none;
     position: absolute;
-    top: 758px;
     width: 100%;
     justify-content: flex-end;
-    margin-right: 40px;  
+    bottom: 30px;
+    right: 30px;
 }
 
 .add-new-contact-button button {
@@ -91,21 +91,18 @@
 .contact {
     display: flex;
     justify-content: flex-start;
-    /* ✅ aligns internal items to the left */
     gap: 35px;
     padding: 15px 24px;
     border-radius: 10px;
-    width: 100%;
-    /* ✅ full width so it aligns to the container */
+    width: 78%;
     max-width: 352px;
-    /* ✅ optional: prevent it from stretching too far */
     background-color: transparent;
     border: none;
     font-size: 18px;
     font-weight: 400 !important;
     text-align: left !important;
-    /* ✅ important for aligning text */
     line-height: 120%;
+    margin-left: 23px;
 }
 
 .contact:hover {
@@ -321,6 +318,10 @@
 
     flex-direction: column;
 
+}
+
+.alphabet-span{
+    padding-left: 23px;
 }
 
 .alphabet-devider {

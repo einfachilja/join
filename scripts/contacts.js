@@ -125,7 +125,7 @@ function renderContacts() {
       currentInitial = firstNameInitial;
       contactListRef.innerHTML += `
                 <div class="alphabet">
-                    ${currentInitial}
+                    <span class="alphabet-span">${currentInitial}</span>
                     <div class="alphabet-devider"></div>
                 </div>
             `;
