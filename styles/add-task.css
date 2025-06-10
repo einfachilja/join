@@ -1,4 +1,4 @@
-£/* === Layout Grundstruktur === */
+/* === Layout Grundstruktur === */
 .desktop-menu {
   position: fixed;
   top: 0;
@@ -235,6 +235,7 @@ label.error {
 
 /* === ASSIGNED TO === */
 .assigned-input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -243,7 +244,6 @@ label.error {
   border-radius: 8px;
   background: white;
   cursor: pointer;
-  position: relative;
 }
 
 .assigned-input-wrapper::after {
@@ -259,6 +259,55 @@ label.error {
   pointer-events: none;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.assigned-item:hover {
+  background-color: #f0f0f0;
+}
+
+.circle-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #d1d1d1;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.assigned-name {
+  flex-grow: 1;
+}
+
+.assigned-item.selected {
+  background-color: #2a3647;
+  color: white;
+}
+
+.assigned-item.selected .assigned-name {
+  color: white;
+}
+
+.assigned-item.selected .circle-icon {
+  background-color: white;
+  color: #2a3647;
+}
+
+.assigned-check {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+}
+
 .assigned-arrow {
   width: 16px;
   height: 16px;
@@ -266,31 +315,12 @@ label.error {
 }
 
 /* === Dropdownliste === */
-.assigned-list {
-  list-style: none;
-  padding: 0;
-  margin: 4px 0 0 0;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  background: white;
-  max-height: 240px;
-  overflow-y: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  position: absolute;
-  width: 100%;
+
+.hidden {
+  display: none !important;
 }
 
 /* === Einzelner Listeneintrag === */
-.assigned-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  position: relative;
-}
 
 .assigned-item:hover {
   background-color: #f0f0f0;
@@ -339,4 +369,28 @@ label.error {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
+}
+
+.container-custom-select-option {
+  margin-bottom: 2px;
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 21px;
+  border-radius: 10px;
+}
+
+.container-custom-select-option:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #2a3647;
+  color: white;
+}
+
+.selected-hover:hover {
+  background-color: #091931 !important;
 }
