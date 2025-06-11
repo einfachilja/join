@@ -38,6 +38,7 @@
     border: none;
     height: 48px;
     border-radius: 10px;
+    width: 100%;
 }
 
 .input-search:focus {
@@ -102,6 +103,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.board-main-box-title img:hover {
+    cursor: pointer;
 }
 
 .card {

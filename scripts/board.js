@@ -212,7 +212,7 @@ function editTask() {
   document.getElementById("edit_btn").classList.add("d-none");
   document.getElementById("seperator").classList.add("d-none");
   document.getElementById("overlay_card_category").classList.add("d-none");
-  
+
 
   document.getElementById("overlay_card_title").contentEditable = "true";
   document.getElementById("overlay_card_title").style.border = "1px solid rgba(0, 0, 0, 0.1)";
@@ -275,7 +275,64 @@ async function saveEditTask(taskKey) {
   }
 }
 
+/* ========== SEARCH FUNCTION ========== */
+function searchTask() {
+  let inputFindTaskRef = document.getElementById("input_find_task");
+  let inputValue = inputFindTaskRef.value.trim().toLowerCase();
 
+  let foundTasks = arrayTasks.filter(task => {
+    let titleMatch = task.title && task.title.toLowerCase().includes(inputValue);
+    let descriptionMatch = task.description && task.description.toLowerCase().includes(inputValue);
+    let priorityMatch = task.priority && task.priority.toLowerCase().includes(inputValue);
+    let statusMatch = task.status && task.status.toLowerCase().includes(inputValue);
+    let subjectMatch = task.subject && task.subject.toLowerCase().includes(inputValue);
+    let subtaskMatch = task.subtask && Array.isArray(task.subtask) && task.subtask.some(sub => sub.toLowerCase().includes(inputValue));
+    let assignedToMatch = task.assignedTo && Array.isArray(task.assignedTo) && task.assignedTo.some(name => name.toLowerCase().includes(inputValue));
+    let dueDateMatch = task.dueDate && task.dueDate.toLowerCase().includes(inputValue);
+    return titleMatch || descriptionMatch || priorityMatch || statusMatch || subjectMatch || subtaskMatch || assignedToMatch || dueDateMatch;
+  });
 
+  if (foundTasks.length > 0) {
+    console.log("Gefundene Tasks:", foundTasks);
+    const sections = ["todo", "progress", "feedback", "done"];
+    sections.forEach(section => {
+      document.getElementById(section).innerHTML = "";
+    });
 
+    for (let task of foundTasks) {
+      if (sections.includes(task.status)) {
+        document.getElementById(task.status).innerHTML += generateTodoHTML(task);
+      }
+    }
+  } else {
+    const sections = ["todo", "progress", "feedback", "done"];
+    sections.forEach(section => {
+      document.getElementById(section).innerHTML = `<span>Keine Ergebnisse in ${section}</span>`;
+    });
+    console.log("Keine Tasks gefunden mit dem Suchbegriff:", inputValue);
+  }
+}
+
+/* ========== ADD NEW TASK TO BOARD ========== */
+async function addNewTask() {
+  let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "title": "New test title",
+      "description": "New test description",
+      "priority": "low",
+      "status": "todo",
+      "subject": "User Story",
+      "subtask": ["Subtask1", "Subtask 2", "Subtask 3"],
+      "assignedTo": ["User 1", "User 2", "User 3"],
+      "dueDate": "31/12/2025"
+    })
+  });
+  let responseJson = await response.json();
+  await loadTasks();
+  return responseJson;
+} 
 

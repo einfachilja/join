@@ -94,20 +94,20 @@
             <h1>Board</h1>
             <div class="board-header-right">
               <div class="search-box">
-                <input class="input-search" type="text" placeholder="Find Task" />
+                <input id="input_find_task" class="input-search" type="text" placeholder="Find Task" onkeyup="searchTask()" />
                 <div class="search-box-right">
                   <img src="./assets/icons/search-line.png" alt="">
                   <img class="search-icon" src="./assets/icons/search.png" alt="">
                 </div>
               </div>
-              <button class="board-add-task-btn">Add task <img src="./assets/icons/add.png" alt=""></button>
+              <button onclick="addNewTask()" class="board-add-task-btn">Add task <img src="./assets/icons/add.png" alt=""></button>
             </div>
           </div>
 
           <div class="board-main">
             <div class="board-main-box">
               <span class="board-main-box-title">To do
-                <img src="./assets/icons/plus-button.png" alt="">
+                <img onclick="addNewTask()" src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="todo" ondrop="moveTo('todo')" ondragleave="removeHighlight('todo')"
                 ondragover="allowDrop(event); highlight('todo')">
@@ -116,7 +116,7 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">In progress
-                <img src="./assets/icons/plus-button.png" alt="">
+                <img onclick="addNewTask()" src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="progress" ondrop="moveTo('progress')" ondragleave="removeHighlight('progress')"
                 ondragover="allowDrop(event); highlight('progress')">
@@ -125,7 +125,7 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">Await feedback
-                <img src="./assets/icons/plus-button.png" alt="">
+                <img onclick="addNewTask()" src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="feedback" ondrop="moveTo('feedback')" ondragleave="removeHighlight('feedback')"
                 ondragover="allowDrop(event); highlight('feedback')">
