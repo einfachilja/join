@@ -88,137 +88,99 @@
         <main class="main">
           <div class="add-task-modal">
             <h2>Add Task</h2>
-            <form id="taskForm" onsubmit="return false;">
+            <form id="task-form" onsubmit="return false;">
               <div class="form-cols">
-                <!-- left -->
+                <!-- LEFT: Title, Description, Due Date -->
                 <div class="col-left">
-                  <label for="title">Title*</label>
-                  <input
-                    id="title"
-                    type="text"
-                    placeholder="e.g. Build UI"
-                    onchange="toggleCreateBtn()"
-                  />
+                  <label for="title"
+                    >Title <span class="red_star">*</span></label
+                  >
+                  <input id="title" type="text" placeholder="e.g. Build UI" />
+
                   <label for="description">Description</label>
                   <textarea
                     id="description"
                     placeholder="e.g. Implement form validations"
                   ></textarea>
-                  <label for="dueDate">Due Date*</label>
+
+                  <label for="dueDate"
+                    >Due Date <span class="red_star">*</span></label
+                  >
                   <input
                     id="dueDate"
-                    class="date-input"
                     type="date"
                     placeholder="DD/MM/YYYY"
-                    onblur="validateDate(); toggleCreateBtn();"
+                    class="date-input"
                   />
                 </div>
 
-                <!-- right -->
+                <!-- MIDDLE -->
+                <div class="add_task_mid_box">
+                  <img
+                    src="./assets/icons/add_tastk_vertical_line.svg"
+                    alt="separator"
+                  />
+                </div>
+
+                <!-- RIGHT: Priority, Assigned To, Subtasks -->
                 <div class="col-right">
                   <label>Priority</label>
                   <div id="buttons-prio" class="priority-buttons">
                     <button
-                      id="urgent"
-                      class="button-prio priority-hover"
                       type="button"
-                      onclick="setPriority('urgent')"
+                      data-prio="urgent"
+                      onclick="selectPriority('urgent')"
                     >
-                      Urgent
-                      <img
-                        id="icon-urgent"
-                        src="./assets/icons/urgent.svg"
-                        alt="urgent icon"
-                      />
+                      Urgent <img src="./assets/icons/urgent.svg" alt="" />
                     </button>
                     <button
-                      id="medium"
-                      class="button-prio priority-hover selected"
                       type="button"
-                      onclick="setPriority('medium')"
+                      data-prio="medium"
+                      class="selected"
+                      onclick="selectPriority('medium')"
                     >
-                      Medium
-                      <img
-                        id="icon-medium"
-                        class="icon-selected"
-                        src="./assets/icons/medium.svg"
-                        alt="medium icon"
-                      />
+                      Medium <img src="./assets/icons/medium.svg" alt="" />
                     </button>
                     <button
-                      id="low"
-                      class="button-prio priority-hover"
                       type="button"
-                      onclick="setPriority('low')"
+                      data-prio="low"
+                      onclick="selectPriority('low')"
                     >
-                      Low
-                      <img
-                        id="icon-low"
-                        src="./assets/icons/low.svg"
-                        alt="low icon"
-                      />
+                      Low <img src="./assets/icons/low.svg" alt="" />
                     </button>
                   </div>
 
-                  <div class="container-input-label custom-select">
-                    <label for="assigned-to" class="label-add-task"
-                      >Assigned to</label
+                  <label>Assigned to</label>
+                  <div id="dropdown-wrapper">
+                    <div
+                      id="dropdown-toggle"
+                      onclick="toggleAssignDropdown(event)"
                     >
-                    <div id="container-input-assigned">
-                      <input
-                        id="assigned-to"
-                        type="text"
-                        name="assigned-to"
-                        placeholder="Select contacts to assign"
-                        size="10"
-                        onclick="toggleAssignOptions(); stopPropagation(event)"
-                        onkeyup="filterContacts()"
-                      />
-                      <button
-                        class="button-dropdown"
-                        type="button"
-                        onclick="toggleAssignOptions(); toggleInputFocus(); stopPropagation(event)"
-                      >
-                        <img
-                          id="arrow-dropdown-assigned"
-                          src="../assets/icons/arrow_drop_down.svg"
-                          alt="icon-arrow-down"
-                        />
-                      </button>
+                      <span id="assigned-to-placeholder">Select contacts</span>
+                      <div class="dropdown-arrow"></div>
                     </div>
-                    <div id="container-dropdown">
-                      <div
-                        id="dropdown-assign"
-                        class="container-custom-select-options d-none"
-                        onmousedown="preventDefault(event)"
-                      ></div>
-                    </div>
-                    <div id="container-assigned-contacts"></div>
+                    <div id="dropdown-content" class="dropdown-content"></div>
                   </div>
+                  <div id="selected-contacts" class="selected-contacts"></div>
 
                   <label>Subtasks</label>
                   <div class="subtask-input">
                     <input
-                      id="subtaskInput"
+                      id="subtask-input"
                       type="text"
                       placeholder="Add new subtask"
-                      onkeypress="if(event.key==='Enter'){ addSubtask(); toggleCreateBtn(); event.preventDefault(); }"
+                      onkeypress="if(event.key==='Enter'){ addSubtask(); event.preventDefault(); }"
                     />
-                    <button
-                      type="button"
-                      onclick="addSubtask(); toggleCreateBtn()"
-                    >
-                      +
-                    </button>
+                    <button type="button" onclick="addSubtask()">+</button>
                   </div>
-                  <ul id="subtaskList"></ul>
+                  <ul id="subtask-list"></ul>
                 </div>
               </div>
 
               <div class="form-actions">
-                <button type="button" onclick="history.back()">Cancel</button>
+                <button type="button" onclick="resetForm()">Cancel</button>
                 <button
-                  id="createBtn"
+                  id="submit-task-btn"
                   type="button"
                   disabled
                   onclick="createTask()"
@@ -229,6 +191,7 @@
             </form>
           </div>
         </main>
+
         <footer>
           <div class="mobile-menu">
             <button>
@@ -264,7 +227,7 @@
     </div>
 
     <script src="./scripts/desktop-template.js"></script>
-    <script src="./scripts/add-task.js"></script>
+    <script src="./scripts/add_task.js"></script>
     <script src="./scripts/help.js"></script>
   </body>
 </html>

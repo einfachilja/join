@@ -33,20 +33,19 @@
   box-sizing: border-box;
 }
 
+/* === Add-Task Modal & Layout === */
 .add-task-modal {
   background: #fff;
   border-radius: 10px;
   padding: 40px;
   max-width: 1040px;
-  width: 100%;
+  margin: 0 auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
-
 .form-cols {
   display: flex;
   gap: 40px;
 }
-
 .col-left,
 .col-right {
   flex: 1;
@@ -54,343 +53,110 @@
   flex-direction: column;
   gap: 24px;
 }
-
-label {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 8px;
+.date-input {
+  appearance: none;
+  padding-right: 40px;
+  background: url("../assets/icons/calendar.svg") no-repeat right center;
 }
-
-input,
-textarea,
-select {
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 16px;
-  font-family: inherit;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #aaa;
-}
-
-.input-error {
-  border-color: #e74c3c !important;
-}
-
-label.error {
-  color: #e74c3c;
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-@media (max-width: 1040px) {
-  .form-cols {
-    flex-direction: column;
-  }
-}
-
-/* === Priorität Buttons === */
-#buttons-prio {
+.priority-buttons button {
+  flex: 1;
+  padding: 12px;
   display: flex;
-  gap: 16px;
-  height: 56px;
-}
-
-.button-prio {
-  width: 136px;
-  height: 56px;
-  border: none;
-  background-color: white;
-  border-radius: 10px;
-  font-family: "Inter", sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 24px;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
   cursor: pointer;
-  box-shadow: 0 0 4px 0 #0000001a;
-  color: #2a3647;
-  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: backround 0.1s;
 }
-
-.button-prio img {
-  width: 20px;
+.priority-buttons button.selected {
+  background: #2a3647;
+  color: #fff;
 }
-
-.button-prio.selected img {
-  filter: brightness(0) invert(1);
-}
-
-.button-prio.urgent.selected {
-  background-color: #ff3d00;
-  color: white;
-}
-
-.button-prio.medium.selected {
-  background-color: #ffa800;
-  color: white;
-}
-
-.button-prio.low.selected {
-  background-color: #7ae229;
-  color: white;
-}
-
-.button-prio.priority-hover:hover {
-  background-color: #f0f0f0;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-/* === Subtasks === */
 .subtask-input {
   display: flex;
   gap: 8px;
 }
-
 .subtask-input input {
   flex: 1;
 }
-
-.subtask-input button {
-  width: 40px;
-  background: #ffa800;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-#subtaskList {
-  list-style: none;
-  margin-top: 12px;
-  padding: 0;
-}
-
-#subtaskList li {
-  padding: 8px 12px;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-/* === Buttons unten === */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
   margin-top: 32px;
 }
-
-.form-actions button {
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.form-actions button:first-child {
-  background: transparent;
-  border: 1px solid #2a3647;
-  color: #2a3647;
-}
-
-.form-actions button#createBtn {
-  background: #2a3647;
-  color: #fff;
-  border: none;
-}
-
-.form-actions button#createBtn:disabled {
-  background: #aaa;
-  cursor: not-allowed;
-}
-
-/* === Date input === */
-.date-input {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+/* Dropdown „Assign to“ */
+#dropdown-wrapper {
   position: relative;
-  padding-right: 40px;
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 20px 20px;
 }
-
-.date-input::-ms-expand {
-  display: none;
-}
-
-/* === ASSIGNED TO === */
-.assigned-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+#dropdown-toggle {
+  padding: 12px;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
-  background: white;
-  cursor: pointer;
-}
-
-.assigned-input-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background: url("../assets/icons/arrow_drop_down.svg") no-repeat center;
-  background-size: contain;
-  pointer-events: none;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.assigned-item:hover {
-  background-color: #f0f0f0;
-}
-
-.circle-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #d1d1d1;
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-}
-
-.assigned-name {
-  flex-grow: 1;
-}
-
-.assigned-item.selected {
-  background-color: #2a3647;
-  color: white;
-}
-
-.assigned-item.selected .assigned-name {
-  color: white;
-}
-
-.assigned-item.selected .circle-icon {
-  background-color: white;
-  color: #2a3647;
-}
-
-.assigned-check {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-}
-
-.assigned-arrow {
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-}
-
-/* === Dropdownliste === */
-
-.hidden {
-  display: none !important;
-}
-
-/* === Einzelner Listeneintrag === */
-
-.assigned-item:hover {
-  background-color: #f0f0f0;
-}
-
-/* Initialen-Kreis */
-.circle-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #d1d1d1;
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-}
-
-/* Name neben Initialen */
-.assigned-name {
-  flex-grow: 1;
-}
-
-/* === Zustand: ausgewählt === */
-.assigned-item.selected {
-  background-color: #2a3647;
-  color: white;
-}
-
-.assigned-item.selected .assigned-name {
-  color: white;
-}
-
-.assigned-item.selected .circle-icon {
-  background-color: white;
-  color: #2a3647;
-}
-
-/* Haken */
-.assigned-check {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-}
-
-.container-custom-select-option {
-  margin-bottom: 2px;
-  height: 48px;
+  background: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 21px;
-  border-radius: 10px;
-}
-
-.container-custom-select-option:hover {
-  background-color: #eeeeee;
   cursor: pointer;
 }
-
-.selected {
-  background-color: #2a3647;
-  color: white;
+.dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #333;
+  transition: transform 0.15s;
 }
-
-.selected-hover:hover {
-  background-color: #091931 !important;
+#dropdown-toggle.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #d1d1d1;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 10;
+}
+.dropdown-content.visible {
+  display: block;
+}
+.dropdown-content .contact-item {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.dropdown-content .contact-item:hover {
+  background: #f0f0f0;
+}
+.selected-contacts {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.selected-contacts .initials-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+}
+.error-border {
+  border-color: #e74c3c !important;
 }
