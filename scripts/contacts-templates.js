@@ -207,15 +207,23 @@ function getOpenContactMobileTemplate(contact) {
     <div class="my-contact-information-section-mobile" onclick="dialogPrevention(event)">
 
       <div class="my-contact-information-section-mobile-content">
-        <div class="my-contact-info-mobile-header" onclick="dialogPrevention(event)">
-          <div class="header-div-mobile">
-            <span class="Contacts-span">Contacts</span>
-            <span class="better-with-a-team-span">Better with a team</span>
-            <img src="./assets/img/contacts-icons/blue-line-mobile.svg" alt="">
+        <div class="my-contact-info-mobile-header">
+          <div class="my-contact-info-mobile-header-content">
+            <div class="header-div-mobile">
+              <span class="Contacts-span">Contacts</span>
+              <span class="better-with-a-team-span">Better with a team</span>
+              <img src="./assets/img/contacts-icons/blue-line-mobile.svg" alt="">
+            </div>
+
+            <div class="arrow-left-mobile">
+              <a href="#" onclick="return returnToPrevPage();">
+                <img src="./assets/img/arrow-left-line.svg" alt="Go Back" />
+              </a>
+            </div>
           </div>
         </div>
 
-        <div class="user-contact-informtion" onclick="dialogPrevention(event)">
+        <div class="user-contact-informtion">
           <div class="profile-badge-and-name">
             <div class="my-profile-icon" style="background-color: ${contact.color};">${initials}</div>
 
@@ -228,12 +236,12 @@ function getOpenContactMobileTemplate(contact) {
             </div>
         
             <div class="email-and-phone-sub-section">
-              <div>Email</div>
+              <div class="email-and-phone-span">Email</div>
               <a href="mailto:${contact.email}">${contact.email}</a>
             </div>
 
             <div class="email-and-phone-sub-section">
-              <div>Phone</div>
+              <div class="email-and-phone-span">Phone</div>
               <a href="tel:${contact.phone}">${contact.phone}</a>
             </div>
           </div>

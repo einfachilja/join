@@ -668,16 +668,25 @@
 .my-contact-information-section-mobile-content {
     display: none;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     height: 100%;
     gap: 50px;
-
+    margin-top: 100px;
 }
 
 .my-contact-info-mobile-header{
     display: flex;
     align-items: center;
+    justify-content: center;
+}
 
+.my-contact-info-mobile-header-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 100px;
+     
 }
 
 .header-div-mobile {
@@ -737,4 +746,9 @@
     font-weight: 400;
     line-height: 120%;
     letter-spacing: 0%;
+}
+
+.arrow-left-mobile{
+    margin-bottom: 35px;
+
 }
