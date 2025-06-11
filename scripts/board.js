@@ -312,3 +312,27 @@ function searchTask() {
     console.log("Keine Tasks gefunden mit dem Suchbegriff:", inputValue);
   }
 }
+
+/* ========== ADD NEW TASK TO BOARD ========== */
+async function addNewTask() {
+  let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "title": "New test title",
+      "description": "New test description",
+      "priority": "low",
+      "status": "todo",
+      "subject": "User Story",
+      "subtask": ["Subtask1", "Subtask 2", "Subtask 3"],
+      "assignedTo": ["User 1", "User 2", "User 3"],
+      "dueDate": "31/12/2025"
+    })
+  });
+  let responseJson = await response.json();
+  await loadTasks();
+  return responseJson;
+} 
+
