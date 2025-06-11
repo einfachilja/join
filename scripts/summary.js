@@ -68,48 +68,48 @@ function updatePriorityAndDeadlineSummary(tasks) {
 
 // Hilfsfunktion: finde relevante Aufgaben nach Priorität
 function getRelevantPriorityTasks(tasks) {
-  const high = tasks.filter(t => t.priority === "high");
-  const medium = tasks.filter(t => t.priority === "medium");
+  const open = tasks.filter(t => t.status !== "done");
 
-  if (high.length > 0) return { priority: "high", tasks: high };
+  const high   = open.filter(t => t.priority === "high");
+  const medium = open.filter(t => t.priority === "medium");
+
+  if (high.length  > 0) return { priority: "high",   tasks: high   };
   if (medium.length > 0) return { priority: "medium", tasks: medium };
-  return { priority: null, tasks: [] }; 
+  return { priority: null, tasks: [] };      
 }
 
 
 // Hilfsfunktion: UI-Anzeige der Priorität (Text + Icon)
 function updatePriorityUI(priority, count) {
-  const label = document.getElementById("priority-label");
-  const icon = document.getElementById("priority-icon");
+  const label  = document.getElementById("priority-label");
+  const icon   = document.getElementById("priority-icon");
   const number = document.getElementById("summary_card_number_priority_high");
 
-  if (!priority) {
+  if (!priority) {                      
     icon.style.display = "none";
-    label.textContent = "";
-    number.textContent = "";
+    label.textContent  = "";
+    number.textContent = "0";           
     return;
   }
 
   icon.style.display = "inline";
-  const timestamp = new Date().getTime();
+  const ts = Date.now();
   icon.src = priority === "high"
-    ? `./assets/icons/summary-urgent.png?${timestamp}`
-    : `./assets/icons/medium.svg?${timestamp}`;
+    ? `./assets/icons/summary-urgent.png?${ts}`
+    : `./assets/icons/medium.svg?${ts}`;
   icon.alt = priority;
 
-  label.textContent = priority === "high" ? "Urgent" : "Medium";
-  number.textContent = count;
+  label.textContent  = priority === "high" ? "Urgent" : "Medium";
+  number.textContent = count;            
 }
-
-
-
 
 // Hilfsfunktion: finde frühestes gültiges Fälligkeitsdatum
 function updateEarliestDeadline(tasks) {
   const deadlines = tasks
+    .filter(t => t.status !== "done") // erledigte Tasks ausschließen
     .map(t => convertDateStringToDate(t.dueDate))
     .filter(date => date instanceof Date && !isNaN(date)) // nur gültige Daten
-    .sort((a, b) => a - b); // aufsteigend sortieren
+    .sort((a, b) => a - b); 
 
   const deadlineEl = document.getElementById("upcoming-deadline-date");
   if (deadlineEl) {
