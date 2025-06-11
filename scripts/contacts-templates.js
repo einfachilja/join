@@ -160,17 +160,15 @@ function getOpenContactTemplate(contact) {
           <span class="user-name">${contact.name}</span>
 
           <div class="edit-delete-section">
-            <button onclick='toggleEditOverlay(${JSON.stringify(
-              contact
-            )})' class="edit-delete-sub-section">
+            <button onclick='toggleEditOverlay(${JSON.stringify(contact)})' class="edit-delete-sub-section">
+
               <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
               <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
               <span>Edit</span>
             </button>
 
-            <button class="edit-delete-sub-section" onclick="deleteContact('${
-              contact.firebaseKey
-            }')">
+            <button onclick='deleteContact("${contact.firebaseKey}")' class="edit-delete-sub-section">
+
               <img class="icon-default" src="./assets/img/contacts-icons/delete.svg" />
               <img class="icon-hover" src="./assets/img/contacts-icons/delete-blue.svg" />
               <span>Delete</span>
@@ -196,4 +194,79 @@ function getOpenContactTemplate(contact) {
       </div>
     </div>
   `;
+}
+
+function getOpenContactMobileTemplate(contact) {
+  const initials = contact.name
+    .split(" ")
+    .map((n) => n[0].toUpperCase())
+    .join("")
+    .slice(0, 2);
+
+  return /*html*/ `
+    <div class="my-contact-information-section-mobile" onclick="dialogPrevention(event)">
+
+      <div class="my-contact-information-section-mobile-content">
+        <div class="my-contact-info-mobile-header" onclick="dialogPrevention(event)">
+          <div class="header-div-mobile">
+            <span class="Contacts-span">Contacts</span>
+            <span class="better-with-a-team-span">Better with a team</span>
+            <img src="./assets/img/contacts-icons/blue-line-mobile.svg" alt="">
+          </div>
+        </div>
+
+        <div class="user-contact-informtion" onclick="dialogPrevention(event)">
+          <div class="profile-badge-and-name">
+            <div class="my-profile-icon" style="background-color: ${contact.color};">${initials}</div>
+
+            <span class="user-name">${contact.name}</span>
+          </div>
+
+          <div class="email-and-phone-section">
+            <div class="Contact-information-div">
+              <span>Contact Information</span>
+            </div>
+        
+            <div class="email-and-phone-sub-section">
+              <div>Email</div>
+              <a href="mailto:${contact.email}">${contact.email}</a>
+            </div>
+
+            <div class="email-and-phone-sub-section">
+              <div>Phone</div>
+              <a href="tel:${contact.phone}">${contact.phone}</a>
+            </div>
+          </div>
+
+          <div class="add-new-contact-button">
+            <button onclick='openEditDeleteMenu(${JSON.stringify(contact)})'>
+              <img src="./assets/img/contacts-icons/edit-delete-menu.svg" alt="edit-delete-menu" />
+            </button>
+          </div>
+          <div id="edit_delete_menu">
+          </div>
+      
+        </div>
+      </div>
+      
+    </div>
+  `;
+}
+
+function getEditDeleteMenuTemplate(contact) {
+  return /*html*/ `
+  <div id="edit_delete_menu" class="edit-delete-menu">
+            <button onclick='toggleEditOverlay(${JSON.stringify(contact)})' class="edit-delete-sub-section">
+              <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
+              <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
+              <span>Edit</span>
+            </button>
+
+            <button class="edit-delete-sub-section" onclick='deleteContact("${contact.firebaseKey}")'>
+              <img class="icon-default" src="./assets/img/contacts-icons/delete.svg" />
+              <img class="icon-hover" src="./assets/img/contacts-icons/delete-blue.svg" />
+              <span>Delete</span>
+            </button>
+          </div>
+  `
 }

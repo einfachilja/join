@@ -158,6 +158,11 @@
     .better-with-a-team-span {
         font-size: 18px;
     }
+
+    .sub-menu {
+        top: 80px;
+        right: 0px;
+    }
 }
 
 @media(max-width: 800px) {
@@ -299,6 +304,49 @@
         font-size: 20px !important;
     }
 
+    /* ====== SHOW CONTACT INFO OVERLAY ====== */
+
+
+    .my-contact-information-section-mobile {
+        display: flex;
+    }
+
+    .my-contact-information-section-mobile-content {
+        display: flex;
+    }
+
+    .profile-badge-and-name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        width: auto;
+    }
+
+    .user-name {
+        height: 35px;
+    }
+
+    .email-and-phone-section {
+        width: auto;
+    }
+
+
+    .header-div-mobile {
+        display: flex;
+    }
+
+    .user-contact-informtion {
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+    }
+
+
+
+
 }
 
 @media(max-width: 500px) {
@@ -334,7 +382,7 @@
     .alphabet {
         font-size: 18px;
     }
-    
+
     .alphabet-devider {
         width: 280px;
     }

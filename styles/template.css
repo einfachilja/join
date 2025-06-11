@@ -189,6 +189,7 @@ button p{
     border-top-left-radius: 20px;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
+    border-top-right-radius: 0px;
     padding: 10px;
     display: flex;
     flex-direction: column;

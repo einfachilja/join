@@ -137,7 +137,7 @@ function renderContacts() {
     }
 
     contactListRef.innerHTML += `
-    <div onclick="styleContactOnclick(this)" class="contact">
+    <div onclick="styleContactOnclick(this)"  class="contact">
         <div class="profile-icon" style="background-color: ${contact.color};">${initials}</div>
         <div class="name-and-email">
             <div class="contact-name">${contact.name}</div>
@@ -158,7 +158,23 @@ function styleContactOnclick(element) {
 
   const name = element.querySelector(".contact-name").textContent;
   const contact = contacts.find((c) => c.name === name);
-  if (contact) showContactInfo(contact);
+  if (contact) {
+    // If mobile view, show overlay
+    if (window.innerWidth <= 800) {
+      toggleContactInfoOverlay(contact); // new overlay for mobile
+    } else {
+      showContactInfo(contact); // desktop mode
+    }
+  }
+}
+
+function toggleContactInfoOverlay(contact){
+  const overlayRef = document.getElementById("overlay");
+  overlayRef.innerHTML = ""; // Clear previous content
+
+  overlayRef.innerHTML += getOpenContactMobileTemplate(contact); // Add new contact info
+
+  overlayRef.classList.remove("d_none"); // Show the overlay
 }
 
 /* ============= SHOW CONTACT TEMPLATE ============= */
@@ -243,6 +259,11 @@ function toggleOverlay() {
   }, 0);
 }
 
+function openEditDeleteMenu(contact){
+  let openEditDeleteMenuRef = document.getElementById("edit_delete_menu");
+  openEditDeleteMenuRef.innerHTML = getEditDeleteMenuTemplate(contact);
+}
+
 /* =================== EDIT OVERLAY ================== */
 function toggleEditOverlay(contact) {
   const overlayRef = document.getElementById("overlay");
@@ -285,3 +306,7 @@ function toggleOff() {
 }
 
 window.onload = loadContacts;
+
+
+// ============== MOBILE TEMPLATE FUNCTIONS ============== */
+
