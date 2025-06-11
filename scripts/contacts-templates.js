@@ -93,7 +93,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
 
         <div class="add-new-contact-right-section">
           <img onclick="toggleOff()"
-            class="add-new-contact-template-x"
+            class="add-new-contact-template-x d_none"
             src="./assets/img/contacts-icons/Close.svg"
             alt="X"
           />
@@ -202,10 +202,10 @@ function getOpenContactMobileTemplate(contact) {
     .map((n) => n[0].toUpperCase())
     .join("")
     .slice(0, 2);
-
   return /*html*/ `
     <div class="my-contact-information-section-mobile" onclick="dialogPrevention(event)">
 
+      <div onclick="toggleOffMobile()" id="overlay_mobile" class="d_none"></div>
       <div class="my-contact-information-section-mobile-content">
         <div class="my-contact-info-mobile-header">
           <div class="my-contact-info-mobile-header-content">
@@ -264,7 +264,7 @@ function getOpenContactMobileTemplate(contact) {
 function getEditDeleteMenuTemplate(contact) {
   return /*html*/ `
   <div id="edit_delete_menu" class="edit-delete-menu">
-            <button onclick='toggleEditOverlay(${JSON.stringify(contact)})' class="edit-delete-sub-section">
+            <button onclick='toggleMobileEditOverlay(${JSON.stringify(contact)})' class="edit-delete-sub-section">
               <img class="icon-default" src="./assets/img/contacts-icons/edit.svg" />
               <img class="icon-hover" src="./assets/img/contacts-icons/edit-blue.svg" />
               <span>Edit</span>

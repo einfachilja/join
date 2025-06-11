@@ -285,6 +285,26 @@ function toggleEditOverlay(contact) {
   }, 0);
 }
 
+function toggleMobileEditOverlay(contact) {
+  const overlayRef = document.getElementById("overlay_mobile");
+  overlayRef.innerHTML = ""; 
+
+  overlayRef.innerHTML += overlayEditTemplate(
+    contact.name,
+    contact.email,
+    contact.phone,
+    contact.firebaseKey
+  );
+
+  overlayRef.classList.remove("d_none"); 
+
+  setTimeout(() => overlayRef.classList.add("active"), 0);
+  setTimeout(() => {
+    const modal = document.querySelector(".add-new-contact-template");
+    if (modal) modal.classList.add("slide-in");
+  }, 0);
+}
+
 function dialogPrevention(event) {
   event.stopPropagation();
 }
@@ -305,8 +325,22 @@ function toggleOff() {
   }, 280); 
 }
 
+function toggleOffMobile() {
+  const overlayRef = document.getElementById("overlay_mobile");
+  const modal = document.querySelector(".add-new-contact-template");
+
+  if (modal) {
+    modal.classList.remove("slide-in"); 
+  }
+
+  overlayRef.classList.remove("active"); 
+
+  setTimeout(() => {
+    overlayRef.classList.add("d_none");
+    overlayRef.innerHTML = ""; 
+  }, 280); 
+}
+
 window.onload = loadContacts;
 
-
-// ============== MOBILE TEMPLATE FUNCTIONS ============== */
 

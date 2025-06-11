@@ -354,6 +354,17 @@
         gap: 280px;
     }
 
+    .save-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1px;
+    }
+
+    .form-buttons button img {
+        width: 22px;
+        height: 22px;
+    }
 
 
 
