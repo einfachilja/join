@@ -38,6 +38,7 @@
     border: none;
     height: 48px;
     border-radius: 10px;
+    width: 100%;
 }
 
 .input-search:focus {
