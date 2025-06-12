@@ -1,3 +1,5 @@
+let firebaseKey = localStorage.getItem("firebaseKey");
+
 // ==== STATE ====
 let selectedPriority = "medium";
 const subtasks = [];
@@ -25,13 +27,14 @@ function selectPriority(prio) {
 }
 
 // ====== Assign-Dropdown toggle ======
-function toggleAssignDropdown(e) {
-  e.stopPropagation();
+function toggleAssignDropdown() {
+  event.stopPropagation();
   document.getElementById("dropdown-toggle").classList.toggle("open");
   document.getElementById("dropdown-content").classList.toggle("visible");
   if (!document.getElementById("dropdown-content").innerHTML) {
     renderAssignOptions();
   }
+
 }
 
 // schließe Dropdown, wenn außerhalb geklickt
@@ -57,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function fetchContacts() {
   try {
     const res = await fetch(
-      "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users.json"
+      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`
     );
     const data = await res.json();
     contacts = Object.entries(data || {})
@@ -114,12 +117,11 @@ function renderAssignOptions() {
     item.className = "contact-item";
     item.innerHTML = `
       <span class="initials-circle" style="background:${c.color}">${c.name
-      .split(" ")
-      .map((w) => w[0])
-      .join("")}</span>
+        .split(" ")
+        .map((w) => w[0])
+        .join("")}</span>
       <span>${c.name}</span>
-      <input type="checkbox" ${
-        selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
+      <input type="checkbox" ${selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
       }/>
     `;
     item.onclick = () => {
