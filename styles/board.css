@@ -184,6 +184,7 @@
     background-color: rgba(22, 31, 44, 0.294);
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .board-overlay-card {
@@ -197,8 +198,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transform: translateX(100%);
-    /* Transition hier setzen */
 }
 
 

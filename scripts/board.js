@@ -314,7 +314,7 @@ function searchTask() {
 }
 
 /* ========== ADD NEW TASK TO BOARD ========== */
-async function addNewTask() {
+async function createTask() {
   let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`, {
     method: "POST",
     headers: {
@@ -334,5 +334,136 @@ async function addNewTask() {
   let responseJson = await response.json();
   await loadTasks();
   return responseJson;
-} 
+}
 
+function openAddTaskOverlay() {
+  let addTaskOverlayRef = document.getElementById("add_task_overlay");
+  document.getElementById("add_task_overlay").classList.remove("d-none");
+  document.getElementById("html").style.overflow = "hidden";
+
+  addTaskOverlayRef.innerHTML = getaddTaskOverlay();
+  updateHTML();
+}
+
+function getaddTaskOverlay() {
+  return `     
+          <div class="add-task-modal">
+            <h2>Add Task</h2>
+            <form id="task-form" onsubmit="return false;">
+              <div class="form-cols">
+                <!-- linke Spalte -->
+                <div class="col-left">
+                  <label for="title"
+                    >Title <span class="red_star">*</span></label
+                  >
+                  <input id="title" type="text" placeholder="e.g. Build UI" />
+
+                  <label for="description">Description</label>
+                  <textarea
+                    id="description"
+                    placeholder="e.g. Implement form validations"
+                  ></textarea>
+
+                  <label for="dueDate"
+                    >Due Date <span class="red_star">*</span></label
+                  >
+                  <div class="date-wrapper">
+                    <input
+                      id="dueDate"
+                      class="date-input"
+                      type="date"
+                      placeholder="DD/MM/YYYY"
+                      onblur="validateDate(); updateSubmitState();"
+                    />
+                    <img
+                      src="./assets/icons/calendar.svg"
+                      class="calendar-icon"
+                      alt="Kalender"
+                      onclick="openDatepicker()"
+                    />
+                  </div>
+                </div>
+
+                <!-- mittlerer Separator -->
+                <div class="add_task_mid_box"></div>
+
+                <!-- rechte Spalte -->
+                <div class="col-right">
+                  <label>Priority</label>
+                  <div id="buttons-prio" class="priority-buttons">
+                    <button
+                      type="button"
+                      data-prio="urgent"
+                      onclick="selectPriority('urgent')"
+                    >
+                      Urgent <img src="./assets/icons/urgent.svg" alt="" />
+                    </button>
+                    <button
+                      type="button"
+                      data-prio="medium"
+                      class="selected"
+                      onclick="selectPriority('medium')"
+                    >
+                      Medium <img src="./assets/icons/medium.svg" alt="" />
+                    </button>
+                    <button
+                      type="button"
+                      data-prio="low"
+                      onclick="selectPriority('low')"
+                    >
+                      Low <img src="./assets/icons/low.svg" alt="" />
+                    </button>
+                  </div>
+
+                  <label>Assigned to</label>
+                  <div id="dropdown-wrapper">
+                    <div
+                      id="dropdown-toggle"
+                      onclick="toggleAssignDropdown()"
+                    >
+                      <span id="assigned-to-placeholder">Select contacts</span>
+                      <div class="dropdown-arrow"></div>
+                    </div>
+                    <div id="dropdown-content" class="dropdown-content"></div>
+                  </div>
+                  <div id="selected-contacts" class="selected-contacts"></div>
+
+                  <label>Subtasks</label>
+                  <div class="subtask-input">
+                    <input
+                      id="subtask-input"
+                      type="text"
+                      placeholder="Add new subtask"
+                      onkeypress="if(event.key==='Enter'){ addSubtask(); event.preventDefault(); }"
+                    />
+                    <button type="button" onclick="addSubtask()">+</button>
+                  </div>
+                  <ul id="subtask-list"></ul>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" onclick="resetForm()">Cancel</button>
+                <button
+                  id="submit-task-btn"
+                  type="button"
+                  onclick="createTask()"
+                >
+                  Create Task
+                </button>
+              </div>
+            </form>
+          </div>
+        `;
+}
+
+// ==== CREATE TASK ====
+async function createTask() {
+  fetch(`https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`, {
+    method: "POST",
+    body: JSON.stringify({
+      status: "todo",
+      subject: "User Story"
+    })
+  })
+}
