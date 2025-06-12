@@ -204,10 +204,13 @@ async function createTask() {
     assignedTo: selectedContacts.map((c) => c.name),
     subtasks,
     createdAt: new Date().toISOString(),
+    status: "todo"
   };
-  // hier deine eigene Save-Logik / Firebase-Endpunkt
-  console.log("Task to save:", task);
-  alert("Task saved – implement your backend call!");
+
+  fetch(`https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`, {
+    method: "POST",
+    body: JSON.stringify(task)
+  })
   resetForm();
 }
 
