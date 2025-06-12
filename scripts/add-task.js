@@ -26,17 +26,6 @@ function selectPriority(prio) {
   updateSubmitState();
 }
 
-// ====== Assign-Dropdown toggle ======
-function toggleAssignDropdown() {
-  event.stopPropagation();
-  document.getElementById("dropdown-toggle").classList.toggle("open");
-  document.getElementById("dropdown-content").classList.toggle("visible");
-  if (!document.getElementById("dropdown-content").innerHTML) {
-    renderAssignOptions();
-  }
-
-}
-
 // schließe Dropdown, wenn außerhalb geklickt
 document.addEventListener("click", (e) => {
   if (!document.getElementById("dropdown-wrapper").contains(e.target)) {
@@ -102,13 +91,6 @@ function toggleAssignDropdown(event) {
   dd.classList.toggle("visible");
   if (dd.innerHTML === "") renderAssignOptions();
 }
-document.addEventListener("click", (e) => {
-  if (!document.getElementById("dropdown-wrapper").contains(e.target)) {
-    document.getElementById("dropdown-toggle").classList.remove("open");
-    document.getElementById("dropdown-content").classList.remove("visible");
-  }
-});
-
 function renderAssignOptions() {
   const dd = document.getElementById("dropdown-content");
   dd.innerHTML = "";
@@ -117,11 +99,12 @@ function renderAssignOptions() {
     item.className = "contact-item";
     item.innerHTML = `
       <span class="initials-circle" style="background:${c.color}">${c.name
-        .split(" ")
-        .map((w) => w[0])
-        .join("")}</span>
+      .split(" ")
+      .map((w) => w[0])
+      .join("")}</span>
       <span>${c.name}</span>
-      <input type="checkbox" ${selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
+      <input type="checkbox" ${
+        selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
       }/>
     `;
     item.onclick = () => {
@@ -204,13 +187,16 @@ async function createTask() {
     assignedTo: selectedContacts.map((c) => c.name),
     subtasks,
     createdAt: new Date().toISOString(),
-    status: "todo"
+    status: "todo",
   };
 
-  fetch(`https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`, {
-    method: "POST",
-    body: JSON.stringify(task)
-  })
+  fetch(
+    `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`,
+    {
+      method: "POST",
+      body: JSON.stringify(task),
+    }
+  );
   resetForm();
 }
 
