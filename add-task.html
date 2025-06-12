@@ -90,7 +90,7 @@
             <h2>Add Task</h2>
             <form id="task-form" onsubmit="return false;">
               <div class="form-cols">
-                <!-- LEFT: Title, Description, Due Date -->
+                <!-- linke Spalte -->
                 <div class="col-left">
                   <label for="title"
                     >Title <span class="red_star">*</span></label
@@ -106,23 +106,27 @@
                   <label for="dueDate"
                     >Due Date <span class="red_star">*</span></label
                   >
-                  <input
-                    id="dueDate"
-                    type="date"
-                    placeholder="DD/MM/YYYY"
-                    class="date-input"
-                  />
+                  <div class="date-wrapper">
+                    <input
+                      id="dueDate"
+                      class="date-input"
+                      type="date"
+                      placeholder="DD/MM/YYYY"
+                      onblur="validateDate(); updateSubmitState();"
+                    />
+                    <img
+                      src="./assets/icons/calendar.svg"
+                      class="calendar-icon"
+                      alt="Kalender"
+                      onclick="openDatepicker()"
+                    />
+                  </div>
                 </div>
 
-                <!-- MIDDLE -->
-                <div class="add_task_mid_box">
-                  <img
-                    src="./assets/icons/add_tastk_vertical_line.svg"
-                    alt="separator"
-                  />
-                </div>
+                <!-- mittlerer Separator -->
+                <div class="add_task_mid_box"></div>
 
-                <!-- RIGHT: Priority, Assigned To, Subtasks -->
+                <!-- rechte Spalte -->
                 <div class="col-right">
                   <label>Priority</label>
                   <div id="buttons-prio" class="priority-buttons">
@@ -227,7 +231,7 @@
     </div>
 
     <script src="./scripts/desktop-template.js"></script>
-    <script src="./scripts/add_task.js"></script>
+    <script src="./scripts/add-task.js"></script>
     <script src="./scripts/help.js"></script>
   </body>
 </html>

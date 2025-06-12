@@ -44,6 +44,7 @@
 }
 .form-cols {
   display: flex;
+  align-items: stretch;
   gap: 40px;
 }
 .col-left,
@@ -53,29 +54,86 @@
   flex-direction: column;
   gap: 24px;
 }
-.date-input {
-  appearance: none;
-  padding-right: 40px;
-  background: url("../assets/icons/calendar.svg") no-repeat right center;
+
+.add_task_mid_box {
+  width: 1px;
+  background-color: #d1d1d1;
 }
-.priority-buttons button {
-  flex: 1;
-  padding: 12px;
+
+.add_task_mid_box img {
+  width: 1px;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === Priority-Buttons: Default mit farbigem Rand/Text/Icon === */
+.priority-buttons {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: none;
+  gap: 16px;
+}
+
+.priority-buttons button {
+  padding: 12px 24px;
+  border: 1px solid transparent;
   border-radius: 8px;
   background: #fff;
+  color: #000;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: backround 0.1s;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
 }
+
+/* Accent-Farben je nach Prio */
+.priority-buttons button[data-prio="urgent"] {
+  border-color: #ff3d00;
+  color: #ff3d00;
+}
+
+.priority-buttons button[data-prio="medium"] {
+  border-color: #ffa800;
+  color: #ffa800;
+}
+
+.priority-buttons button[data-prio="low"] {
+  border-color: #7ae229;
+  color: #7ae229;
+}
+
+/* === Ausgewählter Zustand: Hintergrund voll färben, Text/Icon weiß === */
 .priority-buttons button.selected {
-  background: #2a3647;
+  /* Text weiß */
   color: #fff;
 }
+
+/* Je Prio-Farbe */
+.priority-buttons button[data-prio="urgent"].selected {
+  background-color: #ff3d00;
+  border-color: #ff3d00;
+}
+
+.priority-buttons button[data-prio="medium"].selected {
+  background-color: #ffa800;
+  border-color: #ffa800;
+}
+
+.priority-buttons button[data-prio="low"].selected {
+  background-color: #7ae229;
+  border-color: #7ae229;
+}
+
+/* Icon im selektierten Zustand invertieren (weiß machen) */
+.priority-buttons button.selected img {
+  filter: brightness(0) invert(1);
+}
+
+.priority-buttons button:not(.selected):hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .subtask-input {
   display: flex;
   gap: 8px;
@@ -87,8 +145,34 @@
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-  margin-top: 32px;
+  margin-top: 40px;
 }
+
+.form-actions button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid #2a3647;
+  background: #fff;
+  color: #2a3647;
+  cursor: pointer;
+}
+
+.form-actions button#create-task {
+  background: #2a3647;
+  color: #fff;
+  border: none;
+}
+
+input,
+textarea,
+select {
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  background: #fff;
+}
+
 /* Dropdown „Assign to“ */
 #dropdown-wrapper {
   position: relative;
@@ -159,4 +243,47 @@
 }
 .error-border {
   border-color: #e74c3c !important;
+}
+
+/* ------------------------------------
+   Datum-Input + eigenes Icon
+   ------------------------------------ */
+
+/* 1) Wrapper um Input + Icon */
+.date-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* 2) Input mit extra Padding rechts */
+.date-wrapper .date-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 40px 12px 16px; /* oben/rechts/unten/links */
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* 3) Kalender-Icon absolut positioniert */
+.date-wrapper .calendar-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+/* 4) Native Picker-UI ausblenden */
+.date-wrapper .date-input::-webkit-calendar-picker-indicator,
+.date-wrapper .date-input::-webkit-inner-spin-button,
+.date-wrapper .date-input::-webkit-outer-spin-button {
+  display: none;
 }

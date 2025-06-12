@@ -60,10 +60,12 @@ async function fetchContacts() {
       "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users.json"
     );
     const data = await res.json();
-    contacts = Object.entries(data || {}).map(([k, u]) => ({
-      name: u.name.trim(),
-      color: u.color || "#888",
-    }));
+    contacts = Object.entries(data || {})
+      .filter(([_, u]) => u && typeof u.name === "string" && u.name.trim())
+      .map(([_, u]) => ({
+        name: u.name.trim(),
+        color: u.color || "#888",
+      }));
   } catch (err) {
     console.error("Contacts fetch error:", err);
   }
@@ -205,4 +207,18 @@ async function createTask() {
   console.log("Task to save:", task);
   alert("Task saved – implement your backend call!");
   resetForm();
+}
+
+/**
+ * Öffnet den nativen Datepicker
+ */
+function openDatepicker() {
+  const el = document.getElementById("dueDate");
+  if (typeof el.showPicker === "function") {
+    // moderner Chromium-Browser
+    el.showPicker();
+  } else {
+    // Safari, Firefox, iOS etc.
+    el.focus();
+  }
 }
