@@ -105,24 +105,24 @@
 
 /* === Ausgewählter Zustand: Hintergrund voll färben, Text/Icon weiß === */
 .priority-buttons button.selected {
-  /* Text weiß */
+  border: none;
   color: #fff;
 }
 
 /* Je Prio-Farbe */
 .priority-buttons button[data-prio="urgent"].selected {
   background-color: #ff3d00;
-  border-color: #ff3d00;
+  border: none;
 }
 
 .priority-buttons button[data-prio="medium"].selected {
   background-color: #ffa800;
-  border-color: #ffa800;
+  border: none;
 }
 
 .priority-buttons button[data-prio="low"].selected {
   background-color: #7ae229;
-  border-color: #7ae229;
+  border: none;
 }
 
 /* Icon im selektierten Zustand invertieren (weiß machen) */
