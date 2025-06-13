@@ -266,3 +266,33 @@ button p {
         padding-bottom: 8px;
     }
 }
+
+@media (max-width: 500px){
+        /* ====== HEADER FOOTER ====== */
+    .user-profile {
+        width: 45px;
+        height: 45px;
+    }
+
+    .logo-mobile {
+        width: 45px;
+        height: 45px;
+    }
+
+    .mobile-menu button {
+        height: 60px;
+        width: 70px;
+    }
+
+    .mobile-menu button p {
+        font-size: 14px;
+    }
+
+    .mobile-menu button a.active {
+        width: 70px;
+    }
+
+    .my-contact-info-mobile-header-content {
+        gap: 100px;
+    }
+}

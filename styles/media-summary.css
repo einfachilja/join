@@ -1,0 +1,186 @@
+@media(max-width: 1232px) {
+
+    /* Summary */
+    .summary-container {
+        margin-left: 280px;
+        margin-top: 150px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    .summary-subtitle {
+        font-size: 24px;
+    }
+
+    .welcome-message h2 {
+        font-size: 24px;
+    }
+
+    .welcome-message p {
+        font-size: 26px;
+    }
+
+    .card-container {
+        gap: 40px !important;
+    }
+
+    .card-top {
+        max-width: 220px;
+    }
+
+    .card-center {
+        max-width: 500px;
+    }
+
+    .card-bottom {
+        max-width: 120px;
+    }
+
+}
+
+@media(max-width: 1040px) {
+    .summary-container {
+        margin-left: 70px;
+        margin-top: 100px;
+    }
+
+}
+
+@media(max-width: 800px) {
+    .summary-container {
+        margin-left: 20px;
+        margin-top: 80px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .summary-subtitle {
+        font-size: 18px;
+    }
+
+    .card-top {
+        max-width: 180px;
+    }
+
+    .card-center {
+        max-width: 405px;
+    }
+
+    .card-bottom {
+        max-width: 95px;
+    }
+
+    .summary-to-do-icon {
+        height: 50px;
+        width: 50px;
+    }
+
+    .summary-done-icon {
+        height: 50px;
+        width: 50px;
+    }
+
+    .summary-card-number {
+        font-size: 40px;
+    }
+
+    .summary-card-text {
+        font-size: 16px;
+    }
+
+    .card-container-right {
+        display: none;
+    }
+
+    .summary-header {
+        justify-content: center;
+    }
+
+    .card-container{
+        justify-content: center;
+    }
+
+    .summary-header-vector{
+        max-height: 45px;
+        min-width: 4px;
+    }
+
+}
+
+@media(max-width: 500px) {
+    .summary-container {
+        margin-left: 0px;
+        margin-top: 80px;
+    }
+
+    .summary-header{
+        gap: 14px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .summary-subtitle {
+        font-size: 14px;
+    }
+
+    .card-top {
+        max-width: 100px;
+        height: 80px;
+    }
+
+    .card-center {
+        max-width: 260px;
+        height: 120px;
+        gap: 5px;
+    }
+
+    .card-bottom {
+        max-width: 55px;
+        height: 80px;
+    }
+
+    .summary-to-do-icon {
+        height: 30px;
+        width: 30px;
+    }
+
+    .summary-done-icon {
+        height: 30px;
+        width: 30px;
+    }
+
+    .summary-card-number {
+        font-size: 30px;
+    }
+
+    .summary-card-text {
+        font-size: 14px;
+    }
+
+    .summary-date{
+        font-size: 20px;
+    }
+
+    .card-center-text{
+        gap: 10px;
+    }
+
+    .summary-date-subline{
+        font-size: 14px;
+    }
+
+    .card-box-bottom{
+        gap: 8px;
+    }
+
+    .summary-header-vector{
+        max-height: 35px;
+        min-width: 3px;
+    }
+}
