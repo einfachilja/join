@@ -66,15 +66,18 @@
   object-fit: cover;
 }
 
-/* === Priority-Buttons: Default mit farbigem Rand/Text/Icon === */
+/* === Priority-Buttons: Default === */
 .priority-buttons {
   display: flex;
   gap: 16px;
 }
 
 .priority-buttons button {
-  padding: 12px 24px;
-  border: 1px solid transparent;
+  padding: 10px 18px;
+  height: 42px;
+  font-weight: 500;
+  font-size: 14px;
+  border: none;
   border-radius: 8px;
   background: #fff;
   color: #000;
@@ -83,52 +86,52 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  outline: none;
+  border: none;
 }
 
-/* Accent-Farben je nach Prio */
-.priority-buttons button[data-prio="urgent"] {
-  border-color: #ff3d00;
-  color: #ff3d00;
-}
-
-.priority-buttons button[data-prio="medium"] {
-  border-color: #ffa800;
-  color: #ffa800;
-}
-
-.priority-buttons button[data-prio="low"] {
-  border-color: #7ae229;
-  color: #7ae229;
+.priority-buttons button:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 /* === Ausgewählter Zustand: Hintergrund voll färben, Text/Icon weiß === */
 .priority-buttons button.selected {
-  border: none;
   color: #fff;
 }
 
-/* Je Prio-Farbe */
+.priority-buttons button.selected img {
+  filter: brightness(0) invert(1);
+}
+
+.priority-buttons button:not(.selected) {
+  color: #000;
+}
+
+.priority-buttons button:not(.selected) img {
+  filter: none;
+}
+
 .priority-buttons button[data-prio="urgent"].selected {
   background-color: #ff3d00;
-  border: none;
 }
 
 .priority-buttons button[data-prio="medium"].selected {
   background-color: #ffa800;
-  border: none;
 }
 
 .priority-buttons button[data-prio="low"].selected {
   background-color: #7ae229;
-  border: none;
 }
 
-/* Icon im selektierten Zustand invertieren (weiß machen) */
-.priority-buttons button.selected img {
-  filter: brightness(0) invert(1);
+/* Icon farbig bei nicht ausgewählten Buttons */
+.priority-buttons button[data-prio="urgent"] img,
+.priority-buttons button[data-prio="medium"] img,
+.priority-buttons button[data-prio="low"] img {
 }
+
+/* Entfernt: filter: none; da bereits oben bei button:not(.selected) img definiert */
 
 .priority-buttons button:not(.selected):hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -249,7 +252,7 @@ select {
   color: white;
   font-weight: 500;
   font-size: 14px;
-  background-color: blueviolet; /* wird durch inline-style überschrieben */
+  background-color: blueviolet;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -264,18 +267,16 @@ select {
    Datum-Input + eigenes Icon
    ------------------------------------ */
 
-/* 1) Wrapper um Input + Icon */
 .date-wrapper {
   position: relative;
   display: inline-block;
   width: 100%;
 }
 
-/* 2) Input mit extra Padding rechts */
 .date-wrapper .date-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 40px 12px 16px; /* oben/rechts/unten/links */
+  padding: 12px 40px 12px 16px;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
   font-size: 16px;
@@ -285,7 +286,6 @@ select {
   -moz-appearance: textfield;
 }
 
-/* 3) Kalender-Icon absolut positioniert */
 .date-wrapper .calendar-icon {
   position: absolute;
   top: 50%;
@@ -296,7 +296,6 @@ select {
   cursor: pointer;
 }
 
-/* 4) Native Picker-UI ausblenden */
 .date-wrapper .date-input::-webkit-calendar-picker-indicator,
 .date-wrapper .date-input::-webkit-inner-spin-button,
 .date-wrapper .date-input::-webkit-outer-spin-button {
