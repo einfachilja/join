@@ -98,15 +98,18 @@ function renderAssignOptions() {
     const item = document.createElement("div");
     item.className = "contact-item";
     item.innerHTML = `
-      <span class="initials-circle" style="background:${c.color}">${c.name
+  <span class="profile-icon" style="background:${c.color}">
+    ${c.name
       .split(" ")
       .map((w) => w[0])
-      .join("")}</span>
-      <span>${c.name}</span>
-      <input type="checkbox" ${
-        selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
-      }/>
-    `;
+      .join("")
+      .toUpperCase()}
+  </span>
+  <span>${c.name}</span>
+  <input type="checkbox" ${
+    selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
+  }/>
+`;
     item.onclick = () => {
       const idx = selectedContacts.findIndex((s) => s.name === c.name);
       if (idx >= 0) selectedContacts.splice(idx, 1);
@@ -124,12 +127,13 @@ function updateSelectedContactsUI() {
   box.innerHTML = "";
   selectedContacts.forEach((c) => {
     const el = document.createElement("div");
-    el.className = "initials-circle";
+    el.className = "profile-icon";
     el.style.background = c.color;
     el.textContent = c.name
       .split(" ")
       .map((w) => w[0])
-      .join("");
+      .join("")
+      .toUpperCase();
     box.appendChild(el);
   });
 }
