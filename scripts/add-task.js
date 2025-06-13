@@ -142,13 +142,38 @@ function updateSelectedContactsUI() {
 function addSubtask() {
   const inp = document.getElementById("subtask-input");
   const txt = inp.value.trim();
-  if (!txt) return;
+  if (!txt) {
+    inp.classList.add("error-border");
+    return;
+  }
+  inp.classList.remove("error-border");
   subtasks.push(txt);
+
   const li = document.createElement("li");
-  li.textContent = txt;
+  li.className = "subtask-item";
+  li.innerHTML = `
+    <span>${txt}</span>
+    <img src="./assets/icons/checked.svg" alt="check icon">
+  `;
+
   document.getElementById("subtask-list").appendChild(li);
   inp.value = "";
   updateSubmitState();
+}
+
+function validateTitle() {
+  const title = document.getElementById("title");
+  const titleError = document.getElementById("error-title");
+
+  if (title.value.trim() === "") {
+    title.classList.add("error");
+    titleError.classList.add("visible");
+    return false;
+  } else {
+    title.classList.remove("error");
+    titleError.classList.remove("visible");
+    return true;
+  }
 }
 
 // ==== DATE VALIDATION ====
@@ -164,11 +189,45 @@ function validateDate() {
 
 // ==== SUBMIT-STATE ====
 function updateSubmitState() {
-  const ok =
-    document.getElementById("title").value.trim() !== "" &&
-    validateDate() &&
-    selectedContacts.length > 0;
-  document.getElementById("submit-task-btn").disabled = !ok;
+  const titleEl = document.getElementById("title");
+  const dueDateEl = document.getElementById("dueDate");
+  const categoryEl = document.getElementById("category");
+  const placeholder = document.getElementById("assigned-to-placeholder");
+  const button = document.getElementById("submit-task-btn");
+
+  if (!titleEl || !dueDateEl || !categoryEl || !placeholder || !button) return;
+
+  const title = titleEl.value.trim();
+  const dueDate = dueDateEl.value.trim();
+  const category = categoryEl.value;
+
+  const titleValid = title !== "";
+  const dueDateValid = dueDate !== "";
+  const categoryValid = category !== "" && category !== "disabled";
+  const assignedValid = selectedContacts.length > 0;
+
+  button.disabled = !(
+    titleValid &&
+    dueDateValid &&
+    categoryValid &&
+    assignedValid
+  );
+
+  // Title visual feedback
+  titleEl.classList.toggle("error", !titleValid);
+  const titleError = document.getElementById("error-title");
+  if (titleError) {
+    titleError.classList.toggle("visible", !titleValid);
+  }
+
+  // Due Date visual feedback
+  dueDateEl.classList.toggle("error-border", !dueDateValid);
+
+  // Category visual feedback
+  categoryEl.classList.toggle("error-border", !categoryValid);
+
+  // Assigned visual feedback
+  placeholder.classList.toggle("error-border", !assignedValid);
 }
 
 // ==== RESET ====
@@ -202,6 +261,7 @@ async function createTask() {
     }
   );
   resetForm();
+  showTaskAddedPopup();
 }
 
 /**
@@ -216,4 +276,15 @@ function openDatepicker() {
     // Safari, Firefox, iOS etc.
     el.focus();
   }
+}
+
+/**
+ * Shows confirmation toast
+ */
+function showTaskAddedPopup() {
+  const popup = document.createElement("div");
+  popup.innerHTML = `<img src="./assets/icons/board.svg" alt="board icon"> Task added to Board`;
+  popup.className = "task-toast";
+  document.body.appendChild(popup);
+  setTimeout(() => popup.remove(), 2500);
 }

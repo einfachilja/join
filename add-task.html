@@ -95,12 +95,20 @@
                   <label for="title"
                     >Title <span class="red_star">*</span></label
                   >
-                  <input id="title" type="text" placeholder="e.g. Build UI" />
+                  <input
+                    id="title"
+                    type="text"
+                    placeholder="Enter a title"
+                    onkeyup="updateSubmitState()"
+                  />
+                  <div class="error-message" id="error-title">
+                    This field is required
+                  </div>
 
                   <label for="description">Description</label>
                   <textarea
                     id="description"
-                    placeholder="e.g. Implement form validations"
+                    placeholder="Enter a Description"
                   ></textarea>
 
                   <label for="dueDate"
@@ -120,6 +128,9 @@
                       alt="Kalender"
                       onclick="openDatepicker()"
                     />
+                    <div class="error-message" id="error-dueDate">
+                      This field is required
+                    </div>
                   </div>
                 </div>
 
@@ -163,6 +174,23 @@
                     <div id="dropdown-content" class="dropdown-content"></div>
                   </div>
                   <div id="selected-contacts" class="selected-contacts"></div>
+
+                  <label for="category"
+                    >Category <span class="red_star">*</span></label
+                  >
+                  <div class="category-wrapper">
+                    <select id="category" onchange="updateSubmitState()">
+                      <option value="" disabled selected>
+                        Select task category
+                      </option>
+                      <option value="Technical Task">Technical Task</option>
+                      <option value="User Story">User Story</option>
+                      <option value="Bug">Bug</option>
+                    </select>
+                    <div class="error-message" id="error-category">
+                      This field is required
+                    </div>
+                  </div>
 
                   <label>Subtasks</label>
                   <div class="subtask-input">

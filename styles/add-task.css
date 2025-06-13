@@ -137,6 +137,29 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.subtask-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  margin-bottom: 8px;
+  cursor: default;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.subtask-item:hover {
+  background: #e0e0e0;
+}
+
+.subtask-item img {
+  width: 16px;
+  height: 16px;
+}
+
 .subtask-input {
   display: flex;
   gap: 8px;
@@ -164,6 +187,24 @@
   background: #2a3647;
   color: #fff;
   border: none;
+}
+
+.task-toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2a3647;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
 }
 
 input,
@@ -300,4 +341,19 @@ select {
 .date-wrapper .date-input::-webkit-inner-spin-button,
 .date-wrapper .date-input::-webkit-outer-spin-button {
   display: none;
+}
+
+.error {
+  border: 1px solid red !important;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+  display: none;
+}
+
+.error-message.visible {
+  display: block;
 }
