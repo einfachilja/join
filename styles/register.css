@@ -7,6 +7,7 @@
 
 a {
   text-decoration: none;
+  color: rgb(41, 171, 226);
 }
 
 /* Logo Section */
@@ -18,8 +19,8 @@ a {
 }
 
 .logo-image {
-  width: 100.03px;
-  height: 121.97px;
+  width: 98px;
+  height: 118px;
 }
 
 /* Main Page Layout */
@@ -27,7 +28,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgb(246,247,248);
+  background: rgb(246, 247, 248);
   min-height: 100vh;
 }
 
@@ -36,7 +37,7 @@ a {
   position: fixed;
   max-width: 500px;
   width: 90%;
-  top: 10%;
+  top: 20%;
   border-radius: 30px;
   gap: 32px;
   padding: 48px 88px 48px 88px;
@@ -53,10 +54,10 @@ a {
 
 /* Header */
 .register-header {
-    display: flex;
-    justify-content: start;
-    align-items: baseline;
-    gap: 40px;
+  display: flex;
+  justify-content: start;
+  align-items: baseline;
+  gap: 40px;
 }
 
 .title-group {
@@ -93,7 +94,7 @@ a {
 }
 
 #register-btn:not(:disabled) {
-  background-color: rgb(42,54,71);
+  background-color: rgb(42, 54, 71);
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -103,7 +104,7 @@ a {
   width: 125px;
   height: 80%;
   border-radius: 8px;
-  background: rgb(42,54,71);
+  background: rgb(42, 54, 71);
   color: white;
   font-size: 21px;
   font-weight: 700;
@@ -197,10 +198,11 @@ footer {
   justify-content: center;
   display: flex;
   position: absolute;
-  bottom: 5px;
+  bottom: 50px;
   width: 100%;
   gap: 16px;
   opacity: 0.5;
+
 }
 
 .footer-link {
@@ -209,8 +211,9 @@ footer {
 }
 
 .footer-link:hover {
-  font-weight: 700;
-  color:rgb(41, 171, 226);
+  scale: 1.1;
+  font-weight: 500;
+  color: hsl(198, 76%, 52%) !important;
 }
 
 
@@ -219,7 +222,7 @@ footer {
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgb(42, 54, 71); 
+  background-color: rgb(42, 54, 71);
   color: white;
   padding: 12px 24px;
   border-radius: 25px;
@@ -237,15 +240,22 @@ footer {
   animation: fadeInOut 2s ease forwards;
 }
 
+.privacy-policy:hover {
+  text-decoration: underline;
+}
+
 @keyframes fadeInOut {
   0% {
     opacity: 0;
     transform: translate(-50%, -20px);
   }
-  10%, 90% {
+
+  10%,
+  90% {
     opacity: 1;
     transform: translate(-50%, 0);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -20px);

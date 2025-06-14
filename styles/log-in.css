@@ -233,7 +233,7 @@ footer {
   justify-content: center;
   display: flex;
   position: absolute;
-  bottom: 5px;
+  bottom: 50px;
   width: 100%;
   gap: 16px;
   opacity: 0.5;
