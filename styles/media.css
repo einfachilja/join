@@ -519,35 +519,54 @@
     /* ============ SUMMARY MEDIA ============ */
     .summary-container {
         margin-left: 0px;
-        margin-top: 80px;
-    }
-
-    .summary-header{
-        gap: 14px;
+        margin-top: 100px;
     }
 
     h1 {
-        font-size: 20px;
+        font-size: 35px;
     }
 
     .summary-subtitle {
-        font-size: 14px;
+        font-size: 18px;
     }
 
     .card-top {
         max-width: 100px;
-        height: 80px;
+        height: 50px;
+        border-radius: 20px;
     }
 
     .card-center {
         max-width: 260px;
-        height: 120px;
+        height: 60px;
         gap: 5px;
+        border-radius: 20px;
+    }
+
+    .card-center-vector {
+        max-height: 65px;
+        min-width: 1.5px;
     }
 
     .card-bottom {
         max-width: 55px;
-        height: 80px;
+        height: 60px;
+        border-radius: 20px;
+    }
+
+    .summary-header-vector {
+        display: none;
+    }
+
+    .summary-header-vector-mobile {
+        display: flex;
+    }
+
+    .summary-header {
+        gap: 14px;
+        flex-direction: column;
+        align-items: start;
+        padding: 20px;
     }
 
     .summary-to-do-icon {
@@ -568,24 +587,19 @@
         font-size: 14px;
     }
 
-    .summary-date{
+    .summary-date {
         font-size: 20px;
     }
 
-    .card-center-text{
+    .card-center-text {
         gap: 10px;
     }
 
-    .summary-date-subline{
+    .summary-date-subline {
         font-size: 14px;
     }
 
-    .card-box-bottom{
+    .card-box-bottom {
         gap: 8px;
-    }
-
-    .summary-header-vector{
-        max-height: 35px;
-        min-width: 3px;
     }
 }

@@ -210,3 +210,7 @@
     margin: 0;
     line-height: 1;
 }
+
+.summary-header-vector-mobile {
+    display: none;
+}
