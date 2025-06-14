@@ -57,6 +57,7 @@
     }
 }
 
+/* ============== HEIGHT MEDIA ============= */
 @media (max-height: 800px){
     .logo-section{
         top: 30px;

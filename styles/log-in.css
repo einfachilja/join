@@ -245,6 +245,19 @@ footer {
 }
 
 .footer-link:hover {
-  font-weight: 700;
+  font-weight: 500;
+  scale: 1.1;
   color: rgb(41,171,226);
+  opacity: none !important;
+}
+
+.register-container-mobile{
+  display: none;
+  position: absolute;
+  bottom: 120px;
+  align-items: center;
+  gap: 16px;
+
+  justify-content: center;
+  width: 100%;
 }

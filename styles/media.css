@@ -1,3 +1,4 @@
+/* ============== WIDTH MEDIA ============= */
 @media(max-width: 1300px) {
 
     /* ============ CONTACT MEDIA ============ */
@@ -490,6 +491,31 @@
         width: 70px;
         height: 120px;
     }
+
+    /* ============ LOG-IN MEDIA ============ */
+        .register-container {
+        display: none;
+    }
+
+    .register-container-mobile {
+        display: flex;
+        font-size: 18px;
+    }
+
+    .logo-image {
+        width: 70px;
+        height: 121.97px;
+    }
+
+    .log-in-button {
+        font-size: 18px;
+    }
+
+    .log-in-button,
+    .guest-log-in-button,
+    .register-button {
+        font-size: 18px;
+    }
 }
 
 @media(max-width: 500px) {
@@ -660,10 +686,47 @@
     .footer-link {
         font-size: 14px;
     }
+
+    /* ============ LOG-IN MEDIA ============ */
+    .logo-image {
+        Width: 64px;
+        Height: 78.03px;
+
+    }
+
+    .logo-section {
+        top: 37px;
+        left: 38px;
+    }
+
+    .log-in-container {
+        padding: 30px 25px;
+        border-radius: 20px;
+    }
+
+    .submit-container {
+        flex-direction: column;
+        width: 50%;
+        margin: auto;
+    }
+
+    .log-in-button,
+    .guest-log-in-button {
+        padding: 0 10px !important;
+        font-size: 16px;
+    }
+
+    .register-button {
+        font-size: 16px;
+    }
+
+    .submit-container {
+        gap: 20px;
+    }
 }
 
-/* === HEIGHT MEDIA === */
 
+/* ============== HEIGHT MEDIA ============= */
 @media (max-height: 800px) {
 
     /* ============ REGISTER MEDIA ============ */
@@ -689,5 +752,14 @@
 
     .register-button {
         font-size: 16px;
+    }
+
+    /* ============ LOG-IN MEDIA ============ */
+    .register-container-mobile {
+        bottom: 80px;
+    }
+
+    footer {
+        bottom: 30px;
     }
 }
