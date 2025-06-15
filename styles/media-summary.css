@@ -192,6 +192,12 @@
         display: flex;
     }
 
+    .summary-header-container{
+        display: flex;
+        justify-content: center;
+        margin-left: -100px;
+    }
+
     .summary-header {
         gap: 14px;
         flex-direction: column;
