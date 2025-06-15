@@ -1,4 +1,5 @@
-const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
+const BASE_URL =
+  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
 let arrayTasks = []; // gespeicherte Aufgaben aus Firebase
 let firebaseKey = localStorage.getItem("firebaseKey"); // Benutzer-spezifischer Key für Firebase
 
@@ -8,13 +9,50 @@ function showWelcomeMessage() {
   const name = sessionStorage.getItem("userName") || "Guest";
   const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  // Begrüßungstext und Benutzername einfügen
-  document.getElementById("welcome-message-text").textContent = `${greeting},`;
-  const nameEl = document.getElementById("welcome-username");
-  nameEl.textContent = name;
-  nameEl.style.color = color;
+  if (window.innerWidth <= 800) {
+    // Show overlay welcome message for mobile
+    const overlay = document.getElementById("mobile-welcome-overlay");
+    const overlayText = document.getElementById("mobile-welcome-overlay-text");
+    const overlayName = document.getElementById(
+      "mobile-welcome-overlay-username"
+    );
+
+    overlay.classList.remove("d_none");
+    overlayText.textContent = `${greeting},`;
+    overlayName.textContent = name;
+    overlayName.style.color = color;
+
+    // Hide main content for now
+    const main = document.querySelector("main");
+    main.style.display = "none";
+
+    // Show after 4 seconds
+    setTimeout(() => {
+      overlay.classList.add("d_none");
+      main.style.display = "";
+    }, 1500);
+  } else {
+    const name = sessionStorage.getItem("userName") || "Guest";
+    const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
+    const hour = new Date().getHours();
+    const greeting =
+      hour < 12
+        ? "Good morning"
+        : hour < 18
+        ? "Good afternoon"
+        : "Good evening";
+
+    // Begrüßungstext und Benutzername einfügen
+    document.getElementById(
+      "welcome-message-text"
+    ).textContent = `${greeting},`;
+    const nameEl = document.getElementById("welcome-username");
+    nameEl.textContent = name;
+    nameEl.style.color = color;
+  }
 }
 
 async function loadTasks() {
@@ -29,7 +67,10 @@ async function loadTasks() {
     }
 
     // Tasks in ein Array umwandeln
-    arrayTasks = Object.entries(data).map(([firebaseKey, task]) => ({ ...task, firebaseKey }));
+    arrayTasks = Object.entries(data).map(([firebaseKey, task]) => ({
+      ...task,
+      firebaseKey,
+    }));
     updateBasicTaskStats(arrayTasks);
     updatePriorityAndDeadlineSummary(arrayTasks);
   } catch (error) {
@@ -39,7 +80,6 @@ async function loadTasks() {
 
 // ========== STATISTIKEN: TASK-STATUS ==========
 function updateBasicTaskStats(tasks) {
- 
   const counters = {
     todo: "summary_card_number_todo",
     progress: "summary_card_number_in_progress",
@@ -49,11 +89,14 @@ function updateBasicTaskStats(tasks) {
 
   // Alle Zähler aktualisieren
   for (const [status, elementId] of Object.entries(counters)) {
-    document.getElementById(elementId).textContent = tasks.filter(t => t.status === status).length;
+    document.getElementById(elementId).textContent = tasks.filter(
+      (t) => t.status === status
+    ).length;
   }
 
   // Gesamtanzahl der Aufgaben
-  document.getElementById("summary_card_number_total").textContent = tasks.length;
+  document.getElementById("summary_card_number_total").textContent =
+    tasks.length;
 }
 
 // ========== PRIORITÄT & FÄLLIGKEIT ==========
@@ -68,56 +111,59 @@ function updatePriorityAndDeadlineSummary(tasks) {
 
 // Hilfsfunktion: finde relevante Aufgaben nach Priorität
 function getRelevantPriorityTasks(tasks) {
-  const open = tasks.filter(t => t.status !== "done");
+  const open = tasks.filter((t) => t.status !== "done");
 
-  const high   = open.filter(t => t.priority === "high");
-  const medium = open.filter(t => t.priority === "medium");
+  const high = open.filter((t) => t.priority === "high");
+  const medium = open.filter((t) => t.priority === "medium");
 
-  if (high.length  > 0) return { priority: "high",   tasks: high   };
+  if (high.length > 0) return { priority: "high", tasks: high };
   if (medium.length > 0) return { priority: "medium", tasks: medium };
-  return { priority: null, tasks: [] };      
+  return { priority: null, tasks: [] };
 }
-
 
 // Hilfsfunktion: UI-Anzeige der Priorität (Text + Icon)
 function updatePriorityUI(priority, count) {
-  const label  = document.getElementById("priority-label");
-  const icon   = document.getElementById("priority-icon");
+  const label = document.getElementById("priority-label");
+  const icon = document.getElementById("priority-icon");
   const number = document.getElementById("summary_card_number_priority_high");
 
-  if (!priority) {                      
+  if (!priority) {
     icon.style.display = "none";
-    label.textContent  = "";
-    number.textContent = "0";           
+    label.textContent = "";
+    number.textContent = "0";
     return;
   }
 
   icon.style.display = "inline";
   const ts = Date.now();
-  icon.src = priority === "high"
-    ? `./assets/icons/summary-urgent.png?${ts}`
-    : `./assets/icons/medium.svg?${ts}`;
+  icon.src =
+    priority === "high"
+      ? `./assets/icons/summary-urgent.png?${ts}`
+      : `./assets/icons/medium.svg?${ts}`;
   icon.alt = priority;
 
-  label.textContent  = priority === "high" ? "Urgent" : "Medium";
-  number.textContent = count;            
+  label.textContent = priority === "high" ? "Urgent" : "Medium";
+  number.textContent = count;
 }
 
 // Hilfsfunktion: finde frühestes gültiges Fälligkeitsdatum
 function updateEarliestDeadline(tasks) {
   const deadlines = tasks
-    .filter(t => t.status !== "done") // erledigte Tasks ausschließen
-    .map(t => convertDateStringToDate(t.dueDate))
-    .filter(date => date instanceof Date && !isNaN(date)) // nur gültige Daten
-    .sort((a, b) => a - b); 
+    .filter((t) => t.status !== "done") // erledigte Tasks ausschließen
+    .map((t) => convertDateStringToDate(t.dueDate))
+    .filter((date) => date instanceof Date && !isNaN(date)) // nur gültige Daten
+    .sort((a, b) => a - b);
 
   const deadlineEl = document.getElementById("upcoming-deadline-date");
   if (deadlineEl) {
-    deadlineEl.textContent = deadlines.length > 0
-      ? deadlines[0].toLocaleDateString("en-US", {
-          year: "numeric", month: "long", day: "numeric"
-        })
-      : "No upcoming deadline";
+    deadlineEl.textContent =
+      deadlines.length > 0
+        ? deadlines[0].toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : "No upcoming deadline";
   }
 }
 
@@ -143,5 +189,3 @@ function convertDateStringToDate(dateStr) {
     return new Date(NaN);
   }
 }
-
-

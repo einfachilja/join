@@ -11,10 +11,9 @@
   <link rel="stylesheet" href="./styles/fonts.css">
   <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
   <link rel="stylesheet" href="./styles/media-summary.css">
-
 </head>
 
-<body onload="loadTasks()">
+<body onload="loadTasks(); showWelcomeMessage();">
   <div class="body">
     <div class="desktop-menu">
       <div>
@@ -56,7 +55,6 @@
               <p>Privacy Policy</p>
             </button>
           </a>
-
           <a href="./legal-notice.html">
             <button>
               <p>Legal notice</p>
@@ -77,6 +75,7 @@
           </a>
         </div>
       </div>
+
       <div id="sub_menu" class="d_none sub_menu">
         <a href="./legal-notice.html">
           <p class="sub-menu-content">Legal Notice</p>
@@ -89,7 +88,20 @@
         </a>
       </div>
 
+      <!-- MOBILE WELCOME OVERLAY -->
+      <div id="mobile-welcome-overlay" class="mobile-welcome-overlay d_none">
+        <div class="mobile-welcome-message-centered">
+          <h2 id="mobile-welcome-overlay-text"></h2>
+          <p id="mobile-welcome-overlay-username"></p>
+        </div>
+      </div>
+
       <main class="main">
+        <div class="welcome-message-mobile">
+          <h2 id="welcome-message-text-mobile"></h2>
+          <p id="welcome-username-mobile"></p>
+        </div>
+
         <div class="summary-container">
           <div class="summary-header">
             <h1>Join 360</h1>
@@ -97,6 +109,7 @@
             <span class="summary-subtitle">Key Metrics at a Glance</span>
             <img class="summary-header-vector-mobile" src="./assets/img/contacts-icons/blue-line-mobile.svg" alt="">
           </div>
+
           <div class="summary-main">
             <div class="card-container">
               <div class="card-container-left">
@@ -147,15 +160,16 @@
                   </a>
                 </div>
               </div>
+
               <div class="card-container-right">
                 <div class="welcome-message">
                   <h2 id="welcome-message-text"></h2>
                   <p id="welcome-username"></p>
                 </div>
-                <!--<span id="greets" class="greets"></span>-->
               </div>
             </div>
           </div>
+        </div>
       </main>
 
       <footer>
@@ -166,21 +180,18 @@
               <p>Summary</p>
             </a>
           </button>
-
           <button>
             <a href="./add-task.html">
               <img src="./assets/icons/add-task.svg" alt="" />
               <p>Add Task</p>
             </a>
           </button>
-
           <button>
             <a href="./board.html">
               <img src="./assets/icons/board.svg" alt="" />
               <p>Board</p>
             </a>
           </button>
-
           <button>
             <a href="./contacts.html">
               <img src="./assets/icons/contacts.svg" alt="" />
@@ -192,9 +203,50 @@
     </div>
   </div>
 
+  <script>
+    function showWelcomeMessage() {
+      const name = sessionStorage.getItem("userName") || "Guest";
+      const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
+      const hour = new Date().getHours();
+      const greeting =
+        hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+
+      const mobileTextEl = document.getElementById("welcome-message-text-mobile");
+      const mobileNameEl = document.getElementById("welcome-username-mobile");
+      const desktopTextEl = document.getElementById("welcome-message-text");
+      const desktopNameEl = document.getElementById("welcome-username");
+
+      if (window.innerWidth <= 800) {
+        // Overlay welcome message
+        const overlay = document.getElementById("mobile-welcome-overlay");
+        const overlayText = document.getElementById("mobile-welcome-overlay-text");
+        const overlayName = document.getElementById("mobile-welcome-overlay-username");
+
+        overlay.classList.remove("d_none");
+        overlayText.textContent = `${greeting},`;
+        overlayName.textContent = name;
+        overlayName.style.color = color;
+
+        document.querySelector("main").style.display = "none";
+
+        setTimeout(() => {
+          overlay.classList.add("d_none");
+          document.querySelector("main").style.display = "";
+        }, 4000);
+
+        mobileTextEl.textContent = `${greeting},`;
+        mobileNameEl.textContent = name;
+        mobileNameEl.style.color = color;
+      } else {
+        desktopTextEl.textContent = `${greeting},`;
+        desktopNameEl.textContent = name;
+        desktopNameEl.style.color = color;
+      }
+    }
+  </script>
+
   <script src="./scripts/desktop-template.js"></script>
   <script src="./scripts/summary.js"></script>
-
 </body>
 
 </html>
