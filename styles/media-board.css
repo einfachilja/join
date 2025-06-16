@@ -1,4 +1,6 @@
-@media(max-width: 1232px) {
+@media(max-width: 1232px) {}
+
+@media(max-width: 1040px) {
     .board-main {
         flex-direction: column;
     }
@@ -9,8 +11,8 @@
 
     .body-right {
         padding: 0;
-        
-    } 
+
+    }
 
     .board-header {
         display: block;
@@ -21,13 +23,11 @@
     }
 
     .board-container {
-    
+
         margin-top: 100px;
         margin-left: 0;
     }
 }
-
-@media(max-width: 1040px) {}
 
 @media(max-width: 800px) {}
 
