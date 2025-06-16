@@ -217,7 +217,7 @@ function getOpenContactMobileTemplate(contact) {
 
             <div class="arrow-left-mobile">
               <a href="#" onclick="return returnToPrevPage();">
-                <img src="./assets/img/arrow-left-line.svg" alt="Go Back" />
+                <img class="arrow-mobile" src="./assets/img/arrow-left-line.svg" alt="Go Back" />
               </a>
             </div>
           </div>
@@ -245,16 +245,16 @@ function getOpenContactMobileTemplate(contact) {
               <a href="tel:${contact.phone}">${contact.phone}</a>
             </div>
           </div>
+        </div>
 
-          <div class="add-new-contact-button">
+        <div class="add-new-contact-button">
             <button onclick='openEditDeleteMenu(${JSON.stringify(contact)})'>
               <img src="./assets/img/contacts-icons/edit-delete-menu.svg" alt="edit-delete-menu" />
             </button>
           </div>
-          <div id="edit_delete_menu">
-          </div>
+        <div id="edit_delete_menu">
       
-        </div>
+      </div>
       </div>
       
     </div>
