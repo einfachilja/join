@@ -135,12 +135,6 @@
   background-color: #7ae229;
 }
 
-/* Icon farbig bei nicht ausgewählten Buttons */
-.priority-buttons button[data-prio="urgent"] img,
-.priority-buttons button[data-prio="medium"] img,
-.priority-buttons button[data-prio="low"] img {
-}
-
 /* Entfernt: filter: none; da bereits oben bei button:not(.selected) img definiert */
 
 .priority-buttons button:not(.selected):hover {
