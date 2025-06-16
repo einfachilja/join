@@ -151,23 +151,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f5f5f5;
+  background: #ffffff;
+  border: 1px solid #d1d1d1;
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 14px;
   margin-bottom: 8px;
   cursor: default;
   transition: background-color 0.2s ease;
-  user-select: none;
 }
 
-.subtask-item:hover {
-  background: #e0e0e0;
+.subtask-item input {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d1d1;
+  background-color: #fff;
+  height: 48px;
+  box-sizing: border-box;
+  font-size: 16px;
+  flex: 1;
+  outline: none;
 }
 
-.subtask-item img {
-  width: 16px;
-  height: 16px;
+/* Nur das Close-Icon (delete-subtask) im Hover sichtbar machen */
+.subtask-icons img.delete-subtask {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.subtask-item:hover .subtask-icons img.delete-subtask {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Edit-Button (edit-subtask) immer sichtbar lassen */
+.subtask-icons img.edit-subtask {
+  opacity: 1;
 }
 
 .subtask-input {
@@ -176,6 +196,21 @@
 }
 .subtask-input input {
   flex: 1;
+  background: #f6f7f8;
+  height: 48px;
+  border-radius: 8px;
+  padding: 0 16px;
+  border: 1px solid #d1d1d1;
+}
+.subtask-input button {
+  height: 48px;
+  width: 48px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  font-size: 24px;
+  font-weight: 300;
+  cursor: pointer;
 }
 .form-actions {
   display: flex;
@@ -218,24 +253,36 @@
 }
 
 input,
-textarea,
-select {
+textarea {
   border: 1px solid #d1d1d1;
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 0 16px;
   font-size: 16px;
-  background: #fff;
+  background: #f6f7f8;
   height: 48px;
   box-sizing: border-box;
   width: 100%;
+  color: #000;
 }
 
 select {
-  width: 100%;
-  min-width: 100%;
-  height: 48px;
-  padding: 12px 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 12px 40px 12px 16px;
   font-size: 16px;
+  height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: #2a3647;
 }
 
 /* Dropdown „Assign to“ */
@@ -262,8 +309,8 @@ select {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 6px solid #333;
-  transition: transform 0.15s;
+  border-top: 6px solid #2a3647;
+  transition: transform 0.15s ease;
 }
 
 #dropdown-toggle.open .dropdown-arrow {
@@ -353,23 +400,22 @@ select {
 .date-wrapper .date-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 40px 12px 16px;
+  padding: 0 16px;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
   font-size: 16px;
   font-family: inherit;
-  appearance: textfield;
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
   height: 48px;
+  background: #f6f7f8;
+  color: #000;
 }
 
 .date-wrapper .calendar-icon {
   position: absolute;
   top: 50%;
-  right: 12px;
-  width: 20px;
-  height: 20px;
+  right: 16px;
+  width: 16px;
+  height: 16px;
   transform: translateY(-50%);
   cursor: pointer;
 }
@@ -393,4 +439,139 @@ select {
 
 .error-message.visible {
   display: block;
+}
+
+.subtask-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.subtask-icons img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.subtask-icons img.delete-subtask {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.subtask-item:hover .delete-subtask {
+  opacity: 1;
+}
+
+.subtask-icons img.edit-subtask {
+  opacity: 1;
+}
+
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: #b3b3b3;
+}
+
+/* === Custom Select Wrapper === */
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 16px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #2a3647;
+  pointer-events: none;
+}
+
+.custom-select-wrapper select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 12px 40px 12px 16px;
+  font-size: 16px;
+  height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.custom-select-wrapper select:focus {
+  border-color: #2a3647;
+  outline: none;
+}
+
+.category-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Category Dropdown Toggle - exakt wie Assigned to Dropdown */
+#category-dropdown-toggle {
+  padding: 12px 16px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  height: 48px;
+  box-sizing: border-box;
+}
+
+/* Pfeil-Icon für Category Dropdown (Designmatch zu Assigned to) */
+#category-dropdown-toggle .dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #2a3647;
+  transition: transform 0.15s ease;
+}
+
+#category-dropdown-toggle.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Category Dropdown Content (analog zu Assigned to) */
+.category-dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 2px solid #eee;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  display: none;
+  z-index: 10;
+}
+.category-dropdown-content.visible {
+  display: block;
+}
+.category-dropdown-content .category-item {
+  padding: 16px 20px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+}
+.category-dropdown-content .category-item:hover {
+  background-color: #f0f0f0;
 }

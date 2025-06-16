@@ -1,4 +1,3 @@
-<!-- add-task.html -->
 <!DOCTYPE html>
 <html lang="de">
   <head>
@@ -166,7 +165,7 @@
                   </div>
 
                   <label>Assigned to</label>
-                  <div id="dropdown-wrapper">
+                  <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
                     <div id="dropdown-toggle">
                       <span id="assigned-to-placeholder">Select contacts</span>
                       <div class="dropdown-arrow"></div>
@@ -175,20 +174,39 @@
                   </div>
                   <div id="selected-contacts" class="selected-contacts"></div>
 
-                  <label for="category"
-                    >Category <span class="red_star">*</span></label
+                  <label for="category-select">
+                    Category <span class="red_star">*</span>
+                  </label>
+                  <div
+                    class="custom-dropdown-wrapper"
+                    id="category-dropdown-wrapper"
                   >
-                  <div class="category-wrapper">
-                    <select id="category" onchange="updateSubmitState()">
-                      <option value="" disabled selected>
-                        Select task category
-                      </option>
-                      <option value="Technical Task">Technical Task</option>
-                      <option value="User Story">User Story</option>
-                    </select>
-                    <div class="error-message" id="error-category">
-                      This field is required
+                    <div id="category-dropdown-toggle">
+                      <span id="selected-category-placeholder"
+                        >Select category</span
+                      >
+                      <div class="dropdown-arrow"></div>
                     </div>
+                    <div
+                      id="category-dropdown-content"
+                      class="dropdown-content"
+                    >
+                      <div
+                        class="dropdown-item"
+                        onclick="selectCategory('Technical Task')"
+                      >
+                        Technical Task
+                      </div>
+                      <div
+                        class="dropdown-item"
+                        onclick="selectCategory('User Story')"
+                      >
+                        User Story
+                      </div>
+                    </div>
+                  </div>
+                  <div class="error-message" id="error-category">
+                    This field is required
                   </div>
 
                   <label>Subtasks</label>
