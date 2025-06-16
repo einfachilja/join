@@ -152,9 +152,18 @@ function addSubtask() {
   const li = document.createElement("li");
   li.className = "subtask-item";
   li.innerHTML = `
-    <span>${txt}</span>
-    <img src="./assets/icons/checked.svg" alt="check icon">
+    <input value="${txt}" readonly>
+    <div class="subtask-icons">
+      <img src="./assets/icons/closeXSymbol.svg" class="delete-subtask" alt="delete subtask">
+      <img src="./assets/icons/checked.svg" class="edit-subtask" alt="confirm subtask">
+    </div>
   `;
+  li.querySelector(".delete-subtask").addEventListener("click", () => {
+    const index = subtasks.indexOf(txt);
+    if (index > -1) subtasks.splice(index, 1);
+    li.remove();
+    updateSubmitState();
+  });
 
   document.getElementById("subtask-list").appendChild(li);
   inp.value = "";
@@ -253,13 +262,14 @@ async function createTask() {
     status: "todo",
   };
 
-  fetch(
+  const response = await fetch(
     `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`,
     {
       method: "POST",
       body: JSON.stringify(task),
     }
   );
+  await saveTaskToFirebaseBoard(task);
   resetForm();
   showTaskAddedPopup();
 }
@@ -287,4 +297,21 @@ function showTaskAddedPopup() {
   popup.className = "task-toast";
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 2500);
+}
+
+/**
+ * Saves task to board list
+ */
+async function saveTaskToFirebaseBoard(task) {
+  try {
+    await fetch(
+      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/boardTasks.json`,
+      {
+        method: "POST",
+        body: JSON.stringify(task),
+      }
+    );
+  } catch (error) {
+    console.error("Board task save error:", error);
+  }
 }

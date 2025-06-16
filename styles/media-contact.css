@@ -342,6 +342,9 @@
         flex-direction: column;
         align-items: start;
         justify-content: center;
+        position: absolute;
+        top: 200px;
+        left: 20px;
     }
 
     .email-and-phone-span {
@@ -364,6 +367,9 @@
         height: 22px;
     }
 
+    .arrow-mobile{
+        display: flex;
+    }
 
 
 }
@@ -404,5 +410,41 @@
 
     .alphabet-devider {
         width: 280px;
+    }
+
+    /* ====== SHOW CONTACT INFO OVERLAY ====== */
+    .user-name {
+        height: 30px;
+        font-size: 22px;
+    }
+
+    .user-contact-informtion {
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+    }
+
+    .email-and-phone-span {
+        font-weight: 700;
+    }
+
+    .my-contact-info-mobile-header-content {
+        gap: 100px;
+    }
+
+    .my-profile-icon {
+        font-size: 30px;
+        width: 70px;
+        height: 70px;
+    }
+
+    .Contacts-span {
+        font-size: 35px;
+    }
+
+    .better-with-a-team-span {
+        font-size: 16px;
     }
 }

@@ -34,43 +34,58 @@ function addNewContact() {
   toggleOff();
 }
 
-/* ============== SAVE EDIT CHANGES ============== */
+
+/* ============== SAVE EDIT CONTACT HELPER FUNCTIONS ============== */
+function getTrimmedContactInput() {
+  return {
+    name: document.getElementById("edit_contact_name").value.trim(),
+    email: document.getElementById("edit_contact_email").value.trim(),
+    phone: document.getElementById("edit_contact_phone").value.trim(),
+  };
+}
+
+function isValidContactInput(name, email, phone) {
+  return (
+    name &&
+    email &&
+    phone &&
+    isTelValid("edit_contact_phone") &&
+    isEmailValid("edit_contact_email")
+  );
+}
+
+function buildUpdatedContact(name, email, phone, originalContact) {
+  const color = originalContact?.color || getRandomColor();
+  return { name, email, phone, color };
+}
+
+async function updateContactInFirebase(contactKey, updatedContact) {
+  await fetch(`${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedContact),
+  });
+}
+
+function updateLocalContact(original, updated) {
+  if (!original) return;
+  Object.assign(original, updated);
+}
+
+
+/* ============== SAVE EDIT CONTACT ============== */
 async function saveEditContact(event, contactKey) {
   event.preventDefault();
 
-  const name = document.getElementById("edit_contact_name").value.trim();
-  const email = document.getElementById("edit_contact_email").value.trim();
-  const phone = document.getElementById("edit_contact_phone").value.trim();
-
-  if (
-    !name ||
-    !email ||
-    !phone ||
-    !isTelValid("edit_contact_phone") ||
-    !isEmailValid("edit_contact_email")
-  )
-    return;
-
+  const { name, email, phone } = getTrimmedContactInput();
+  if (!isValidContactInput(name, email, phone)) return;
 
   const originalContact = contacts.find((c) => c.firebaseKey === contactKey);
-  const color = originalContact?.color || getRandomColor();
-
-  const updatedContact = { name, email, phone, color };
+  const updatedContact = buildUpdatedContact(name, email, phone, originalContact);
 
   try {
-    await fetch(`${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedContact),
-    });
-
-    if (originalContact) {
-      originalContact.name = name;
-      originalContact.email = email;
-      originalContact.phone = phone;
-      originalContact.color = color; 
-    }
-
+    await updateContactInFirebase(contactKey, updatedContact);
+    updateLocalContact(originalContact, updatedContact);
     toggleOff();
     renderContacts();
     showContactInfo({ ...updatedContact, firebaseKey: contactKey });
