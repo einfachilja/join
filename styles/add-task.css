@@ -7,47 +7,19 @@
   height: 100vh;
 }
 
-.body-right .header {
-  position: fixed;
-  top: 0;
-  left: 232px;
-  right: 0;
-  height: 96px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  background-color: #fff;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-}
-
-.body-right {
-  padding: 96px 40px 40px 272px;
-  background: #f6f7f8;
-}
-
-.main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 40px;
-  box-sizing: border-box;
-  max-width: 1000px;
-  /* margin: 0 auto; */
-}
-
 /* === Add-Task Modal & Layout === */
 .add-task-modal {
   background: #fff;
   border-radius: 10px;
   padding: 40px;
   max-width: 1040px;
-  width: 100%;
+  /* width: 100%; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* margin-left: auto; */
-  /* margin-right: auto; */
+  margin-left: 250px;
+  margin-top: 150px;
+  margin-right: 24px;
 }
+
 .form-cols {
   display: flex;
   align-items: stretch;
@@ -55,6 +27,7 @@
   width: 100%;
   flex-wrap: nowrap;
 }
+
 .col-left,
 .col-right {
   flex: 1;
@@ -188,6 +161,7 @@
   display: flex;
   gap: 8px;
 }
+
 .subtask-input input {
   flex: 1;
   background: #f6f7f8;
@@ -196,6 +170,7 @@
   padding: 0 16px;
   border: 1px solid #d1d1d1;
 }
+
 .subtask-input button {
   height: 48px;
   width: 48px;
@@ -206,6 +181,7 @@
   font-weight: 300;
   cursor: pointer;
 }
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -555,9 +531,11 @@ select::placeholder {
   display: none;
   z-index: 10;
 }
+
 .category-dropdown-content.visible {
   display: block;
 }
+
 .category-dropdown-content .category-item {
   padding: 16px 20px;
   font-size: 18px;
@@ -566,6 +544,7 @@ select::placeholder {
   gap: 20px;
   cursor: pointer;
 }
+
 .category-dropdown-content .category-item:hover {
   background-color: #f0f0f0;
 }
