@@ -5,6 +5,7 @@ let selectedPriority = "medium";
 const subtasks = [];
 let contacts = [];
 let selectedContacts = [];
+let selectedCategory = "";
 
 // ====== Helfer zum Stoppen der Klick-Propagation ======
 function stopPropagation(e = window.event) {
@@ -73,6 +74,9 @@ function setupEventListeners() {
   document
     .getElementById("dueDate")
     .addEventListener("blur", () => validateDate() && updateSubmitState());
+  document
+    .getElementById("category-toggle")
+    .addEventListener("click", toggleCategoryDropdown);
 }
 
 // ==== PRIORITY ====
@@ -100,26 +104,45 @@ function renderAssignOptions() {
     const item = document.createElement("div");
     item.className = "contact-item";
     item.innerHTML = `
-  <span class="profile-icon" style="background:${c.color}">
-    ${c.name
-      .split(" ")
-      .map((w) => w[0])
-      .join("")
-      .toUpperCase()}
-  </span>
-  <span>${c.name}</span>
-  <input type="checkbox" ${
-    selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
-  }/>
-`;
-    item.onclick = () => {
+      <span class="profile-icon" style="background:${c.color}">
+        ${c.name
+          .split(" ")
+          .map((w) => w[0])
+          .join("")
+          .toUpperCase()}
+      </span>
+      <span>${c.name}</span>
+      <input type="checkbox" ${
+        selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
+      }/>
+    `;
+
+    const checkbox = item.querySelector("input[type='checkbox']");
+    checkbox.addEventListener("click", (event) => {
+      event.stopPropagation(); // prevent dropdown from closing
       const idx = selectedContacts.findIndex((s) => s.name === c.name);
-      if (idx >= 0) selectedContacts.splice(idx, 1);
-      else selectedContacts.push(c);
+      if (checkbox.checked && idx === -1) {
+        selectedContacts.push(c);
+      } else if (!checkbox.checked && idx >= 0) {
+        selectedContacts.splice(idx, 1);
+        if (selectedContacts.length === 0) {
+          closeDropdown();
+        }
+      }
       updateSelectedContactsUI();
       renderAssignOptions();
       updateSubmitState();
-    };
+    });
+
+    // Make the entire contact card clickable (except the checkbox itself)
+    item.addEventListener("click", (event) => {
+      if (event.target.tagName.toLowerCase() === "input") return;
+      event.stopPropagation();
+      checkbox.checked = !checkbox.checked;
+      const clickEvent = new Event("click", { bubbles: true });
+      checkbox.dispatchEvent(clickEvent);
+    });
+
     dd.appendChild(item);
   });
 }
@@ -202,19 +225,20 @@ function validateDate() {
 function updateSubmitState() {
   const titleEl = document.getElementById("title");
   const dueDateEl = document.getElementById("dueDate");
-  const categoryEl = document.getElementById("category");
+  const categoryToggle = document.getElementById("category-toggle");
   const placeholder = document.getElementById("assigned-to-placeholder");
   const button = document.getElementById("submit-task-btn");
 
-  if (!titleEl || !dueDateEl || !categoryEl || !placeholder || !button) return;
+  if (!titleEl || !dueDateEl || !categoryToggle || !placeholder || !button)
+    return;
 
   const title = titleEl.value.trim();
   const dueDate = dueDateEl.value.trim();
-  const category = categoryEl.value;
+  const category = selectedCategory;
 
   const titleValid = title !== "";
   const dueDateValid = dueDate !== "";
-  const categoryValid = category !== "" && category !== "disabled";
+  const categoryValid = category !== "";
   const assignedValid = selectedContacts.length > 0;
 
   button.disabled = !(
@@ -235,7 +259,7 @@ function updateSubmitState() {
   dueDateEl.classList.toggle("error-border", !dueDateValid);
 
   // Category visual feedback
-  categoryEl.classList.toggle("error-border", !categoryValid);
+  categoryToggle.classList.toggle("error-border", !categoryValid);
 
   // Assigned visual feedback
   placeholder.classList.toggle("error-border", !assignedValid);
@@ -246,8 +270,10 @@ function resetForm() {
   document.getElementById("task-form").reset();
   document.getElementById("subtask-list").innerHTML = "";
   selectedContacts = [];
+  selectedCategory = "";
   updateSelectedContactsUI();
   selectPriority("medium");
+  updateCategoryUI();
   updateSubmitState();
 }
 
@@ -259,6 +285,7 @@ async function createTask() {
     dueDate: document.getElementById("dueDate").value,
     priority: selectedPriority,
     assignedTo: selectedContacts.map((c) => c.name),
+    category: selectedCategory,
     subtasks,
     createdAt: new Date().toISOString(),
     status: "todo",
@@ -319,39 +346,67 @@ async function saveTaskToFirebaseBoard(task) {
 }
 
 // ==== CATEGORY DROPDOWN ====
+
 function toggleCategoryDropdown(event) {
-  stopPropagation(event);
-  const toggle = document.getElementById("category-dropdown-toggle");
-  const content = document.getElementById("category-dropdown-content");
+  event.stopPropagation();
+  const toggle = document.getElementById("category-toggle");
+  const content = document.getElementById("category-content");
 
   toggle.classList.toggle("open");
   content.classList.toggle("visible");
+
+  if (content.innerHTML.trim() === "") renderCategoryOptions();
+}
+
+function renderCategoryOptions() {
+  const content = document.getElementById("category-content");
+  content.innerHTML = "";
+  const categories = ["Technical Task", "User Story"];
+
+  categories.forEach((category) => {
+    const item = document.createElement("div");
+    item.className = "dropdown-item category-item";
+    item.innerHTML = `<span class="category-name">${category}</span>`;
+    item.onclick = () => {
+      selectCategory(category);
+      content.classList.remove("visible");
+      document.getElementById("category-toggle").classList.remove("open");
+      updateSubmitState();
+    };
+    content.appendChild(item);
+  });
 }
 
 function selectCategory(category) {
-  const placeholder = document.getElementById("selected-category-placeholder");
-  const hiddenInput = document.getElementById("category");
-
+  selectedCategory = category;
+  const placeholder = document.querySelector("#category-toggle span");
   placeholder.textContent = category;
-  hiddenInput.value = category;
-
-  document.getElementById("category-dropdown-toggle")?.classList.remove("open");
-  document
-    .getElementById("category-dropdown-content")
-    ?.classList.remove("visible");
-
-  updateSubmitState();
 }
 
+function updateCategoryUI() {
+  const box = document.getElementById("selected-category");
+  box.innerHTML = "";
+  if (selectedCategory) {
+    const el = document.createElement("div");
+    el.className = "profile-icon";
+    el.style.background = "#2a3647";
+    el.textContent = selectedCategory
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase();
+    box.appendChild(el);
+  }
+}
+
+// Update global click event for both dropdowns
 document.addEventListener("click", (e) => {
-  if (
-    !document.getElementById("category-dropdown-wrapper").contains(e.target)
-  ) {
-    document
-      .getElementById("category-dropdown-toggle")
-      ?.classList.remove("open");
-    document
-      .getElementById("category-dropdown-content")
-      ?.classList.remove("visible");
+  if (!document.getElementById("category-wrapper").contains(e.target)) {
+    document.getElementById("category-toggle")?.classList.remove("open");
+    document.getElementById("category-content")?.classList.remove("visible");
+  }
+
+  if (!document.getElementById("dropdown-wrapper").contains(e.target)) {
+    closeDropdown();
   }
 });

@@ -107,7 +107,7 @@
                   <label for="description">Description</label>
                   <textarea
                     id="description"
-                    placeholder="Enter a Description"
+                    placeholder="Enter a description"
                   ></textarea>
 
                   <label for="dueDate"
@@ -174,39 +174,17 @@
                   </div>
                   <div id="selected-contacts" class="selected-contacts"></div>
 
-                  <label> Category <span class="red_star">*</span> </label>
-                  <div
-                    class="custom-dropdown-wrapper"
-                    id="category-dropdown-wrapper"
-                  >
-                    <div
-                      id="category-dropdown-toggle"
-                      onclick="toggleCategoryDropdown()"
-                    >
+                  <label>Category <span class="red_star">*</span></label>
+                  <div class="custom-dropdown-wrapper" id="category-wrapper">
+                    <div id="category-toggle">
                       <span id="selected-category-placeholder"
                         >Select category</span
                       >
-                      <div class="dropdown-arrow"></div>
+                      <div id="category-arrow" class="dropdown-arrow"></div>
                     </div>
-                    <div
-                      id="category-dropdown-content"
-                      class="dropdown-content"
-                    >
-                      <div
-                        class="dropdown-item"
-                        onclick="selectCategory('Technical Task')"
-                      >
-                        Technical Task
-                      </div>
-                      <div
-                        class="dropdown-item"
-                        onclick="selectCategory('User Story')"
-                      >
-                        User Story
-                      </div>
-                    </div>
-                    <input type="hidden" id="category" value="" />
+                    <div id="category-content"></div>
                   </div>
+                  <input type="hidden" id="category" value="" />
                   <div class="error-message" id="error-category">
                     This field is required
                   </div>

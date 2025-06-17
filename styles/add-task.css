@@ -79,9 +79,13 @@
   box-shadow: none;
 }
 
-/* === Ausgewählter Zustand: Hintergrund voll färben, Text/Icon weiß === */
 .priority-buttons button.selected {
   color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.priority-buttons button:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .priority-buttons button.selected img {
@@ -111,7 +115,7 @@
 /* Entfernt: filter: none; da bereits oben bei button:not(.selected) img definiert */
 
 .priority-buttons button:not(.selected):hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .subtask-item {
@@ -233,6 +237,11 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   color: #000;
+  font-family: inherit;
+}
+
+textarea {
+  padding-top: 12px;
 }
 
 select {
@@ -248,6 +257,7 @@ select {
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
+  font-family: inherit;
 }
 
 select:focus {
@@ -440,6 +450,7 @@ input::placeholder,
 textarea::placeholder,
 select::placeholder {
   color: #b3b3b3;
+  font-family: inherit;
 }
 
 /* === Custom Select Wrapper === */
@@ -482,13 +493,12 @@ select::placeholder {
   outline: none;
 }
 
-.category-wrapper {
+/* === Category Dropdown (wie Assigned to) === */
+#category-wrapper {
   position: relative;
-  width: 100%;
 }
 
-/* Category Dropdown Toggle - exakt wie Assigned to Dropdown */
-#category-dropdown-toggle {
+#category-toggle {
   padding: 12px 16px;
   border: 2px solid #ccc;
   border-radius: 12px;
@@ -502,8 +512,11 @@ select::placeholder {
   box-sizing: border-box;
 }
 
-/* Pfeil-Icon für Category Dropdown (Designmatch zu Assigned to) */
-#category-dropdown-toggle .dropdown-arrow {
+#category-toggle.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+#category-arrow {
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
@@ -512,12 +525,7 @@ select::placeholder {
   transition: transform 0.15s ease;
 }
 
-#category-dropdown-toggle.open .dropdown-arrow {
-  transform: rotate(180deg);
-}
-
-/* Category Dropdown Content (analog zu Assigned to) */
-.category-dropdown-content {
+#category-content {
   position: absolute;
   top: 100%;
   left: 0;
@@ -530,27 +538,58 @@ select::placeholder {
   background: #fff;
   display: none;
   z-index: 10;
+  padding: 8px 0;
 }
 
-.category-dropdown-content.visible {
+#category-content.visible {
   display: block;
 }
 
-.category-dropdown-content .category-item {
+#category-content .category-item {
   padding: 12px 16px;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
+  gap: 12px;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+}
+
+#category-content .category-item:hover {
+  background-color: #f0f0f0;
+}
+
+#category-content .category-item input[type="radio"] {
+  margin-left: auto;
+  accent-color: #2a3647;
+  transform: scale(1.4);
   cursor: pointer;
 }
 
-.category-dropdown-content .category-item.selected {
-  background-color: #f0f0f0;
-  font-weight: bold;
+.category-icon {
+  border-radius: 45px;
+  height: 42px;
+  width: 42px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  background-color: #2a3647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
 }
 
-.category-dropdown-content .category-item:hover {
-  background-color: #f0f0f0;
+#description {
+  padding: 12px 16px;
+  font-size: 16px;
+  height: 100px;
+  line-height: normal;
+}
+
+#description::placeholder {
+  width: 100%;
 }
