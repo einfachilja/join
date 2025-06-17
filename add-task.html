@@ -174,14 +174,15 @@
                   </div>
                   <div id="selected-contacts" class="selected-contacts"></div>
 
-                  <label for="category-select">
-                    Category <span class="red_star">*</span>
-                  </label>
+                  <label> Category <span class="red_star">*</span> </label>
                   <div
                     class="custom-dropdown-wrapper"
                     id="category-dropdown-wrapper"
                   >
-                    <div id="category-dropdown-toggle">
+                    <div
+                      id="category-dropdown-toggle"
+                      onclick="toggleCategoryDropdown()"
+                    >
                       <span id="selected-category-placeholder"
                         >Select category</span
                       >
@@ -204,6 +205,7 @@
                         User Story
                       </div>
                     </div>
+                    <input type="hidden" id="category" value="" />
                   </div>
                   <div class="error-message" id="error-category">
                     This field is required

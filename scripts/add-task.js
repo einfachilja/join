@@ -7,8 +7,10 @@ let contacts = [];
 let selectedContacts = [];
 
 // ====== Helfer zum Stoppen der Klick-Propagation ======
-function stopPropagation(e) {
-  e.stopPropagation();
+function stopPropagation(e = window.event) {
+  if (e && typeof e.stopPropagation === "function") {
+    e.stopPropagation();
+  }
 }
 
 // ====== Dropdown schließen, wenn irgendwo im Body geklickt wird ======
@@ -315,3 +317,41 @@ async function saveTaskToFirebaseBoard(task) {
     console.error("Board task save error:", error);
   }
 }
+
+// ==== CATEGORY DROPDOWN ====
+function toggleCategoryDropdown(event) {
+  stopPropagation(event);
+  const toggle = document.getElementById("category-dropdown-toggle");
+  const content = document.getElementById("category-dropdown-content");
+
+  toggle.classList.toggle("open");
+  content.classList.toggle("visible");
+}
+
+function selectCategory(category) {
+  const placeholder = document.getElementById("selected-category-placeholder");
+  const hiddenInput = document.getElementById("category");
+
+  placeholder.textContent = category;
+  hiddenInput.value = category;
+
+  document.getElementById("category-dropdown-toggle")?.classList.remove("open");
+  document
+    .getElementById("category-dropdown-content")
+    ?.classList.remove("visible");
+
+  updateSubmitState();
+}
+
+document.addEventListener("click", (e) => {
+  if (
+    !document.getElementById("category-dropdown-wrapper").contains(e.target)
+  ) {
+    document
+      .getElementById("category-dropdown-toggle")
+      ?.classList.remove("open");
+    document
+      .getElementById("category-dropdown-content")
+      ?.classList.remove("visible");
+  }
+});

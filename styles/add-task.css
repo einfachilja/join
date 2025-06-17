@@ -295,7 +295,7 @@ select:focus {
   max-height: 200px;
   overflow-y: auto;
   border-radius: 12px;
-  border: 2px solid #eee;
+  border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background: #fff;
   display: none;
@@ -525,7 +525,7 @@ select::placeholder {
   max-height: 200px;
   overflow-y: auto;
   border-radius: 12px;
-  border: 2px solid #eee;
+  border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background: #fff;
   display: none;
@@ -537,12 +537,18 @@ select::placeholder {
 }
 
 .category-dropdown-content .category-item {
-  padding: 16px 20px;
-  font-size: 18px;
+  padding: 12px 16px;
+  font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  height: 48px;
   cursor: pointer;
+}
+
+.category-dropdown-content .category-item.selected {
+  background-color: #f0f0f0;
+  font-weight: bold;
 }
 
 .category-dropdown-content .category-item:hover {
