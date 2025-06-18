@@ -67,10 +67,12 @@
             alt="logo"
           />
           <div class="header-right">
-            <div onclick="openSubMenu()" class="user-profile"><b>SM</b></div>
-            <a class="help-img" href="./help.html"
-              ><img src="./assets/img/help.svg" alt="Help Icon"
-            /></a>
+            <div onclick="openSubMenu()" class="user-profile">
+              <b id="user-initials"></b>
+            </div>
+            <a class="help-img" href="./help.html">
+              <img src="./assets/img/help.svg" alt="" />
+            </a>
           </div>
         </div>
 
@@ -190,19 +192,46 @@
                   </div>
 
                   <label>Subtasks</label>
-                  <div class="subtask-input">
-                    <input
-                      id="subtask-input"
-                      type="text"
-                      placeholder="Add new subtask"
-                      onkeypress="if(event.key==='Enter'){ addSubtask(); event.preventDefault(); }"
-                    />
-                    <button type="button" onclick="addSubtask()">+</button>
+                  <div class="subtask-input-container">
+                    <div class="subtasks-container">
+                      <div class="subtask-input-wrapper">
+                        <div class="subtask-input-field">
+                          <input
+                            id="subtask-input"
+                            type="text"
+                            placeholder="Add new subtask"
+                            onfocus="toggleSubtaskIcons()"
+                            oninput="toggleSubtaskIcons()"
+                            onkeydown="handleSubtaskEnter(event)"
+                          />
+                          <div id="subtask-icons" class="subtask-icons hidden">
+                            <img
+                              src="./assets/icons/closeXSymbol.svg"
+                              alt="Cancel"
+                              onclick="clearSubtaskInput()"
+                            />
+                            <div class="divider"></div>
+                            <img
+                              src="./assets/icons/checked.svg"
+                              alt="Confirm"
+                              onclick="addSubtask()"
+                            />
+                          </div>
+                          <img
+                            id="subtask-plus"
+                            class="subtask-plus"
+                            src="./assets/icons/add+symbol.svg"
+                            alt="Add"
+                            onclick="toggleSubtaskIcons()"
+                          />
+                        </div>
+                      </div>
+
+                      <ul id="subtask-list" class="subtask-list"></ul>
+                    </div>
                   </div>
-                  <ul id="subtask-list"></ul>
                 </div>
               </div>
-
               <div class="form-actions">
                 <button type="button" onclick="resetForm()">Cancel</button>
                 <button
