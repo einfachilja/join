@@ -12,7 +12,7 @@ function showWelcomeMessage() {
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  if (window.innerWidth <= 800) {
+  if (window.innerWidth <= 1040) {
     // Show overlay welcome message for mobile
     const overlay = document.getElementById("mobile-welcome-overlay");
     const overlayText = document.getElementById("mobile-welcome-overlay-text");

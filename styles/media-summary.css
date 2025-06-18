@@ -42,15 +42,68 @@
 
 @media(max-width: 1040px) {
     .summary-container {
-        margin-left: 70px;
+        margin-left: 0px;
         margin-top: 100px;
+    }
+
+    /* welcome message summary */
+    .mobile-welcome-overlay {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        bottom: 80px;
+        background-color: #f5f5f5;
+        z-index: 999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+    }
+
+    .mobile-welcome-message-centered {
+        text-align: center;
+    }
+
+    .mobile-welcome-message-centered h2 {
+        font-size: 30px;
+        font-weight: 500;
+        color: rgb(42, 54, 71);
+        margin-bottom: 12px;
+    }
+
+    .mobile-welcome-message-centered p {
+        font-size: 32px;
+        font-weight: 700;
+        color: rgb(41, 171, 226);
+    }
+
+    .d_none {
+        display: none !important;
+    }
+
+        .card-container-right {
+        display: none;
+    }
+
+    .summary-header {
+        justify-content: center;
+    }
+
+    .card-container {
+        justify-content: center;
+    }
+
+    .summary-header-vector {
+        max-height: 45px;
+        min-width: 4px;
     }
 
 }
 
 @media(max-width: 800px) {
     .summary-container {
-        margin-left: 20px;
+        margin-left: 0px;
         margin-top: 80px;
     }
 
@@ -90,59 +143,6 @@
 
     .summary-card-text {
         font-size: 16px;
-    }
-
-    .card-container-right {
-        display: none;
-    }
-
-    .summary-header {
-        justify-content: center;
-    }
-
-    .card-container {
-        justify-content: center;
-    }
-
-    .summary-header-vector {
-        max-height: 45px;
-        min-width: 4px;
-    }
-
-    /* welcome message summary */
-    .mobile-welcome-overlay {
-        position: absolute;
-        top: 80px;
-        left: 0;
-        right: 0;
-        bottom: 80px;
-        background-color: #f5f5f5;
-        z-index: 999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: auto;
-    }
-
-    .mobile-welcome-message-centered {
-        text-align: center;
-    }
-
-    .mobile-welcome-message-centered h2 {
-        font-size: 30px;
-        font-weight: 500;
-        color: rgb(42, 54, 71);
-        margin-bottom: 12px;
-    }
-
-    .mobile-welcome-message-centered p {
-        font-size: 32px;
-        font-weight: 700;
-        color: rgb(41, 171, 226);
-    }
-
-    .d_none {
-        display: none !important;
     }
 }
 
@@ -224,7 +224,7 @@
     }
 
     .summary-date {
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .card-center-text {
@@ -232,7 +232,7 @@
     }
 
     .summary-date-subline {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .card-box-bottom {
