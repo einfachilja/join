@@ -632,3 +632,43 @@ select::placeholder {
 .hidden {
   display: none !important;
 }
+
+/* === Responsive Breakpoints === */
+
+@media (max-width: 1040px) {
+  .add-task-modal {
+    margin: 100px 12px 24px 12px;
+    padding: 24px;
+  }
+
+  .form-cols {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .add_task_mid_box {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .add-task-modal {
+    margin: 80px 8px 16px 8px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 500px) {
+  .form-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .add-task-modal {
+    padding: 12px;
+  }
+}
