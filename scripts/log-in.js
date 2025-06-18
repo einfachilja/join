@@ -10,13 +10,15 @@ window.onload = function () {
 // Blendet den Loader nach kurzer Zeit aus
 function initLoaderAnimation() {
   const loader = document.getElementById("loader");
+  const logo = document.getElementById("animated-logo");
 
   setTimeout(() => {
-    loader.style.opacity = "0";
-
+    logo.classList.add("logo-finished");
+    loader.style.background = "transparent";
     setTimeout(() => {
-      loader.style.display = "none";
-    }, 1000);
+      loader.style.pointerEvents = "none";
+    }, 800);
+
   }, 500);
 }
 
