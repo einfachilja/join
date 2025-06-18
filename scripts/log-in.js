@@ -4,6 +4,7 @@ window.onload = function () {
   initLoaderAnimation();
   initInputListeners();
   initPasswordVisibilityToggle();
+  initLivePasswordIconChange();
 };
 
 // Blendet den Loader nach kurzer Zeit aus
@@ -118,9 +119,33 @@ function initPasswordVisibilityToggle() {
   document.querySelectorAll(".toggle-password").forEach((icon) => {
     icon.addEventListener("click", () => {
       const targetId = icon.getAttribute("data-target");
-      const input = document.getElementById(targetId);
-      if (input) {
-        input.type = input.type === "password" ? "text" : "password";
+      togglePasswordWithIcon(targetId, icon);
+    });
+  });
+}
+
+// Schaltet die Sichtbarkeit des Passwortfeldes um und wechselt das Icon zwischen „Sichtbar“ und „Versteckt“.
+function togglePasswordWithIcon(inputId, iconElement) {
+  const input = document.getElementById(inputId);
+  const isVisible = input.type === "text";
+
+  input.type = isVisible ? "password" : "text";
+  iconElement.src = isVisible
+    ? "./assets/img/2. log-sign-page/visibility_off.svg"
+    : "./assets/img/2. log-sign-page/visibility_eye.svg";
+}
+
+// Ändert das Passwort-Icon dynamisch beim Tippen:
+function initLivePasswordIconChange() {
+  document.querySelectorAll("input[type='password']").forEach((input) => {
+    input.addEventListener("input", () => {
+      const icon = input.closest(".input-container").querySelector(".toggle-password");
+      if (!icon) return;
+
+      if (input.value.length > 0) {
+        icon.src = "./assets/img/2. log-sign-page/visibility_off.svg";
+      } else {
+        icon.src = "./assets/img/2. log-sign-page/lock-icon.svg";
       }
     });
   });
