@@ -144,6 +144,12 @@ input:focus-visible {
   height: 24px;
 }
 
+.input-icon-password {
+  width: 24px;
+  height: 24px;
+  object-fit: contain; 
+}
+
 .toggle-password {
   cursor: pointer;
   pointer-events: auto;

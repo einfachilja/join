@@ -179,6 +179,12 @@ input:focus-visible {
   cursor: pointer;
 }
 
+.input-icon-password {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+}
+
 /* Privacy */
 .privacy-container {
   display: flex;
