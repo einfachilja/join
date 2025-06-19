@@ -133,7 +133,7 @@ function generateTodoHTML(element) {
     priorityIcon = "./assets/icons/board-priority-low.svg";
   } else if (element.priority && element.priority.toLowerCase() === "medium") {
     priorityIcon = "./assets/icons/board-priority-medium.svg";
-  } else if (element.priority && element.priority.toLowerCase() === "high") {
+  } else if (element.priority && element.priority.toLowerCase() === "urgent") {
     priorityIcon = "./assets/icons/board-priority-high.svg";
   }
 
@@ -255,7 +255,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
     priorityIcon = "./assets/icons/board-priority-low.svg";
   } else if (task.priority && task.priority.toLowerCase() === "medium") {
     priorityIcon = "./assets/icons/board-priority-medium.svg";
-  } else if (task.priority && task.priority.toLowerCase() === "high") {
+  } else if (task.priority && task.priority.toLowerCase() === "urgent") {
     priorityIcon = "./assets/icons/board-priority-high.svg";
   }
   return /*html*/ `
@@ -448,6 +448,41 @@ function editTask() {
     priorityHeadline.innerHTML = '';
     priorityHeadline.appendChild(wrapper);
   }
+
+  // Assigned To bearbeiten via <select multiple>
+  const assignedListContainer = document.querySelector('.assigned-list');
+  if (assignedListContainer && !document.getElementById('assigned-select')) {
+    assignedListContainer.innerHTML = '';
+    // Label
+    const labelA = document.createElement('span');
+    labelA.textContent = 'Assigned To';
+    labelA.className = 'overlay-card-label';
+    assignedListContainer.appendChild(labelA);
+    // Multi-select element
+    const select = document.createElement('select');
+    select.id = 'assigned-select';
+    select.multiple = true;
+    select.size = 5;  // adjust height as needed
+    select.className = 'overlay-card-select';
+    // Populate options from localStorage contacts
+    const userKey = localStorage.getItem('firebaseKey');
+    const usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
+    const contacts = usersData[userKey]?.contacts || {};
+    Object.values(contacts).forEach(c => {
+      const option = document.createElement('option');
+      option.value = c.name;
+      option.textContent = c.name;
+      select.appendChild(option);
+    });
+    // Pre-select existing assignedTo
+    const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+    (task.assignedTo || []).forEach(name => {
+      const opt = Array.from(select.options).find(o => o.value === name);
+      if (opt) opt.selected = true;
+    });
+    assignedListContainer.appendChild(select);
+  }
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
@@ -492,13 +527,20 @@ async function saveEditTask(taskKey) {
     newDueDate = match ? match[0] : "";
   }
 
+  // Assigned To aus Edit-Block holen von <select>
+  let newAssignedTo = task.assignedTo;
+  const select = document.getElementById('assigned-select');
+  if (select) {
+    newAssignedTo = Array.from(select.selectedOptions).map(opt => opt.value);
+  }
+
   const updatedTask = {
     ...task,
     title: newTitle,
     description: newDescription,
     dueDate: newDueDate,
     priority: newPriority,
-    // assignedTo: newAssignedTo,
+    assignedTo: newAssignedTo,
     // subtask: newSubtask
   };
 
