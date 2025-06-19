@@ -110,36 +110,45 @@ function removeHighlight(status) {
 /* ========== UPDATE BOARD PAGE ========== */
 function updateHTML() {
   let todo = arrayTasks.filter((t) => t["status"] == "todo");
+  let progress = arrayTasks.filter((t) => t["status"] == "progress");
+  let feedback = arrayTasks.filter((t) => t["status"] == "feedback");
+  let done = arrayTasks.filter((t) => t["status"] == "done");
 
   document.getElementById("todo").innerHTML = "";
-
-  for (let index = 0; index < todo.length; index++) {
-    let element = todo[index];
-    document.getElementById("todo").innerHTML += generateTodoHTML(element);
-  }
-
-  let progress = arrayTasks.filter((t) => t["status"] == "progress");
   document.getElementById("progress").innerHTML = "";
-
-  for (let index = 0; index < progress.length; index++) {
-    let element = progress[index];
-    document.getElementById("progress").innerHTML += generateTodoHTML(element);
-  }
-
-  let feedback = arrayTasks.filter((t) => t["status"] == "feedback");
   document.getElementById("feedback").innerHTML = "";
-
-  for (let index = 0; index < feedback.length; index++) {
-    let element = feedback[index];
-    document.getElementById("feedback").innerHTML += generateTodoHTML(element);
-  }
-
-  let done = arrayTasks.filter((t) => t["status"] == "done");
   document.getElementById("done").innerHTML = "";
 
-  for (let index = 0; index < done.length; index++) {
-    let element = done[index];
-    document.getElementById("done").innerHTML += generateTodoHTML(element);
+  if (todo.length === 0) {
+    document.getElementById("todo").innerHTML = `<span class="empty-message">No Tasks in To do</span>`;
+  } else {
+    for (let element of todo) {
+      document.getElementById("todo").innerHTML += generateTodoHTML(element);
+    }
+  }
+
+  if (progress.length === 0) {
+    document.getElementById("progress").innerHTML = `<span class="empty-message">No Tasks in <br> Await feedback</span>`;
+  } else {
+    for (let element of progress) {
+      document.getElementById("progress").innerHTML += generateTodoHTML(element);
+    }
+  }
+
+  if (feedback.length === 0) {
+    document.getElementById("feedback").innerHTML = `<span class="empty-message">No Tasks in <br> Await feedback</span>`;
+  } else {
+    for (let element of feedback) {
+      document.getElementById("feedback").innerHTML += generateTodoHTML(element);
+    }
+  }
+
+  if (done.length === 0) {
+    document.getElementById("done").innerHTML = `<span class="empty-message">No Tasks in Done</span>`;
+  } else {
+    for (let element of done) {
+      document.getElementById("done").innerHTML += generateTodoHTML(element);
+    }
   }
 }
 

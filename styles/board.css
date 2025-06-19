@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     text-decoration: none;
-    
+
 }
 
 .board-container {
@@ -31,14 +31,14 @@
     border: 1px solid #a8a8a8;
     border-radius: 10px;
     padding: 4px 12px;
-    width: 350px;
+    width: 300px;
+    height: 38px;
     justify-content: space-between;
 }
 
 .input-search {
     border: none;
-    height: 48px;
-    border-radius: 10px;
+    font-family: inherit;
     width: 100%;
 }
 
@@ -49,6 +49,7 @@
 .input-search::placeholder {
     font-size: 16px;
     color: #d1d1d1;
+    align-content: center;
 }
 
 .search-box-right {
@@ -171,6 +172,19 @@
 
 .drag-area-highlight {
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+.empty-message {
+    background-color: rgba(231, 231, 231, 1.0);
+    color: rgba(168, 168, 168, 1.0);
+    border-radius: 10px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: dashed 1px rgba(168, 168, 168, 1.0);
+    padding: 16px 24px;
+    text-align: center;
 }
 
 .board-overlay {
