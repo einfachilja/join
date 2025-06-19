@@ -275,6 +275,13 @@
     font-size: 20px;
 }
 
+.assigned-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 12px;
+}
+
 .overlay-card-footer {
     width: 100%;
     display: flex;

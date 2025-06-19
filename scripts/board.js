@@ -264,9 +264,20 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span id="due_date">Due date: ${task.dueDate}</span>
-      <span>Priority: ${task.priority} <img src="${priorityIcon}" alt="${task.priority}" /></span>
-      <div>
-        Assigned to: <span>${task.assignedTo}</span>
+      <span>Priority: ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)} <img src="${priorityIcon}" alt="${task.priority}" /></span>
+      <div class="assigned-list">
+        <span>Assigned To:</span>
+        ${Array.isArray(task.assignedTo)
+          ? task.assignedTo.map(name => {
+              const contact = getContactByName(name);
+              const color = contact?.color || "#ccc";
+              return `
+                <div class="assigned-entry">
+                  <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
+                  <span class="assigned-name">${name}</span>
+                </div>`;
+            }).join("")
+          : ""}
       </div>
       <div>
         <span>Subtasks:</span>
@@ -280,7 +291,6 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <div id="edit_btn" class="edit-btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok</div>
       </div>
-     
     </div>`;
 }
 
