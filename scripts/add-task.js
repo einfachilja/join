@@ -97,13 +97,6 @@ function setupEventListeners() {
 }
 
 // ==== PRIORITY ====
-function selectPriority(prio) {
-  selectedPriority = prio;
-  document
-    .querySelectorAll("#buttons-prio button")
-    .forEach((b) => b.classList.toggle("selected", b.dataset.prio === prio));
-  updateSubmitState();
-}
 
 // ==== ASSIGN-DROPDOWN ====
 function toggleAssignDropdown(event) {
@@ -181,164 +174,93 @@ function updateSelectedContactsUI() {
 }
 
 // ==== SUBTASK ====
-function addSubtask() {
-  // Only trigger if explicitly confirmed (button click or Enter when confirm visible)
-  // Cleanup before creating a new li to ensure no rogue icons exist
+function cleanupFloatingDeleteIcons() {
+  // Remove any delete-subtask icons not inside a proper subtask list item
+  document.querySelectorAll("img.delete-subtask").forEach((icon) => {
+    if (!icon.closest("#subtask-list > li.subtask-list-item")) {
+      icon.remove();
+    }
+  });
+  // Remove any delete-subtask icons directly under body (floating)
   document
-    .querySelectorAll(".subtask-list > .delete-subtask:not(img)")
-    .forEach((el) => el.remove());
+    .querySelectorAll("body > img.delete-subtask")
+    .forEach((icon) => icon.remove());
+}
 
+function addSubtask() {
   const input = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
   const text = input.value.trim();
-  // Only add if confirm/cancel buttons are visible and input is non-empty
   if (!text || subtaskIcons.classList.contains("hidden")) {
     input.classList.add("error-border");
     return;
   }
-
   input.classList.remove("error-border");
   subtasks.push(text);
-
   const li = document.createElement("li");
   li.className = "subtask-list-item";
-
   const label = document.createElement("span");
   label.textContent = text;
   label.className = "subtask-label";
-
-  // Icons
   const iconWrapper = document.createElement("div");
   iconWrapper.className = "subtask-icons";
-
-  // Delete (Papierkorb) Icon
   const deleteIcon = document.createElement("img");
+  deleteIcon.setAttribute("data-subtask-delete", "true");
   deleteIcon.src = "./assets/icons/board-delete-icon.svg";
   deleteIcon.alt = "Delete";
   deleteIcon.className = "delete-subtask";
-
+  deleteIcon.style.position = "static";
   iconWrapper.appendChild(deleteIcon);
   li.appendChild(label);
   li.appendChild(iconWrapper);
-
   li.addEventListener("dblclick", () => {
-    enterEditMode(li, label, text);
+    enterEditMode(li);
   });
-  // Ensure the list item is only appended if it is correctly constructed and not orphaned
-  if (!li.contains(deleteIcon)) {
-    console.warn("Skipping subtask append due to missing icon");
-    return;
-  }
   document.getElementById("subtask-list").appendChild(li);
-
-  // Papierkorb-Event
   deleteIcon.addEventListener("click", () => {
     const index = subtasks.indexOf(text);
     if (index > -1) subtasks.splice(index, 1);
     li.remove();
     updateSubmitState();
+    cleanupFloatingDeleteIcons();
   });
-
   updateSubmitState();
   input.value = "";
-  // Hide icons after adding
   subtaskIcons.classList.add("hidden");
   const subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
+  cleanupFloatingDeleteIcons();
 }
 
-function enterEditMode(li, label, oldValue) {
+function enterEditMode(subtaskElement) {
+  const currentText =
+    subtaskElement.querySelector(".subtask-label").textContent;
+  const inputWrapper = document.createElement("div");
+  inputWrapper.classList.add("edit-subtask-wrapper");
+
   const input = document.createElement("input");
   input.type = "text";
-  input.value = oldValue;
-  input.className = "subtask-edit-input";
+  input.value = currentText;
+  input.classList.add("subtask-edit-input");
 
-  const cancelIcon = document.createElement("img");
-  cancelIcon.src = "./assets/icons/board-delete-icon.svg";
-  cancelIcon.alt = "Cancel";
-  cancelIcon.className = "cancel-subtask";
+  const confirmBtn = document.createElement("button");
+  confirmBtn.innerHTML = `<img src="./assets/icons/check-blue.svg">`;
+  confirmBtn.classList.add("subtask-confirm-btn");
+  confirmBtn.onclick = () => saveEditedSubtask(subtaskElement, input.value);
 
-  const confirmIcon = document.createElement("img");
-  confirmIcon.src = "./assets/icons/checked.svg";
-  confirmIcon.alt = "Confirm";
-  confirmIcon.className = "confirm-subtask";
+  const deleteBtn = document.createElement("button");
+  deleteBtn.innerHTML = `<img src="./assets/icons/delete-subtask.svg">`;
+  deleteBtn.classList.add("subtask-delete-btn");
+  deleteBtn.onclick = () => deleteSubtask(currentText);
 
-  const iconWrapper = document.createElement("div");
-  iconWrapper.className = "subtask-icons";
-  iconWrapper.style.display = "flex";
-  iconWrapper.style.gap = "8px";
-  iconWrapper.appendChild(cancelIcon);
-  iconWrapper.appendChild(confirmIcon);
-  // Remove any previous .subtask-icons wrappers to prevent orphaned icons
-  li.querySelectorAll(".subtask-icons").forEach((el) => el.remove());
-
-  const inputWrapper = document.createElement("div");
-  inputWrapper.className = "subtask-input-edit-wrapper";
   inputWrapper.appendChild(input);
+  inputWrapper.appendChild(confirmBtn);
+  inputWrapper.appendChild(deleteBtn);
 
-  const editContainer = document.createElement("div");
-  editContainer.className = "subtask-edit-container";
-  editContainer.appendChild(inputWrapper);
-  editContainer.appendChild(iconWrapper);
-
-  // Stelle sicher, dass die Struktur korrekt nur innerhalb von <li> gerendert wird
-  li.innerHTML = "";
-  li.classList.add("editing");
-  li.appendChild(editContainer);
-
-  cancelIcon.addEventListener("click", () => {
-    const index = subtasks.indexOf(oldValue);
-    if (index > -1) subtasks.splice(index, 1);
-    li.remove();
-    updateSubmitState();
-  });
-
-  confirmIcon.addEventListener("click", () => {
-    const newValue = input.value.trim();
-    if (!newValue) return;
-    const index = subtasks.indexOf(oldValue);
-    if (index > -1) subtasks[index] = newValue;
-
-    label.textContent = newValue;
-
-    li.innerHTML = "";
-    li.classList.remove("editing");
-
-    const newLabel = document.createElement("span");
-    newLabel.textContent = newValue;
-    newLabel.className = "subtask-label";
-
-    const newDeleteIcon = document.createElement("img");
-    newDeleteIcon.src = "./assets/icons/board-delete-icon.svg";
-    newDeleteIcon.alt = "Delete";
-    newDeleteIcon.className = "delete-subtask";
-    newDeleteIcon.addEventListener("click", () => {
-      const delIndex = subtasks.indexOf(newValue);
-      if (delIndex > -1) subtasks.splice(delIndex, 1);
-      li.remove();
-      updateSubmitState();
-    });
-
-    const newIconWrapper = document.createElement("div");
-    newIconWrapper.className = "subtask-icons";
-    newIconWrapper.appendChild(newDeleteIcon);
-
-    li.appendChild(newLabel);
-    li.appendChild(newIconWrapper);
-    li.addEventListener("dblclick", () => {
-      enterEditMode(li, newLabel, newValue);
-    });
-
-    updateSubmitState();
-  });
+  subtaskElement.innerHTML = "";
+  subtaskElement.appendChild(inputWrapper);
 
   input.focus();
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      confirmIcon.click();
-    }
-  });
 }
 
 function validateTitle() {
@@ -374,40 +296,28 @@ function updateSubmitState() {
   const categoryToggle = document.getElementById("category-toggle");
   const placeholder = document.getElementById("assigned-to-placeholder");
   const button = document.getElementById("submit-task-btn");
-
   if (!titleEl || !dueDateEl || !categoryToggle || !placeholder || !button)
     return;
-
   const title = titleEl.value.trim();
   const dueDate = dueDateEl.value.trim();
   const category = selectedCategory;
-
   const titleValid = title !== "";
   const dueDateValid = dueDate !== "";
   const categoryValid = category !== "";
   const assignedValid = selectedContacts.length > 0;
-
   button.disabled = !(
     titleValid &&
     dueDateValid &&
     categoryValid &&
     assignedValid
   );
-
-  // Title visual feedback
   titleEl.classList.toggle("error", !titleValid);
   const titleError = document.getElementById("error-title");
   if (titleError) {
     titleError.classList.toggle("visible", !titleValid);
   }
-
-  // Due Date visual feedback
   dueDateEl.classList.toggle("error-border", !dueDateValid);
-
-  // Category visual feedback
   categoryToggle.classList.toggle("error-border", !categoryValid);
-
-  // Assigned visual feedback
   placeholder.classList.toggle("error-border", !assignedValid);
 }
 
@@ -436,6 +346,7 @@ async function createTask() {
     createdAt: new Date().toISOString(),
     status: "todo",
   };
+  console.log("Creating task with data:", task);
 
   const response = await fetch(
     `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`,
@@ -446,19 +357,17 @@ async function createTask() {
   );
   await saveTaskToFirebaseBoard(task);
   resetForm();
+  if (typeof renderBoardTasks === "function") {
+    renderBoardTasks();
+  }
   showTaskAddedPopup();
 }
 
-/**
- * Öffnet den nativen Datepicker
- */
 function openDatepicker() {
   const el = document.getElementById("dueDate");
   if (typeof el.showPicker === "function") {
-    // moderner Chromium-Browser
     el.showPicker();
   } else {
-    // Safari, Firefox, iOS etc.
     el.focus();
   }
 }
@@ -508,12 +417,11 @@ function renderCategoryOptions() {
   const content = document.getElementById("category-content");
   content.innerHTML = "";
   const categories = ["Technical Task", "User Story"];
-
   categories.forEach((category) => {
     const item = document.createElement("div");
     item.className = "dropdown-item category-item";
     item.innerHTML = `<span class="category-name">${category}</span>`;
-    item.onclick = (ja) => {
+    item.onclick = (_) => {
       selectCategory(category);
       content.classList.remove("visible");
       document.getElementById("category-toggle").classList.remove("open");
@@ -546,17 +454,7 @@ function updateCategoryUI() {
   }
 }
 
-// Update global click event for both dropdowns
-document.addEventListener("click", (e) => {
-  if (!document.getElementById("category-wrapper").contains(e.target)) {
-    document.getElementById("category-toggle")?.classList.remove("open");
-    document.getElementById("category-content")?.classList.remove("visible");
-  }
-
-  if (!document.getElementById("dropdown-wrapper").contains(e.target)) {
-    closeDropdown();
-  }
-});
+// (Global click event for dropdown closure is already defined above. Only one instance is needed.)
 
 function toggleSubtaskIcons() {
   const input = document.getElementById("subtask-input");
