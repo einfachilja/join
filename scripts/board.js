@@ -152,14 +152,14 @@ function generateTodoHTML(element) {
                 <div class="card-footer">
                   <div class="assigned-container">
                     ${Array.isArray(assignedList)
-                      ? assignedList.map(name => {
-                          let contact = getContactByName(name);
-                          let color = contact && contact.color ? contact.color : "#ccc";
-                          return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
-                        }).join("")
-                      : ""}
+      ? assignedList.map(name => {
+        let contact = getContactByName(name);
+        let color = contact && contact.color ? contact.color : "#ccc";
+        return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
+      }).join("")
+      : ""}
                   </div>
-                  <div><img src="${priorityIcon}" alt="${element.priority}"></div>
+                  <div class="priority-container"><img src="${priorityIcon}" alt="${element.priority}"></div>
                 </div>
         </div>
     </div>`;
@@ -263,27 +263,33 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.subject}</span>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
-      <span id="due_date">Due date: ${task.dueDate}</span>
-      <span>Priority: ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)} <img src="${priorityIcon}" alt="${task.priority}" /></span>
+      <span class="due-date-headline" id="due_date">Due date: <span>${task.dueDate}</span></span>
+      <span class="priority-headline">Priority: <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
       <div class="assigned-list">
         <span>Assigned To:</span>
         ${Array.isArray(task.assignedTo)
-          ? task.assignedTo.map(name => {
-              const contact = getContactByName(name);
-              const color = contact?.color || "#ccc";
-              return `
+      ? task.assignedTo.map(name => {
+        const contact = getContactByName(name);
+        const color = contact?.color || "#ccc";
+        return `
                 <div class="assigned-entry">
                   <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
                   <span class="assigned-name">${name}</span>
                 </div>`;
-            }).join("")
-          : ""}
+      }).join("")
+      : ""}
       </div>
-      <div>
+      <div class="subtask-list">
         <span>Subtasks:</span>
-        <div>
-          ${task.subtask}
-        </div>
+        <ul>
+          ${Array.isArray(task.subtask)
+      ? task.subtask.map(sub => `
+                <div class="subtask-item">
+                  <input type="checkbox" disabled />
+                  <label>${sub}</label>
+                </div>`).join("")
+      : ""}
+        </ul>
       </div>
       <div id="overlay_card_footer" class="overlay-card-footer">
         <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>

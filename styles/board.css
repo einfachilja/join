@@ -161,35 +161,52 @@
 
 }
 
+.due-date-headline {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.priority-headline {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.priority-container {
+    display: flex;
+    align-items: center;
+}
+
 .assigned-container {
-  display: flex;
-  align-items: center;
-  padding-top: 5px;
+    display: flex;
+    align-items: center;
+    padding-top: 5px;
 }
 
 .assigned-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #ccc;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  border: 1px solid white;
-  margin-left: -8px;
-  z-index: 1;
-  position: relative;
-  transition: z-index 0.2s;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #ccc;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border: 1px solid white;
+    margin-left: -8px;
+    z-index: 1;
+    position: relative;
+    transition: z-index 0.2s;
 }
 
 .assigned-circle:first-child {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 .assigned-circle:hover {
-  z-index: 10;
+    z-index: 10;
 }
 
 .drag-area {
@@ -239,7 +256,6 @@
 }
 
 .board-overlay-card {
-    height: 700px;
     width: 500px;
     background-color: #ffffff;
     border-radius: 30px;
@@ -248,7 +264,7 @@
     box-shadow: 0px 0px 4px 0px #00000029;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     font-size: 20px;
 }
 
@@ -280,6 +296,19 @@
     align-items: center;
     gap: 12px;
     padding-top: 12px;
+}
+
+.subtask-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 12px;
+    font-size: 16px;
+}
+
+input[type="checkbox"] {
+    height: 16px;
+    width: 16px;
 }
 
 .overlay-card-footer {
