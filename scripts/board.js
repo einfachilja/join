@@ -150,7 +150,7 @@ function updateHTML() {
   }
 
   if (progress.length === 0) {
-    document.getElementById("progress").innerHTML = `<span class="empty-message">No Tasks in <br> Await feedback</span>`;
+    document.getElementById("progress").innerHTML = `<span class="empty-message">No Tasks in <br> In progress</span>`;
   } else {
     for (let element of progress) {
       document.getElementById("progress").innerHTML += generateTodoHTML(element);
