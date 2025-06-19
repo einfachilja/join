@@ -283,11 +283,16 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <span>Subtasks:</span>
         <ul>
           ${Array.isArray(task.subtask)
-      ? task.subtask.map(sub => `
-                <div class="subtask-item">
-                  <input type="checkbox" disabled />
-                  <label>${sub}</label>
-                </div>`).join("")
+      ? task.subtask.map((sub, idx) => {
+          const title = typeof sub === 'string' ? sub : sub.title;
+          const checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
+          const id = `subtask-${task.firebaseKey}-${idx}`;
+          return `
+            <div class="subtask-item">
+              <input type="checkbox" id="${id}" ${checked} onchange="toggleSubtask('${task.firebaseKey}', ${idx})" />
+              <label for="${id}">${title}</label>
+            </div>`;
+        }).join("")
       : ""}
         </ul>
       </div>
@@ -298,6 +303,30 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok</div>
       </div>
     </div>`;
+}
+
+
+// ========== TOGGLE SUBTASK COMPLETION & UPDATE FIREBASE ==========
+async function toggleSubtask(taskKey, index) {
+  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  if (!task || !Array.isArray(task.subtask)) return;
+  // Convert string subtasks to objects for backward compatibility
+  task.subtask = task.subtask.map(sub => typeof sub === 'string' ? { title: sub, completed: false } : sub);
+  // Toggle the completed flag
+  task.subtask[index].completed = !task.subtask[index].completed;
+  try {
+    // Persist updated subtasks array to Firebase
+    await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}/subtask.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task.subtask)
+    });
+    // Refresh UI
+    updateHTML();
+    openBoardCard(taskKey);
+  } catch (error) {
+    console.error("Fehler beim Aktualisieren des Subtasks:", error);
+  }
 }
 
 function closeBoardCard() {

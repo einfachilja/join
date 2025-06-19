@@ -306,9 +306,36 @@
     font-size: 16px;
 }
 
-input[type="checkbox"] {
-    height: 16px;
-    width: 16px;
+/* Subtask Checkbox Custom Styling */
+.subtask-item input[type="checkbox"] {
+    /* Remove native appearance */
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    outline: none;
+    margin-right: 12px;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid #2A3647;
+    background: transparent
+}
+
+
+/* Haken nach dem Ankreuzen */
+.subtask-item input[type="checkbox"]:checked::after {
+    content: "✔";
+    font-size: 20px;
+    color: #2A3647;
+    display: block;
+    text-align: center;
+    position: absolute;
+    left: 5px;
+    top: -5px;
 }
 
 .overlay-card-footer {
