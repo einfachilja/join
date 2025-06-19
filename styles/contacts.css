@@ -780,3 +780,26 @@
     margin-bottom: 35px;
 
 }
+
+
+
+
+
+
+
+/* Error message */
+.error-message {
+    visibility: hidden;
+    display: block;
+    min-height: 16px;
+    font-size: 12px;
+    color: red;
+    margin-left: 5px;
+    padding: 0px;
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+
+.error-message.visible {
+    visibility: visible;
+}

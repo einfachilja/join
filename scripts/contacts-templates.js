@@ -42,11 +42,17 @@ function overlayTemplate() {
                         <input id="new_contact_email" type="email" placeholder="Email" required />
                         <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
                       </div>
+                      <small id="email-error" class="error-message">
+                        Please enter a valid email address.
+                      </small>
                       <div class="input-group">
                         <input id="new_contact_phone" pattern="\\+?[0-9 -]{7,}" type="tel" placeholder="Phone" required />
 
                         <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                       </div>
+                      <small id="phone-error" class="error-message">
+                        Please enter a valid number.
+                      </small>
 
                       <div class="form-buttons">
                     <button
@@ -115,10 +121,16 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
                   <input id="edit_contact_email" type="email" placeholder="Email" value="${email}" required />
                   <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
                 </div>
+                <small id="email-error" class="error-message">
+                  Please enter a valid email address.
+                </small>
                 <div class="input-group">
                   <input id="edit_contact_phone" type="tel" pattern="\\+?[0-9 -]{7,}" placeholder="Phone" value="${phone}" required />
                   <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                 </div>
+                <small id="phone-error" class="error-message">
+                  Please enter a valid number.
+                </small>
 
                 <div class="form-buttons">
                   <button

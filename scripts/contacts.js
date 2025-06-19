@@ -19,13 +19,19 @@ function getRandomColor() {
 let firebaseKey = localStorage.getItem("firebaseKey");
 
 /* ============== ADD CONTACTS ============== */
-function addNewContact() {
+function addNewContact(event) {
+  event.preventDefault();
+
   const name = new_contact_name.value.trim();
   const email = new_contact_email.value.trim();
   const phone = new_contact_phone.value.trim();
-  if (!name || !email || !phone) return;
+
+  if (!isEmailValid()) {
+    return; 
+  }
 
   const contact = { name, email, phone, color: getRandomColor() };
+
   fetch(`https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`, {
     method: "POST",
     body: JSON.stringify(contact)
@@ -50,7 +56,7 @@ function isValidContactInput(name, email, phone) {
     email &&
     phone &&
     isTelValid("edit_contact_phone") &&
-    isEmailValid("edit_contact_email")
+    isEmailValid()
   );
 }
 
@@ -174,11 +180,10 @@ function styleContactOnclick(element) {
   const name = element.querySelector(".contact-name").textContent;
   const contact = contacts.find((c) => c.name === name);
   if (contact) {
-    // If mobile view, show overlay
     if (window.innerWidth <= 800) {
-      toggleContactInfoOverlay(contact); // new overlay for mobile
+      toggleContactInfoOverlay(contact); 
     } else {
-      showContactInfo(contact); // desktop mode
+      showContactInfo(contact); 
     }
   }
 }
@@ -238,36 +243,35 @@ function isTelValid(inputId = "new_contact_phone") {
 }
 
 /* ============= EMAIL VALIDATION ============= */
-function isEmailValid(inputId = "new_contact_email") {
-  const emailInput = document.getElementById(inputId);
-  if (!emailInput) return false;
 
-  const emailValue = emailInput.value.trim();
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function isEmailValid() {
+  const email = document.getElementById("new_contact_email").value.trim();
+  const error = document.getElementById("email-error");
 
-  if (!emailPattern.test(emailValue)) {
-    emailInput.classList.add("invalid");
+  if (email === "") {
+    error.classList.remove("visible");
     return false;
-  } else {
-    emailInput.classList.remove("invalid");
-    return true;
   }
+
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  error.classList.toggle("visible", !valid);
+  return valid;
 }
+
+
 
 /* =================== OVERLAY ================== */
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = ""; 
-  overlayRef.innerHTML += overlayTemplate(); 
+  overlayRef.innerHTML += overlayTemplate();
+  document.getElementById("new_contact_email").addEventListener("input", isEmailValid);
+
 
   overlayRef.classList.remove("d_none"); 
-
-  // Fade in the overlay background
   setTimeout(() => {
     overlayRef.classList.add("active");
   }, 0);
-
-  // Slide in the modal
   setTimeout(() => {
     const modal = document.querySelector(".add-new-contact-template");
     if (modal) modal.classList.add("slide-in");
