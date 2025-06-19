@@ -89,6 +89,15 @@ function generateTodoHTML(element) {
     categoryClass = "category-technical";
   }
 
+  let priorityIcon = "";
+  if (element.priority && element.priority.toLowerCase() === "low") {
+    priorityIcon = "./assets/icons/board-priority-low.svg";
+  } else if (element.priority && element.priority.toLowerCase() === "medium") {
+    priorityIcon = "./assets/icons/board-priority-medium.svg";
+  } else if (element.priority && element.priority.toLowerCase() === "high") {
+    priorityIcon = "./assets/icons/board-priority-high.svg";
+  }
+
   return `
     <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
@@ -97,7 +106,7 @@ function generateTodoHTML(element) {
             <span class="card-description">${element.description}</span>
                 <div class="card-footer">
                   <div>${element.assignedTo}</div>
-                  <div>${element.priority}</div>
+                  <div><img src="${priorityIcon}" alt="${element.priority}"></div>
                 </div>
         </div>
     </div>`;
@@ -188,13 +197,21 @@ function openBoardCard(firebaseKey) {
 }
 
 function getOpenBoardCardTemplate(categoryClass, task) {
+  let priorityIcon = "";
+  if (task.priority && task.priority.toLowerCase() === "low") {
+    priorityIcon = "./assets/icons/board-priority-low.svg";
+  } else if (task.priority && task.priority.toLowerCase() === "medium") {
+    priorityIcon = "./assets/icons/board-priority-medium.svg";
+  } else if (task.priority && task.priority.toLowerCase() === "high") {
+    priorityIcon = "./assets/icons/board-priority-high.svg";
+  }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" onclick="onclickProtection(event)">
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.subject}</span>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span id="due_date">Due date: ${task.dueDate}</span>
-      <span>Priority: ${task.priority}</span>
+      <span>Priority: ${task.priority} <img src="${priorityIcon}" alt="${task.priority}" /></span>
       <div>
         Assigned to: <span>${task.assignedTo}</span>
       </div>
