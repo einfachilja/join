@@ -676,44 +676,60 @@ select::placeholder {
 
 .subtask-list-item.subtask-edit-mode {
   background-color: #fff;
-  border: none;
-  padding: 8px 0;
-  list-style-type: disc;
-  margin-left: 20px;
+  border: 2px solid #29abe2;
+  border-radius: 8px;
+  padding: 10px 12px;
+  list-style-type: none;
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .subtask-edit-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  position: relative;
+  background-color: white;
+  border: 2px solid #29abe2;
+  border-radius: 8px;
+  padding: 8px 12px;
 }
 
 .subtask-input-edit-wrapper {
   flex: 1;
-  position: relative;
+  margin-right: 12px;
 }
 
 .subtask-input-edit-wrapper input {
-  height: 48px;
+  flex: 1;
+  height: 40px;
   background-color: #fff;
-  border-radius: 8px;
-  padding: 0 16px;
+  border-radius: 4px;
+  padding: 0 12px;
   font-size: 16px;
   width: 100%;
   box-sizing: border-box;
+  border: none;
+  outline: none;
 }
 
 .subtask-edit-container img {
-  width: 24px;
-  height: 24px;
-  padding: 6px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
+  width: 20px;
+  height: 20px;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: transparent;
 }
 
 .subtask-edit-container img:hover {
-  background-color: #e0e0e0;
+  background-color: #f0f0f0;
+}
+
+.subtask-edit-icons {
+  display: flex;
+  gap: 8px;
 }
 
 .subtask-icons img {

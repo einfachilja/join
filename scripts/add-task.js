@@ -220,47 +220,65 @@ function enterEditMode(subtaskElement) {
     subtaskElement.querySelector(".subtask-label")?.textContent || "";
   if (!currentText) return;
 
+  subtaskElement.innerHTML = ""; // clear old content
+
+  // Input-Feld
   const input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
   input.classList.add("subtask-edit-input");
 
+  // Cancel-Button
   const cancelBtn = document.createElement("img");
   cancelBtn.src = "./assets/icons/closeXSymbol.svg";
-  cancelBtn.alt = "Cancel";
-  cancelBtn.className = "subtask-cancel-edit";
+  cancelBtn.alt = "Delete";
+  cancelBtn.className = "subtask-edit-cancel";
   cancelBtn.addEventListener("click", () => {
-    input.replaceWith(labelClone);
-    btnWrapper.remove();
-    subtaskElement.appendChild(labelClone);
+    const index = subtasks.indexOf(currentText);
+    if (index > -1) {
+      subtasks.splice(index, 1);
+    }
+    subtaskElement.remove();
+    updateSubmitState();
   });
 
+  // Confirm-Button
   const confirmBtn = document.createElement("img");
   confirmBtn.src = "./assets/icons/checked.svg";
   confirmBtn.alt = "Confirm";
-  confirmBtn.className = "subtask-confirm-edit";
+  confirmBtn.className = "subtask-edit-confirm";
   confirmBtn.addEventListener("click", () => {
     const newValue = input.value.trim();
     if (newValue) {
-      labelClone.textContent = newValue;
-      input.replaceWith(labelClone);
-      btnWrapper.remove();
-      subtaskElement.appendChild(labelClone);
+      subtasks[subtasks.indexOf(currentText)] = newValue;
+      subtaskElement.innerHTML = "";
+      const label = document.createElement("span");
+      label.textContent = newValue;
+      label.className = "subtask-label";
+      subtaskElement.appendChild(label);
+      subtaskElement.addEventListener("dblclick", () => {
+        enterEditMode(subtaskElement);
+      });
     }
   });
 
-  const btnWrapper = document.createElement("div");
-  btnWrapper.className = "subtask-icons";
-  btnWrapper.appendChild(cancelBtn);
-  btnWrapper.appendChild(confirmBtn);
+  // Neue Struktur für Bearbeitungs-Container
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("subtask-edit-container");
 
-  const labelClone = document.createElement("span");
-  labelClone.className = "subtask-label";
-  labelClone.textContent = currentText;
+  const inputWrapper = document.createElement("div");
+  inputWrapper.classList.add("subtask-input-edit-wrapper");
+  inputWrapper.appendChild(input);
 
-  subtaskElement.innerHTML = "";
-  subtaskElement.appendChild(input);
-  subtaskElement.appendChild(btnWrapper);
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("subtask-edit-buttons");
+  buttonContainer.appendChild(cancelBtn);
+  buttonContainer.appendChild(confirmBtn);
+
+  wrapper.appendChild(inputWrapper);
+  wrapper.appendChild(buttonContainer);
+  subtaskElement.appendChild(wrapper);
+
   input.focus();
 }
 
@@ -336,7 +354,7 @@ function updateSubmitState() {
 
 // ==== RESET ====
 function resetForm() {
-/*   document.getElementById("task-form").reset();
+  /*   document.getElementById("task-form").reset();
   document.getElementById("subtask-list").innerHTML = "";
   selectedContacts = [];
   selectedCategory = "";
