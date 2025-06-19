@@ -284,15 +284,15 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <ul>
           ${Array.isArray(task.subtask)
       ? task.subtask.map((sub, idx) => {
-          const title = typeof sub === 'string' ? sub : sub.title;
-          const checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
-          const id = `subtask-${task.firebaseKey}-${idx}`;
-          return `
+        const title = typeof sub === 'string' ? sub : sub.title;
+        const checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
+        const id = `subtask-${task.firebaseKey}-${idx}`;
+        return `
             <div class="subtask-item">
               <input type="checkbox" id="${id}" ${checked} onchange="toggleSubtask('${task.firebaseKey}', ${idx})" />
               <label for="${id}">${title}</label>
             </div>`;
-        }).join("")
+      }).join("")
       : ""}
         </ul>
       </div>
@@ -375,6 +375,37 @@ function editTask() {
     descLabel.className = "overlay-card-label";
     descElement.parentNode.insertBefore(descLabel, descElement);
   }
+
+  // ==== HIER kommt dein neues Due Date Label ====
+  let dueDateSpan = document.getElementById("due_date");
+  if (dueDateSpan && !document.getElementById("due_date_input")) {
+    // Aktuelles Datum extrahieren
+    let match = dueDateSpan.innerText.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
+    let currentDueDate = match ? match[0] : "";
+    let formattedDate = "";
+    if (currentDueDate.match(/\d{2}\/\d{2}\/\d{4}/)) {
+      let [d, m, y] = currentDueDate.split("/");
+      formattedDate = `${y}-${m}-${d}`;
+    } else {
+      formattedDate = currentDueDate;
+    }
+    // Neues Label erzeugen
+    if (!document.getElementById("overlay_card_due_date_label")) {
+      let dueLabel = document.createElement("span");
+      dueLabel.textContent = "Due Date";
+      dueLabel.id = "overlay_card_due_date_label";
+      dueLabel.className = "overlay-card-label";
+      dueDateSpan.parentNode.insertBefore(dueLabel, dueDateSpan);
+    }
+    // Input erzeugen und ersetzen
+    let input = document.createElement("input");
+    input.type = "date";
+    input.id = "due_date_input";
+    input.className = "overlay-card-date-input";
+    input.value = formattedDate;
+    dueDateSpan.innerHTML = "";
+    dueDateSpan.appendChild(input);
+  }
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
@@ -396,9 +427,21 @@ async function saveEditTask(taskKey) {
 
   const newTitle = document.getElementById("overlay_card_title").innerHTML;
   const newDescription = document.getElementById("overlay_card_description").innerHTML;
-  const rawDueDate = document.getElementById("due_date").innerHTML; /*NEU */
-  const match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/); /*NEU */
-  const newDueDate = match ? match[0] : ""; /*NEU */
+
+  let dueDateInput = document.getElementById("due_date_input");
+  let newDueDate = "";
+  if (dueDateInput) {
+    // YYYY-MM-DD zu DD/MM/YYYY konvertieren
+    let [y, m, d] = dueDateInput.value.split("-");
+    if (y && m && d) {
+      newDueDate = `${d}/${m}/${y}`;
+    }
+  } else {
+    // Fallback, falls kein Input vorhanden
+    const rawDueDate = document.getElementById("due_date").innerHTML;
+    const match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
+    newDueDate = match ? match[0] : "";
+  }
 
   const updatedTask = {
     ...task,
