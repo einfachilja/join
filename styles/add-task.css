@@ -511,13 +511,15 @@ select::placeholder {
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  padding: 0;
 }
 
 .subtask-edit input {
   flex: 1;
   height: 48px;
-  background-color: #f6f7f8;
-  border: 1px solid #d1d1d1;
+  background-color: #fff;
+  border: 2px solid #2a3647;
   border-radius: 8px;
   padding: 0 16px;
   font-size: 16px;
@@ -543,12 +545,11 @@ select::placeholder {
 }
 
 .subtask-list-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #f6f7f8;
-  border-radius: 8px;
-  padding: 12px 16px;
+  list-style-type: disc;
+  margin-left: 20px;
+  background: none;
+  border: none;
+  padding: 8px 0;
   font-size: 16px;
   color: #000;
 }
@@ -584,8 +585,23 @@ select::placeholder {
   font-size: 16px;
   width: 100%;
   padding: 0 16px;
-  padding-right: 48px; /* Platz für das Icon rechts */
+  padding-right: 96px; /* Platz für zwei Icons rechts */
   box-sizing: border-box;
+}
+
+.subtask-icons {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.subtask-icons img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 #subtask-plus {
@@ -671,4 +687,59 @@ select::placeholder {
   .add-task-modal {
     padding: 12px;
   }
+}
+
+.subtask-list-item.subtask-edit-mode {
+  background-color: #fff;
+  border: none;
+  padding: 0;
+  list-style-type: none;
+}
+
+.subtask-edit-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.subtask-input-edit-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.subtask-input-edit-wrapper input {
+  height: 48px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.subtask-edit-container img {
+  width: 24px;
+  height: 24px;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.subtask-edit-container img:hover {
+  background-color: #e0e0e0;
+}
+
+.subtask-edit-container > img:first-child {
+  display: none;
+}
+
+.subtask-icons img {
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.subtask-icons img:hover {
+  filter: brightness(0.8);
 }

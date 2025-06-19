@@ -195,6 +195,7 @@
                   <div class="subtask-input-container">
                     <div class="subtasks-container">
                       <div class="subtask-input-wrapper">
+                        <!-- Eingabefeld für neue Subtasks, Bearbeitungslogik wird per JS ergänzt -->
                         <div class="subtask-input-field">
                           <input
                             id="subtask-input"
@@ -206,12 +207,14 @@
                           />
                           <div id="subtask-icons" class="subtask-icons hidden">
                             <img
+                              id="subtask-cancel"
                               src="./assets/icons/closeXSymbol.svg"
                               alt="Cancel"
                               onclick="clearSubtaskInput()"
                             />
                             <div class="divider"></div>
                             <img
+                              id="subtask-confirm"
                               src="./assets/icons/checked.svg"
                               alt="Confirm"
                               onclick="addSubtask()"
@@ -227,7 +230,31 @@
                         </div>
                       </div>
 
-                      <ul id="subtask-list" class="subtask-list"></ul>
+                      <!-- Subtasks werden hier als <li> generiert -->
+                      <ul id="subtask-list" class="subtask-list">
+                        <!-- Subtasks will be rendered here via JavaScript -->
+                      </ul>
+                      <!-- Edit Subtask Area (hidden by default, shown via JS when editing) -->
+                      <div class="subtask-edit-container hidden">
+                        <div class="subtask-input-edit-wrapper">
+                          <input
+                            class="subtask-edit-input"
+                            type="text"
+                            placeholder="Edit subtask"
+                          />
+                          <div class="subtask-edit-icons">
+                            <img
+                              src="./assets/icons/closeXSymbol.svg"
+                              alt="Cancel"
+                            />
+                            <div class="divider"></div>
+                            <img
+                              src="./assets/icons/checked.svg"
+                              alt="Confirm"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
