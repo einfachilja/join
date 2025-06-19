@@ -79,45 +79,19 @@ function setupEventListeners() {
     .getElementById("category-toggle")
     .addEventListener("click", toggleCategoryDropdown);
 
-  // Subtask input/plus/buttons logic with null checks
+  // Subtask input/icons logic
   const subtaskInput = document.getElementById("subtask-input");
-  const subtaskPlus = document.getElementById("subtask-plus");
-  const subtaskButtons = document.getElementById("subtask-buttons");
-  const subtaskCancel = document.getElementById("subtask-cancel");
-  const subtaskConfirm = document.getElementById("subtask-confirm");
+  if (subtaskInput) {
+    subtaskInput.addEventListener("input", () => {
+      const value = subtaskInput.value.trim();
+      const iconWrapper = document.getElementById("subtask-icons");
 
-  if (
-    subtaskInput &&
-    subtaskPlus &&
-    subtaskButtons &&
-    subtaskCancel &&
-    subtaskConfirm
-  ) {
-    subtaskInput.addEventListener("focus", () => {
-      subtaskButtons.classList.remove("hidden");
-      subtaskPlus.classList.add("hidden");
-    });
-
-    subtaskInput.addEventListener("blur", () => {
-      if (!subtaskInput.value.trim()) {
-        setTimeout(() => {
-          subtaskButtons.classList.add("hidden");
-          subtaskPlus.classList.remove("hidden");
-        }, 100);
+      if (value.length > 0) {
+        iconWrapper.classList.remove("hidden");
+      } else {
+        iconWrapper.classList.add("hidden");
       }
     });
-
-    subtaskPlus.addEventListener("click", () => {
-      subtaskInput.focus();
-    });
-
-    subtaskCancel.addEventListener("click", () => {
-      subtaskInput.value = "";
-      subtaskButtons.classList.add("hidden");
-      subtaskPlus.classList.remove("hidden");
-    });
-
-    subtaskConfirm.addEventListener("click", addSubtask);
     subtaskInput.addEventListener("keydown", handleSubtaskEnter);
   }
 }
@@ -208,9 +182,17 @@ function updateSelectedContactsUI() {
 
 // ==== SUBTASK ====
 function addSubtask() {
+  // Only trigger if explicitly confirmed (button click or Enter when confirm visible)
+  // Cleanup before creating a new li to ensure no rogue icons exist
+  document
+    .querySelectorAll(".subtask-list > .delete-subtask:not(img)")
+    .forEach((el) => el.remove());
+
   const input = document.getElementById("subtask-input");
+  const subtaskIcons = document.getElementById("subtask-icons");
   const text = input.value.trim();
-  if (!text) {
+  // Only add if confirm/cancel buttons are visible and input is non-empty
+  if (!text || subtaskIcons.classList.contains("hidden")) {
     input.classList.add("error-border");
     return;
   }
@@ -236,9 +218,17 @@ function addSubtask() {
   deleteIcon.className = "delete-subtask";
 
   iconWrapper.appendChild(deleteIcon);
-
   li.appendChild(label);
   li.appendChild(iconWrapper);
+
+  li.addEventListener("dblclick", () => {
+    enterEditMode(li, label, text);
+  });
+  // Ensure the list item is only appended if it is correctly constructed and not orphaned
+  if (!li.contains(deleteIcon)) {
+    console.warn("Skipping subtask append due to missing icon");
+    return;
+  }
   document.getElementById("subtask-list").appendChild(li);
 
   // Papierkorb-Event
@@ -251,6 +241,10 @@ function addSubtask() {
 
   updateSubmitState();
   input.value = "";
+  // Hide icons after adding
+  subtaskIcons.classList.add("hidden");
+  const subtaskPlus = document.getElementById("subtask-plus");
+  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
 function enterEditMode(li, label, oldValue) {
@@ -258,9 +252,6 @@ function enterEditMode(li, label, oldValue) {
   input.type = "text";
   input.value = oldValue;
   input.className = "subtask-edit-input";
-
-  const iconWrapper = document.createElement("div");
-  iconWrapper.className = "subtask-icons";
 
   const cancelIcon = document.createElement("img");
   cancelIcon.src = "./assets/icons/board-delete-icon.svg";
@@ -272,18 +263,34 @@ function enterEditMode(li, label, oldValue) {
   confirmIcon.alt = "Confirm";
   confirmIcon.className = "confirm-subtask";
 
+  const iconWrapper = document.createElement("div");
+  iconWrapper.className = "subtask-icons";
+  iconWrapper.style.display = "flex";
+  iconWrapper.style.gap = "8px";
   iconWrapper.appendChild(cancelIcon);
   iconWrapper.appendChild(confirmIcon);
+  // Remove any previous .subtask-icons wrappers to prevent orphaned icons
+  li.querySelectorAll(".subtask-icons").forEach((el) => el.remove());
 
-  const editWrapper = document.createElement("li");
-  editWrapper.className = "subtask-list-item";
-  editWrapper.appendChild(input);
-  editWrapper.appendChild(iconWrapper);
+  const inputWrapper = document.createElement("div");
+  inputWrapper.className = "subtask-input-edit-wrapper";
+  inputWrapper.appendChild(input);
 
-  li.replaceWith(editWrapper);
+  const editContainer = document.createElement("div");
+  editContainer.className = "subtask-edit-container";
+  editContainer.appendChild(inputWrapper);
+  editContainer.appendChild(iconWrapper);
+
+  // Stelle sicher, dass die Struktur korrekt nur innerhalb von <li> gerendert wird
+  li.innerHTML = "";
+  li.classList.add("editing");
+  li.appendChild(editContainer);
 
   cancelIcon.addEventListener("click", () => {
-    editWrapper.replaceWith(li);
+    const index = subtasks.indexOf(oldValue);
+    if (index > -1) subtasks.splice(index, 1);
+    li.remove();
+    updateSubmitState();
   });
 
   confirmIcon.addEventListener("click", () => {
@@ -291,9 +298,46 @@ function enterEditMode(li, label, oldValue) {
     if (!newValue) return;
     const index = subtasks.indexOf(oldValue);
     if (index > -1) subtasks[index] = newValue;
+
     label.textContent = newValue;
-    editWrapper.replaceWith(li);
+
+    li.innerHTML = "";
+    li.classList.remove("editing");
+
+    const newLabel = document.createElement("span");
+    newLabel.textContent = newValue;
+    newLabel.className = "subtask-label";
+
+    const newDeleteIcon = document.createElement("img");
+    newDeleteIcon.src = "./assets/icons/board-delete-icon.svg";
+    newDeleteIcon.alt = "Delete";
+    newDeleteIcon.className = "delete-subtask";
+    newDeleteIcon.addEventListener("click", () => {
+      const delIndex = subtasks.indexOf(newValue);
+      if (delIndex > -1) subtasks.splice(delIndex, 1);
+      li.remove();
+      updateSubmitState();
+    });
+
+    const newIconWrapper = document.createElement("div");
+    newIconWrapper.className = "subtask-icons";
+    newIconWrapper.appendChild(newDeleteIcon);
+
+    li.appendChild(newLabel);
+    li.appendChild(newIconWrapper);
+    li.addEventListener("dblclick", () => {
+      enterEditMode(li, newLabel, newValue);
+    });
+
     updateSubmitState();
+  });
+
+  input.focus();
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      confirmIcon.click();
+    }
   });
 }
 
@@ -530,6 +574,21 @@ function toggleSubtaskIcons() {
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
     e.preventDefault();
-    addSubtask();
+    // Only add if confirm button is visible (i.e., explicit confirmation)
+    const subtaskIcons = document.getElementById("subtask-icons");
+    if (subtaskIcons && !subtaskIcons.classList.contains("hidden")) {
+      addSubtask();
+    }
   }
+}
+
+// ==== CLEAR SUBTASK INPUT ====
+function clearSubtaskInput() {
+  const subtaskInput = document.getElementById("subtask-input");
+  const subtaskIcons = document.getElementById("subtask-icons");
+  const subtaskPlus = document.getElementById("subtask-plus");
+
+  subtaskInput.value = "";
+  subtaskIcons.classList.add("hidden");
+  subtaskPlus.classList.remove("hidden");
 }
