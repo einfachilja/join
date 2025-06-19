@@ -113,10 +113,10 @@ function updatePriorityAndDeadlineSummary(tasks) {
 function getRelevantPriorityTasks(tasks) {
   const open = tasks.filter((t) => t.status !== "done");
 
-  const high = open.filter((t) => t.priority === "high");
+  const high = open.filter((t) => t.priority === "urgent");
   const medium = open.filter((t) => t.priority === "medium");
 
-  if (high.length > 0) return { priority: "high", tasks: high };
+  if (high.length > 0) return { priority: "urgent", tasks: high };
   if (medium.length > 0) return { priority: "medium", tasks: medium };
   return { priority: null, tasks: [] };
 }
@@ -137,12 +137,12 @@ function updatePriorityUI(priority, count) {
   icon.style.display = "inline";
   const ts = Date.now();
   icon.src =
-    priority === "high"
+    priority === "urgent"
       ? `./assets/icons/summary-urgent.png?${ts}`
       : `./assets/icons/medium.svg?${ts}`;
   icon.alt = priority;
 
-  label.textContent = priority === "high" ? "Urgent" : "Medium";
+  label.textContent = priority === "urgent" ? "Urgent" : "Medium";
   number.textContent = count;
 }
 

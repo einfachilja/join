@@ -413,14 +413,15 @@ function updateSubmitState() {
 
 // ==== RESET ====
 function resetForm() {
-  document.getElementById("task-form").reset();
+/*   document.getElementById("task-form").reset();
   document.getElementById("subtask-list").innerHTML = "";
   selectedContacts = [];
   selectedCategory = "";
   updateSelectedContactsUI();
   selectPriority("medium");
   updateCategoryUI();
-  updateSubmitState();
+  updateSubmitState(); */
+  location.reload();
 }
 
 // ==== CREATE TASK ====

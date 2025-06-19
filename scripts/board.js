@@ -572,13 +572,7 @@ function searchTask() {
   let foundTasks = arrayTasks.filter(task => {
     let titleMatch = task.title && task.title.toLowerCase().includes(inputValue);
     let descriptionMatch = task.description && task.description.toLowerCase().includes(inputValue);
-    let priorityMatch = task.priority && task.priority.toLowerCase().includes(inputValue);
-    let statusMatch = task.status && task.status.toLowerCase().includes(inputValue);
-    let subjectMatch = task.subject && task.subject.toLowerCase().includes(inputValue);
-    let subtaskMatch = task.subtask && Array.isArray(task.subtask) && task.subtask.some(sub => sub.toLowerCase().includes(inputValue));
-    let assignedToMatch = task.assignedTo && Array.isArray(task.assignedTo) && task.assignedTo.some(name => name.toLowerCase().includes(inputValue));
-    let dueDateMatch = task.dueDate && task.dueDate.toLowerCase().includes(inputValue);
-    return titleMatch || descriptionMatch || priorityMatch || statusMatch || subjectMatch || subtaskMatch || assignedToMatch || dueDateMatch;
+    return titleMatch || descriptionMatch;
   });
 
   if (foundTasks.length > 0) {
@@ -596,7 +590,7 @@ function searchTask() {
   } else {
     const sections = ["todo", "progress", "feedback", "done"];
     sections.forEach(section => {
-      document.getElementById(section).innerHTML = `<span>Keine Ergebnisse in ${section}</span>`;
+      document.getElementById(section).innerHTML = "";
     });
     console.log("Keine Tasks gefunden mit dem Suchbegriff:", inputValue);
   }
