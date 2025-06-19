@@ -259,7 +259,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
     priorityIcon = "./assets/icons/board-priority-high.svg";
   }
   return /*html*/ `
-    <div id="board_overlay_card" class="board-overlay-card" onclick="onclickProtection(event)">
+    <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.subject}</span>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
@@ -303,6 +303,31 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok</div>
       </div>
     </div>`;
+}
+
+// Generate HTML for priority buttons in edit mode
+function getPriorityButtonsHTML(currentPriority) {
+  const priorities = [
+    { value: 'high', label: 'Urgent', icon: './assets/icons/urgent.svg' },
+    { value: 'medium', label: 'Medium', icon: './assets/icons/medium.svg' },
+    { value: 'low', label: 'Low', icon: './assets/icons/low.svg' }
+  ];
+  return priorities.map(p => `
+    <button 
+      type="button" 
+      class="priority-edit-btn${currentPriority === p.value ? ' selected' : ''}" 
+      data-priority="${p.value}" 
+      onclick="selectOverlayPriority('${p.value}', this)">
+      ${p.label} <img src="${p.icon}" alt="${p.label}" />
+    </button>
+  `).join('');
+}
+
+// Handle priority button selection in overlay edit mode
+function selectOverlayPriority(priority, btn) {
+  document.querySelectorAll('.priority-edit-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('priority-edit-buttons').dataset.selectedPriority = priority;
 }
 
 
@@ -406,6 +431,23 @@ function editTask() {
     dueDateSpan.innerHTML = "";
     dueDateSpan.appendChild(input);
   }
+
+  // Priority bearbeiten
+  const priorityHeadline = document.querySelector('.priority-headline');
+  if (priorityHeadline && !document.getElementById('priority-edit-buttons')) {
+    const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+    const wrapper = document.createElement('div');
+    wrapper.id = 'priority-edit-buttons';
+    wrapper.innerHTML = getPriorityButtonsHTML(task.priority.toLowerCase());
+    const labelP = document.createElement('span');
+    labelP.textContent = 'Priority';
+    labelP.id = 'overlay_card_priority_label';
+    labelP.className = 'overlay-card-label';
+    priorityHeadline.parentNode.insertBefore(labelP, priorityHeadline);
+    priorityHeadline.innerHTML = '';
+    priorityHeadline.appendChild(wrapper);
+  }
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
@@ -424,6 +466,13 @@ async function saveEditTask(taskKey) {
   if (titleLabel) titleLabel.remove();
   let descLabel = document.getElementById("overlay_card_description_label");
   if (descLabel) descLabel.remove();
+
+  // Priority aus dem Edit-Block holen
+  let newPriority = task.priority;
+  const priorityWrapper = document.getElementById('priority-edit-buttons');
+  if (priorityWrapper && priorityWrapper.dataset.selectedPriority) {
+    newPriority = priorityWrapper.dataset.selectedPriority;
+  }
 
   const newTitle = document.getElementById("overlay_card_title").innerHTML;
   const newDescription = document.getElementById("overlay_card_description").innerHTML;
@@ -448,7 +497,7 @@ async function saveEditTask(taskKey) {
     title: newTitle,
     description: newDescription,
     dueDate: newDueDate,
-    // priority: newPriority,
+    priority: newPriority,
     // assignedTo: newAssignedTo,
     // subtask: newSubtask
   };
