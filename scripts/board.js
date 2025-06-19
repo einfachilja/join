@@ -70,10 +70,18 @@ let currentDraggedElement;
 
 function startDragging(firebaseKey) {
   currentDraggedElement = firebaseKey;
+  const taskElement = document.getElementById(firebaseKey);
+  taskElement.classList.add("dragging");
+}
+
+function stopDragging(firebaseKey) {
+  const taskElement = document.getElementById(firebaseKey);
+  if (taskElement) {
+    taskElement.classList.remove("dragging");
+  }
 }
 
 function generateTodoHTML(element) {
-
   let categoryClass = "";
   if (element.subject === "User Story") {
     categoryClass = "category-user";
@@ -82,7 +90,7 @@ function generateTodoHTML(element) {
   }
 
   return `
-    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
+    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
             <span class="card-category ${categoryClass}"  ${element.subject}">${element.subject}</span>
             <span class="card-title">${element.title}</span>
@@ -97,6 +105,11 @@ function generateTodoHTML(element) {
 
 function allowDrop(ev) {
   ev.preventDefault();
+  const target = ev.currentTarget;
+  const draggedEl = document.getElementById(currentDraggedElement);
+  if (draggedEl && !target.contains(draggedEl)) {
+    target.appendChild(draggedEl);
+  }
 }
 
 function highlight(status) {
