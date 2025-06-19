@@ -1,6 +1,25 @@
 const BASE_URL =
   "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
 
+// Neue Funktion zum Laden der Kontakte und Speichern im localStorage
+async function fetchContactsAndStore(userKey) {
+  const url = `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${userKey}/contacts.json`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data) {
+      let users = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
+      users[userKey] = users[userKey] || {};
+      users[userKey]['contacts'] = data;
+      localStorage.setItem('firebaseUsers', JSON.stringify(users));
+    }
+  } catch (error) {
+    console.error("Fehler beim Abrufen der Kontakte:", error);
+  }
+}
+
 let arrayTasks = [];
 let firebaseKey = localStorage.getItem("firebaseKey");
 console.log("firebaseKey:", firebaseKey); // Debug-Ausgabe
@@ -9,6 +28,7 @@ console.log("firebaseKey:", firebaseKey); // Debug-Ausgabe
 async function loadTasks() {
   let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`);
   let responseJson = await response.json();
+  await fetchContactsAndStore(firebaseKey);
 
   if (!responseJson) {
     arrayTasks = [];
@@ -81,6 +101,25 @@ function stopDragging(firebaseKey) {
   }
 }
 
+
+function getContactByName(name) {
+  // Beispiel: Holt den aktuellen User aus dem localStorage
+  let currentUser = localStorage.getItem("firebaseKey");
+  let userData = JSON.parse(localStorage.getItem("firebaseUsers"));
+  if (!userData || !userData[currentUser] || !userData[currentUser].contacts) return null;
+
+  for (let key in userData[currentUser].contacts) {
+    if (userData[currentUser].contacts[key].name === name) {
+      return userData[currentUser].contacts[key];
+    }
+  }
+  return null;
+}
+
+function getInitials(name) {
+  return name.split(" ").map(n => n[0]).join("").toUpperCase();
+}
+
 function generateTodoHTML(element) {
   let categoryClass = "";
   if (element.subject === "User Story") {
@@ -98,6 +137,12 @@ function generateTodoHTML(element) {
     priorityIcon = "./assets/icons/board-priority-high.svg";
   }
 
+  // assignedTo kann String oder Array sein
+  let assignedList = element.assignedTo;
+  if (typeof assignedList === "string") {
+    assignedList = assignedList.split(",").map(name => name.trim());
+  }
+
   return `
     <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
@@ -105,7 +150,15 @@ function generateTodoHTML(element) {
             <span class="card-title">${element.title}</span>
             <span class="card-description">${element.description}</span>
                 <div class="card-footer">
-                  <div>${element.assignedTo}</div>
+                  <div class="assigned-container">
+                    ${Array.isArray(assignedList)
+                      ? assignedList.map(name => {
+                          let contact = getContactByName(name);
+                          let color = contact && contact.color ? contact.color : "#ccc";
+                          return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
+                        }).join("")
+                      : ""}
+                  </div>
                   <div><img src="${priorityIcon}" alt="${element.priority}"></div>
                 </div>
         </div>
