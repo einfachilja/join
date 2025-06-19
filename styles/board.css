@@ -385,3 +385,24 @@
 .hallo {
     background-color: #0038FF;
 }
+
+/* Editable overlay card fields */
+.board-overlay-card [contenteditable="true"] {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 0.5rem;
+  outline: none;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.board-overlay-card .overlay-card-title,
+.board-overlay-card .overlay-card-description {
+  display: block;
+  min-height: 1.2em;
+}
+
+.board-overlay-card [contenteditable="true"]:focus {
+  border-color: rgba(0, 123, 255, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(0, 123, 255, 0.25);
+}

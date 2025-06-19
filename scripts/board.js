@@ -334,6 +334,11 @@ function closeBoardCard() {
   document.getElementById("board_overlay_card").classList.remove("board-overlay-card-show");
   document.getElementById("board_overlay_card").classList.add("board-overlay-card-hide");
   document.getElementById("html").style.overflow = "";
+  // Remove labels if they exist
+  let titleLabel = document.getElementById("overlay_card_title_label");
+  if (titleLabel) titleLabel.remove();
+  let descLabel = document.getElementById("overlay_card_description_label");
+  if (descLabel) descLabel.remove();
   updateHTML();
 }
 
@@ -343,25 +348,33 @@ function onclickProtection(event) {
 
 
 function editTask() {
-
   document.getElementById("ok_btn").classList.remove("d-none");
   document.getElementById("delete_btn").classList.add("d-none");
   document.getElementById("edit_btn").classList.add("d-none");
   document.getElementById("seperator").classList.add("d-none");
   document.getElementById("overlay_card_category").classList.add("d-none");
 
-
   document.getElementById("overlay_card_title").contentEditable = "true";
-  document.getElementById("overlay_card_title").style.border = "1px solid rgba(0, 0, 0, 0.1)";
-  document.getElementById("overlay_card_title").style.borderRadius = "10px";
-
   document.getElementById("overlay_card_description").contentEditable = "true";
-  document.getElementById("overlay_card_description").style.border = "1px solid rgba(0, 0, 0, 0.1)";
-  document.getElementById("overlay_card_description").style.borderRadius = "10px";
 
-  document.getElementById("due_date").contentEditable = "true";
-  document.getElementById("due_date").style.border = "1px solid rgba(0, 0, 0, 0.1)";
-  document.getElementById("due_date").style.borderRadius = "10px";
+  // Insert label "Title" above the editable title
+  let titleElement = document.getElementById("overlay_card_title");
+  if (!document.getElementById("overlay_card_title_label")) {
+    let titleLabel = document.createElement("span");
+    titleLabel.textContent = "Title";
+    titleLabel.id = "overlay_card_title_label";
+    titleLabel.className = "overlay-card-label";
+    titleElement.parentNode.insertBefore(titleLabel, titleElement);
+  }
+  // Insert label "Description" above the editable description
+  let descElement = document.getElementById("overlay_card_description");
+  if (!document.getElementById("overlay_card_description_label")) {
+    let descLabel = document.createElement("span");
+    descLabel.textContent = "Description";
+    descLabel.id = "overlay_card_description_label";
+    descLabel.className = "overlay-card-label";
+    descElement.parentNode.insertBefore(descLabel, descElement);
+  }
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
@@ -375,6 +388,11 @@ async function saveEditTask(taskKey) {
   document.getElementById("overlay_card_title").contentEditable = "false";
   document.getElementById("overlay_card_description").contentEditable = "false";
   document.getElementById("due_date").contentEditable = "false";
+  // Remove labels if they exist
+  let titleLabel = document.getElementById("overlay_card_title_label");
+  if (titleLabel) titleLabel.remove();
+  let descLabel = document.getElementById("overlay_card_description_label");
+  if (descLabel) descLabel.remove();
 
   const newTitle = document.getElementById("overlay_card_title").innerHTML;
   const newDescription = document.getElementById("overlay_card_description").innerHTML;
