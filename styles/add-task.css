@@ -556,19 +556,6 @@ select::placeholder {
   flex: 1;
 }
 
-.subtask-list-item img {
-  width: 20px;
-  height: 20px;
-  padding: 4px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-}
-
-.subtask-list-item img:hover {
-  background-color: #e0e0e0;
-}
-
 /* === Subtask Input mit Plus-Icon innen rechts === */
 .subtask-input-wrapper {
   position: relative;
@@ -721,17 +708,12 @@ select::placeholder {
   width: 24px;
   height: 24px;
   padding: 6px;
-  cursor: pointer;
   border-radius: 6px;
   transition: background-color 0.2s ease;
 }
 
 .subtask-edit-container img:hover {
   background-color: #e0e0e0;
-}
-
-.subtask-edit-container > img:first-child {
-  display: none;
 }
 
 .subtask-icons img {
