@@ -312,6 +312,7 @@ function toggleOverlay() {
 function openEditDeleteMenu(contact) {
   let openEditDeleteMenuRef = document.getElementById("edit_delete_menu");
   openEditDeleteMenuRef.innerHTML = getEditDeleteMenuTemplate(contact);
+  
 }
 
 /* =================== EDIT OVERLAY ================== */
@@ -361,6 +362,7 @@ function dialogPrevention(event) {
 
 function toggleOff() {
   const overlayRef = document.getElementById("overlay");
+  const mobileOverlayRef = document.getElementById("overlay_mobile");
   const modal = document.querySelector(".add-new-contact-template");
 
   if (modal) {
@@ -370,8 +372,24 @@ function toggleOff() {
   overlayRef.classList.remove("active");
 
   setTimeout(() => {
-    overlayRef.classList.add("d_none");
-    overlayRef.innerHTML = "";
+    const isMobile = window.innerWidth <= 800;
+
+    if (isMobile) {
+      const editOverlay = overlayRef.querySelector(
+        ".add-new-contact-template-section"
+      );
+      if (editOverlay) {
+        editOverlay.remove();
+        mobileOverlayRef.remove();
+      }
+
+      if (overlayRef.children.length === 0) {
+        overlayRef.classList.add("d_none");
+      }
+    } else {
+      overlayRef.classList.add("d_none");
+      overlayRef.innerHTML = "";
+    }
   }, 280);
 }
 

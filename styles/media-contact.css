@@ -160,6 +160,7 @@
     .sub-menu {
         top: 80px;
         right: 0px;
+        z-index: 3000;
     }
 }
 
