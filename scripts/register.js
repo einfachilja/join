@@ -61,39 +61,6 @@ function shouldSkipPasswordMatchCheck(password, confirm) {
   );
 }
 
-/* Toggles password visibility on lock icon click */
-function initPasswordVisibilityToggle() {
-  document.querySelectorAll(".toggle-password").forEach((icon) => {
-    icon.addEventListener("click", () => {
-      const targetId = icon.getAttribute("data-target");
-      const input = document.getElementById(targetId);
-      if (!input) return;
-
-      const isVisible = input.type === "text";
-      input.type = isVisible ? "password" : "text";
-      icon.src = isVisible
-        ? "./assets/img/2. log-sign-page/visibility_off.svg"
-        : "./assets/img/2. log-sign-page/visibility_eye.svg";
-    });
-  });
-}
-
-// Ändert das Passwort-Icon dynamisch beim Tippen:
-function initLivePasswordIconChange() {
-  document.querySelectorAll("input[type='password']").forEach((input) => {
-    input.addEventListener("input", () => {
-      const icon = input.closest(".input-container").querySelector(".toggle-password");
-      if (!icon) return;
-
-      if (input.value.length > 0) {
-        icon.src = "./assets/img/2. log-sign-page/visibility_off.svg";
-      } else {
-        icon.src = "./assets/img/2. log-sign-page/lock-icon.svg";
-      }
-    });
-  });
-} 
-
 /* Enables or disables the submit button */
 function checkFormValidity() {
   const name = document.getElementById("first-name").value.trim();
@@ -200,29 +167,25 @@ function handleConfirmPasswordInput() {
   checkFormValidity();
 }
 
-function addInputListener(id, handler, event = "input") {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener(event, handler);
-}
-function addFocusListener(id, handler) {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener("focus", handler);
+function updatePasswordIcon(input) {
+  const icon = input.closest(".input-container").querySelector(".toggle-password");
+  if (!icon) return;
+
+  if (input.value.length > 0) {
+    icon.src = "./assets/img/2. log-sign-page/visibility_off.svg";
+  } else {
+    icon.src = "./assets/img/2. log-sign-page/lock-icon.svg";
+  }
 }
 
-function init() {
-  initInputValidation();
-  initPasswordVisibilityToggle();
-  initLivePasswordIconChange();
-}
+function togglePasswordWithIcon(inputId, icon) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
 
-/* Sets up all validation-related event listeners */
-function initInputValidation() {
-  addInputListener("first-name", checkFormValidity);
-  addInputListener("email", handleEmailInput);
-  addInputListener("password", handlePasswordInput);
-  addInputListener("confirm-password", handleConfirmPasswordInput);
-  addFocusListener("confirm-password", () => (confirmPasswordTouched = true));
-  addInputListener("privacy-policy", checkFormValidity, "change");
-}
+  const isVisible = input.type === "text";
+  input.type = isVisible ? "password" : "text";
 
-init();
+  icon.src = isVisible
+    ? "./assets/img/2. log-sign-page/visibility_off.svg"
+    : "./assets/img/2. log-sign-page/visibility_eye.svg";
+}

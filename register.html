@@ -33,7 +33,7 @@
         <!-- Name -->
         <div class="input-group">
           <label class="input-container">
-            <input type="text" id="first-name" placeholder="First and last name" required />
+            <input type="text" id="first-name" placeholder="First and last name" required oninput="checkFormValidity()" /> <!--NEU NEU-->
             <img class="input-icon" src="./assets/img/2. log-sign-page/person-icon.svg" alt="User Icon" />
           </label>
           <small class="error-message">&nbsp;</small>
@@ -42,7 +42,7 @@
         <!-- Email -->
         <div class="input-group">
           <label class="input-container">
-            <input type="text" placeholder="Email" id="email" required />
+            <input type="text" placeholder="Email" id="email" required oninput="handleEmailInput()" /> <!--NEU-->
             <img class="input-icon" src="./assets/img/2. log-sign-page/mail-icon.svg" alt="E-Mail Icon" />
           </label>
           <small id="email-error" class="error-message">
@@ -53,9 +53,9 @@
         <!-- Password -->
         <div class="input-group">
           <label class="input-container">
-            <input type="password" placeholder="Password" id="password" required />
+            <input type="password" placeholder="Password" id="password" required oninput="handlePasswordInput(); updatePasswordIcon(this)"/> <!--NEU NEU-->
             <img class="input-icon-password toggle-password" src="./assets/img/2. log-sign-page/lock-icon.svg"
-              alt="Password Icon" data-target="password" />
+              alt="Password Icon" data-target="password" onclick="togglePasswordWithIcon('password', this)"/> <!--NEU NEU-->
           </label>
           <small id="password-error" class="error-message">
             Password must be at least 8 characters long.
@@ -65,9 +65,10 @@
         <!-- Confirm Password -->
         <div class="input-group">
           <label class="input-container">
-            <input type="password" placeholder="Confirm password" id="confirm-password" required />
+            <input type="password" placeholder="Confirm password" id="confirm-password" 
+            required oninput="handleConfirmPasswordInput(); updatePasswordIcon(this)" onfocus="confirmPasswordTouched = true"/> <!--NEU NEU-->
             <img class="input-icon-password toggle-password" src="./assets/img/2. log-sign-page/lock-icon.svg"
-              alt="Password Icon" data-target="confirm-password" />
+              alt="Password Icon" data-target="confirm-password" onclick="togglePasswordWithIcon('confirm-password', this)" /> <!--NEU-->
           </label>
           <small id="confirm-password-error" class="error-message">
             Passwords do not match.
@@ -76,7 +77,7 @@
 
         <!-- Privacy -->
         <div class="privacy-container">
-          <input id="privacy-policy" class="checkbox" type="checkbox" />
+          <input id="privacy-policy" class="checkbox" type="checkbox" onchange="checkFormValidity()"/> <!--NEU-->
           <span class="accept-span">
             I accept the
             <a class="privacy-policy" href="./privacy-ext.html">Privacy Police</a>
@@ -103,7 +104,3 @@
 
   <script src="./scripts/firebase.js"></script>
   <script src="./scripts/register.js"></script>
-
-</body>
-
-</html>
