@@ -1,4 +1,12 @@
 @media (max-width: 800px) {
+    
+    .loader {
+        background-color:rgba(42, 54, 71, 1);
+    }
+
+    #animated-logo.mobile-white {
+    content: url('./assets/img/1. join-frontpage/join-logo-white.svg');
+  }
     .register-container {
         display: none;
     }

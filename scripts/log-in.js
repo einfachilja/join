@@ -2,8 +2,6 @@ const LOGIN_SUCCESSFUL = "./summary.html";
 
 window.onload = function () {
   initLoaderAnimation();
-  initInputListeners();
-  initPasswordVisibilityToggle();
   initLivePasswordIconChange();
 };
 
@@ -12,13 +10,24 @@ function initLoaderAnimation() {
   const loader = document.getElementById("loader");
   const logo = document.getElementById("animated-logo");
 
+// Wenn der Bildschirm zu Beginn klein ist, zeige weißes Logo im Loader
+if (window.innerWidth <= 800) {
+  document.getElementById("animated-logo").src =
+    "./assets/img/1. join-frontpage/join-logo-white.svg";
+}
+
   setTimeout(() => {
+    //  Hier beginnt die Bewegung → Jetzt Logo auf dunkel umschalten
+    if (window.innerWidth <= 800) {
+      logo.src = "./assets/img/1. join-frontpage/join-logo.svg";
+    }
+
     logo.classList.add("logo-finished");
     loader.style.background = "transparent";
+
     setTimeout(() => {
       loader.style.pointerEvents = "none";
     }, 800);
-
   }, 500);
 }
 
@@ -116,16 +125,6 @@ function guestLogin() {
   }, 2000);
 }
 
-// Aktiviert Umschalten von Passwort-Sichtbarkeit
-function initPasswordVisibilityToggle() {
-  document.querySelectorAll(".toggle-password").forEach((icon) => {
-    icon.addEventListener("click", () => {
-      const targetId = icon.getAttribute("data-target");
-      togglePasswordWithIcon(targetId, icon);
-    });
-  });
-}
-
 // Schaltet die Sichtbarkeit des Passwortfeldes um und wechselt das Icon zwischen „Sichtbar“ und „Versteckt“.
 function togglePasswordWithIcon(inputId, iconElement) {
   const input = document.getElementById(inputId);
@@ -138,44 +137,11 @@ function togglePasswordWithIcon(inputId, iconElement) {
 }
 
 // Ändert das Passwort-Icon dynamisch beim Tippen:
-function initLivePasswordIconChange() {
-  document.querySelectorAll("input[type='password']").forEach((input) => {
-    input.addEventListener("input", () => {
-      const icon = input.closest(".input-container").querySelector(".toggle-password");
-      if (!icon) return;
+function togglePasswordIcon(input) {
+  const icon = input.closest(".input-container").querySelector(".toggle-password");
+  if (!icon) return;
 
-      if (input.value.length > 0) {
-        icon.src = "./assets/img/2. log-sign-page/visibility_off.svg";
-      } else {
-        icon.src = "./assets/img/2. log-sign-page/lock-icon.svg";
-      }
-    });
-  });
-}
-
-// Initialisiert Event Listener für das Formular und den Gast-Login
-function initInputListeners() {
-  const loginForm = document.querySelector(".log-in-form");
-  const guestBtn = document.querySelector(".guest-log-in-button");
-
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      login();
-    });
-  }
-
-  if (guestBtn) {
-    guestBtn.addEventListener("click", guestLogin);
-  }
-
-  addInputListener("email", validateLoginEmail);
-}
-
-// Vereinfachter EventListener-Wrapper für Inputs
-function addInputListener(id, handler, event = "input") {
-  const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener(event, handler);
-  }
+  icon.src = input.value.length > 0
+    ? "./assets/img/2. log-sign-page/visibility_off.svg"
+    : "./assets/img/2. log-sign-page/lock-icon.svg";
 }

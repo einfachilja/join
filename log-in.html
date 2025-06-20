@@ -36,11 +36,11 @@
       </div>
 
       <!-- Formular -->
-      <form class="log-in-form">
+      <form class="log-in-form" onsubmit="login(); return false;"> <!--NEU-->
         <div class="log-in-input">
           <div class="input-group">
             <label class="input-container">
-              <input type="text" placeholder="E-Mail" id="email" required />
+              <input type="text" placeholder="E-Mail" id="email" required oninput="validateLoginEmail()"/> <!--NEU-->
               <img class="input-icon" src="./assets/img/2. log-sign-page/mail-icon.svg" alt="E-Mail Icon" />
             </label>
             <small id="login-email-error" class="error-message">&nbsp;</small>
@@ -48,9 +48,11 @@
 
           <div class="input-group">
             <label class="input-container">
-              <input type="password" placeholder="Password" id="password" required />
-              <img class="input-icon-password toggle-password" src="./assets/img/2. log-sign-page/lock-icon.svg"
-                alt="Passwort Icon" data-target="password" />
+              <input type="password" placeholder="Password" id="password" required oninput="togglePasswordIcon(this)" />
+              <img class="input-icon-password toggle-password" 
+                   src="./assets/img/2. log-sign-page/lock-icon.svg"
+                   alt="Passwort Icon" data-target="password"
+                   onclick="togglePasswordWithIcon('password', this)" /> <!--NEU-->
             </label>
           </div>
 
@@ -58,7 +60,7 @@
 
         <div class="submit-container">
           <button class="log-in-button" type="submit">Log in</button>
-          <button class="guest-log-in-button" type="button">
+          <button class="guest-log-in-button" type="button" onclick="guestLogin()"> <!--NEU-->
             Guest Login
           </button>
         </div>
