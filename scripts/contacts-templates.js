@@ -39,20 +39,18 @@ function overlayTemplate() {
                         <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
                       </div>
                       <div class="input-group">
-                        <input id="new_contact_email" type="email" placeholder="Email" required />
+                        <input id="new_contact_email" type="email" placeholder="Email" oninput="isEmailValid('new_contact_email', 'email-error')" required />
                         <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
                       </div>
                       <small id="email-error" class="error-message">
                         Please enter a valid email address.
                       </small>
                       <div class="input-group">
-                        <input id="new_contact_phone" pattern="\\+?[0-9 -]{7,}" type="number" maxlength="10" oninput="this.value=this.value.slice(0,10)" placeholder="Phone" required />
+                        <input id="new_contact_phone" type="tel" maxlength="10" oninput="isPhoneValid('new_contact_phone', 'phone-error')" placeholder="Phone" />
 
                         <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                       </div>
-                      <small id="phone-error" class="error-message">
-                        Please enter a valid number.
-                      </small>
+                      <small id="phone-error" class="error-message">Please enter a valid number.</small>
 
                       <div class="form-buttons">
                     <button
@@ -118,19 +116,17 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
                   <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
                 </div>
                 <div class="input-group">
-                  <input id="edit_contact_email" type="email" placeholder="Email" value="${email}" required />
+                  <input id="edit_contact_email" type="email" placeholder="Email" value="${email}" oninput="isEmailValid('edit_contact_email', 'edit-email-error')" required />
                   <img src="./assets/img/contacts-icons/mail.svg" alt="Email Icon" />
                 </div>
-                <small id="email-error" class="error-message">
+                <small id="edit-email-error" class="error-message">
                   Please enter a valid email address.
                 </small>
                 <div class="input-group">
-                  <input id="edit_contact_phone" type="number" pattern="\\+?[0-9 -]{7,}" maxlength="10" oninput="this.value=this.value.slice(0,10)" placeholder="Phone" value="${phone}" required />
+                  <input id="edit_contact_phone" value="${phone}" type="tel" maxlength="10" oninput="isPhoneValid('edit_contact_phone', 'edit-phone-error')" placeholder="Phone" />
                   <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                 </div>
-                <small id="phone-error" class="error-message">
-                  Please enter a valid number.
-                </small>
+                <small id="edit-phone-error" class="error-message">Please enter a valid number.</small>
 
                 <div class="form-buttons">
                   <button
