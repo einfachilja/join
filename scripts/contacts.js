@@ -55,7 +55,6 @@ function isValidContactInput(name, email, phone) {
     name &&
     email &&
     phone &&
-    isTelValid("edit_contact_phone") &&
     isEmailValid()
   );
 }
@@ -226,21 +225,21 @@ async function deleteContact(contactKey) {
 }
 
 /* ============= TEL VALIDATION ============= */
-function isTelValid(inputId = "new_contact_phone") {
-  const phoneInput = document.getElementById(inputId);
-  if (!phoneInput) return false;
+// function isTelValid(inputId = "new_contact_phone") {
+//   const phoneInput = document.getElementById(inputId);
+//   if (!phoneInput) return false;
 
-  const phoneValue = phoneInput.value.trim();
-  const phonePattern = /^\+?[0-9\s-]{7,}$/;
+//   const phoneValue = phoneInput.value.trim();
+//   const phonePattern = /^\+?[0-9\s-]{7,}$/;
 
-  if (!phonePattern.test(phoneValue)) {
-    phoneInput.classList.add("invalid");
-    return false;
-  } else {
-    phoneInput.classList.remove("invalid");
-    return true;
-  }
-}
+//   if (!phonePattern.test(phoneValue)) {
+//     phoneInput.classList.add("invalid");
+//     return false;
+//   } else {
+//     phoneInput.classList.remove("invalid");
+//     return true;
+//   }
+// }
 
 /* ============= EMAIL VALIDATION ============= */
 

@@ -46,7 +46,7 @@ function overlayTemplate() {
                         Please enter a valid email address.
                       </small>
                       <div class="input-group">
-                        <input id="new_contact_phone" pattern="\\+?[0-9 -]{7,}" type="tel" placeholder="Phone" required />
+                        <input id="new_contact_phone" pattern="\\+?[0-9 -]{7,}" type="number" maxlength="10" oninput="this.value=this.value.slice(0,10)" placeholder="Phone" required />
 
                         <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                       </div>
@@ -125,7 +125,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
                   Please enter a valid email address.
                 </small>
                 <div class="input-group">
-                  <input id="edit_contact_phone" type="tel" pattern="\\+?[0-9 -]{7,}" placeholder="Phone" value="${phone}" required />
+                  <input id="edit_contact_phone" type="number" pattern="\\+?[0-9 -]{7,}" maxlength="10" oninput="this.value=this.value.slice(0,10)" placeholder="Phone" value="${phone}" required />
                   <img src="./assets/img/contacts-icons/call.svg" alt="Phone Icon" />
                 </div>
                 <small id="phone-error" class="error-message">
