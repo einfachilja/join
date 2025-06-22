@@ -81,7 +81,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
     <div class="add-new-contact-template-section" >
       <div class="add-new-contact-template" onclick="dialogPrevention(event)">
         <div class="add-new-contact-left-section">
-          <img onclick="toggleOff()"
+          <img onclick="toggleOffMobile()"
             class="add-new-contact-template-x-mobile"
             src="./assets/img/contacts-icons/close-white.svg"
             alt="X"
@@ -97,7 +97,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
 
         <div class="add-new-contact-right-section">
           <img onclick="toggleOff()"
-            class="add-new-contact-template-x d_none"
+            class="add-new-contact-template-x"
             src="./assets/img/contacts-icons/Close.svg"
             alt="X"
           />
@@ -213,7 +213,7 @@ function getOpenContactMobileTemplate(contact) {
   return /*html*/ `
     <div class="my-contact-information-section-mobile" onclick="dialogPrevention(event)">
 
-      <div onclick="toggleOffMobile()" id="overlay_mobile" class="d_none"></div>
+      
       <div class="my-contact-information-section-mobile-content">
         <div class="my-contact-info-mobile-header">
           <div class="my-contact-info-mobile-header-content">

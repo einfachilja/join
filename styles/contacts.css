@@ -393,7 +393,7 @@
     width: 1212px;
     position: absolute;
 
-    transform: translateX(100%);
+    transform: translateX(100vh);
     transition: transform 0.4s ease-in-out;
 
 }
@@ -478,7 +478,6 @@
     cursor: pointer;
     margin-left: 565px;
     margin-bottom: 70px;
-
 }
 
 .add-new-contact-template-x:hover {
