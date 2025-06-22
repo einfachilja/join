@@ -1,11 +1,14 @@
 let confirmPasswordTouched = false;
 
-/* Alte Sessiondaten (von Gast) löschen*/
+// Clear any previous guest session
 sessionStorage.removeItem("userName");
 sessionStorage.removeItem("userColor");
 sessionStorage.removeItem("email");
 
-/* Validates the email input format */
+/**
+ * Validates the email input format.
+ * @returns {boolean} True if valid, otherwise false.
+ */
 function isEmailValid() {
   const email = document.getElementById("email").value.trim();
   const error = document.getElementById("email-error");
@@ -20,7 +23,10 @@ function isEmailValid() {
   return valid;
 }
 
-/* Validates the password length */
+/**
+ * Validates password length (minimum 8 characters).
+ * @returns {boolean} True if valid, otherwise false.
+ */
 function isPasswordValid() {
   const password = document.getElementById("password").value.trim();
   const error = document.getElementById("password-error");
@@ -35,7 +41,10 @@ function isPasswordValid() {
   return valid;
 }
 
-/* Validates that both passwords match */
+/**
+ * Checks if password and confirmation match.
+ * @returns {boolean} True if matching, otherwise false.
+ */
 function doPasswordsMatch() {
   const password = document.getElementById("password").value.trim();
   const confirm = document.getElementById("confirm-password").value.trim();
@@ -51,7 +60,12 @@ function doPasswordsMatch() {
   return matches;
 }
 
-/* Skips match check if fields aren't ready */
+/**
+ * Determines if password matching should be skipped.
+ * @param {string} password - The main password.
+ * @param {string} confirm - The confirmation input.
+ * @returns {boolean} True if check should be skipped.
+ */
 function shouldSkipPasswordMatchCheck(password, confirm) {
   return (
     confirm === "" ||
@@ -61,7 +75,9 @@ function shouldSkipPasswordMatchCheck(password, confirm) {
   );
 }
 
-/* Enables or disables the submit button */
+/**
+ * Enables or disables the sign-up button based on form validity.
+ */
 function checkFormValidity() {
   const name = document.getElementById("first-name").value.trim();
   const emailValid = isEmailValid();
@@ -74,7 +90,9 @@ function checkFormValidity() {
   document.getElementById("register-btn").disabled = !allValid;
 }
 
-/* Starts the registration process */
+/**
+ * Starts user registration if all inputs are valid.
+ */
 function registerUser() {
   const name = document.getElementById("first-name").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -92,7 +110,10 @@ function registerUser() {
   saveUser(name, email, password);
 }
 
-// adds a random color to the user profile
+/**
+ * Picks a random color for the new user profile.
+ * @returns {string} A color string (RGB).
+ */
 function addColorToUserProfile() {
   const colors = [
     "rgb(255, 122, 0)",
@@ -114,7 +135,12 @@ function addColorToUserProfile() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-/* Saves a new user to the Firebase Realtime Database + Displays a message */
+/**
+ * Saves a new user to Firebase and shows confirmation.
+ * @param {string} name - The user's name.
+ * @param {string} email - The user's email.
+ * @param {string} password - The user's password.
+ */
 function saveUser(name, email, password) {
   const color = addColorToUserProfile();
   fetch(userfirebaseURL, {
@@ -123,7 +149,6 @@ function saveUser(name, email, password) {
     body: JSON.stringify({ name, email, password, color }),
   })
     .then(() => {
-      // Session speichern, damit summary.js korrekt begrüßt
       sessionStorage.setItem("userName", name);
       sessionStorage.setItem("userColor", color);
       sessionStorage.setItem("email", email);
@@ -134,7 +159,11 @@ function saveUser(name, email, password) {
     .catch(console.error);
 }
 
-/* Displays a message */
+/**
+ * Displays a temporary success or error message.
+ * @param {string} message - Message text.
+ * @param {boolean} [isSuccess=false] - True if success, false if error.
+ */
 function showMessage(message, isSuccess = false) {
   const messageBox = document.getElementById("message-box");
 
@@ -151,22 +180,35 @@ function showMessage(message, isSuccess = false) {
   }, 2000);
 }
 
+/**
+ * Handles email input event.
+ */
 function handleEmailInput() {
   isEmailValid();
   checkFormValidity();
 }
 
+/**
+ * Handles password input event.
+ */
 function handlePasswordInput() {
   isPasswordValid();
   doPasswordsMatch();
   checkFormValidity();
 }
 
+/**
+ * Handles confirm password input event.
+ */
 function handleConfirmPasswordInput() {
   doPasswordsMatch();
   checkFormValidity();
 }
 
+/**
+ * Updates the password visibility icon.
+ * @param {HTMLInputElement} input - The input field element.
+ */
 function updatePasswordIcon(input) {
   const icon = input.closest(".input-container").querySelector(".toggle-password");
   if (!icon) return;
@@ -178,6 +220,11 @@ function updatePasswordIcon(input) {
   }
 }
 
+/**
+ * Toggles password field visibility and icon.
+ * @param {string} inputId - ID of the input field.
+ * @param {HTMLElement} icon - Icon element to update.
+ */
 function togglePasswordWithIcon(inputId, icon) {
   const input = document.getElementById(inputId);
   if (!input) return;
@@ -189,3 +236,4 @@ function togglePasswordWithIcon(inputId, icon) {
     ? "./assets/img/2. log-sign-page/visibility_off.svg"
     : "./assets/img/2. log-sign-page/visibility_eye.svg";
 }
+

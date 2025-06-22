@@ -5,35 +5,49 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Join | Sign up</title>
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="./styles/register.css" />
-  <link rel="stylesheet" href="./styles/fonts.css">
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/media-register.css" />
+
+  <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
-  <link rel="stylesheet" href="./styles/media-register.css">
 </head>
 
 <body>
-
+  <!-- Logo top left -->
   <section class="logo-section">
     <img class="logo-image" src="./assets/img/2. log-sign-page/join-logo.svg" alt="Logo" />
   </section>
 
+  <!-- Register Box -->
   <section class="register-page">
     <div class="register-container">
       <div class="register-header">
-        <a href="./log-in.html">
-          <img class="back-arrow" src="./assets/img/2. log-sign-page/arrow-left-line.svg" alt="back-arrow" />
+        <!-- Back to login -->
+        <a href="./log-in.html" onclick="sessionStorage.setItem('skipLoader', 'true')">
+          <img class="back-arrow" src="./assets/img/2. log-sign-page/arrow-left-line.svg" alt="Back arrow" />
         </a>
+
         <div class="title-group">
           <h1 class="register-title">Sign Up</h1>
-          <img class="title-underline" src="./assets/img/2. log-sign-page/blue-line.svg" alt="blue-line" />
+          <img class="title-underline" src="./assets/img/2. log-sign-page/blue-line.svg" alt="Blue underline" />
         </div>
       </div>
 
+      <!-- Form -->
       <form class="register-form" onsubmit="registerUser(); return false">
         <!-- Name -->
         <div class="input-group">
           <label class="input-container">
-            <input type="text" id="first-name" placeholder="First and last name" required oninput="checkFormValidity()" /> <!--NEU NEU-->
+            <input
+              type="text"
+              id="first-name"
+              placeholder="First and last name"
+              required
+              oninput="checkFormValidity()"
+            />
             <img class="input-icon" src="./assets/img/2. log-sign-page/person-icon.svg" alt="User Icon" />
           </label>
           <small class="error-message">&nbsp;</small>
@@ -42,8 +56,14 @@
         <!-- Email -->
         <div class="input-group">
           <label class="input-container">
-            <input type="text" placeholder="Email" id="email" required oninput="handleEmailInput()" /> <!--NEU-->
-            <img class="input-icon" src="./assets/img/2. log-sign-page/mail-icon.svg" alt="E-Mail Icon" />
+            <input
+              type="text"
+              id="email"
+              placeholder="Email"
+              required
+              oninput="handleEmailInput()"
+            />
+            <img class="input-icon" src="./assets/img/2. log-sign-page/mail-icon.svg" alt="Email Icon" />
           </label>
           <small id="email-error" class="error-message">
             Please enter a valid email address.
@@ -53,9 +73,20 @@
         <!-- Password -->
         <div class="input-group">
           <label class="input-container">
-            <input type="password" placeholder="Password" id="password" required oninput="handlePasswordInput(); updatePasswordIcon(this)"/> <!--NEU NEU-->
-            <img class="input-icon-password toggle-password" src="./assets/img/2. log-sign-page/lock-icon.svg"
-              alt="Password Icon" data-target="password" onclick="togglePasswordWithIcon('password', this)"/> <!--NEU NEU-->
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+              oninput="handlePasswordInput(); updatePasswordIcon(this)"
+            />
+            <img
+              class="input-icon-password toggle-password"
+              src="./assets/img/2. log-sign-page/lock-icon.svg"
+              alt="Password Icon"
+              data-target="password"
+              onclick="togglePasswordWithIcon('password', this)"
+            />
           </label>
           <small id="password-error" class="error-message">
             Password must be at least 8 characters long.
@@ -65,22 +96,38 @@
         <!-- Confirm Password -->
         <div class="input-group">
           <label class="input-container">
-            <input type="password" placeholder="Confirm password" id="confirm-password" 
-            required oninput="handleConfirmPasswordInput(); updatePasswordIcon(this)" onfocus="confirmPasswordTouched = true"/> <!--NEU NEU-->
-            <img class="input-icon-password toggle-password" src="./assets/img/2. log-sign-page/lock-icon.svg"
-              alt="Password Icon" data-target="confirm-password" onclick="togglePasswordWithIcon('confirm-password', this)" /> <!--NEU-->
+            <input
+              type="password"
+              id="confirm-password"
+              placeholder="Confirm password"
+              required
+              oninput="handleConfirmPasswordInput(); updatePasswordIcon(this)"
+              onfocus="confirmPasswordTouched = true"
+            />
+            <img
+              class="input-icon-password toggle-password"
+              src="./assets/img/2. log-sign-page/lock-icon.svg"
+              alt="Password Icon"
+              data-target="confirm-password"
+              onclick="togglePasswordWithIcon('confirm-password', this)"
+            />
           </label>
           <small id="confirm-password-error" class="error-message">
             Passwords do not match.
           </small>
         </div>
 
-        <!-- Privacy -->
+        <!-- Privacy Policy -->
         <div class="privacy-container">
-          <input id="privacy-policy" class="checkbox" type="checkbox" onchange="checkFormValidity()"/> <!--NEU-->
+          <input
+            id="privacy-policy"
+            class="checkbox"
+            type="checkbox"
+            onchange="checkFormValidity()"
+          />
           <span class="accept-span">
             I accept the
-            <a class="privacy-policy" href="./privacy-ext.html">Privacy Police</a>
+            <a class="privacy-policy" href="./privacy-ext.html">Privacy Policy</a>
           </span>
         </div>
 
@@ -95,12 +142,16 @@
 
     <!-- Footer -->
     <footer>
-      <a class="footer-link" href="./privacy-ext.html">Privacy Police</a>
+      <a class="footer-link" href="./privacy-ext.html">Privacy Policy</a>
       <a class="footer-link" href="./legal-ext.html">Legal notice</a>
     </footer>
   </section>
 
+  <!-- Message Box -->
   <div id="message-box" class="d-none"></div>
 
+  <!-- Scripts -->
   <script src="./scripts/firebase.js"></script>
   <script src="./scripts/register.js"></script>
+</body>
+</html>

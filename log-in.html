@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Join | Log in</title>
+
+  
   <link rel="stylesheet" href="./styles/log-in.css" />
   <link rel="stylesheet" href="./styles/responsive.css" />
   <link rel="stylesheet" href="./styles/fonts.css" />
-  <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
   <link rel="stylesheet" href="./styles/media-login.css" />
+
+  
+  <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
 </head>
 
-<body>
+<body onload="handleLoginPageLoad()">
+  
+  <section class="logo-section" id="static-logo">
+    <img class="logo-image" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
+  </section>
 
-  <!-- Loader  -->
-  <div class="loader" id="loader">
+  
+  <div class="loader d-none" id="loader">
     <img id="animated-logo" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
   </div>
 
-  <!-- Registrierung oben rechts -->
+  
   <section class="register-container">
     <span class="no-user">Not a Join user?</span>
     <a class="button-link" href="./register.html">
@@ -27,40 +34,56 @@
     </a>
   </section>
 
-  <!-- Login Box -->
+  
   <section class="login-page">
     <div class="log-in-container">
       <div class="login-container-headline">
         <h1 class="login-headline">Log in</h1>
-        <img class="blue-line" src="./assets/img/2. log-sign-page/blue-line.svg" alt="blue-line" />
+        <img class="blue-line" src="./assets/img/2. log-sign-page/blue-line.svg" alt="blue line" />
       </div>
 
-      <!-- Formular -->
-      <form class="log-in-form" onsubmit="login(); return false;"> <!--NEU-->
+      
+      <form class="log-in-form" onsubmit="login(); return false;">
         <div class="log-in-input">
+          
           <div class="input-group">
             <label class="input-container">
-              <input type="text" placeholder="E-Mail" id="email" required oninput="validateLoginEmail()"/> <!--NEU-->
-              <img class="input-icon" src="./assets/img/2. log-sign-page/mail-icon.svg" alt="E-Mail Icon" />
+              <input
+                type="text"
+                placeholder="E-Mail"
+                id="email"
+                required
+                oninput="validateLoginEmail()"
+              />
+              <img class="input-icon" src="./assets/img/2. log-sign-page/mail-icon.svg" alt="Email Icon" />
             </label>
             <small id="login-email-error" class="error-message">&nbsp;</small>
           </div>
 
+       
           <div class="input-group">
             <label class="input-container">
-              <input type="password" placeholder="Password" id="password" required oninput="togglePasswordIcon(this)" />
-              <img class="input-icon-password toggle-password" 
-                   src="./assets/img/2. log-sign-page/lock-icon.svg"
-                   alt="Passwort Icon" data-target="password"
-                   onclick="togglePasswordWithIcon('password', this)" /> <!--NEU-->
+              <input
+                type="password"
+                placeholder="Password"
+                id="password"
+                required
+                oninput="togglePasswordIcon(this)"
+              />
+              <img
+                class="input-icon-password toggle-password"
+                src="./assets/img/2. log-sign-page/lock-icon.svg"
+                alt="Password Icon"
+                data-target="password"
+                onclick="togglePasswordWithIcon('password', this)"
+              />
             </label>
           </div>
-
         </div>
 
         <div class="submit-container">
           <button class="log-in-button" type="submit">Log in</button>
-          <button class="guest-log-in-button" type="button" onclick="guestLogin()"> <!--NEU-->
+          <button class="guest-log-in-button" type="button" onclick="guestLogin()">
             Guest Login
           </button>
         </div>
@@ -74,7 +97,6 @@
       </a>
     </section>
 
-    <!-- Footer -->
     <footer>
       <a class="footer-link" href="./privacy-ext.html">Privacy Policy</a>
       <a class="footer-link" href="./legal-ext.html">Legal notice</a>
@@ -86,5 +108,4 @@
   <script src="./scripts/log-in.js"></script>
   <script src="./scripts/firebase.js"></script>
 </body>
-
 </html>

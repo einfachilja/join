@@ -1,23 +1,41 @@
 const LOGIN_SUCCESSFUL = "./summary.html";
 
-window.onload = function () {
-  initLoaderAnimation();
-  initLivePasswordIconChange();
-};
+/**
+ * Handles login page load:
+ * - Skips loader if user returns from register
+ * - Otherwise shows loader animation
+ */
+function handleLoginPageLoad() {
+  const skipLoader = sessionStorage.getItem("skipLoader");
 
-// Blendet den Loader nach kurzer Zeit aus
+  if (skipLoader === "true") {
+    sessionStorage.removeItem("skipLoader");
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("static-logo").style.display = "block"; 
+  } else {
+    const loader = document.getElementById("loader");
+    loader.classList.remove("d-none");
+    initLoaderAnimation();
+  }
+
+  initLivePasswordIconChange();
+}
+
+/**
+ * Plays loader animation and animates logo
+ */
 function initLoaderAnimation() {
   const loader = document.getElementById("loader");
   const logo = document.getElementById("animated-logo");
 
-// Wenn der Bildschirm zu Beginn klein ist, zeige weißes Logo im Loader
-if (window.innerWidth <= 800) {
-  document.getElementById("animated-logo").src =
-    "./assets/img/1. join-frontpage/join-logo-white.svg";
-}
+  // Show white logo for small screens
+  if (window.innerWidth <= 800) {
+    document.getElementById("animated-logo").src =
+      "./assets/img/1. join-frontpage/join-logo-white.svg";
+  }
 
   setTimeout(() => {
-    //  Hier beginnt die Bewegung → Jetzt Logo auf dunkel umschalten
+    // Start animation: shrink and move logo
     if (window.innerWidth <= 800) {
       logo.src = "./assets/img/1. join-frontpage/join-logo.svg";
     }
@@ -31,7 +49,10 @@ if (window.innerWidth <= 800) {
   }, 500);
 }
 
-// Prüft, ob die eingegebene E-Mail eine gültige Syntax hat
+/**
+ * Validates login email format
+ * @returns {boolean} True if valid or empty, false otherwise
+ */
 function validateLoginEmail() {
   const emailInput = document.getElementById("email");
   const error = document.getElementById("login-email-error");
@@ -49,13 +70,17 @@ function validateLoginEmail() {
   }
 }
 
-// Zeigt temporäre Erfolg- oder Fehlermeldungen an
+/**
+ * Shows a temporary message box
+ * @param {string} message - Text to display
+ * @param {boolean} [isSuccess=false] - True for success, false for error
+ */
 function showMessage(message, isSuccess = false) {
   const messageBox = document.getElementById("message-box");
   messageBox.textContent = message;
   messageBox.style.backgroundColor = isSuccess
-    ? "rgb(42, 54, 71)"   // dunkelblau für Erfolg
-    : "rgb(220, 53, 69)"; // rot für Fehler
+    ? "rgb(42, 54, 71)"
+    : "rgb(220, 53, 69)";
   messageBox.classList.remove("d-none");
   messageBox.style.display = "block";
 
@@ -65,7 +90,9 @@ function showMessage(message, isSuccess = false) {
   }, 2000);
 }
 
-// Startet den Login-Prozess, sobald das Formular abgeschickt wird
+/**
+ * Starts login process from form
+ */
 function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -75,7 +102,11 @@ function login() {
   fetchUsers(email, password);
 }
 
-// Holt alle registrierten User aus der Datenbank
+/**
+ * Loads user data and verifies login
+ * @param {string} email - Entered email
+ * @param {string} password - Entered password
+ */
 function fetchUsers(email, password) {
   fetch(userfirebaseURL)
     .then((response) => response.json())
@@ -83,7 +114,12 @@ function fetchUsers(email, password) {
     .catch(console.error);
 }
 
-// Überprüft Login-Daten gegen die Datenbank
+/**
+ * Compares credentials with database
+ * @param {Object} users - All users from Firebase
+ * @param {string} email - Input email
+ * @param {string} password - Input password
+ */
 function checkLogin(users, email, password) {
   const match = findUserWithKey(users, email);
   if (!match) return showMessage("E-Mail address not found!", false);
@@ -94,17 +130,26 @@ function checkLogin(users, email, password) {
   loginUser(user, firebaseKey);
 }
 
-// Findet den passenden Benutzer mit dessen Firebase-Key
+/**
+ * Finds a user object by email
+ * @param {Object} users - All users
+ * @param {string} email - Email to search
+ * @returns {[string, Object]|undefined} Firebase key and user
+ */
 function findUserWithKey(users, email) {
   return Object.entries(users || {}).find(([_, user]) => user.email === email);
 }
 
-// Führt alle Schritte nach erfolgreichem Login aus
+/**
+ * Logs in user and stores session data
+ * @param {Object} user - User object
+ * @param {string} firebaseKey - User's Firebase key
+ */
 function loginUser(user, firebaseKey) {
   sessionStorage.setItem("userName", user.name);
   sessionStorage.setItem("email", user.email);
   sessionStorage.setItem("userColor", user.color);
-  localStorage.setItem("firebaseKey", firebaseKey); // WICHTIG: Nutzer-spezifischer Zugriff später für Task und Contacts
+  localStorage.setItem("firebaseKey", firebaseKey);
 
   showMessage("Login successful!", true);
   setTimeout(() => {
@@ -112,12 +157,14 @@ function loginUser(user, firebaseKey) {
   }, 1500);
 }
 
-// Speichert eine Gast-Session ohne Registrierung
+/**
+ * Logs in as guest user
+ */
 function guestLogin() {
   sessionStorage.setItem("userName", "Guest");
   sessionStorage.setItem("userColor", "rgb(41, 171, 226)");
   sessionStorage.setItem("email", "guest@join-test.de");
-  localStorage.setItem("firebaseKey", "guest"); // wird genutzt, um Gast-Daten zuzuordnen
+  localStorage.setItem("firebaseKey", "guest");
 
   showMessage("You are logged in as a guest!", true);
   setTimeout(() => {
@@ -125,7 +172,11 @@ function guestLogin() {
   }, 2000);
 }
 
-// Schaltet die Sichtbarkeit des Passwortfeldes um und wechselt das Icon zwischen „Sichtbar“ und „Versteckt“.
+/**
+ * Toggles password visibility and icon
+ * @param {string} inputId - Password input field ID
+ * @param {HTMLElement} iconElement - Clicked icon
+ */
 function togglePasswordWithIcon(inputId, iconElement) {
   const input = document.getElementById(inputId);
   const isVisible = input.type === "text";
@@ -136,7 +187,10 @@ function togglePasswordWithIcon(inputId, iconElement) {
     : "./assets/img/2. log-sign-page/visibility_eye.svg";
 }
 
-// Ändert das Passwort-Icon dynamisch beim Tippen:
+/**
+ * Changes icon while typing in password field
+ * @param {HTMLInputElement} input - Target input field
+ */
 function togglePasswordIcon(input) {
   const icon = input.closest(".input-container").querySelector(".toggle-password");
   if (!icon) return;
