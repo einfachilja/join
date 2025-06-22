@@ -12,10 +12,13 @@
   <link rel="stylesheet" href="./styles/media-login.css" />
 </head>
 
-<body>
+<body onload="handleLoginPageLoad()">
 
-  <!-- Loader  -->
-  <div class="loader" id="loader">
+  <section class="logo-section" id="static-logo">
+    <img class="logo-image" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
+  </section>
+    <!-- Loader  -->
+  <div class="loader d-none" id="loader">
     <img id="animated-logo" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
   </div>
 

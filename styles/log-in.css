@@ -53,6 +53,9 @@ a {
   transform: scale(0.25); 
 }
 
+#static-logo {
+  display: none;
+}
 #message-box {
   position: absolute;
   top: 20%;

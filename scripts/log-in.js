@@ -1,9 +1,21 @@
 const LOGIN_SUCCESSFUL = "./summary.html";
 
-window.onload = function () {
-  initLoaderAnimation();
+function handleLoginPageLoad() {
+  const skipLoader = sessionStorage.getItem("skipLoader");
+
+  if (skipLoader === "true") {
+    sessionStorage.removeItem("skipLoader");
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("static-logo").style.display = "block"; 
+  } else {
+    const loader = document.getElementById("loader");
+    loader.classList.remove("d-none");
+    initLoaderAnimation();
+  }
+
   initLivePasswordIconChange();
-};
+}
+
 
 // Blendet den Loader nach kurzer Zeit aus
 function initLoaderAnimation() {
