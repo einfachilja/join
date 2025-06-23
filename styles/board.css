@@ -505,7 +505,7 @@
 }
 
 .assigned-dropdown-toggle {
-    border: 1px solid #5bb6fa;
+    border: 1px solid #D1D1D1;
     border-radius: 8px;
     background: #fff;
     padding: 8px 12px;
@@ -528,10 +528,11 @@
     background: #fff;
     border: 1px solid #eee;
     border-radius: 8px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.09);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.09);
     max-height: 200px;
     overflow-y: auto;
-    position: static;  /* NEU: von absolute auf static setzen! */
+    position: static;
+    /* NEU: von absolute auf static setzen! */
     width: 100%;
     z-index: 20;
     display: none;
@@ -580,4 +581,150 @@
     accent-color: #5bb6fa;
     width: 18px;
     height: 18px;
+}
+
+/* Subtask Input Style mit Button im Inputfeld rechts */
+.subtask-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    box-shadow: none;
+}
+
+.add-subtask-input {
+    flex: 1;
+    border: 1px solid #D1D1D1;
+    border-radius: 12px;
+    padding: 10px 48px 10px 16px;
+    /* Rechts Platz für Button */
+    font-size: 16px;
+    color: #1d2b3a;
+    background: #fff;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.add-subtask-input::placeholder {
+    color: #d1d1d1;
+    font-size: 18px;
+    font-family: inherit;
+}
+
+.add-subtask-input:focus {
+    border-color: #5bb6fa;
+}
+
+.add-subtask-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #2a3647;
+    font-size: 28px;
+    font-weight: 400;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    width: 32px;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.add-subtask-btn:hover {
+    color: #29abe2;
+}
+
+/* Subtask Edit Input */
+.subtask-list-editinput {
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-right: 10px;
+    border: 1px solid #d1d1d1;
+    outline: none;
+    font-family: inherit;
+    color: #1d2b3a;
+    width: auto;
+    min-width: 60px;
+    max-width: 75%;
+    background: #fff;
+}
+
+/* Mülleimer-Button im Subtask Edit */
+.subtask-remove-btn {
+    background: none;
+    border: none;
+    color: #b2b2b2;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Stift-Button im Subtask Edit */
+.subtask-edit-btn {
+    background: none;
+    border: none;
+    color: #b2b2b2;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 2px 6px;
+    display: flex;
+    align-items: center;
+}
+
+.subtask-remove-btn:hover {
+    color: #ff4d4d;
+}
+
+.subtask-list-row {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    margin-bottom: 4px;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.subtask-list-row:last-child {
+    margin-bottom: 0;
+}
+
+.subtask-dot {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #222f3e;
+    display: inline-block;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* Damit Inputs und der Mülleimer-Button in der Zeile gut aussehen */
+.subtask-list-editinput {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 500;
+    color: #222f3e;
+    padding: 0;
+    outline: none;
+    width: 100%;
+    min-width: 40px;
+}
+
+.subtask-list-editinput:focus {
+    background: #f4f7fc;
 }

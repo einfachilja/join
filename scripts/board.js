@@ -611,6 +611,131 @@ function editTask() {
     // Save Selected auf global speichern, damit saveEditTask das findet
     window.getAssignedOverlaySelection = () => selectedContacts;
   }
+
+  // === Subtasks Edit: Input-Feld & Listendarstellung wie Screenshot ===
+  const subtaskList = document.querySelector('.subtask-list ul');
+  if (subtaskList && !document.getElementById('subtasks-edit-container')) {
+    // Container für Subtasks-Edit
+    const container = document.createElement('div');
+    container.id = 'subtasks-edit-container';
+    container.className = 'subtasks-edit-container';
+
+    // Inputfeld und + Button oben wie im Screenshot
+    const inputWrapper = document.createElement('div');
+    inputWrapper.className = 'subtask-input-wrapper';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Add new subtask';
+    input.id = 'add-subtask-input';
+    input.className = 'add-subtask-input';
+
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.id = 'add-subtask-btn';
+    addBtn.textContent = '+';
+    addBtn.className = 'add-subtask-btn';
+
+    inputWrapper.appendChild(input);
+    inputWrapper.appendChild(addBtn);
+    container.appendChild(inputWrapper);
+
+    // Bestehende Subtasks auslesen
+    const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+    let subtasks = Array.isArray(task.subtask) ? task.subtask : [];
+
+    // NEUE renderSubtasksList-Funktion und Initialaufruf gemäß Instruktion
+    function renderSubtasksList(subtaskArr) {
+      let listDiv = document.getElementById('subtask-list-edit');
+      if (!listDiv) {
+        listDiv = document.createElement('div');
+        listDiv.id = 'subtask-list-edit';
+        container.appendChild(listDiv);
+      }
+      listDiv.innerHTML = '';
+      subtaskArr.forEach((sub, idx) => {
+        const row = document.createElement('div');
+        row.className = 'subtask-list-row';
+
+        // Sofort als Inputfeld anzeigen
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = typeof sub === 'string' ? sub : sub.title;
+        input.className = 'subtask-list-editinput';
+        input.readOnly = true; // Input zunächst nicht editierbar
+
+        // Funktion für Editieren (Input aktivieren und fokussieren)
+        function activateEdit() {
+          input.readOnly = false;
+          input.focus();
+          // Markiere den Text (optional)
+          input.setSelectionRange(0, input.value.length);
+        }
+
+        input.onblur = () => {
+          if (input.value.trim() !== '') {
+            subtaskArr[idx].title = input.value.trim();
+          }
+          input.readOnly = true; // Nach Bearbeitung wieder nicht editierbar
+        };
+        input.onkeydown = (e) => {
+          if (e.key === 'Enter') input.blur();
+        };
+
+        // Löschen-Button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'subtask-remove-btn';
+        removeBtn.innerHTML = `<img src="assets/icons/board-delete-icon.svg">`;
+        removeBtn.onclick = (e) => {
+          e.preventDefault();
+          subtaskArr.splice(idx, 1);
+          renderSubtasksList(subtaskArr);
+        };
+
+        // Edit-Button (Stift)
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = 'subtask-edit-btn';
+        editBtn.innerHTML = `<img src="assets/icons/board-edit-icon.svg">`;
+        editBtn.title = 'Bearbeiten';
+        editBtn.onclick = (e) => {
+          e.preventDefault();
+          activateEdit();
+        };
+
+        const dot = document.createElement('span');
+        dot.className = 'subtask-dot';
+        dot.textContent = '•';
+
+        row.appendChild(dot);
+        row.appendChild(input);
+        row.appendChild(editBtn);
+        row.appendChild(removeBtn);
+
+        listDiv.appendChild(row);
+      });
+    }
+    renderSubtasksList(subtasks);
+
+    // Beim Klick auf + neuen Subtask zur Liste hinzufügen
+    addBtn.onclick = () => {
+      const val = input.value.trim();
+      if (val) {
+        subtasks.push({ title: val, completed: false });
+        renderSubtasksList(subtasks);
+        input.value = '';
+      }
+    };
+
+    // Im UI einfügen (anstelle alter .subtask-list ul)
+    subtaskList.innerHTML = '';
+    subtaskList.appendChild(container);
+
+    // Speichern-Hook (für saveEditTask): Aktuelle Subtask-Liste global speichern
+    window.getEditedSubtasks = () => subtasks;
+  }
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
@@ -661,6 +786,14 @@ async function saveEditTask(taskKey) {
     newAssignedTo = window.getAssignedOverlaySelection();
   }
 
+  // Subtasks aus Input-Liste wie im Screenshot holen
+  let newSubtasks = [];
+  if (typeof window.getEditedSubtasks === 'function') {
+    newSubtasks = window.getEditedSubtasks();
+  } else if (task.subtask) {
+    newSubtasks = task.subtask;
+  }
+
   const updatedTask = {
     ...task,
     title: newTitle,
@@ -668,7 +801,7 @@ async function saveEditTask(taskKey) {
     dueDate: newDueDate,
     priority: newPriority,
     assignedTo: newAssignedTo,
-    // subtask: newSubtask
+    subtask: newSubtasks
   };
 
   try {
