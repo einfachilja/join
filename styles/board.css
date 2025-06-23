@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
     text-decoration: none;
-
 }
 
 .board-container {
@@ -256,7 +255,7 @@
 }
 
 .board-overlay-card {
-    width: 500px;
+    max-width: 500px;
     background-color: #ffffff;
     border-radius: 30px;
     padding: 40px;
@@ -266,9 +265,10 @@
     flex-direction: column;
     font-size: 20px;
     max-height: calc(100vh - 40px);
-    margin-top: 20px;
-    margin-bottom: 20px;
     overflow-y: auto;
+    margin-left: 12px;
+    margin-right: 12px;
+
 }
 
 .overlay-card-category {
@@ -284,7 +284,7 @@
 }
 
 .overlay-card-title {
-    font-size: 61px;
+    font-size: 48px;
     font-weight: 700;
 }
 
@@ -733,16 +733,19 @@
     display: flex;
     align-items: center;
     width: 100%;
-    justify-content: space-between;
-
+    gap: 12px;
+    margin: 8px 0 2px 0;
 }
 
 .subtask-progress-bar-bg {
     background: #eaeaea;
-    border-radius: 8px;
-    width: 80px;
-    height: 7px;
+    border-radius: 10px;
+    height: 8px;
     overflow: hidden;
+    flex: 1; /* Nimmt die komplette verfügbare Breite */
+    min-width: 45px;
+    max-width: 100%;
+    margin-right: 8px;
 }
 
 .subtask-progress-bar-fill {
@@ -754,4 +757,5 @@
 .subtask-progress-text {
     font-size: 12px;
     color: #555;
+    white-space: nowrap;
 }
