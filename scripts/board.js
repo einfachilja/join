@@ -355,6 +355,7 @@ async function toggleSubtask(taskKey, index) {
 }
 
 function closeBoardCard() {
+  if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
   document.getElementById("board_overlay").classList.add("d-none");
   document.getElementById("board_overlay_card").classList.remove("board-overlay-card-show");
   document.getElementById("board_overlay_card").classList.add("board-overlay-card-hide");
@@ -449,39 +450,166 @@ function editTask() {
     priorityHeadline.appendChild(wrapper);
   }
 
-  // Assigned To bearbeiten via <select multiple>
+  // Custom Dropdown für "Assigned To"
   const assignedListContainer = document.querySelector('.assigned-list');
-  if (assignedListContainer && !document.getElementById('assigned-select')) {
+  if (assignedListContainer && !document.getElementById('assigned-dropdown')) {
     assignedListContainer.innerHTML = '';
     // Label
     const labelA = document.createElement('span');
-    labelA.textContent = 'Assigned To';
+    labelA.textContent = 'Assigned to';
     labelA.className = 'overlay-card-label';
     assignedListContainer.appendChild(labelA);
-    // Multi-select element
-    const select = document.createElement('select');
-    select.id = 'assigned-select';
-    select.multiple = true;
-    select.size = 5;  // adjust height as needed
-    select.className = 'overlay-card-select';
-    // Populate options from localStorage contacts
+
+    // Dropdown-Toggle
+    const dropdown = document.createElement('div');
+    dropdown.id = 'assigned-dropdown';
+    dropdown.className = 'assigned-dropdown';
+
+    const toggle = document.createElement('div');
+    toggle.className = 'assigned-dropdown-toggle';
+    toggle.onclick = function () {
+      list.classList.toggle('open');
+    };
+
+    const placeholder = document.createElement('span');
+    placeholder.id = 'assigned-placeholder';
+    placeholder.textContent = 'Select contacts to assign';
+
+    const arrow = document.createElement('span');
+    arrow.className = 'dropdown-arrow';
+
+    toggle.appendChild(placeholder);
+    toggle.appendChild(arrow);
+
+    // Dropdown-Liste
+    const list = document.createElement('div');
+    list.id = 'assigned-dropdown-list';
+    list.className = 'assigned-dropdown-list';
+
+    dropdown.appendChild(toggle);
+    dropdown.appendChild(list);
+    assignedListContainer.appendChild(dropdown);
+
+    // Kontakte aus localStorage holen
     const userKey = localStorage.getItem('firebaseKey');
     const usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
-    const contacts = usersData[userKey]?.contacts || {};
-    Object.values(contacts).forEach(c => {
-      const option = document.createElement('option');
-      option.value = c.name;
-      option.textContent = c.name;
-      select.appendChild(option);
-    });
-    // Pre-select existing assignedTo
+    const contacts = Object.values(usersData[userKey]?.contacts || {});
     const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
     const task = arrayTasks.find(t => t.firebaseKey === taskKey);
-    (task.assignedTo || []).forEach(name => {
-      const opt = Array.from(select.options).find(o => o.value === name);
-      if (opt) opt.selected = true;
-    });
-    assignedListContainer.appendChild(select);
+    let selectedContacts = [...(task.assignedTo || [])];
+
+    // Initialen-Hilfsfunktion
+    function getInitials(name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
+
+    function toggleContact(name) {
+      if (selectedContacts.includes(name)) {
+        selectedContacts = selectedContacts.filter(n => n !== name);
+      } else {
+        selectedContacts.push(name);
+      }
+      renderAssignedDropdown();
+      // Outside-Click schließt Dropdown
+      function handleDropdownClickOutside(e) {
+        const dropdown = document.getElementById('assigned-dropdown');
+        if (dropdown && !dropdown.contains(e.target)) {
+          list.classList.remove('open');
+        }
+      }
+      document.addEventListener('mousedown', handleDropdownClickOutside);
+
+      // Cleanup-Funktion merken, um Event Listener später zu entfernen
+      if (!window._assignedDropdownCleanup) {
+        window._assignedDropdownCleanup = () => {
+          document.removeEventListener('mousedown', handleDropdownClickOutside);
+        };
+      }
+    }
+
+    function renderAssignedDropdown() {
+      list.innerHTML = '';
+      contacts.forEach(contact => {
+        const initials = getInitials(contact.name);
+        const isChecked = selectedContacts.includes(contact.name);
+
+        const item = document.createElement('div');
+        item.className = 'assigned-item' + (isChecked ? ' selected' : '');
+        item.onclick = () => toggleContact(contact.name);
+
+        const circle = document.createElement('span');
+        circle.className = 'assigned-circle';
+        circle.style.backgroundColor = contact.color || '#ccc';
+        circle.textContent = initials;
+
+        const name = document.createElement('span');
+        name.className = 'assigned-name';
+        name.textContent = contact.name;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'assigned-checkbox';
+        checkbox.checked = isChecked;
+        checkbox.onclick = (e) => {
+          e.stopPropagation();
+          toggleContact(contact.name);
+        };
+
+        item.appendChild(circle);
+        item.appendChild(name);
+        item.appendChild(checkbox);
+
+        list.appendChild(item);
+      });
+      // Placeholder immer gleich lassen
+      placeholder.textContent = 'Select contacts to assign';
+      // Reihenfolge: Erst Dropdown, dann Kreise!
+      // Wichtig: assignedListContainer.appendChild(dropdown) wurde bereits vor dem ersten renderAssignedSelectedCircles aufgerufen.
+      renderAssignedSelectedCircles();
+    }
+
+    // Funktion zum Rendern der ausgewählten Kreise (NEU gemäß Vorgabe)
+    function renderAssignedSelectedCircles() {
+      let wrapper = document.getElementById('assigned-selected-circles');
+      if (!wrapper) {
+        wrapper = document.createElement('div');
+        wrapper.id = 'assigned-selected-circles';
+        wrapper.className = 'selected-initials-wrapper';
+        // WICHTIG: Nicht als Kind von dropdown/list, sondern direkt NACH dropdown!
+        assignedListContainer.appendChild(wrapper);
+      } else {
+        // Falls wrapper aktuell NICHT direkt nach dropdown steht, positioniere es um
+        const dropdown = document.getElementById('assigned-dropdown');
+        if (dropdown && wrapper.previousSibling !== dropdown) {
+          assignedListContainer.insertBefore(wrapper, dropdown.nextSibling);
+        }
+      }
+      // Sichtbarkeit abhängig von ausgewählten Kontakten
+      if (selectedContacts.length === 0) {
+        wrapper.style.display = "none";
+        return;
+      } else {
+        wrapper.style.display = "flex";
+      }
+      wrapper.innerHTML = '';
+      selectedContacts.forEach(name => {
+        const contact = contacts.find(c => c.name === name);
+        const initials = contact ? getInitials(contact.name) : '';
+        const color = contact && contact.color ? contact.color : '#ccc';
+        const div = document.createElement('div');
+        div.className = 'initial-circle';
+        div.style.backgroundColor = color;
+        div.textContent = initials;
+        wrapper.appendChild(div);
+      });
+    }
+
+    // Update Save/Edit Logik (AssignedTo für saveEditTask)
+    assignedListContainer.dataset.selectedContacts = JSON.stringify(selectedContacts);
+    renderAssignedDropdown();
+
+    // Save Selected auf global speichern, damit saveEditTask das findet
+    window.getAssignedOverlaySelection = () => selectedContacts;
   }
 }
 
@@ -524,14 +652,13 @@ async function saveEditTask(taskKey) {
     // Fallback, falls kein Input vorhanden
     const rawDueDate = document.getElementById("due_date").innerHTML;
     const match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
-    newDueDate = match ? match[0] : "";
+    newDueDate = match ? match[0] : ""; xw
   }
 
-  // Assigned To aus Edit-Block holen von <select>
+  // Assigned To aus Custom Dropdown holen
   let newAssignedTo = task.assignedTo;
-  const select = document.getElementById('assigned-select');
-  if (select) {
-    newAssignedTo = Array.from(select.selectedOptions).map(opt => opt.value);
+  if (typeof window.getAssignedOverlaySelection === 'function') {
+    newAssignedTo = window.getAssignedOverlaySelection();
   }
 
   const updatedTask = {
@@ -626,118 +753,6 @@ function openAddTaskOverlay() {
 
   addTaskOverlayRef.innerHTML = getaddTaskOverlay();
   updateHTML();
-}
-
-function getaddTaskOverlay() {
-  return `     
-          <div class="add-task-modal">
-            <h2>Add Task</h2>
-            <form id="task-form" onsubmit="return false;">
-              <div class="form-cols">
-                <!-- linke Spalte -->
-                <div class="col-left">
-                  <label for="title"
-                    >Title <span class="red_star">*</span></label
-                  >
-                  <input id="title" type="text" placeholder="e.g. Build UI" />
-
-                  <label for="description">Description</label>
-                  <textarea
-                    id="description"
-                    placeholder="e.g. Implement form validations"
-                  ></textarea>
-
-                  <label for="dueDate"
-                    >Due Date <span class="red_star">*</span></label
-                  >
-                  <div class="date-wrapper">
-                    <input
-                      id="dueDate"
-                      class="date-input"
-                      type="date"
-                      placeholder="DD/MM/YYYY"
-                      onblur="validateDate(); updateSubmitState();"
-                    />
-                    <img
-                      src="./assets/icons/calendar.svg"
-                      class="calendar-icon"
-                      alt="Kalender"
-                      onclick="openDatepicker()"
-                    />
-                  </div>
-                </div>
-
-                <!-- mittlerer Separator -->
-                <div class="add_task_mid_box"></div>
-
-                <!-- rechte Spalte -->
-                <div class="col-right">
-                  <label>Priority</label>
-                  <div id="buttons-prio" class="priority-buttons">
-                    <button
-                      type="button"
-                      data-prio="urgent"
-                      onclick="selectPriority('urgent')"
-                    >
-                      Urgent <img src="./assets/icons/urgent.svg" alt="" />
-                    </button>
-                    <button
-                      type="button"
-                      data-prio="medium"
-                      class="selected"
-                      onclick="selectPriority('medium')"
-                    >
-                      Medium <img src="./assets/icons/medium.svg" alt="" />
-                    </button>
-                    <button
-                      type="button"
-                      data-prio="low"
-                      onclick="selectPriority('low')"
-                    >
-                      Low <img src="./assets/icons/low.svg" alt="" />
-                    </button>
-                  </div>
-
-                  <label>Assigned to</label>
-                  <div id="dropdown-wrapper">
-                    <div
-                      id="dropdown-toggle"
-                      onclick="toggleAssignDropdown()"
-                    >
-                      <span id="assigned-to-placeholder">Select contacts</span>
-                      <div class="dropdown-arrow"></div>
-                    </div>
-                    <div id="dropdown-content" class="dropdown-content"></div>
-                  </div>
-                  <div id="selected-contacts" class="selected-contacts"></div>
-
-                  <label>Subtasks</label>
-                  <div class="subtask-input">
-                    <input
-                      id="subtask-input"
-                      type="text"
-                      placeholder="Add new subtask"
-                      onkeypress="if(event.key==='Enter'){ addSubtask(); event.preventDefault(); }"
-                    />
-                    <button type="button" onclick="addSubtask()">+</button>
-                  </div>
-                  <ul id="subtask-list"></ul>
-                </div>
-              </div>
-
-              <div class="form-actions">
-                <button type="button" onclick="resetForm()">Cancel</button>
-                <button
-                  id="submit-task-btn"
-                  type="button"
-                  onclick="createTask()"
-                >
-                  Create Task
-                </button>
-              </div>
-            </form>
-          </div>
-        `;
 }
 
 // ==== CREATE TASK ====

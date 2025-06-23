@@ -265,6 +265,10 @@
     display: flex;
     flex-direction: column;
     font-size: 20px;
+    max-height: calc(100vh - 40px);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    overflow-y: auto;
 }
 
 .overlay-card-category {
@@ -469,4 +473,111 @@
 
 .priority-edit-btn[data-priority="low"].selected {
     background-color: #4BB543;
+}
+
+.selected-initials-wrapper {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    min-height: 32px;
+    position: static;
+    z-index: 0;
+}
+
+.initial-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.assigned-dropdown {
+    width: 100%;
+    position: relative;
+}
+
+.assigned-dropdown-toggle {
+    border: 1px solid #5bb6fa;
+    border-radius: 8px;
+    background: #fff;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dropdown-arrow {
+    border: solid #aaa;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    margin-left: 10px;
+}
+
+.assigned-dropdown-list {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.09);
+    max-height: 200px;
+    overflow-y: auto;
+    position: static;  /* NEU: von absolute auf static setzen! */
+    width: 100%;
+    z-index: 20;
+    display: none;
+    margin-top: 4px;
+}
+
+.assigned-dropdown-list.open {
+    display: block;
+}
+
+.assigned-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 8px;
+}
+
+.assigned-item.selected {
+    background: #242424;
+    color: #fff;
+}
+
+.assigned-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    border: 2px solid #fff;
+}
+
+.assigned-name {
+    flex: 1;
+    font-size: 1rem;
+}
+
+.assigned-checkbox {
+    margin-left: auto;
+    accent-color: #5bb6fa;
+    width: 18px;
+    height: 18px;
 }
