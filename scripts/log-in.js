@@ -18,7 +18,6 @@ function handleLoginPageLoad() {
     initLoaderAnimation();
   }
 
-  initLivePasswordIconChange();
 }
 
 /**
