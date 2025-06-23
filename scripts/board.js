@@ -143,12 +143,29 @@ function generateTodoHTML(element) {
     assignedList = assignedList.split(",").map(name => name.trim());
   }
 
+  // ==== Subtasks tracking ====
+  let totalSubtasks = 0;
+  let completedSubtasks = 0;
+  if (Array.isArray(element.subtask)) {
+    totalSubtasks = element.subtask.length;
+    completedSubtasks = element.subtask.filter(
+      sub => typeof sub === "object" ? sub.completed : false
+    ).length;
+  }
+  let progressPercent = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
+
   return `
     <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
             <span class="card-category ${categoryClass}"  ${element.subject}">${element.subject}</span>
             <span class="card-title">${element.title}</span>
             <span class="card-description">${element.description}</span>
+            <div class="card-subtask-progress">
+              <div class="subtask-progress-bar-bg">
+                <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
+              </div>
+              <span class="subtask-progress-text">${completedSubtasks}/${totalSubtasks} Subtasks</span>
+            </div>
                 <div class="card-footer">
                   <div class="assigned-container">
                     ${Array.isArray(assignedList)
