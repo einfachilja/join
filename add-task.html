@@ -119,8 +119,8 @@
                     <input
                       id="dueDate"
                       class="date-input"
-                      type="date"
-                      placeholder="DD/MM/YYYY"
+                      type="text"
+                      placeholder="dd/mm/yyyy"
                       onblur="validateDate(); updateSubmitState();"
                     />
                     <img
@@ -129,9 +129,9 @@
                       alt="Kalender"
                       onclick="openDatepicker()"
                     />
-                    <div class="error-message" id="error-dueDate">
-                      This field is required
-                    </div>
+                  </div>
+                  <div class="error-message" id="error-dueDate">
+                    This field is required
                   </div>
                 </div>
 
@@ -165,6 +165,9 @@
                       Low <img src="./assets/icons/low.svg" alt="" />
                     </button>
                   </div>
+                  <div class="error-message" id="error-priority">
+                    This field is required
+                  </div>
 
                   <label>Assigned to</label>
                   <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
@@ -175,6 +178,9 @@
                     <div id="dropdown-content" class="dropdown-content"></div>
                   </div>
                   <div id="selected-contacts" class="selected-contacts"></div>
+                  <div class="error-message" id="error-assignedTo">
+                    This field is required
+                  </div>
 
                   <label>Category <span class="red_star">*</span></label>
                   <div class="custom-dropdown-wrapper" id="category-wrapper">
@@ -239,7 +245,6 @@
                 <button
                   id="submit-task-btn"
                   type="button"
-                  disabled
                   onclick="createTask()"
                 >
                   Create Task

@@ -12,15 +12,15 @@ a {
 
 /* Logo Section */
 .logo-section {
-  position: absolute;
-  top: 80px;
-  left: 77px;
-  z-index: 999;
+  position: absolute !important;
+  top: 80px !important;
+  left: 77px !important;
+  z-index: 999 !important;
 }
 
 .logo-image {
-  width: 98px;
-  height: 118px;
+  width: 100px !important;
+  height: 122px !important;
 }
 
 /* Main Page Layout */
