@@ -149,6 +149,20 @@
     color: #a8a8a8;
 }
 
+/* Zweizeiliges Limit mit Ellipsis für Titel und Beschreibung */
+.card-title,
+.card-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 2.8em;
+    /* Passt die max-height ggf. je nach line-height an */
+    line-height: 1.4em;
+    word-break: break-word;
+}
+
 .card-footer {
     width: 100%;
     display: flex;
@@ -268,7 +282,6 @@
     overflow-y: auto;
     margin-left: 12px;
     margin-right: 12px;
-
 }
 
 .overlay-card-category {
@@ -463,7 +476,7 @@
 }
 
 /* Spezifische Hintergrundfarben je nach Priority */
-.priority-edit-btn[data-priority="high"].selected {
+.priority-edit-btn[data-priority="urgent"].selected {
     background-color: #FF4D4D;
 }
 

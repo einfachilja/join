@@ -11,15 +11,40 @@
 
     .body-right {
         padding: 0;
-
     }
 
     .board-header {
         display: block;
     }
 
+    .board-header-mobile {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 24px;
+
+    }
+
+    .board-main-box {
+        width: auto;
+        padding: 0;
+        margin-top: 24px;
+    }
+
+    .board-header-add-task {
+        display: block;
+        cursor: pointer;
+    }
+
+    .board-add-task-btn {
+        display: none;
+
+    }
+
     .drag-area {
         flex-direction: row;
+        overflow: auto;
+        max-height: 250px;
+
     }
 
     .board-container {

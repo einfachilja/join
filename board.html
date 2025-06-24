@@ -92,7 +92,10 @@
 
         <div class="board-container">
           <div class="board-header">
-            <h1>Board</h1>
+            <div class="board-header-mobile">
+              <h1>Board</h1>
+              <img class="board-header-add-task d-none" src="assets/icons/board-header-add-task.svg" alt="">
+            </div>
             <div class="board-header-right">
               <div class="search-box">
                 <input id="input_find_task" class="input-search" type="text" placeholder="Find Task"
@@ -102,8 +105,8 @@
                   <img class="search-icon" src="./assets/icons/search.png" alt="">
                 </div>
               </div>
-              <button onclick="openAddTaskOverlay()" class="board-add-task-btn">Add task <img src="./assets/icons/add.png"
-                  alt=""></button>
+              <button onclick="openAddTaskOverlay()" class="board-add-task-btn">Add task <img
+                  src="./assets/icons/add.png" alt=""></button>
             </div>
           </div>
 
