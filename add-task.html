@@ -172,7 +172,13 @@
                   <label>Assigned to</label>
                   <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
                     <div id="dropdown-toggle">
-                      <span id="assigned-to-placeholder">Select contacts</span>
+                      <input
+                        id="assigned-to-input"
+                        type="text"
+                        placeholder="Select contacts"
+                        oninput="handleAssignedToInput(event)"
+                        onclick="handleAssignedToClick(event)"
+                      />
                       <div class="dropdown-arrow"></div>
                     </div>
                     <div id="dropdown-content" class="dropdown-content"></div>

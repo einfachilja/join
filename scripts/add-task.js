@@ -48,6 +48,17 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// ==== ADDITIONAL HANDLERS (moved up) ====
+function handleAssignedToClick(e) {
+  e.stopPropagation();
+  toggleAssignDropdown(e);
+}
+
+function handleAssignedToInput(e) {
+  const value = e.target.value.trim().toLowerCase();
+  renderAssignOptions(value);
+}
+
 // ==== INIT ====
 document.addEventListener("DOMContentLoaded", () => {
   document
@@ -136,18 +147,6 @@ function toggleAssignDropdown(event) {
   tog.classList.toggle("open");
   dd.classList.toggle("visible");
   if (dd.innerHTML === "") {
-    const searchInput = document.createElement("input");
-    searchInput.type = "text";
-    searchInput.placeholder = "Search contacts...";
-    searchInput.className = "contact-search";
-    searchInput.style.cssText =
-      "width: 90%; margin: 10px; padding: 8px; border-radius: 6px; border: 1px solid #ccc;";
-    dd.appendChild(searchInput);
-
-    searchInput.addEventListener("input", () => {
-      renderAssignOptions(searchInput.value.toLowerCase());
-    });
-
     renderAssignOptions();
   }
 }
