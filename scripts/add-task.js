@@ -1,3 +1,11 @@
+// Helper to format date to DD/MM/YYYY
+function formatDateToDDMMYYYY(dateString) {
+  if (!dateString) return '';
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString; // already formatted
+  const [year, month, day] = dateString.split('-');
+  if (year && month && day) return `${day}/${month}/${year}`;
+  return dateString;
+}
 let firebaseKey = localStorage.getItem("firebaseKey");
 
 // ==== STATE ====
@@ -75,10 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const dueDateInput = document.getElementById("dueDate");
   if (dueDateInput) {
     dueDateInput.placeholder = "dd/mm/yyyy";
-    dueDateInput.addEventListener("blur", () => {
-      const value = dueDateInput.value.trim();
-      const isValid = /^\d{2}\/\d{2}\/\d{4}$/.test(value);
-      dueDateInput.classList.toggle("error-border", !isValid);
+    // Listen to "change" instead of "blur" to catch native date picker selection
+    dueDateInput.addEventListener("change", () => {
+      dueDateInput.value = formatDateToDDMMYYYY(dueDateInput.value.trim());
+      // After formatting, run validation
+      validateDate();
+      updateSubmitState();
     });
   }
 });
@@ -106,9 +116,7 @@ function setupEventListeners() {
   document
     .getElementById("dropdown-toggle")
     .addEventListener("click", toggleAssignDropdown);
-  document
-    .getElementById("dueDate")
-    .addEventListener("blur", () => validateDate() && updateSubmitState());
+  // Remove "blur" listener for dueDate, as we now handle formatting/validation on "change"
   document
     .getElementById("category-toggle")
     .addEventListener("click", toggleCategoryDropdown);
@@ -405,11 +413,8 @@ function resetForm() {
 async function createTask() {
   if (!validateForm()) return;
   const dueDateValue = document.getElementById("dueDate").value;
-  let formattedDate = dueDateValue;
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dueDateValue)) {
-    const [day, month, year] = dueDateValue.split("/");
-    formattedDate = `${year}-${month}-${day}`; // yyyy-mm-dd
-  }
+  // Always store dueDate as DD/MM/YYYY (formatted)
+  const formattedDate = formatDateToDDMMYYYY(dueDateValue);
   const task = {
     title: document.getElementById("title").value.trim(),
     description: document.getElementById("description").value.trim(),
