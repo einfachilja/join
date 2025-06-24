@@ -117,6 +117,7 @@ function getContactByName(name) {
 }
 
 function getInitials(name) {
+  if (!name || typeof name !== 'string') return '';
   return name.split(" ").map(n => n[0]).join("").toUpperCase();
 }
 
@@ -142,6 +143,7 @@ function generateTodoHTML(element) {
   if (typeof assignedList === "string") {
     assignedList = assignedList.split(",").map(name => name.trim());
   }
+  assignedList = assignedList.filter(name => !!name && typeof name === 'string');
 
   // ==== Subtasks tracking ====
   let totalSubtasks = 0;
