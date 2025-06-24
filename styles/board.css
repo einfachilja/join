@@ -249,7 +249,6 @@
     justify-content: center;
     align-items: center;
     border: dashed 1px rgba(168, 168, 168, 1.0);
-    padding: 16px 24px;
     text-align: center;
 }
 
@@ -755,7 +754,8 @@
     border-radius: 10px;
     height: 8px;
     overflow: hidden;
-    flex: 1; /* Nimmt die komplette verfügbare Breite */
+    flex: 1;
+    /* Nimmt die komplette verfügbare Breite */
     min-width: 45px;
     max-width: 100%;
     margin-right: 8px;

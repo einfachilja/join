@@ -222,7 +222,7 @@ function updateHTML() {
   }
 
   if (progress.length === 0) {
-    document.getElementById("progress").innerHTML = `<span class="empty-message">No Tasks in <br> In progress</span>`;
+    document.getElementById("progress").innerHTML = `<span class="empty-message">No Tasks In progress</span>`;
   } else {
     for (let element of progress) {
       document.getElementById("progress").innerHTML += generateTodoHTML(element);
@@ -230,7 +230,7 @@ function updateHTML() {
   }
 
   if (feedback.length === 0) {
-    document.getElementById("feedback").innerHTML = `<span class="empty-message">No Tasks in <br> Await feedback</span>`;
+    document.getElementById("feedback").innerHTML = `<span class="empty-message">No Tasks in Await feedback</span>`;
   } else {
     for (let element of feedback) {
       document.getElementById("feedback").innerHTML += generateTodoHTML(element);
