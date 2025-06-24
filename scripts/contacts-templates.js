@@ -35,7 +35,7 @@ function overlayTemplate() {
                   <div class="add-new-contact-text">
                     <form class="add-contact-form" onsubmit="addNewContact(event)">
                       <div class="input-group">
-                        <input id="new_contact_name" type="text" placeholder="Name" required />
+                        <input id="new_contact_name" type="text" placeholder="Name" maxlength="26" required />
                         <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
                       </div>
                       <div class="input-group">
@@ -112,7 +112,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
             <div class="add-new-contact-text">
               <form class="add-contact-form" onsubmit="saveEditContact(event, '${firebaseKey}')">
                 <div class="input-group">
-                  <input id="edit_contact_name" type="text" placeholder="Name" value="${name}" required />
+                  <input id="edit_contact_name" type="text" placeholder="Name" value="${name}" maxlength="26" required />
                   <img src="./assets/img/contacts-icons/person.svg" alt="Name Icon" />
                 </div>
                 <div class="input-group">
