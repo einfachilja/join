@@ -1,8 +1,8 @@
 // Helper to format date to DD/MM/YYYY
 function formatDateToDDMMYYYY(dateString) {
-  if (!dateString) return '';
+  if (!dateString) return "";
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString; // already formatted
-  const [year, month, day] = dateString.split('-');
+  const [year, month, day] = dateString.split("-");
   if (year && month && day) return `${day}/${month}/${year}`;
   return dateString;
 }
@@ -67,6 +67,27 @@ function handleAssignedToInput(e) {
   renderAssignOptions(value);
 }
 
+function setupDateValidation() {
+  setTimeout(() => {
+    const dateInput = document.getElementById("dueDate");
+    const errorText = document.getElementById("error-dueDate");
+    if (!dateInput || !errorText) return;
+
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+
+    // Only remove error styling on input, do not add error-border preemptively
+    dateInput.addEventListener("input", () => {
+      dateInput.classList.remove("error-border");
+      errorText.classList.remove("visible");
+    });
+  }, 100);
+}
+
+function hideDateError(input, error) {
+  input.style.border = "";
+  error.classList.remove("visible");
+}
 // ==== INIT ====
 document.addEventListener("DOMContentLoaded", () => {
   document
@@ -82,15 +103,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Custom date input formatting and validation
   const dueDateInput = document.getElementById("dueDate");
   if (dueDateInput) {
-    dueDateInput.placeholder = "dd/mm/yyyy";
-    // Listen to "change" instead of "blur" to catch native date picker selection
-    dueDateInput.addEventListener("change", () => {
-      dueDateInput.value = formatDateToDDMMYYYY(dueDateInput.value.trim());
-      // After formatting, run validation
-      validateDate();
-      updateSubmitState();
-    });
+    // Nur Platzhalter für Browser, der ihn unterstützt
+    dueDateInput.placeholder = "yyyy-mm-dd";
   }
+  setupDateValidation();
 });
 
 // ==== FETCH CONTACTS ====
@@ -150,10 +166,22 @@ function setupEventListeners() {
 // ==== ASSIGN-DROPDOWN ====
 function toggleAssignDropdown(event) {
   event.stopPropagation();
+  console.log("toggleAssignDropdown ausgelöst");
+
   const tog = document.getElementById("dropdown-toggle");
   const dd = document.getElementById("dropdown-content");
+
+  if (!tog || !dd) {
+    console.error("Dropdown-Elemente fehlen!");
+    return;
+  }
+
   tog.classList.toggle("open");
   dd.classList.toggle("visible");
+
+  console.log("Dropdown sichtbar?", dd.classList.contains("visible"));
+  console.log("Kontakte geladen?", contacts.length);
+
   if (dd.innerHTML === "") {
     renderAssignOptions();
   }
@@ -354,15 +382,7 @@ function validateTitle() {
 }
 
 // ==== DATE VALIDATION ====
-function validateDate() {
-  const el = document.getElementById("dueDate");
-  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(el.value)) {
-    el.classList.add("error-border");
-    return false;
-  }
-  el.classList.remove("error-border");
-  return true;
-}
+// validateDate is not used anywhere except inside validateForm
 
 // ==== SUBMIT-STATE ====
 function updateSubmitState() {
@@ -406,15 +426,38 @@ function validateForm() {
 
 // ==== RESET ====
 function resetForm() {
-  location.reload();
+  document.getElementById("title").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("dueDate").value = "";
+  selectedPriority = "medium";
+  selectPriority("medium");
+
+  selectedContacts = [];
+  updateSelectedContactsUI();
+
+  selectedCategory = "";
+  const categoryPlaceholder = document.querySelector("#category-toggle span");
+  if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
+
+  subtasks.length = 0;
+  const subtaskList = document.getElementById("subtask-list");
+  if (subtaskList) subtaskList.innerHTML = "";
+
+  const subtaskInput = document.getElementById("subtask-input");
+  if (subtaskInput) subtaskInput.value = "";
+
+  const subtaskIcons = document.getElementById("subtask-icons");
+  if (subtaskIcons) subtaskIcons.classList.add("hidden");
+
+  const subtaskPlus = document.getElementById("subtask-plus");
+  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
 // ==== CREATE TASK ====
 async function createTask() {
   if (!validateForm()) return;
   const dueDateValue = document.getElementById("dueDate").value;
-  // Always store dueDate as DD/MM/YYYY (formatted)
-  const formattedDate = formatDateToDDMMYYYY(dueDateValue);
+  const formattedDate = dueDateValue;
   const task = {
     title: document.getElementById("title").value.trim(),
     description: document.getElementById("description").value.trim(),

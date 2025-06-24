@@ -121,13 +121,12 @@
                       class="date-input"
                       type="date"
                       placeholder="dd/mm/yyyy"
-                      onblur="validateDate(); updateSubmitState();"
                     />
                     <img
                       src="./assets/icons/calendar.svg"
                       class="calendar-icon"
                       alt="Kalender"
-                      onclick="openDatepicker()"
+                      onclick="document.getElementById('dueDate').showPicker()"
                     />
                   </div>
                   <div class="error-message" id="error-dueDate">
@@ -171,7 +170,7 @@
 
                   <label>Assigned to</label>
                   <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
-                    <div id="dropdown-toggle">
+                    <div id="dropdown-toggle" tabindex="0" role="button">
                       <input
                         id="assigned-to-input"
                         type="text"
