@@ -122,9 +122,9 @@ function getInitials(name) {
 
 function generateTodoHTML(element) {
   let categoryClass = "";
-  if (element.subject === "User Story") {
+  if (element.category === "User Story") {
     categoryClass = "category-user";
-  } else if (element.subject === "Technical Task") {
+  } else if (element.category === "Technical Task") {
     categoryClass = "category-technical";
   }
 
@@ -157,7 +157,7 @@ function generateTodoHTML(element) {
   return `
     <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
-            <span class="card-category ${categoryClass}"  ${element.subject}">${element.subject}</span>
+            <span class="card-category ${categoryClass}"  ${element.category}">${element.category}</span>
             <span class="card-title">${element.title}</span>
             <span class="card-description">${element.description}</span>
             <div class="card-subtask-progress">
@@ -252,9 +252,9 @@ function openBoardCard(firebaseKey) {
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
 
   let categoryClass = "";
-  if (task.subject === "User Story") {
+  if (task.category === "User Story") {
     categoryClass = "category-user";
-  } else if (task.subject === "Technical Task") {
+  } else if (task.category === "Technical Task") {
     categoryClass = "category-technical";
   }
 
@@ -277,7 +277,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
   }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
-      <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.subject}</span>
+      <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date">Due date: <span>${task.dueDate}</span></span>
@@ -325,7 +325,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
 // Generate HTML for priority buttons in edit mode
 function getPriorityButtonsHTML(currentPriority) {
   const priorities = [
-    { value: 'high', label: 'Urgent', icon: './assets/icons/urgent.svg' },
+    { value: 'urgent', label: 'Urgent', icon: './assets/icons/urgent.svg' },
     { value: 'medium', label: 'Medium', icon: './assets/icons/medium.svg' },
     { value: 'low', label: 'Low', icon: './assets/icons/low.svg' }
   ];
@@ -885,7 +885,7 @@ async function createTask() {
       "description": "New test description",
       "priority": "low",
       "status": "todo",
-      "subject": "User Story",
+      "category": "User Story",
       "subtask": ["Subtask1", "Subtask 2", "Subtask 3"],
       "assignedTo": ["User 1", "User 2", "User 3"],
       "dueDate": "31/12/2025"
@@ -911,7 +911,7 @@ async function createTask() {
     method: "POST",
     body: JSON.stringify({
       status: "todo",
-      subject: "User Story"
+      category: "User Story"
     })
   })
 }
