@@ -312,6 +312,7 @@ select:focus {
   border-radius: 8px;
   background: #f6f7f8;
 }
+
 #dueDate.error-border,
 #title.error {
   border-color: #e74c3c !important;
@@ -583,7 +584,8 @@ select::placeholder {
   font-size: 16px;
   width: 100%;
   padding: 0 16px;
-  padding-right: 96px; /* Platz für zwei Icons rechts */
+  padding-right: 96px;
+  /* Platz für zwei Icons rechts */
   box-sizing: border-box;
 }
 
@@ -775,4 +777,10 @@ select::placeholder {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.h1-add-task {
+  margin-top: 0px;
+  padding-top: 24px;
+  padding-left: 24px;
 }
