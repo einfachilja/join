@@ -2,6 +2,7 @@ const BASE_URL =
   "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
 
 let contacts = [];
+let recentlyAddedContact = null;
 
 function getRandomColor() {
   const colors = [
@@ -29,6 +30,7 @@ function addNewContact(event) {
   if (!isValidContactInput(name, email, phone)) return;
 
   const contact = { name, email, phone, color: getRandomColor() };
+  recentlyAddedContact = contact;
 
   fetch(
     `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`,
@@ -39,6 +41,34 @@ function addNewContact(event) {
   ).then(loadContacts);
 
   toggleOff();
+
+  setTimeout(() => {
+    toggleContactInfoOverlay(contact);
+
+    setTimeout(() => {
+      showAddedContactMessage();
+    }, 150);
+  }, 300);
+}
+
+
+function showAddedContactMessage() {
+  let showAddedContactMessageRef = document.getElementById(
+    "user_contact_information_section_mobile"
+  );
+
+  showAddedContactMessageRef.innerHTML +=
+    getCreatedContactSuccessfullyMessage();
+
+  let message = document.getElementById("created_contact_message");
+
+  setTimeout(() => {
+    message.remove("d_none");
+  }, 2500);
+
+  setTimeout(() => {
+    message.add("d_none");
+  }, 1000);
 }
 
 /* ============== SAVE EDIT CONTACT HELPER FUNCTIONS ============== */
@@ -151,14 +181,12 @@ function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
   contactListRef.innerHTML = "";
 
-  // Step 1: Sort contacts alphabetically by first name
   contacts.sort((a, b) => {
     let aName = a.name.trim().toUpperCase();
     let bName = b.name.trim().toUpperCase();
     return aName.localeCompare(bName);
   });
 
-  // Step 2: Group by first letter of first name
   let currentInitial = null;
 
   contacts.forEach((contact) => {
@@ -168,11 +196,11 @@ function renderContacts() {
     if (firstNameInitial !== currentInitial) {
       currentInitial = firstNameInitial;
       contactListRef.innerHTML += `
-                <div class="alphabet">
-                    <span class="alphabet-span">${currentInitial}</span>
-                    <div class="alphabet-devider"></div>
-                </div>
-            `;
+        <div class="alphabet">
+          <span class="alphabet-span">${currentInitial}</span>
+          <div class="alphabet-devider"></div>
+        </div>
+      `;
     }
 
     let initials = nameParts[0][0].toUpperCase();
@@ -180,17 +208,37 @@ function renderContacts() {
       initials += nameParts[1][0].toUpperCase();
     }
 
+    // Check if this is the last added contact
+    let highlight = "";
+    if (
+      recentlyAddedContact &&
+      contact.name === recentlyAddedContact.name &&
+      contact.email === recentlyAddedContact.email &&
+      contact.phone === recentlyAddedContact.phone
+    ) {
+      highlight = "highlight";
+    }
+
     contactListRef.innerHTML += `
-    <div onclick="styleContactOnclick(this)"  class="contact">
+      <div onclick="styleContactOnclick(this)" class="contact ${highlight}">
         <div class="profile-icon" style="background-color: ${contact.color};">${initials}</div>
         <div class="name-and-email">
-            <div class="contact-name">${contact.name}</div>
-            <a>${contact.email}</a>
+          <div class="contact-name">${contact.name}</div>
+          <a>${contact.email}</a>
         </div>
-    </div>
-`;
+      </div>
+    `;
   });
+
+  // Remove highlight after 3 seconds
+  setTimeout(() => {
+    const highlighted = document.querySelector(".contact.highlight");
+    if (highlighted) {
+      highlighted.classList.remove("highlight");
+    }
+  }, 3000);
 }
+
 
 /* ========== STYLE CONTACT BUTTON ONCLICK ========== */
 function styleContactOnclick(element) {

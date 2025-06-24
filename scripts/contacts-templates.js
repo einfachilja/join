@@ -211,7 +211,7 @@ function getOpenContactMobileTemplate(contact) {
     .join("")
     .slice(0, 2);
   return /*html*/ `
-    <div class="my-contact-information-section-mobile" onclick="dialogPrevention(event)">
+    <div class="my-contact-information-section-mobile" id="user_contact_information_section_mobile" onclick="dialogPrevention(event)">
 
       
       <div class="my-contact-information-section-mobile-content">
@@ -284,5 +284,13 @@ function getEditDeleteMenuTemplate(contact) {
               <span>Delete</span>
             </button>
           </div>
+  `
+}
+
+function getCreatedContactSuccessfullyMessage(){
+  return /*html*/ `
+  <div id="created_contact_message" class="created-contact-message-div d_none">
+    <span class="created-contact-message">Contact successfully created</span>
+  </div>
   `
 }

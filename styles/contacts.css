@@ -701,7 +701,6 @@
     justify-content: space-between;
     width: 100%;
     gap: 100px;
-
 }
 
 .header-div-mobile {
@@ -803,4 +802,33 @@
 
 input.invalid {
     border-color: red;
+}
+
+
+
+/* created contact */
+.created-contact-message-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 150px;
+    width: 100%;
+}
+
+.created-contact-message {
+    background-color: hsl(216, 25%, 22%);
+    padding: 20px 20px;
+    color: white;
+    border-radius: 15px;
+}
+
+
+.highlight {
+  background-color: hsl(216, 25%, 22%);
+  transition: background-color 0.1s;
+}
+
+.highlight .contact-name {
+  color: white;
 }
