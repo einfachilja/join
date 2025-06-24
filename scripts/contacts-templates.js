@@ -224,7 +224,7 @@ function getOpenContactMobileTemplate(contact) {
             </div>
 
             <div class="arrow-left-mobile">
-              <a href="#" onclick="return returnToPrevPage();">
+              <a href="contacts.html">
                 <img class="arrow-mobile" src="./assets/img/arrow-left-line.svg" alt="Go Back" />
               </a>
             </div>

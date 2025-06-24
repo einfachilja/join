@@ -197,7 +197,6 @@ select:focus {
 }
 
 #dropdown-toggle {
-  padding: 0 16px;
   border: 2px solid #ccc;
   border-radius: 12px;
   background: #fff;
@@ -782,5 +781,4 @@ select::placeholder {
 .h1-add-task {
   margin-top: 0px;
   padding-top: 24px;
-  padding-left: 24px;
 }

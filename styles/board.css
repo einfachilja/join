@@ -93,7 +93,7 @@
     gap: 24px;
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    padding: 16px 16px 16px 0;
     width: 350px;
 }
 
@@ -227,7 +227,6 @@
     flex-direction: column;
     gap: 16px;
     min-height: 350px;
-    border-radius: 24px;
 }
 
 /* .drag-area-highlight {
@@ -250,6 +249,7 @@
     align-items: center;
     border: dashed 1px rgba(168, 168, 168, 1.0);
     text-align: center;
+    padding: 4px;
 }
 
 .board-overlay {
