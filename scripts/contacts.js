@@ -43,11 +43,10 @@ function addNewContact(event) {
   toggleOff();
 
   setTimeout(() => {
-    toggleContactInfoOverlay(contact);
-
     setTimeout(() => {
+      toggleContactInfoOverlay(contact);
       showAddedContactMessage();
-    }, 150);
+    }, 0);
   }, 300);
 }
 
