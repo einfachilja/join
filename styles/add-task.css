@@ -4,13 +4,19 @@
   left: 0;
   width: 232px;
   height: 100vh;
+  min-width: 200px;
 }
 
 /* === Add-Task Modal & Layout === */
 .add-task-modal {
   max-width: 1040px;
   margin-left: 275px;
+  margin-right: 48px;
   margin-top: 160px;
+}
+
+.main {
+  padding-right: 8px;
 }
 
 .form-cols {
@@ -45,10 +51,14 @@
 /* === Priority-Buttons: Default === */
 .priority-buttons {
   display: flex;
+  justify-content: space-between;
   gap: 16px;
+  width: 100%;
 }
 
 .priority-buttons button {
+  flex: 1;
+  min-width: 0;
   padding: 10px 18px;
   height: 42px;
   font-weight: 500;
@@ -60,11 +70,11 @@
   box-shadow: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
   outline: none;
-  border: none;
 }
 
 .priority-buttons button:focus {
@@ -199,6 +209,7 @@ select:focus {
 #dropdown-toggle {
   border: 2px solid #ccc;
   border-radius: 12px;
+  padding-right: 16px;
   background: #fff;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -685,6 +696,25 @@ select::placeholder {
 
   .add-task-modal {
     padding: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .priority-buttons {
+    gap: 8px;
+  }
+
+  .priority-buttons button {
+    padding: 8px 12px;
+    height: 40px;
+    font-size: 14px;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .priority-buttons button img {
+    width: 16px;
+    height: 16px;
   }
 }
 
