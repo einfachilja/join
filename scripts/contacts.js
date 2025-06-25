@@ -229,12 +229,12 @@ function renderContacts() {
     `;
   });
 
-  // Remove highlight after 3 seconds
   setTimeout(() => {
     const highlighted = document.querySelector(".contact.highlight");
     if (highlighted) {
       highlighted.classList.remove("highlight");
     }
+    recentlyAddedContact = null;
   }, 3000);
 }
 
