@@ -27,14 +27,13 @@ function initLoaderAnimation() {
   const loader = document.getElementById("loader");
   const logo = document.getElementById("animated-logo");
 
-  // Show white logo for small screens
   if (window.innerWidth <= 800) {
     document.getElementById("animated-logo").src =
       "./assets/img/1. join-frontpage/join-logo-white.svg";
   }
 
   setTimeout(() => {
-    // Start animation: shrink and move logo
+
     if (window.innerWidth <= 800) {
       logo.src = "./assets/img/1. join-frontpage/join-logo.svg";
     }
