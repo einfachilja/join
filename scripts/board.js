@@ -907,45 +907,207 @@ function searchTask() {
   }
 }
 
-/* ========== ADD NEW TASK TO BOARD ========== */
-async function createTask() {
-  let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      "title": "New test title",
-      "description": "New test description",
-      "priority": "low",
-      "status": "todo",
-      "category": "User Story",
-      "subtask": ["Subtask1", "Subtask 2", "Subtask 3"],
-      "assignedTo": ["User 1", "User 2", "User 3"],
-      "dueDate": "31/12/2025"
-    })
-  });
-  let responseJson = await response.json();
-  await loadTasks();
-  return responseJson;
-}
-
 function openAddTaskOverlay() {
   let addTaskOverlayRef = document.getElementById("add_task_overlay");
   document.getElementById("add_task_overlay").classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
 
-  addTaskOverlayRef.innerHTML = getaddTaskOverlay();
+  addTaskOverlayRef.innerHTML = getAddTaskOverlay();
   updateHTML();
+
+  // Add click outside listener after overlay is open
+  setTimeout(() => {
+    document.addEventListener('mousedown', handleAddTaskOverlayClickOutside);
+  }, 0);
 }
 
-// ==== CREATE TASK ====
-async function createTask() {
-  fetch(`https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`, {
-    method: "POST",
-    body: JSON.stringify({
-      status: "todo",
-      category: "User Story"
-    })
-  })
+function closeAddTaskOverlay() {
+  let overlay = document.getElementById("add_task_overlay");
+  if (overlay) {
+    overlay.classList.add("d-none");
+    document.getElementById("html").style.overflow = "";
+    overlay.innerHTML = "";
+  }
+  document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);
+}
+
+function handleAddTaskOverlayClickOutside(event) {
+  const modal = document.querySelector('.board-add-task-modal');
+  if (!modal) return;
+  if (!modal.contains(event.target)) {
+    closeAddTaskOverlay();
+  }
+}
+
+function getAddTaskOverlay () {
+  return `          <div class="board-add-task-modal">
+            <h1 class="h1-add-task">Add Task</h1>
+            <form id="task-form" onsubmit="return false;">
+              <div class="form-cols">
+                <!-- linke Spalte -->
+                <div class="col-left">
+                  <label for="title"
+                    >Title <span class="red_star">*</span></label
+                  >
+                  <input
+                    id="title"
+                    type="text"
+                    placeholder="Enter a title"
+                    onkeyup="updateSubmitState()"
+                  />
+                  <div class="error-message" id="error-title">
+                    This field is required
+                  </div>
+
+                  <label for="description">Description</label>
+                  <textarea
+                    id="description"
+                    placeholder="Enter a description"
+                  ></textarea>
+
+                  <label for="dueDate"
+                    >Due Date <span class="red_star">*</span></label
+                  >
+                  <div class="date-wrapper">
+                    <input
+                      id="dueDate"
+                      class="date-input"
+                      type="date"
+                      placeholder="dd/mm/yyyy"
+                    />
+                    <img
+                      src="./assets/icons/calendar.svg"
+                      class="calendar-icon"
+                      alt="Kalender"
+                      onclick="document.getElementById('dueDate').showPicker()"
+                    />
+                  </div>
+                  <div class="error-message" id="error-dueDate">
+                    This field is required
+                  </div>
+                </div>
+
+                <!-- mittlerer Separator -->
+                <div class="add_task_mid_box"></div>
+
+                <!-- rechte Spalte -->
+                <div class="col-right">
+                  <label>Priority</label>
+                  <div id="buttons-prio" class="priority-buttons">
+                    <button
+                      type="button"
+                      data-prio="urgent"
+                      onclick="selectPriority('urgent')"
+                    >
+                      Urgent <img src="./assets/icons/urgent.svg" alt="" />
+                    </button>
+                    <button
+                      type="button"
+                      data-prio="medium"
+                      class="selected"
+                      onclick="selectPriority('medium')"
+                    >
+                      Medium <img src="./assets/icons/medium.svg" alt="" />
+                    </button>
+                    <button
+                      type="button"
+                      data-prio="low"
+                      onclick="selectPriority('low')"
+                    >
+                      Low <img src="./assets/icons/low.svg" alt="" />
+                    </button>
+                  </div>
+                  <div class="error-message" id="error-priority">
+                    This field is required
+                  </div>
+
+                  <label>Assigned to</label>
+                  <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
+                    <div id="dropdown-toggle" tabindex="0" role="button">
+                      <input
+                        id="assigned-to-input"
+                        type="text"
+                        placeholder="Select contacts"
+                        oninput="handleAssignedToInput(event)"
+                        onclick="handleAssignedToClick(event)"
+                      />
+                      <div class="dropdown-arrow"></div>
+                    </div>
+                    <div id="dropdown-content" class="dropdown-content"></div>
+                  </div>
+                  <div id="selected-contacts" class="selected-contacts"></div>
+                  <div class="error-message" id="error-assignedTo">
+                    This field is required
+                  </div>
+
+                  <label>Category <span class="red_star">*</span></label>
+                  <div class="custom-dropdown-wrapper" id="category-wrapper">
+                    <div id="category-toggle">
+                      <span id="selected-category-placeholder"
+                        >Select category</span
+                      >
+                      <div id="category-arrow" class="dropdown-arrow"></div>
+                    </div>
+                    <div id="category-content"></div>
+                  </div>
+                  <input type="hidden" id="category" value="" />
+                  <div class="error-message" id="error-category">
+                    This field is required
+                  </div>
+
+                  <label>Subtasks</label>
+                  <div class="subtask-input-container">
+                    <div class="subtasks-container">
+                      <div class="subtask-input-wrapper">
+                        <div class="subtask-input-field">
+                          <input
+                            id="subtask-input"
+                            type="text"
+                            placeholder="Add new subtask"
+                            onfocus="toggleSubtaskIcons()"
+                            oninput="toggleSubtaskIcons()"
+                            onkeydown="handleSubtaskEnter(event)"
+                          />
+                          <div id="subtask-icons" class="subtask-icons hidden">
+                            <img
+                              id="subtask-cancel"
+                              src="./assets/icons/closeXSymbol.svg"
+                              alt="Cancel"
+                              onclick="clearSubtaskInput()"
+                            />
+                            <div class="divider"></div>
+                            <img
+                              id="subtask-confirm"
+                              src="./assets/icons/checked.svg"
+                              alt="Confirm"
+                              onclick="addSubtask()"
+                            />
+                          </div>
+                          <img
+                            id="subtask-plus"
+                            class="subtask-plus"
+                            src="./assets/icons/add+symbol.svg"
+                            alt="Add"
+                            onclick="toggleSubtaskIcons()"
+                          />
+                        </div>
+                      </div>
+
+                      <ul id="subtask-list" class="subtask-list"></ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="button" onclick="closeAddTaskOverlay()">Cancel</button>
+                <button
+                  id="submit-task-btn"
+                  type="button"
+                  onclick="createTask()"
+                >
+                  Create Task
+                </button>
+              </div>
+            </form>
+          </div>`;
 }

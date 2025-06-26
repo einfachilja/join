@@ -35,17 +35,20 @@
     justify-content: space-between;
 }
 
-.input-search {
+.board-input-search {
     border: none;
     font-family: inherit;
     width: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
 }
 
-.input-search:focus {
+.board-input-search:focus {
     outline: none;
 }
 
-.input-search::placeholder {
+.board-input-search::placeholder {
     font-size: 16px;
     color: #d1d1d1;
     align-content: center;
@@ -268,7 +271,8 @@
 }
 
 .board-overlay-card {
-    max-width: 500px;
+    max-width: 400px;
+    flex: 1;
     background-color: #ffffff;
     border-radius: 30px;
     padding: 40px;
@@ -771,4 +775,16 @@
     font-size: 12px;
     color: #555;
     white-space: nowrap;
+}
+
+.board-add-task-modal {
+    margin: 24px;
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    flex: 1;
+    max-width: 800px;
+    max-height: 680px;
+    overflow: scroll;
+
 }
