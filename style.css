@@ -1,4 +1,4 @@
-/* ========== GLOBAL ========== */
+
 button {
     cursor: pointer;
 }
@@ -8,7 +8,68 @@ body {
     background-color: hsl(210, 13%, 97%);
 }
 
-/* ========== DESKTOP TEMPLATE ========== */
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: hsl(198, 76%, 52%);
+}
+
+
+.arrow-left-section img {
+    width: 37px;
+    height: 37px;
+    position: fixed;
+    top: 225px;
+    right: 0;
+    margin-right: 120px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+
+}
+
+h1 {
+    font-weight: 700;
+    font-size: 61px;
+    line-height: 120%;
+    letter-spacing: 0;
+    color: hsla(0, 0%, 0%, 1);
+    gap: 30px;
+}
+
+
+h2 {
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 120%;
+    letter-spacing: 0;
+    color: hsla(0, 0%, 0%, 1);
+}
+
+h3 {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: 0;
+    color: hsla(0, 0%, 0%, 1);
+    margin-bottom: 0;
+}
+
+p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 0;
+    margin: 0;
+}
+
+
 .desktop-menu {
     width: 232px;
     height: 100vh;
@@ -196,17 +257,15 @@ button p {
     color: hsl(0, 0%, 80%) !important;
 }
 
-/* Renamed .body to avoid conflict */
 .main-body {
     padding-bottom: 100px;
-    /* Space for footer */
 }
 
 .mobile-menu {
     display: none;
 }
 
-/* ========== MOBILE TEMPLATE ========== */
+
 @media (max-width: 1040px) {
     .desktop-menu {
         display: none;
@@ -324,8 +383,6 @@ button p {
 
 
 @media (max-width: 500px) {
-
-    /* ====== HEADER FOOTER ====== */
     .user-profile {
         width: 45px;
         height: 45px;
