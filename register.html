@@ -6,26 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Join | Sign up</title>
 
-  <!-- Stylesheets -->
   <link rel="stylesheet" href="./styles/register.css" />
   <link rel="stylesheet" href="./styles/fonts.css" />
   <link rel="stylesheet" href="./styles/media-register.css" />
 
-  <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
 </head>
 
 <body>
-  <!-- Logo top left -->
+
   <section class="logo-section">
     <img class="logo-image" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
   </section>
 
-  <!-- Register Box -->
   <section class="register-page">
     <div class="register-container">
       <div class="register-header">
-        <!-- Back to login -->
         <a href="./log-in.html" onclick="sessionStorage.setItem('skipLoader', 'true')">
           <img class="back-arrow" src="./assets/img/2. log-sign-page/arrow-left-line.svg" alt="Back arrow" />
         </a>
@@ -36,14 +32,14 @@
         </div>
       </div>
 
-      <!-- Form -->
       <form class="register-form" onsubmit="registerUser(); return false">
-        <!-- Name -->
+       
         <div class="input-group">
           <label class="input-container">
             <input
               type="text"
               id="first-name"
+              autocomplete="name"
               placeholder="First and last name"
               required
               oninput="checkFormValidity()"
@@ -53,12 +49,12 @@
           <small class="error-message">&nbsp;</small>
         </div>
 
-        <!-- Email -->
         <div class="input-group">
           <label class="input-container">
             <input
               type="text"
               id="email"
+              autocomplete="email"
               placeholder="Email"
               required
               oninput="handleEmailInput()"
@@ -70,12 +66,12 @@
           </small>
         </div>
 
-        <!-- Password -->
         <div class="input-group">
           <label class="input-container">
             <input
               type="password"
               id="password"
+              autocomplete="new-password"
               placeholder="Password"
               required
               oninput="handlePasswordInput(); updatePasswordIcon(this)"
@@ -93,12 +89,12 @@
           </small>
         </div>
 
-        <!-- Confirm Password -->
         <div class="input-group">
           <label class="input-container">
             <input
               type="password"
               id="confirm-password"
+              autocomplete="new-password"
               placeholder="Confirm password"
               required
               oninput="handleConfirmPasswordInput(); updatePasswordIcon(this)"
@@ -117,7 +113,6 @@
           </small>
         </div>
 
-        <!-- Privacy Policy -->
         <div class="privacy-container">
           <input
             id="privacy-policy"
@@ -131,7 +126,6 @@
           </span>
         </div>
 
-        <!-- Submit -->
         <div class="submit-container">
           <button class="register-button" id="register-btn" type="submit" disabled>
             Sign Up
@@ -140,18 +134,16 @@
       </form>
     </div>
 
-    <!-- Footer -->
     <footer>
       <a class="footer-link" href="./privacy-ext.html">Privacy Policy</a>
       <a class="footer-link" href="./legal-ext.html">Legal notice</a>
     </footer>
   </section>
 
-  <!-- Message Box -->
   <div id="message-box" class="d-none"></div>
 
-  <!-- Scripts -->
   <script src="./scripts/firebase.js"></script>
   <script src="./scripts/register.js"></script>
+  
 </body>
 </html>

@@ -5,12 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Join | Log in</title>
 
-  
   <link rel="stylesheet" href="./styles/log-in.css" />
-  <link rel="stylesheet" href="./styles/responsive.css" />
   <link rel="stylesheet" href="./styles/fonts.css" />
   <link rel="stylesheet" href="./styles/media-login.css" />
-
   
   <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
 </head>
@@ -21,12 +18,10 @@
     <img class="logo-image" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
   </section>
 
-  
   <div class="loader d-none" id="loader">
     <img id="animated-logo" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
   </div>
 
-  
   <section class="register-container">
     <span class="no-user">Not a Join user?</span>
     <a class="button-link" href="./register.html">
@@ -34,7 +29,6 @@
     </a>
   </section>
 
-  
   <section class="login-page">
     <div class="log-in-container">
       <div class="login-container-headline">
@@ -42,7 +36,6 @@
         <img class="blue-line" src="./assets/img/2. log-sign-page/blue-line.svg" alt="blue line" />
       </div>
 
-      
       <form class="log-in-form" onsubmit="login(); return false;">
         <div class="log-in-input">
           
@@ -50,6 +43,7 @@
             <label class="input-container">
               <input
                 type="text"
+                autocomplete="email"
                 placeholder="E-Mail"
                 id="email"
                 required
@@ -60,11 +54,11 @@
             <small id="login-email-error" class="error-message">&nbsp;</small>
           </div>
 
-       
           <div class="input-group">
             <label class="input-container">
               <input
                 type="password"
+                autocomplete="current-password"
                 placeholder="Password"
                 id="password"
                 required
@@ -107,5 +101,6 @@
 
   <script src="./scripts/log-in.js"></script>
   <script src="./scripts/firebase.js"></script>
+  
 </body>
 </html>

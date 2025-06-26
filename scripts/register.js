@@ -1,6 +1,5 @@
 let confirmPasswordTouched = false;
 
-// Clear any previous guest session
 sessionStorage.removeItem("userName");
 sessionStorage.removeItem("userColor");
 sessionStorage.removeItem("email");

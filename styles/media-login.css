@@ -6,7 +6,18 @@
 
     #animated-logo.mobile-white {
     content: url('./assets/img/1. join-frontpage/join-logo-white.svg');
-  }
+   }
+
+    .logo-image {
+        width: 71px;
+        height: 84px;
+    }
+
+    .logo-section {
+        top: 36px;
+        left: 32px;
+    }
+
     .register-container {
         display: none;
     }
@@ -14,11 +25,6 @@
     .register-container-mobile {
         display: flex;
         font-size: 18px;
-    }
-
-    .logo-image {
-        width: 70px;
-        height: 121.97px;
     }
 
     .log-in-button {
@@ -40,8 +46,8 @@
     }
 
     .logo-section {
-        top: 37px;
-        left: 38px;
+        top: 23px;
+        left: 21px;
     }
 
     .log-in-container {
@@ -70,8 +76,6 @@
     }
 }
 
-
-/* ============== HEIGHT MEDIA ============= */
 @media (max-height: 800px) {
     .register-container-mobile {
         bottom: 80px;

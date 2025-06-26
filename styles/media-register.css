@@ -1,10 +1,8 @@
 @media(max-width: 800px) {
 
     .logo-section {
-        position: absolute;
-        top: 50px;
-        left: 77px;
-        z-index: 999;
+        top: 36px;
+        left: 32px;
     }
 
     .logo-image {
@@ -20,9 +18,9 @@
         height: 70px;
     }
 
-    .logo-section{
-        top: 40px;
-        left: 40px;
+    .logo-section {
+        top: 23px;
+        left: 21px;
     }
 
     .register-container{
@@ -57,7 +55,6 @@
     }
 }
 
-/* ============== HEIGHT MEDIA ============= */
 @media (max-height: 800px){
     .logo-section{
         top: 30px;
