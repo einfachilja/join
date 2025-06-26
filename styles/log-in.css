@@ -18,8 +18,8 @@ a {
 }
 
 .logo-image {
-  width: 71px;
-  height: 84px;
+  width: 100.03px;
+  height: 121.97px;
 }
 
 /* ========== Loader ========== */
@@ -41,6 +41,26 @@ a {
   position: fixed;
   top: 50%;
   left: 50%;
+  width: 400.12px;
+  height: 487.88px;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 9999;
+  transition: transform 0.8s ease, top 0.8s ease, left 0.8s ease;
+}
+
+#animated-logo.logo-finished {
+  position: fixed;
+  top: -147px;
+  left: -118px;
+  transform: scale(0.25);
+}
+
+
+/* Die Version funktioniert
+#animated-logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%) scale(1);
   z-index: 9999;
   transition: transform 0.8s ease, top 0.8s ease, left 0.8s ease;
@@ -52,10 +72,12 @@ a {
   left: -70px;
   transform: scale(0.25); 
 }
+  */
 
 #static-logo {
   display: none;
 }
+
 #message-box {
   position: absolute;
   top: 20%;

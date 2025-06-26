@@ -18,9 +18,9 @@ a {
   z-index: 999 !important;
 }
 
-.logo-image {
-  width: 71px !important;
-  height: 84px !important;
+.logo-section .logo-image {
+  width: 100.03px;
+  height: 121.97px;
 }
 
 

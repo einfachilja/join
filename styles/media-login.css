@@ -5,8 +5,21 @@
     }
 
     #animated-logo.mobile-white {
-    content: url('./assets/img/1. join-frontpage/join-logo-white.svg');
+        content: url('./assets/img/1. join-frontpage/join-logo-white.svg');
    }
+
+    #animated-logo {
+        width: 400.12px;              /* gleich groß wie normal */
+        height: 487.88px;
+        transform: translate(-50%, -50%) scale(0.7); /* kleiner, aber bleibt exakt zentriert */
+    }
+
+    #animated-logo.logo-finished {
+        top: -166px;
+        left: -132px;
+        transform: scale(0.172); 
+    }
+
 
     .logo-image {
         width: 71px;

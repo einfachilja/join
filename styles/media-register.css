@@ -5,11 +5,10 @@
         left: 32px;
     }
 
-    .logo-image {
-        width: 70px;
-        height: 120px;
-    }
-
+  .logo-section .logo-image {
+    width: 71px;
+    height: 84px;
+  }
 }
 
 @media(max-width: 500px) {
