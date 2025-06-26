@@ -20,7 +20,7 @@ function getRandomColor() {
 let firebaseKey = localStorage.getItem("firebaseKey");
 
 /* ============== ADD CONTACTS ============== */
-function addNewContact(event) {
+async function addNewContact(event) {
   event.preventDefault();
 
   const name = new_contact_name.value.trim();
@@ -32,15 +32,17 @@ function addNewContact(event) {
   const contact = { name, email, phone, color: getRandomColor() };
   recentlyAddedContact = contact;
 
-  fetch(
+  await fetch(
     `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`,
     {
       method: "POST",
       body: JSON.stringify(contact),
     }
-  ).then(loadContacts);
+  );
+  await loadContacts();
 
   toggleOff();
+  toggleOffMobile();
 
   setTimeout(() => {
     setTimeout(() => {
@@ -49,7 +51,6 @@ function addNewContact(event) {
     }, 0);
   }, 300);
 }
-
 
 function showAddedContactMessage() {
   let showAddedContactMessageRef = document.getElementById(
@@ -66,7 +67,7 @@ function showAddedContactMessage() {
   }, 2500);
 
   setTimeout(() => {
-    message.add("d_none");
+    message.classList.add("d_none");
   }, 1000);
 }
 
@@ -145,12 +146,14 @@ async function saveEditContact(event, contactKey) {
   try {
     await updateContactInFirebase(contactKey, updatedContact);
     updateLocalContact(originalContact, updatedContact);
-    toggleOff();
     renderContacts();
     showContactInfo({ ...updatedContact, firebaseKey: contactKey });
   } catch (error) {
     console.error("Failed to save contact:", error);
   }
+  toggleOff();
+  toggleOffMobile();
+  
 }
 
 /* ============== LOAD CONTACTS ============== */
@@ -237,7 +240,6 @@ function renderContacts() {
     recentlyAddedContact = null;
   }, 3000);
 }
-
 
 /* ========== STYLE CONTACT BUTTON ONCLICK ========== */
 function styleContactOnclick(element) {
