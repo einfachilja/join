@@ -15,9 +15,7 @@
     background-color: hsla(0, 0%, 100%, 1);
 
     height: calc(100vh - 140px);
-    /* Gives it height so scrolling can occur */
     width: 456px;
-    /* Matches header width */
     overflow: hidden;
 
     padding-top: 15px;
@@ -332,7 +330,6 @@
 }
 
 
-/* overlay */
 #overlay {
     height: 100vh;
     width: 100%;
@@ -378,7 +375,6 @@
     height: 100vh;
 }
 
-/* add new contact template */
 .add-new-contact-template-section {
     display: flex;
     align-items: center;
@@ -778,13 +774,6 @@
 
 }
 
-
-
-
-
-
-
-/* Error message */
 .error-message {
     visibility: hidden;
     display: block;
@@ -804,9 +793,6 @@ input.invalid {
     border-color: red;
 }
 
-
-
-/* created contact */
 .created-contact-message-div {
     display: flex;
     justify-content: center;
@@ -822,7 +808,6 @@ input.invalid {
     color: white;
     border-radius: 15px;
 }
-
 
 .highlight {
   background-color: hsl(216, 25%, 22%);

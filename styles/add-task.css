@@ -675,6 +675,10 @@ select::placeholder {
   .add_task_mid_box {
     display: none;
   }
+
+  .form-actions{
+    padding-bottom: 80px;
+  }
 }
 
 @media (max-width: 800px) {
