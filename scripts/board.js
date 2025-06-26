@@ -36,8 +36,29 @@ async function loadTasks() {
     return;
   }
 
+  // Fallback/default logic: Setze sinnvolle Defaults für fehlende Felder
   arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
-    return { ...task, firebaseKey };
+    return {
+      firebaseKey,
+      title: typeof task.title === 'string' ? task.title : '',
+      description: typeof task.description === 'string' ? task.description : '',
+      dueDate: typeof task.dueDate === 'string' ? task.dueDate : '',
+      priority: typeof task.priority === 'string' ? task.priority : 'low',
+      status: typeof task.status === 'string' ? task.status : 'todo',
+      category: typeof task.category === 'string' ? task.category : '',
+      assignedTo: Array.isArray(task.assignedTo)
+        ? task.assignedTo
+        : (typeof task.assignedTo === 'string'
+          ? task.assignedTo.split(',').map(n => n.trim()).filter(Boolean)
+          : []),
+      subtask: Array.isArray(task.subtask)
+        ? task.subtask
+        : (typeof task.subtask === 'string'
+          ? [{ title: task.subtask, completed: false }]
+          : []),
+      // Kopiere ggf. weitere Felder
+      ...task
+    };
   });
   updateHTML(arrayTasks);
 }
@@ -122,46 +143,56 @@ function getInitials(name) {
 }
 
 function generateTodoHTML(element) {
+  // Fallback-Logik: Setze Defaults für fehlende Felder
+  const category = typeof element.category === 'string' ? element.category : '';
   let categoryClass = "";
-  if (element.category === "User Story") {
+  if (category === "User Story") {
     categoryClass = "category-user";
-  } else if (element.category === "Technical Task") {
+  } else if (category === "Technical Task") {
     categoryClass = "category-technical";
   }
 
+  const priority = typeof element.priority === 'string' ? element.priority : 'low';
   let priorityIcon = "";
-  if (element.priority && element.priority.toLowerCase() === "low") {
+  if (priority.toLowerCase() === "low") {
     priorityIcon = "./assets/icons/board-priority-low.svg";
-  } else if (element.priority && element.priority.toLowerCase() === "medium") {
+  } else if (priority.toLowerCase() === "medium") {
     priorityIcon = "./assets/icons/board-priority-medium.svg";
-  } else if (element.priority && element.priority.toLowerCase() === "urgent") {
+  } else if (priority.toLowerCase() === "urgent") {
     priorityIcon = "./assets/icons/board-priority-high.svg";
   }
 
-  // assignedTo kann String oder Array sein
-  let assignedList = element.assignedTo;
-  if (typeof assignedList === "string") {
-    assignedList = assignedList.split(",").map(name => name.trim());
+  // assignedTo kann String oder Array sein, fallback zu []
+  let assignedList = [];
+  if (Array.isArray(element.assignedTo)) {
+    assignedList = element.assignedTo.filter(name => !!name && typeof name === 'string');
+  } else if (typeof element.assignedTo === "string") {
+    assignedList = element.assignedTo.split(",").map(name => name.trim()).filter(Boolean);
   }
-  assignedList = assignedList.filter(name => !!name && typeof name === 'string');
 
   // ==== Subtasks tracking ====
   let totalSubtasks = 0;
   let completedSubtasks = 0;
+  let subtasksArr = [];
   if (Array.isArray(element.subtask)) {
-    totalSubtasks = element.subtask.length;
-    completedSubtasks = element.subtask.filter(
+    subtasksArr = element.subtask;
+    totalSubtasks = subtasksArr.length;
+    completedSubtasks = subtasksArr.filter(
       sub => typeof sub === "object" ? sub.completed : false
     ).length;
   }
   let progressPercent = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
 
+  // Fallback für title/description
+  const title = typeof element.title === 'string' ? element.title : '';
+  const description = typeof element.description === 'string' ? element.description : '';
+
   return `
     <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
         <div class="card">
-            <span class="card-category ${categoryClass}"  ${element.category}">${element.category}</span>
-            <span class="card-title">${element.title}</span>
-            <span class="card-description">${element.description}</span>
+            <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
+            <span class="card-title">${title}</span>
+            <span class="card-description">${description}</span>
             <div class="card-subtask-progress">
               <div class="subtask-progress-bar-bg">
                 <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
@@ -178,7 +209,7 @@ function generateTodoHTML(element) {
       }).join("")
       : ""}
                   </div>
-                  <div class="priority-container"><img src="${priorityIcon}" alt="${element.priority}"></div>
+                  <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
                 </div>
         </div>
     </div>`;
@@ -203,10 +234,11 @@ function removeHighlight(status) {
 
 /* ========== UPDATE BOARD PAGE ========== */
 function updateHTML() {
-  let todo = arrayTasks.filter((t) => t["status"] == "todo");
-  let progress = arrayTasks.filter((t) => t["status"] == "progress");
-  let feedback = arrayTasks.filter((t) => t["status"] == "feedback");
-  let done = arrayTasks.filter((t) => t["status"] == "done");
+  // Fallback/Default-Logik: handle tasks with missing or undefined fields robustly
+  let todo = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : 'todo') === "todo");
+  let progress = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "progress");
+  let feedback = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "feedback");
+  let done = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "done");
 
   document.getElementById("todo").innerHTML = "";
   document.getElementById("progress").innerHTML = "";
