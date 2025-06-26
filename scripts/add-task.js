@@ -90,6 +90,17 @@ function hideDateError(input, error) {
 }
 // ==== INIT ====
 document.addEventListener("DOMContentLoaded", () => {
+  // Force the placeholder for the date input immediately on page load
+  document.getElementById("due-date") &&
+    (document.getElementById("due-date").value = "");
+  document.getElementById("due-date") &&
+    (document.getElementById("due-date").placeholder = "tt.mm.jjjj");
+  // Ensure dueDate input has correct placeholder format before any listeners
+  const dueDateInput = document.getElementById("dueDate");
+  if (dueDateInput) {
+    dueDateInput.placeholder = "dd/mm/yyyy";
+  }
+
   document
     .getElementById("buttons-prio")
     .querySelectorAll("button")
@@ -101,12 +112,48 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("subtask-list")?.classList.add("subtask-list");
 
   // Custom date input formatting and validation
-  const dueDateInput = document.getElementById("dueDate");
-  if (dueDateInput) {
-    // Nur Platzhalter für Browser, der ihn unterstützt
-    dueDateInput.placeholder = "yyyy-mm-dd";
-  }
+  // Placeholder is now handled above
   setupDateValidation();
+
+  // Format date input as dd/mm/yyyy on display (custom formatting)
+  if (dueDateInput) {
+    dueDateInput.addEventListener("change", function (event) {
+      const selectedDate = new Date(event.target.value);
+      if (!isNaN(selectedDate)) {
+        const year = selectedDate.getFullYear();
+        const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+        const day = String(selectedDate.getDate()).padStart(2, "0");
+        // Set hidden input value in ISO format for form submission
+        const dueDateHidden = document.getElementById("dueDateHidden");
+        if (dueDateHidden) {
+          dueDateHidden.value = `${year}-${month}-${day}`;
+        }
+        // Set display value as dd/mm/yyyy for visual purposes
+        this.value = `${day}/${month}/${year}`;
+      }
+    });
+    dueDateInput.addEventListener("focus", function () {
+      // On focus, revert to date type if possible for picker
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(this.value)) {
+        // Convert dd/mm/yyyy to yyyy-mm-dd for date input
+        const [day, month, year] = this.value.split("/");
+        this.type = "date";
+        this.value = `${year}-${month}-${day}`;
+      } else {
+        this.type = "date";
+      }
+    });
+    dueDateInput.addEventListener("blur", function () {
+      // On blur, if value is still yyyy-mm-dd, format visually
+      if (/^\d{4}-\d{2}-\d{2}$/.test(this.value)) {
+        const [year, month, day] = this.value.split("-");
+        this.type = "text";
+        this.value = `${day}/${month}/${year}`;
+      } else if (!this.value) {
+        this.type = "text";
+      }
+    });
+  }
 });
 
 // ==== FETCH CONTACTS ====
@@ -489,20 +536,6 @@ async function createTask() {
 }
 
 /**
- * Öffnet den nativen Datepicker
- */
-function openDatepicker() {
-  const el = document.getElementById("dueDate");
-  if (typeof el.showPicker === "function") {
-    // moderner Chromium-Browser
-    el.showPicker();
-  } else {
-    // Safari, Firefox, iOS etc.
-    el.focus();
-  }
-}
-
-/**
  * Shows confirmation toast
  */
 function showTaskAddedPopup() {
@@ -638,3 +671,49 @@ document.addEventListener("DOMContentLoaded", () => {
     button.disabled = false;
   }
 });
+
+// --- Custom Date Picker Helper ---
+/**
+ * Makes a text input act as a date picker on focus, and revert if empty on blur.
+ * Usage: <input type="text" onfocus="showDatePicker(this)" ...>
+ */
+function showDatePicker(input) {
+  input.type = "date";
+  input.focus();
+
+  input.addEventListener(
+    "change",
+    () => {
+      if (input.value) {
+        const date = new Date(input.value);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+
+        // Delay to avoid native validation error
+        setTimeout(() => {
+          input.type = "text";
+          input.value = `${day}/${month}/${year}`;
+        }, 0);
+      } else {
+        setTimeout(() => {
+          input.type = "text";
+          input.placeholder = "dd/mm/yyyy";
+          input.value = "";
+        }, 0);
+      }
+    },
+    { once: true }
+  );
+
+  input.addEventListener(
+    "blur",
+    () => {
+      if (!input.value) {
+        input.type = "text";
+        input.placeholder = "dd/mm/yyyy";
+      }
+    },
+    { once: true }
+  );
+}
