@@ -282,6 +282,9 @@ function updateHTML() {
 /* ========== OPEN AND CLOSE OVERLAY ========== */
 function openBoardCard(firebaseKey) {
   let boardOverlayRef = document.getElementById("board_overlay");
+  // Neue Logik: Overlay-Status vor dem Anzeigen abfragen
+  const overlay = document.getElementById("board_overlay");
+  const wasHidden = overlay.classList.contains("d-none");
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
   let categoryClass = "";
   if (task.category === "User Story") {
@@ -292,10 +295,17 @@ function openBoardCard(firebaseKey) {
   document.getElementById("board_overlay").classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
   boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-  setTimeout(() => {
-    const card = document.querySelector('.board-overlay-card');
+  // Neue Logik für .open-Klasse
+  const card = document.querySelector('.board-overlay-card');
+  if (wasHidden) {
+    // Slide-in Animation nur beim ersten Öffnen
+    setTimeout(() => {
+      if (card) card.classList.add('open');
+    }, 10);
+  } else {
+    // Beim Refresh direkt sichtbar lassen
     if (card) card.classList.add('open');
-  }, 10);
+  }
   updateHTML();
 }
 
