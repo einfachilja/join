@@ -788,12 +788,28 @@
     gap: 48px;
 }
 
-.board-add-task-modal .col-left > *,
-.board-add-task-modal .col-right > * {
+.board-add-task-modal .col-left>*,
+.board-add-task-modal .col-right>* {
     margin-bottom: 16px;
 }
 
-.board-add-task-modal .col-left > *:last-child,
-.board-add-task-modal .col-right > *:last-child {
+.board-add-task-modal .col-left>*:last-child,
+.board-add-task-modal .col-right>*:last-child {
     margin-bottom: 0;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+    }
+
+    50% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.task-highlight .card {
+    animation: blink 1s ease-in-out 3;
 }

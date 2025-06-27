@@ -1528,16 +1528,18 @@ async function createTask() {
   );
   closeAddTaskOverlay();
   await loadTasks();
-  showTaskAddedPopup();
-}
-
-// Toast nach Hinzufügen
-function showTaskAddedPopup() {
-  const popup = document.createElement("div");
-  popup.innerHTML = `<img src="./assets/icons/board.svg" alt="board icon"> Task added to Board`;
-  popup.className = "task-toast";
-  document.body.appendChild(popup);
-  setTimeout(() => popup.remove(), 2500);
+  setTimeout(() => {
+    const lastTask = arrayTasks[arrayTasks.length - 1];
+    if (lastTask && lastTask.firebaseKey) {
+      const newTaskEl = document.getElementById(lastTask.firebaseKey);
+      if (newTaskEl) {
+        newTaskEl.classList.add("task-highlight");
+        setTimeout(() => {
+          newTaskEl.classList.remove("task-highlight");
+        }, 3000);
+      }
+    }
+  }, 100);
 }
 
 // Initialisiere alle Add-Task-Funktionen nach Modal-Render
