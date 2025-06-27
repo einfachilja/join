@@ -129,7 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
           dueDateHidden.value = `${year}-${month}-${day}`;
         }
         // Set display value as dd/mm/yyyy for visual purposes
-        this.value = `${day}/${month}/${year}`;
+        const formattedDate = `${day}/${month}/${year}`;
+        // REPLACEMENT: store formatted date in data attribute, and set input value as ISO
+        dateInput = this;
+        dateInput.setAttribute("data-formatted", formattedDate);
+        const [d, m, y] = formattedDate.split("/");
+        const isoDate = `${y}-${m}-${d}`;
+        dateInput.value = isoDate;
       }
     });
     dueDateInput.addEventListener("focus", function () {

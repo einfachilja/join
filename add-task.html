@@ -125,8 +125,14 @@
                     id="dueDate"
                     class="date-input"
                     placeholder="dd/mm/yyyy"
-                    required
+                    pattern="\d{2}/\d{2}/\d{4}"
                     onfocus="showDatePicker(this)"
+                  />
+                  <input
+                    type="hidden"
+                    id="dueDateISO"
+                    name="dueDateISO"
+                    required
                   />
                   <div class="error-message" id="error-dueDate">
                     This field is required
