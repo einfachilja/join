@@ -76,6 +76,7 @@ function overlayTemplate() {
           `;
 }
 
+
 function overlayEditTemplate(name, email, phone, firebaseKey) {
   return /*html*/ `
     <div class="add-new-contact-template-section" >
@@ -150,6 +151,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
   `;
 }
 
+
 function getOpenContactTemplate(contact, initials) {
   return /*html*/ `
     <div class="my-contact-information-section">
@@ -193,6 +195,7 @@ function getOpenContactTemplate(contact, initials) {
     </div>
   `;
 }
+
 
 function getOpenContactMobileTemplate(contact, initials) {
   return /*html*/ `
@@ -247,6 +250,7 @@ function getOpenContactMobileTemplate(contact, initials) {
   `;
 }
 
+
 function getEditDeleteMenuTemplate(contact) {
   return /*html*/ `
   <div id="edit_delete_menu" class="edit-delete-menu">
@@ -265,6 +269,7 @@ function getEditDeleteMenuTemplate(contact) {
   `
 }
 
+
 function getCreatedContactSuccessfullyMessage(){
   return /*html*/ `
   <div id="created_contact_message" class="created-contact-message-div d_none">
@@ -272,6 +277,7 @@ function getCreatedContactSuccessfullyMessage(){
   </div>
   `
 }
+
 
 function getFirstInitialAndDevider(currentInitial){
   return /*html*/ `
@@ -281,6 +287,7 @@ function getFirstInitialAndDevider(currentInitial){
         </div>
       `
 }
+
 
 function getContactBasicTemplate(contact, initials, highlight) {
   return /*html*/ `
