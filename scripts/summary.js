@@ -6,7 +6,7 @@ let firebaseKey = localStorage.getItem("firebaseKey"); // Benutzer-spezifischer 
 window.addEventListener("DOMContentLoaded", showWelcomeMessage); // Begrüßung anzeigen beim Laden
 
 function showWelcomeMessage() {
-  const name = sessionStorage.getItem("userName") || "Guest";
+  const name = sessionStorage.getItem("userName") || " ";
   const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
   const hour = new Date().getHours();
   const greeting =
@@ -21,7 +21,7 @@ function showWelcomeMessage() {
     );
 
     overlay.classList.remove("d_none");
-    overlayText.textContent = `${greeting},`;
+    overlayText.textContent = `${greeting}`;
     overlayName.textContent = name;
     overlayName.style.color = color;
 
@@ -35,7 +35,7 @@ function showWelcomeMessage() {
       main.style.display = "";
     }, 1500);
   } else {
-    const name = sessionStorage.getItem("userName") || "Guest";
+    const name = sessionStorage.getItem("userName") || " ";
     const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
     const hour = new Date().getHours();
     const greeting =
@@ -48,7 +48,7 @@ function showWelcomeMessage() {
     // Begrüßungstext und Benutzername einfügen
     document.getElementById(
       "welcome-message-text"
-    ).textContent = `${greeting},`;
+    ).textContent = `${greeting}`;
     const nameEl = document.getElementById("welcome-username");
     nameEl.textContent = name;
     nameEl.style.color = color;
