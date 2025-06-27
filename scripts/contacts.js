@@ -3,6 +3,8 @@ const BASE_URL =
 
 let contacts = [];
 let recentlyAddedContact = null;
+let firebaseKey = localStorage.getItem("firebaseKey");
+
 
 function getRandomColor() {
   const colors = [
@@ -17,7 +19,6 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-let firebaseKey = localStorage.getItem("firebaseKey");
 
 function getInitials(name) {
   if (!name) return "";
@@ -32,6 +33,7 @@ function getInitials(name) {
   }
 }
 
+
 async function getFirebaseKeyAndLoadContacts(contact) {
   await fetch(`${BASE_URL}users/${firebaseKey}/contacts.json`, {
     method: "POST",
@@ -40,7 +42,7 @@ async function getFirebaseKeyAndLoadContacts(contact) {
   await loadContacts();
 }
 
-/* ============== ADD CONTACTS ============== */
+
 function addNewContact(event) {
   event.preventDefault();
 
@@ -65,6 +67,7 @@ function addNewContact(event) {
   }, 300);
 }
 
+
 function showAddedContactMessage() {
   let showAddedContactMessageRef = document.getElementById(
     "user_contact_information_section_mobile"
@@ -84,7 +87,7 @@ function showAddedContactMessage() {
   }, 1000);
 }
 
-/* ============== SAVE EDIT CONTACT HELPER FUNCTIONS ============== */
+
 function getTrimmedContactInput() {
   return {
     name: document.getElementById("edit_contact_name").value.trim(),
@@ -92,6 +95,7 @@ function getTrimmedContactInput() {
     phone: document.getElementById("edit_contact_phone").value.trim(),
   };
 }
+
 
 function isValidContactInput(
   name,
@@ -111,10 +115,12 @@ function isValidContactInput(
   );
 }
 
+
 function buildUpdatedContact(name, email, phone, originalContact) {
   const color = originalContact?.color || getRandomColor();
   return { name, email, phone, color };
 }
+
 
 async function updateContactInFirebase(contactKey, updatedContact) {
   await fetch(`${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`, {
@@ -124,12 +130,13 @@ async function updateContactInFirebase(contactKey, updatedContact) {
   });
 }
 
+
 function updateLocalContact(original, updated) {
   if (!original) return;
   Object.assign(original, updated);
 }
 
-/* ============== SAVE EDIT CONTACT ============== */
+
 async function saveEditContact(event, contactKey) {
   event.preventDefault();
   const { name, email, phone } = getTrimmedContactInput();
@@ -167,7 +174,7 @@ async function saveEditContact(event, contactKey) {
   toggleOffMobile();
 }
 
-/* ============== LOAD CONTACTS ============== */
+
 async function loadContacts() {
   try {
     const response = await fetch(
@@ -187,16 +194,18 @@ async function loadContacts() {
   }
 }
 
-/* ============== RENDER FINCTION HELPERS ============== */
+
 function sortContacts(list) {
   return list.slice().sort((a, b) =>
     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
   );
 }
 
+
 function getFirstLetter(name) {
   return name.trim()[0].toUpperCase();
 }
+
 
 function isRecentlyAdded(contact) {
   return (
@@ -206,6 +215,7 @@ function isRecentlyAdded(contact) {
     contact.phone === recentlyAddedContact.phone
   );
 }
+
 
 function clearHighlightAfterDelay() {
   setTimeout(() => {
@@ -217,7 +227,7 @@ function clearHighlightAfterDelay() {
   }, 3000);
 }
 
-/* ============== RENDER CONTACTS ============== */
+
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
   contactListRef.innerHTML = "";
@@ -246,7 +256,7 @@ function renderContacts() {
   clearHighlightAfterDelay();
 }
 
-/* ========== STYLE CONTACT BUTTON ONCLICK ========== */
+
 function styleContactOnclick(element, initials) {
   document
     .querySelectorAll(".contact.open-contact")
@@ -265,18 +275,20 @@ function styleContactOnclick(element, initials) {
   }
 }
 
+
 function toggleContactInfoOverlay(contact, initials) {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = getOpenContactMobileTemplate(contact, initials);
   overlayRef.classList.remove("d_none");
 }
 
+
 function showContactInfo(contact, initials) {
   let contactInfoRef = document.getElementById("open_contact_Template");
   contactInfoRef.innerHTML = getOpenContactTemplate(contact, initials);
 }
 
-/* ========== DELETE Contact FROM FIREBASE ============== */
+
 async function deleteContact(contactKey) {
   try {
     let response = await fetch(
@@ -298,7 +310,7 @@ async function deleteContact(contactKey) {
   }
 }
 
-/* ============= EMAIL VALIDATION ============= */
+
 function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
   const emailInput = document.getElementById(inputId);
   const error = document.getElementById(errorId);
@@ -316,7 +328,7 @@ function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
   return valid;
 }
 
-/* ============= TEL VALIDATION ============= */
+
 function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
   const phoneInput = document.getElementById(inputId);
   const error = document.getElementById(errorId);
@@ -336,7 +348,7 @@ function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
   return valid;
 }
 
-/* =================== OVERLAY ================== */
+
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = overlayTemplate();
@@ -353,12 +365,13 @@ function toggleOverlay() {
   }, 0);
 }
 
+
 function openEditDeleteMenu(contact) {
   document.getElementById("edit_delete_menu").innerHTML =
     getEditDeleteMenuTemplate(contact);
 }
 
-/* =================== EDIT OVERLAY ================== */
+
 function toggleEditOverlay(contact) {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = overlayEditTemplate(
@@ -376,10 +389,12 @@ function toggleEditOverlay(contact) {
   }, 0);
 }
 
+
 function closeEditDeleteMenu() {
   const menuRef = document.getElementById("edit_delete_menu");
   if (menuRef) menuRef.innerHTML = "";
 }
+
 
 function toggleMobileEditOverlay(contact) {
   closeEditDeleteMenu();
@@ -400,9 +415,11 @@ function toggleMobileEditOverlay(contact) {
   }, 0);
 }
 
+
 function dialogPrevention(event) {
   event.stopPropagation();
 }
+
 
 function toggleOff() {
   const overlayRef = document.getElementById("overlay");
@@ -417,6 +434,7 @@ function toggleOff() {
   }, 300);
 }
 
+
 function toggleOffMobile() {
   const overlayRef = document.getElementById("overlay_mobile");
   const modal = document.querySelector(".add-new-contact-template");
@@ -430,6 +448,7 @@ function toggleOffMobile() {
   }, 300);
 }
 
+
 function OpenContactTemplates(contact) {
   const initials = getInitials(contact.name);
 
@@ -440,5 +459,6 @@ function OpenContactTemplates(contact) {
     initials
   );
 }
+
 
 window.onload = loadContacts;
