@@ -12,7 +12,8 @@
   max-width: 1040px;
   margin-left: 275px;
   margin-right: 48px;
-  margin-top: 160px;
+  margin-top: 120px;
+  padding-bottom: 32px;
 }
 
 .main {
@@ -22,7 +23,7 @@
 .form-cols {
   display: flex;
   align-items: stretch;
-  gap: 40px;
+  gap: 24px;
   width: 100%;
   flex-wrap: nowrap;
 }
@@ -123,9 +124,12 @@
 
 .form-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 16px;
-  margin-top: 40px;
+  margin-top: 32px;
+  padding-right: 32px;
+  width: 100%;
 }
 
 .form-actions button {
@@ -173,6 +177,22 @@ textarea {
   color: #000;
   font-family: inherit;
   margin-bottom: 4px;
+}
+
+/* Consistent style for date input */
+#dateInput {
+  padding: 12px 16px;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #000;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#dateInput::placeholder {
+  color: #999;
 }
 
 textarea {
@@ -326,46 +346,6 @@ select:focus {
 #dueDate.error-border,
 #title.error {
   border-color: #e74c3c !important;
-}
-
-/* ------------------------------------
-   Datum-Input + eigenes Icon
-   ------------------------------------ */
-
-.date-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 4px;
-}
-
-.date-wrapper .date-input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 16px;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: inherit;
-  height: 48px;
-  background: #f6f7f8;
-  color: #000;
-}
-
-.date-wrapper .calendar-icon {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  width: 16px;
-  height: 16px;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-.date-wrapper .date-input::-webkit-calendar-picker-indicator,
-.date-wrapper .date-input::-webkit-inner-spin-button,
-.date-wrapper .date-input::-webkit-outer-spin-button {
-  display: none;
 }
 
 .error {
@@ -676,7 +656,7 @@ select::placeholder {
     display: none;
   }
 
-  .form-actions{
+  .form-actions {
     padding-bottom: 80px;
   }
 }
@@ -690,8 +670,18 @@ select::placeholder {
 
 @media (max-width: 500px) {
   .form-actions {
+    position: static; /* nicht mehr fixed */
+    bottom: auto;
+    left: auto;
+    right: auto;
+    padding: 0;
+    background: none;
+    z-index: auto;
+    box-shadow: none;
     flex-direction: column;
     gap: 8px;
+    padding-bottom: 48px;
+    align-items: center;
   }
 
   .form-actions button {
@@ -700,6 +690,7 @@ select::placeholder {
 
   .add-task-modal {
     padding: 12px;
+    margin-bottom: 48px;
   }
 }
 
@@ -793,6 +784,16 @@ select::placeholder {
   color: red;
 }
 
+.legend-required {
+  padding-left: 0;
+  font-size: 14px;
+  color: #6e6e6e;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-grow: 1;
+}
+
 /* Added for consistent error message layout and field wrappers */
 .error-message {
   color: red;
@@ -813,6 +814,15 @@ select::placeholder {
 }
 
 .h1-add-task {
-  margin-top: 0px;
-  padding-top: 24px;
+  margin-top: 40px;
+  padding-top: 0;
+}
+
+@media (max-width: 500px) {
+  .legend-required {
+    font-size: 12px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0;
+  }
 }

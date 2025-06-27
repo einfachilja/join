@@ -114,20 +114,26 @@
                   <label for="dueDate"
                     >Due Date <span class="red_star">*</span></label
                   >
-                  <div class="date-wrapper">
-                    <input
-                      id="dueDate"
-                      class="date-input"
-                      type="date"
-                      placeholder="dd/mm/yyyy"
-                    />
-                    <img
-                      src="./assets/icons/calendar.svg"
-                      class="calendar-icon"
-                      alt="Kalender"
-                      onclick="document.getElementById('dueDate').showPicker()"
-                    />
-                  </div>
+                  <input
+                    type="date"
+                    id="hiddenDateInput"
+                    style="position: absolute; left: -9999px"
+                    onchange="updateDueDateFromHidden()"
+                  />
+                  <input
+                    type="text"
+                    id="dueDate"
+                    class="date-input"
+                    placeholder="dd/mm/yyyy"
+                    pattern="\d{2}/\d{2}/\d{4}"
+                    onfocus="showDatePicker(this)"
+                  />
+                  <input
+                    type="hidden"
+                    id="dueDateISO"
+                    name="dueDateISO"
+                    required
+                  />
                   <div class="error-message" id="error-dueDate">
                     This field is required
                   </div>
@@ -244,17 +250,16 @@
                   </div>
                 </div>
               </div>
-              <div class="form-actions">
-                <button type="button" onclick="resetForm()">Cancel</button>
-                <button
-                  id="submit-task-btn"
-                  type="button"
-                  onclick="createTask()"
-                >
-                  Create Task
-                </button>
-              </div>
             </form>
+            <div class="form-actions">
+              <p class="legend-required">
+                <span class="red_star">*</span>This field is required
+              </p>
+              <button type="button" onclick="resetForm()">Cancel</button>
+              <button id="submit-task-btn" type="button" onclick="createTask()">
+                Create Task
+              </button>
+            </div>
           </div>
         </main>
 
