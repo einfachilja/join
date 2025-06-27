@@ -240,58 +240,82 @@ function toggleAssignDropdown(event) {
   }
 }
 
+// Render the options in the assign dropdown, split into helpers for clarity
 function renderAssignOptions(filter = "") {
   const dd = document.getElementById("dropdown-content");
-  // Remove all nodes except the search input
+  clearAssignDropdownContent(dd);
+  const filteredContacts = contacts.filter((c) =>
+    c.name.toLowerCase().includes(filter)
+  );
+  filteredContacts.forEach((c) => {
+    const item = createContactDropdownItem(c, filter);
+    dd.appendChild(item);
+  });
+}
+
+// Remove all nodes except the search input from the dropdown
+function clearAssignDropdownContent(dd) {
   const nodes = Array.from(dd.childNodes).filter((n) => n.tagName !== "INPUT");
   nodes.forEach((n) => n.remove());
+}
 
-  contacts
-    .filter((c) => c.name.toLowerCase().includes(filter))
-    .forEach((c) => {
-      const item = document.createElement("div");
-      item.className = "contact-item";
-      item.innerHTML = `
-        <span class="profile-icon" style="background:${c.color}">
-          ${c.name
-            .split(" ")
-            .map((w) => w[0])
-            .join("")
-            .toUpperCase()}
-        </span>
-        <span>${c.name}</span>
-        <input type="checkbox" ${
-          selectedContacts.some((s) => s.name === c.name) ? "checked" : ""
-        }/>
-      `;
+// Create the DOM node for a contact dropdown item
+function createContactDropdownItem(contact, filter) {
+  const item = document.createElement("div");
+  item.className = "contact-item";
+  item.innerHTML = `
+    <span class="profile-icon" style="background:${contact.color}">
+      ${getContactInitials(contact.name)}
+    </span>
+    <span>${contact.name}</span>
+    <input type="checkbox" ${
+      selectedContacts.some((s) => s.name === contact.name) ? "checked" : ""
+    }/>
+  `;
+  setupContactCheckbox(item, contact, filter);
+  setupContactItemClick(item);
+  return item;
+}
 
-      const checkbox = item.querySelector("input[type='checkbox']");
-      checkbox.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const idx = selectedContacts.findIndex((s) => s.name === c.name);
-        if (checkbox.checked && idx === -1) {
-          selectedContacts.push(c);
-        } else if (!checkbox.checked && idx >= 0) {
-          selectedContacts.splice(idx, 1);
-          if (selectedContacts.length === 0) {
-            closeDropdown();
-          }
-        }
-        updateSelectedContactsUI();
-        renderAssignOptions(filter);
-        updateSubmitState();
-      });
+// Get initials for a contact
+function getContactInitials(name) {
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
 
-      item.addEventListener("click", (event) => {
-        if (event.target.tagName.toLowerCase() === "input") return;
-        event.stopPropagation();
-        checkbox.checked = !checkbox.checked;
-        const clickEvent = new Event("click", { bubbles: true });
-        checkbox.dispatchEvent(clickEvent);
-      });
+// Add event listener for the checkbox in the contact dropdown item
+function setupContactCheckbox(item, contact, filter) {
+  const checkbox = item.querySelector("input[type='checkbox']");
+  checkbox.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const idx = selectedContacts.findIndex((s) => s.name === contact.name);
+    if (checkbox.checked && idx === -1) {
+      selectedContacts.push(contact);
+    } else if (!checkbox.checked && idx >= 0) {
+      selectedContacts.splice(idx, 1);
+      if (selectedContacts.length === 0) {
+        closeDropdown();
+      }
+    }
+    updateSelectedContactsUI();
+    renderAssignOptions(filter);
+    updateSubmitState();
+  });
+}
 
-      dd.appendChild(item);
-    });
+// Add event listener for clicking on the contact dropdown item itself
+function setupContactItemClick(item) {
+  const checkbox = item.querySelector("input[type='checkbox']");
+  item.addEventListener("click", (event) => {
+    if (event.target.tagName.toLowerCase() === "input") return;
+    event.stopPropagation();
+    checkbox.checked = !checkbox.checked;
+    const clickEvent = new Event("click", { bubbles: true });
+    checkbox.dispatchEvent(clickEvent);
+  });
 }
 
 function updateSelectedContactsUI() {
@@ -311,61 +335,86 @@ function updateSelectedContactsUI() {
 }
 
 // ==== SUBTASK ====
+// Add a new subtask to the list and UI, split into helpers
 function addSubtask() {
   const input = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
   const text = input.value.trim();
-  // Only add if confirm/cancel buttons are visible and input is non-empty
+  if (!validateSubtaskInput(text, subtaskIcons, input)) return;
+  subtasks.push(text);
+  const li = createSubtaskListItem(text);
+  document.getElementById("subtask-list").appendChild(li);
+  finalizeSubtaskInput(input, subtaskIcons);
+}
+
+// Validate subtask input
+function validateSubtaskInput(text, subtaskIcons, input) {
   if (!text || subtaskIcons.classList.contains("hidden")) {
     input.classList.add("error-border");
-    return;
+    return false;
   }
-
   input.classList.remove("error-border");
-  subtasks.push(text);
+  return true;
+}
 
+// Create a subtask list item element
+function createSubtaskListItem(text) {
   const li = document.createElement("li");
   li.className = "subtask-list-item";
-
   const label = document.createElement("span");
   label.textContent = text;
   label.className = "subtask-label";
-
-  // Icons
   const iconWrapper = document.createElement("div");
   iconWrapper.className = "subtask-icons";
-
   li.appendChild(label);
   li.appendChild(iconWrapper);
-
   li.addEventListener("dblclick", () => {
     enterEditMode(li);
   });
-  document.getElementById("subtask-list").appendChild(li);
+  return li;
+}
 
+// Finalize subtask input UI state
+function finalizeSubtaskInput(input, subtaskIcons) {
   updateSubmitState();
   input.value = "";
-  // Hide icons after adding
   subtaskIcons.classList.add("hidden");
-  // Clean up any mistakenly placed floating delete icons
   const subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
+// Enter edit mode for a subtask, split into helpers
 function enterEditMode(subtaskElement) {
-  const currentText =
-    subtaskElement.querySelector(".subtask-label")?.textContent || "";
+  const currentText = getSubtaskCurrentText(subtaskElement);
   if (!currentText) return;
+  subtaskElement.innerHTML = "";
+  const input = createSubtaskEditInput(currentText);
+  const cancelBtn = createSubtaskCancelBtn(currentText, subtaskElement);
+  const confirmBtn = createSubtaskConfirmBtn(
+    currentText,
+    subtaskElement,
+    input
+  );
+  assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn);
+  input.focus();
+}
 
-  subtaskElement.innerHTML = ""; // clear old content
+// Get current subtask label text
+function getSubtaskCurrentText(subtaskElement) {
+  return subtaskElement.querySelector(".subtask-label")?.textContent || "";
+}
 
-  // Input-Feld
+// Create input for editing subtask
+function createSubtaskEditInput(currentText) {
   const input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
   input.classList.add("subtask-edit-input");
+  return input;
+}
 
-  // Cancel-Button
+// Create cancel button for subtask edit
+function createSubtaskCancelBtn(currentText, subtaskElement) {
   const cancelBtn = document.createElement("img");
   cancelBtn.src = "./assets/icons/closeXSymbol.svg";
   cancelBtn.alt = "Delete";
@@ -378,8 +427,11 @@ function enterEditMode(subtaskElement) {
     subtaskElement.remove();
     updateSubmitState();
   });
+  return cancelBtn;
+}
 
-  // Confirm-Button
+// Create confirm button for subtask edit
+function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   const confirmBtn = document.createElement("img");
   confirmBtn.src = "./assets/icons/checked.svg";
   confirmBtn.alt = "Confirm";
@@ -388,35 +440,38 @@ function enterEditMode(subtaskElement) {
     const newValue = input.value.trim();
     if (newValue) {
       subtasks[subtasks.indexOf(currentText)] = newValue;
-      subtaskElement.innerHTML = "";
-      const label = document.createElement("span");
-      label.textContent = newValue;
-      label.className = "subtask-label";
-      subtaskElement.appendChild(label);
-      subtaskElement.addEventListener("dblclick", () => {
-        enterEditMode(subtaskElement);
-      });
+      updateSubtaskLabel(subtaskElement, newValue);
     }
   });
+  return confirmBtn;
+}
 
-  // Neue Struktur für Bearbeitungs-Container
+// Update subtask label after editing
+function updateSubtaskLabel(subtaskElement, newValue) {
+  subtaskElement.innerHTML = "";
+  const label = document.createElement("span");
+  label.textContent = newValue;
+  label.className = "subtask-label";
+  subtaskElement.appendChild(label);
+  subtaskElement.addEventListener("dblclick", () => {
+    enterEditMode(subtaskElement);
+  });
+}
+
+// Assemble the edit UI for subtask
+function assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn) {
   const wrapper = document.createElement("div");
   wrapper.classList.add("subtask-edit-container");
-
   const inputWrapper = document.createElement("div");
   inputWrapper.classList.add("subtask-input-edit-wrapper");
   inputWrapper.appendChild(input);
-
   const buttonContainer = document.createElement("div");
   buttonContainer.classList.add("subtask-edit-buttons");
   buttonContainer.appendChild(cancelBtn);
   buttonContainer.appendChild(confirmBtn);
-
   wrapper.appendChild(inputWrapper);
   wrapper.appendChild(buttonContainer);
   subtaskElement.appendChild(wrapper);
-
-  input.focus();
 }
 
 function validateTitle() {

@@ -28,8 +28,8 @@
   flex-wrap: nowrap;
 }
 
-.col-left,
-.col-right {
+.form-section-left,
+.form-section-right {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -37,13 +37,13 @@
   width: 100%;
 }
 
-.add_task_mid_box {
+.form-divider {
   width: 1px;
   background-color: #d1d1d1;
   height: auto;
 }
 
-.add_task_mid_box img {
+.form-divider img {
   width: 1px;
   height: 100%;
   object-fit: cover;
@@ -652,7 +652,7 @@ select::placeholder {
     gap: 24px;
   }
 
-  .add_task_mid_box {
+  .form-divider {
     display: none;
   }
 
