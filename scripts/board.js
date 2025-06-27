@@ -1123,6 +1123,31 @@ let contacts = [];
 let selectedContacts = [];
 let selectedCategory = "";
 
+// Globaler EventListener zum Schließen des Dropdowns bei Klick außerhalb
+document.addEventListener("mousedown", function (event) {
+  const dropdown = document.getElementById("dropdown-content");
+  const toggle = document.getElementById("dropdown-toggle");
+
+  if (dropdown && toggle) {
+    const isClickInside = dropdown.contains(event.target) || toggle.contains(event.target);
+    if (!isClickInside) {
+      dropdown.classList.remove("visible");
+      toggle.classList.remove("open");
+    }
+  }
+
+  // Category-Dropdown: Schließen wenn außerhalb geklickt wird
+  const catDropdown = document.getElementById("category-content");
+  const catToggle = document.getElementById("category-toggle");
+  if (catDropdown && catToggle) {
+    const isCatClickInside = catDropdown.contains(event.target) || catToggle.contains(event.target);
+    if (!isCatClickInside) {
+      catDropdown.classList.remove("visible");
+      catToggle.classList.remove("open");
+    }
+  }
+});
+
 // Priority auswählen
 function selectPriority(prio) {
   selectedPriority = prio;
