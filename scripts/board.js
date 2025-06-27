@@ -977,19 +977,14 @@ function getAddTaskOverlay() {
                   <label for="dueDate"
                     >Due Date <span class="red_star">*</span></label
                   >
-                  <div class="date-wrapper">
+                  <div class="date-input-wrapper">
                     <input
                       id="dueDate"
-                      class="date-input"
+                      class="overlay-card-date-input"
                       type="date"
                       placeholder="dd/mm/yyyy"
                     />
-                    <img
-                      src="./assets/icons/calendar.svg"
-                      class="calendar-icon"
-                      alt="Kalender"
-                      onclick="document.getElementById('dueDate').showPicker()"
-                    />
+                    
                   </div>
                   <div class="error-message" id="error-dueDate">
                     This field is required
