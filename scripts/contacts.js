@@ -20,8 +20,8 @@ function getRandomColor() {
 let firebaseKey = localStorage.getItem("firebaseKey");
 
 function getInitials(name) {
-  if (!name) return '';
-  const nameParts = name.trim().split(' ');
+  if (!name) return "";
+  const nameParts = name.trim().split(" ");
   if (nameParts.length === 1) {
     return nameParts[0][0].toUpperCase();
   } else {
@@ -32,8 +32,16 @@ function getInitials(name) {
   }
 }
 
+async function getFirebaseKeyAndLoadContacts(contact) {
+  await fetch(`${BASE_URL}users/${firebaseKey}/contacts.json`, {
+    method: "POST",
+    body: JSON.stringify(contact),
+  });
+  await loadContacts();
+}
+
 /* ============== ADD CONTACTS ============== */
-async function addNewContact(event) {
+function addNewContact(event) {
   event.preventDefault();
 
   const name = new_contact_name.value.trim();
@@ -45,14 +53,7 @@ async function addNewContact(event) {
   const contact = { name, email, phone, color: getRandomColor() };
   recentlyAddedContact = contact;
 
-  await fetch(
-    `${BASE_URL}users/${firebaseKey}/contacts.json`,
-    {
-      method: "POST",
-      body: JSON.stringify(contact),
-    }
-  );
-  await loadContacts();
+  getFirebaseKeyAndLoadContacts(contact);
 
   toggleOff();
   toggleOffMobile();
@@ -69,7 +70,8 @@ function showAddedContactMessage() {
     "user_contact_information_section_mobile"
   );
 
-  showAddedContactMessageRef.innerHTML += getCreatedContactSuccessfullyMessage();
+  showAddedContactMessageRef.innerHTML +=
+    getCreatedContactSuccessfullyMessage();
 
   let message = document.getElementById("created_contact_message");
 
@@ -145,7 +147,12 @@ async function saveEditContact(event, contactKey) {
     return;
 
   const originalContact = contacts.find((c) => c.firebaseKey === contactKey);
-  const updatedContact = buildUpdatedContact(name, email, phone, originalContact);
+  const updatedContact = buildUpdatedContact(
+    name,
+    email,
+    phone,
+    originalContact
+  );
 
   try {
     await updateContactInFirebase(contactKey, updatedContact);
@@ -180,54 +187,29 @@ async function loadContacts() {
   }
 }
 
-/* ============== RENDER CONTACTS ============== */
-function renderContacts() {
-  let contactListRef = document.getElementById("all_contacts");
-  contactListRef.innerHTML = "";
+/* ============== RENDER FINCTION HELPERS ============== */
+function sortContacts(list) {
+  return list.slice().sort((a, b) =>
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+}
 
-  contacts.sort((a, b) => a.name.trim().toUpperCase().localeCompare(b.name.trim().toUpperCase()));
+function getFirstLetter(name) {
+  return name.trim()[0].toUpperCase();
+}
 
-  let currentInitial = null;
+function isRecentlyAdded(contact) {
+  return (
+    recentlyAddedContact &&
+    contact.name === recentlyAddedContact.name &&
+    contact.email === recentlyAddedContact.email &&
+    contact.phone === recentlyAddedContact.phone
+  );
+}
 
-  contacts.forEach((contact) => {
-    const nameParts = contact.name.trim().split(" ");
-    const firstNameInitial = nameParts[0][0].toUpperCase();
-
-    if (firstNameInitial !== currentInitial) {
-      currentInitial = firstNameInitial;
-      contactListRef.innerHTML += `
-        <div class="alphabet">
-          <span class="alphabet-span">${currentInitial}</span>
-          <div class="alphabet-devider"></div>
-        </div>
-      `;
-    }
-
-    const initials = getInitials(contact.name);
-
-    let highlight = "";
-    if (
-      recentlyAddedContact &&
-      contact.name === recentlyAddedContact.name &&
-      contact.email === recentlyAddedContact.email &&
-      contact.phone === recentlyAddedContact.phone
-    ) {
-      highlight = "highlight";
-    }
-
-    contactListRef.innerHTML += `
-      <div onclick="styleContactOnclick(this, '${initials}')" class="contact ${highlight}">
-        <div class="profile-icon" style="background-color: ${contact.color};">${initials}</div>
-        <div class="name-and-email">
-          <div class="contact-name">${contact.name}</div>
-          <a>${contact.email}</a>
-        </div>
-      </div>
-    `;
-  });
-
+function clearHighlightAfterDelay() {
   setTimeout(() => {
-    const highlighted = document.querySelector(".contact.highlight");
+    let highlighted = document.querySelector(".contact.highlight");
     if (highlighted) {
       highlighted.classList.remove("highlight");
     }
@@ -235,11 +217,40 @@ function renderContacts() {
   }, 3000);
 }
 
+/* ============== RENDER CONTACTS ============== */
+function renderContacts() {
+  let contactListRef = document.getElementById("all_contacts");
+  contactListRef.innerHTML = "";
+
+  let sortedContacts = sortContacts(contacts);
+  let currentInitial = null;
+
+  sortedContacts.forEach((contact) => {
+    let firstInitial = getFirstLetter(contact.name);
+
+    if (firstInitial !== currentInitial) {
+      currentInitial = firstInitial;
+      contactListRef.innerHTML += getFirstInitialAndDevider(currentInitial);
+    }
+
+    let initials = getInitials(contact.name);
+    let highlight = isRecentlyAdded(contact) ? "highlight" : "";
+
+    contactListRef.innerHTML += getContactBasicTemplate(
+      contact,
+      initials,
+      highlight
+    );
+  });
+
+  clearHighlightAfterDelay();
+}
+
 /* ========== STYLE CONTACT BUTTON ONCLICK ========== */
 function styleContactOnclick(element, initials) {
-  document.querySelectorAll(".contact.open-contact").forEach((el) =>
-    el.classList.remove("open-contact")
-  );
+  document
+    .querySelectorAll(".contact.open-contact")
+    .forEach((el) => el.classList.remove("open-contact"));
 
   element.classList.add("open-contact");
 
@@ -424,8 +435,10 @@ function OpenContactTemplates(contact) {
 
   document.getElementById("open_contact_Template").innerHTML =
     getOpenContactTemplate(contact, initials);
-  document.getElementById("overlay").innerHTML =
-    getOpenContactMobileTemplate(contact, initials);
+  document.getElementById("overlay").innerHTML = getOpenContactMobileTemplate(
+    contact,
+    initials
+  );
 }
 
 window.onload = loadContacts;

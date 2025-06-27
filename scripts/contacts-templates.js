@@ -194,7 +194,6 @@ function getOpenContactTemplate(contact, initials) {
   `;
 }
 
-
 function getOpenContactMobileTemplate(contact, initials) {
   return /*html*/ `
     <div class="my-contact-information-section-mobile" id="user_contact_information_section_mobile" onclick="dialogPrevention(event)">
@@ -248,7 +247,6 @@ function getOpenContactMobileTemplate(contact, initials) {
   `;
 }
 
-
 function getEditDeleteMenuTemplate(contact) {
   return /*html*/ `
   <div id="edit_delete_menu" class="edit-delete-menu">
@@ -273,4 +271,25 @@ function getCreatedContactSuccessfullyMessage(){
     <span class="created-contact-message">Contact successfully created</span>
   </div>
   `
+}
+
+function getFirstInitialAndDevider(currentInitial){
+  return /*html*/ `
+        <div class="alphabet">
+          <span class="alphabet-span">${currentInitial}</span>
+          <div class="alphabet-devider"></div>
+        </div>
+      `
+}
+
+function getContactBasicTemplate(contact, initials, highlight) {
+  return /*html*/ `
+    <div onclick="styleContactOnclick(this, '${initials}')" class="contact ${highlight}">
+      <div class="profile-icon" style="background-color: ${contact.color};">${initials}</div>
+      <div class="name-and-email">
+        <div class="contact-name">${contact.name}</div>
+        <a>${contact.email}</a>
+      </div>
+    </div>
+  `;
 }
