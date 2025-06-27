@@ -21,6 +21,7 @@ async function fetchContactsAndStore(userKey) {
 }
 
 let arrayTasks = [];
+let addTaskDefaultStatus = "todo";
 let firebaseKey = localStorage.getItem("firebaseKey");
 console.log("firebaseKey:", firebaseKey); // Debug-Ausgabe
 
@@ -907,6 +908,11 @@ function searchTask() {
   }
 }
 
+function openAddTaskForStatus(status) {
+  addTaskDefaultStatus = status;
+  openAddTaskOverlay();
+}
+
 function openAddTaskOverlay() {
   let addTaskOverlayRef = document.getElementById("add_task_overlay");
   document.getElementById("add_task_overlay").classList.remove("d-none");
@@ -930,6 +936,7 @@ function closeAddTaskOverlay() {
     document.getElementById("html").style.overflow = "";
     overlay.innerHTML = "";
   }
+  addTaskDefaultStatus = "todo";
   document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);
 }
 
@@ -1515,7 +1522,7 @@ async function createTask() {
     category: selectedCategory,
     subtask: subtasks.map(st => ({ title: st, completed: false })),
     createdAt: new Date().toISOString(),
-    status: "todo",
+    status: addTaskDefaultStatus,
   };
   await fetch(
     `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`,
