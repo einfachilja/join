@@ -281,23 +281,21 @@ function updateHTML() {
 
 /* ========== OPEN AND CLOSE OVERLAY ========== */
 function openBoardCard(firebaseKey) {
-
   let boardOverlayRef = document.getElementById("board_overlay");
-
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
-
   let categoryClass = "";
   if (task.category === "User Story") {
     categoryClass = "category-user";
   } else if (task.category === "Technical Task") {
     categoryClass = "category-technical";
   }
-
   document.getElementById("board_overlay").classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
-
   boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-
+  setTimeout(() => {
+    const card = document.querySelector('.board-overlay-card');
+    if (card) card.classList.add('open');
+  }, 10);
   updateHTML();
 }
 
@@ -408,16 +406,28 @@ async function toggleSubtask(taskKey, index) {
 
 function closeBoardCard() {
   if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
-  document.getElementById("board_overlay").classList.add("d-none");
-  document.getElementById("board_overlay_card").classList.remove("board-overlay-card-show");
-  document.getElementById("board_overlay_card").classList.add("board-overlay-card-hide");
-  document.getElementById("html").style.overflow = "";
-  // Remove labels if they exist
-  let titleLabel = document.getElementById("overlay_card_title_label");
-  if (titleLabel) titleLabel.remove();
-  let descLabel = document.getElementById("overlay_card_description_label");
-  if (descLabel) descLabel.remove();
-  updateHTML();
+  const card = document.querySelector('.board-overlay-card');
+  if (card) {
+    card.classList.remove('open');
+    setTimeout(() => {
+      document.getElementById("board_overlay").classList.add("d-none");
+      document.getElementById("html").style.overflow = "";
+      // Remove labels if they exist
+      let titleLabel = document.getElementById("overlay_card_title_label");
+      if (titleLabel) titleLabel.remove();
+      let descLabel = document.getElementById("overlay_card_description_label");
+      if (descLabel) descLabel.remove();
+      updateHTML();
+    }, 400);
+  } else {
+    document.getElementById("board_overlay").classList.add("d-none");
+    document.getElementById("html").style.overflow = "";
+    let titleLabel = document.getElementById("overlay_card_title_label");
+    if (titleLabel) titleLabel.remove();
+    let descLabel = document.getElementById("overlay_card_description_label");
+    if (descLabel) descLabel.remove();
+    updateHTML();
+  }
 }
 
 function onclickProtection(event) {
@@ -916,6 +926,11 @@ function openAddTaskForStatus(status) {
 function openAddTaskOverlay() {
   let addTaskOverlayRef = document.getElementById("add_task_overlay");
   document.getElementById("add_task_overlay").classList.remove("d-none");
+  // Add modal open animation after rendering
+  setTimeout(() => {
+    const modal = document.querySelector('.board-add-task-modal');
+    if (modal) modal.classList.add('open');
+  }, 10);
   document.getElementById("html").style.overflow = "hidden";
 
   addTaskOverlayRef.innerHTML = getAddTaskOverlay();
@@ -930,11 +945,24 @@ function openAddTaskOverlay() {
 }
 
 function closeAddTaskOverlay() {
-  let overlay = document.getElementById("add_task_overlay");
-  if (overlay) {
-    overlay.classList.add("d-none");
-    document.getElementById("html").style.overflow = "";
-    overlay.innerHTML = "";
+  const modal = document.querySelector('.board-add-task-modal');
+  if (modal) {
+    modal.classList.remove('open');
+    setTimeout(() => {
+      let overlay = document.getElementById("add_task_overlay");
+      if (overlay) {
+        overlay.classList.add("d-none");
+        document.getElementById("html").style.overflow = "";
+        overlay.innerHTML = "";
+      }
+    }, 400); // exakt so lang wie die CSS-Transition!
+  } else {
+    let overlay = document.getElementById("add_task_overlay");
+    if (overlay) {
+      overlay.classList.add("d-none");
+      document.getElementById("html").style.overflow = "";
+      overlay.innerHTML = "";
+    }
   }
   addTaskDefaultStatus = "todo";
   document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);

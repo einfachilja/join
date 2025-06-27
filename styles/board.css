@@ -46,6 +46,8 @@
 
 .board-input-search:focus {
     outline: none;
+    font-size: 16px;
+    align-content: center;
 }
 
 .board-input-search::placeholder {
@@ -194,14 +196,14 @@
     align-items: center;
 }
 
+.priority-container img {
+    width: 40px;
+}
+
 .assigned-container {
     display: flex;
     align-items: center;
     padding-top: 5px;
-}
-
-.assigned-list {
-    display: contents;
 }
 
 .assigned-circle {
@@ -328,7 +330,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding-top: 12px;
+    padding-bottom: 12px;
     font-size: 16px;
 }
 
@@ -348,7 +350,8 @@
     display: inline-block;
     vertical-align: middle;
     border: 2px solid #2A3647;
-    background: transparent
+    background: transparent;
+    padding: 0;
 }
 
 
@@ -510,7 +513,6 @@
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-weight: bold;
     font-size: 1rem;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
 }
@@ -570,13 +572,13 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    font-weight: bold;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
     border: 2px solid #fff;
+    padding: 2px;
 }
 
 .assigned-name {
@@ -773,7 +775,7 @@
     margin: 24px;
     background-color: white;
     padding: 40px;
-    border-radius: 10px;
+    border-radius: 30px;
     flex: 1;
     max-width: 800px;
     max-height: 680px;
@@ -812,4 +814,28 @@
 
 .task-highlight .card {
     animation: blink 1s ease-in-out 3;
+}
+
+/* Animation für das Add Task Modal: Slide-in von links */
+.board-add-task-modal {
+    transform: translateX(100vw);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
+}
+
+.board-add-task-modal.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Animation für Board Overlay Card: Slide-in von rechts */
+.board-overlay-card {
+    transform: translateX(100vw);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
+}
+
+.board-overlay-card.open {
+    transform: translateX(0);
+    opacity: 1;
 }
