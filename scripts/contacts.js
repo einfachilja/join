@@ -19,6 +19,19 @@ function getRandomColor() {
 
 let firebaseKey = localStorage.getItem("firebaseKey");
 
+function getInitials(name) {
+  if (!name) return '';
+  const nameParts = name.trim().split(' ');
+  if (nameParts.length === 1) {
+    return nameParts[0][0].toUpperCase();
+  } else {
+    return (
+      nameParts[0][0].toUpperCase() +
+      nameParts[nameParts.length - 1][0].toUpperCase()
+    );
+  }
+}
+
 /* ============== ADD CONTACTS ============== */
 async function addNewContact(event) {
   event.preventDefault();
@@ -33,7 +46,7 @@ async function addNewContact(event) {
   recentlyAddedContact = contact;
 
   await fetch(
-    `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`,
+    `${BASE_URL}users/${firebaseKey}/contacts.json`,
     {
       method: "POST",
       body: JSON.stringify(contact),
@@ -45,10 +58,9 @@ async function addNewContact(event) {
   toggleOffMobile();
 
   setTimeout(() => {
-    setTimeout(() => {
-      toggleContactInfoOverlay(contact);
-      showAddedContactMessage();
-    }, 0);
+    const initials = getInitials(contact.name);
+    toggleContactInfoOverlay(contact, initials);
+    showAddedContactMessage();
   }, 300);
 }
 
@@ -57,8 +69,7 @@ function showAddedContactMessage() {
     "user_contact_information_section_mobile"
   );
 
-  showAddedContactMessageRef.innerHTML +=
-    getCreatedContactSuccessfullyMessage();
+  showAddedContactMessageRef.innerHTML += getCreatedContactSuccessfullyMessage();
 
   let message = document.getElementById("created_contact_message");
 
@@ -119,9 +130,7 @@ function updateLocalContact(original, updated) {
 /* ============== SAVE EDIT CONTACT ============== */
 async function saveEditContact(event, contactKey) {
   event.preventDefault();
-
   const { name, email, phone } = getTrimmedContactInput();
-
   if (
     !isValidContactInput(
       name,
@@ -136,31 +145,26 @@ async function saveEditContact(event, contactKey) {
     return;
 
   const originalContact = contacts.find((c) => c.firebaseKey === contactKey);
-  const updatedContact = buildUpdatedContact(
-    name,
-    email,
-    phone,
-    originalContact
-  );
+  const updatedContact = buildUpdatedContact(name, email, phone, originalContact);
 
   try {
     await updateContactInFirebase(contactKey, updatedContact);
     updateLocalContact(originalContact, updatedContact);
     renderContacts();
-    showContactInfo({ ...updatedContact, firebaseKey: contactKey });
+    const initials = getInitials(updatedContact.name);
+    showContactInfo({ ...updatedContact, firebaseKey: contactKey }, initials);
   } catch (error) {
     console.error("Failed to save contact:", error);
   }
   toggleOff();
   toggleOffMobile();
-  
 }
 
 /* ============== LOAD CONTACTS ============== */
 async function loadContacts() {
   try {
     const response = await fetch(
-      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`
+      `${BASE_URL}users/${firebaseKey}/contacts.json`
     );
     const data = await response.json();
 
@@ -176,18 +180,12 @@ async function loadContacts() {
   }
 }
 
-/* ============== RENDER HELPER FUNCTIONS ============== */
-
 /* ============== RENDER CONTACTS ============== */
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
   contactListRef.innerHTML = "";
 
-  contacts.sort((a, b) => {
-    let aName = a.name.trim().toUpperCase();
-    let bName = b.name.trim().toUpperCase();
-    return aName.localeCompare(bName);
-  });
+  contacts.sort((a, b) => a.name.trim().toUpperCase().localeCompare(b.name.trim().toUpperCase()));
 
   let currentInitial = null;
 
@@ -205,12 +203,8 @@ function renderContacts() {
       `;
     }
 
-    let initials = nameParts[0][0].toUpperCase();
-    if (nameParts.length >= 2) {
-      initials += nameParts[1][0].toUpperCase();
-    }
+    const initials = getInitials(contact.name);
 
-    // Check if this is the last added contact
     let highlight = "";
     if (
       recentlyAddedContact &&
@@ -222,7 +216,7 @@ function renderContacts() {
     }
 
     contactListRef.innerHTML += `
-      <div onclick="styleContactOnclick(this)" class="contact ${highlight}">
+      <div onclick="styleContactOnclick(this, '${initials}')" class="contact ${highlight}">
         <div class="profile-icon" style="background-color: ${contact.color};">${initials}</div>
         <div class="name-and-email">
           <div class="contact-name">${contact.name}</div>
@@ -242,10 +236,10 @@ function renderContacts() {
 }
 
 /* ========== STYLE CONTACT BUTTON ONCLICK ========== */
-function styleContactOnclick(element) {
-  document.querySelectorAll(".contact.open-contact").forEach((el) => {
-    el.classList.remove("open-contact");
-  });
+function styleContactOnclick(element, initials) {
+  document.querySelectorAll(".contact.open-contact").forEach((el) =>
+    el.classList.remove("open-contact")
+  );
 
   element.classList.add("open-contact");
 
@@ -253,26 +247,22 @@ function styleContactOnclick(element) {
   const contact = contacts.find((c) => c.name === name);
   if (contact) {
     if (window.innerWidth <= 800) {
-      toggleContactInfoOverlay(contact);
+      toggleContactInfoOverlay(contact, initials);
     } else {
-      showContactInfo(contact);
+      showContactInfo(contact, initials);
     }
   }
 }
 
-function toggleContactInfoOverlay(contact) {
+function toggleContactInfoOverlay(contact, initials) {
   const overlayRef = document.getElementById("overlay");
-  overlayRef.innerHTML = ""; // Clear previous content
-
-  overlayRef.innerHTML += getOpenContactMobileTemplate(contact); // Add new contact info
-
-  overlayRef.classList.remove("d_none"); // Show the overlay
+  overlayRef.innerHTML = getOpenContactMobileTemplate(contact, initials);
+  overlayRef.classList.remove("d_none");
 }
 
-/* ============= SHOW CONTACT TEMPLATE ============= */
-function showContactInfo(contact) {
+function showContactInfo(contact, initials) {
   let contactInfoRef = document.getElementById("open_contact_Template");
-  contactInfoRef.innerHTML = getOpenContactTemplate(contact);
+  contactInfoRef.innerHTML = getOpenContactTemplate(contact, initials);
 }
 
 /* ========== DELETE Contact FROM FIREBASE ============== */
@@ -280,19 +270,16 @@ async function deleteContact(contactKey) {
   try {
     let response = await fetch(
       `${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`,
-      {
-        method: "DELETE",
-      }
+      { method: "DELETE" }
     );
 
     if (!response.ok) throw new Error("Delete failed");
 
-    contacts = contacts.filter((c) => c.contactKey !== contactKey);
+    contacts = contacts.filter((c) => c.firebaseKey !== contactKey);
 
     const contactInfoRef = document.getElementById("open_contact_Template");
-    if (contactInfoRef) {
-      contactInfoRef.innerHTML = "";
-    }
+    if (contactInfoRef) contactInfoRef.innerHTML = "";
+
     toggleOff();
     await loadContacts();
   } catch (error) {
@@ -301,7 +288,6 @@ async function deleteContact(contactKey) {
 }
 
 /* ============= EMAIL VALIDATION ============= */
-
 function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
   const emailInput = document.getElementById(inputId);
   const error = document.getElementById(errorId);
@@ -342,16 +328,14 @@ function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
 /* =================== OVERLAY ================== */
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
-  overlayRef.innerHTML = "";
-  overlayRef.innerHTML += overlayTemplate();
+  overlayRef.innerHTML = overlayTemplate();
+
   document
     .getElementById("new_contact_email")
     .addEventListener("input", isEmailValid);
 
   overlayRef.classList.remove("d_none");
-  setTimeout(() => {
-    overlayRef.classList.add("active");
-  }, 0);
+  setTimeout(() => overlayRef.classList.add("active"), 0);
   setTimeout(() => {
     const modal = document.querySelector(".add-new-contact-template");
     if (modal) modal.classList.add("slide-in");
@@ -359,16 +343,14 @@ function toggleOverlay() {
 }
 
 function openEditDeleteMenu(contact) {
-  let openEditDeleteMenuRef = document.getElementById("edit_delete_menu");
-  openEditDeleteMenuRef.innerHTML = getEditDeleteMenuTemplate(contact);
+  document.getElementById("edit_delete_menu").innerHTML =
+    getEditDeleteMenuTemplate(contact);
 }
 
 /* =================== EDIT OVERLAY ================== */
 function toggleEditOverlay(contact) {
   const overlayRef = document.getElementById("overlay");
-  overlayRef.innerHTML = "";
-
-  overlayRef.innerHTML += overlayEditTemplate(
+  overlayRef.innerHTML = overlayEditTemplate(
     contact.name,
     contact.email,
     contact.phone,
@@ -376,7 +358,6 @@ function toggleEditOverlay(contact) {
   );
 
   overlayRef.classList.remove("d_none");
-
   setTimeout(() => overlayRef.classList.add("active"), 0);
   setTimeout(() => {
     const modal = document.querySelector(".add-new-contact-template");
@@ -386,17 +367,14 @@ function toggleEditOverlay(contact) {
 
 function closeEditDeleteMenu() {
   const menuRef = document.getElementById("edit_delete_menu");
-  if (menuRef) {
-    menuRef.innerHTML = "";
-  }
+  if (menuRef) menuRef.innerHTML = "";
 }
 
 function toggleMobileEditOverlay(contact) {
   closeEditDeleteMenu();
-
   const overlayRef = document.getElementById("overlay_mobile");
 
-  overlayRef.innerHTML += overlayEditTemplate(
+  overlayRef.innerHTML = overlayEditTemplate(
     contact.name,
     contact.email,
     contact.phone,
@@ -404,7 +382,6 @@ function toggleMobileEditOverlay(contact) {
   );
 
   overlayRef.classList.remove("d_none");
-
   setTimeout(() => overlayRef.classList.add("active"), 0);
   setTimeout(() => {
     const modal = document.querySelector(".add-new-contact-template");
@@ -420,12 +397,9 @@ function toggleOff() {
   const overlayRef = document.getElementById("overlay");
   const modal = document.querySelector(".add-new-contact-template");
 
-  if (modal) {
-    modal.classList.remove("slide-in");
-  }
+  if (modal) modal.classList.remove("slide-in");
 
   overlayRef.classList.remove("active");
-
   setTimeout(() => {
     overlayRef.classList.add("d_none");
     overlayRef.innerHTML = "";
@@ -436,16 +410,22 @@ function toggleOffMobile() {
   const overlayRef = document.getElementById("overlay_mobile");
   const modal = document.querySelector(".add-new-contact-template");
 
-  if (modal) {
-    modal.classList.remove("slide-in");
-  }
+  if (modal) modal.classList.remove("slide-in");
 
   overlayRef.classList.remove("active");
-
   setTimeout(() => {
     overlayRef.classList.add("d_none");
     overlayRef.innerHTML = "";
   }, 300);
+}
+
+function OpenContactTemplates(contact) {
+  const initials = getInitials(contact.name);
+
+  document.getElementById("open_contact_Template").innerHTML =
+    getOpenContactTemplate(contact, initials);
+  document.getElementById("overlay").innerHTML =
+    getOpenContactMobileTemplate(contact, initials);
 }
 
 window.onload = loadContacts;
