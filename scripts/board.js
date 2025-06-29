@@ -23,6 +23,7 @@ async function fetchContactsAndStore(userKey) {
 let arrayTasks = [];
 let addTaskDefaultStatus = "todo";
 let firebaseKey = localStorage.getItem("firebaseKey");
+let lastCreatedTaskKey = null;
 console.log("firebaseKey:", firebaseKey); // Debug-Ausgabe
 
 /* ========== LOAD TASKS FROM FIREBASE ========== */
@@ -191,7 +192,7 @@ function generateTodoHTML(element) {
   // Nur das innere Card-Element bekommt das id-Attribut, kein onclick am äußeren Wrapper!
   return `
     <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
-        <div class="card" id="${element.firebaseKey}">
+        <div class="card${element.firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${element.firebaseKey}">
             <div class="card-header">
             <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
             <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
@@ -1618,13 +1619,15 @@ async function createTask() {
   setTimeout(() => {
     const lastTask = arrayTasks[arrayTasks.length - 1];
     if (lastTask && lastTask.firebaseKey) {
-      const newTaskEl = document.getElementById(lastTask.firebaseKey);
-      if (newTaskEl) {
-        newTaskEl.classList.add("task-highlight");
-        setTimeout(() => {
-          newTaskEl.classList.remove("task-highlight");
-        }, 3000);
-      }
+      lastCreatedTaskKey = lastTask.firebaseKey;
+      updateHTML();
+      setTimeout(() => {
+        const newTaskEl = document.getElementById(lastCreatedTaskKey);
+        if (newTaskEl) {
+          newTaskEl.classList.remove("task-blink");
+        }
+        lastCreatedTaskKey = null;
+      }, 2000);
     }
   }, 100);
 }
@@ -1681,7 +1684,7 @@ function openMoveTaskMenu(taskKey, event) {
   dropdown.className = 'move-task-dropdown-menu';
   dropdown.style.position = 'absolute';
   dropdown.style.zIndex = '1000';
-  dropdown.style.minWidth = '120px';
+  dropdown.style.minWidth = '140px';
   dropdown.style.background = '#2A3647';
   dropdown.style.color = 'white';
   dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';

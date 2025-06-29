@@ -1,12 +1,4 @@
 @media(max-width: 1040px) {
-    .board-main {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        min-height: 100vh;
-        max-height: unset;
-        padding: 0;
-    }
 
     .board-container {
         width: 100vw;
@@ -34,22 +26,19 @@
         cursor: pointer;
     }
 
-    .board-add-task-btn {
-        display: none;
-    }
-
-    .board-add-task-modal {
-        max-width: 500px;
-        padding: 24px;
-        gap: 0;
-    }
-
-    .board-add-task-modal .form-cols {
-        gap: 0;
-    }
-
-    .form-actions {
+    .board-main {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+        max-height: unset;
         padding: 0;
+    }
+
+    .board-main-box {
+        width: auto;
+        margin-top: 12px;
+        padding: 24px;
     }
 
     .drag-area {
@@ -74,12 +63,6 @@
         border-radius: 4px;
     }
 
-    .board-main-box {
-        width: auto;
-        margin-top: 12px;
-        padding: 24px;
-    }
-
     .card {
         width: 100%;
         min-width: 200px;
@@ -92,12 +75,31 @@
         display: block;
     }
 
+    .board-add-task-modal {
+        max-width: 500px;
+        padding: 24px;
+        gap: 0;
+    }
+
+    .board-add-task-modal .form-cols {
+        gap: 0;
+    }
+
+    .form-actions {
+        padding: 0;
+    }
+
+    .board-add-task-btn {
+        display: none;
+    }
+
     .empty-message {
         width: 100%;
     }
 }
 
 @media(max-width: 450px) {
+
     .board-overlay-card {
         padding: 24px;
     }
