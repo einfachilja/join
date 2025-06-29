@@ -369,7 +369,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         </ul>
       </div>
       <div id="overlay_card_footer" class="overlay-card-footer">
-        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
+        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img class="delete-icon" src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
         <img id="seperator" src="./assets/icons/board-separator-icon.svg" alt="">
         <div id="edit_btn" class="edit-btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok</div>

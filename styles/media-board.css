@@ -60,7 +60,6 @@
         overflow-y: visible;
         min-height: 120px;
         padding-bottom: 8px;
-        width: 100vw;
         box-sizing: border-box;
         scroll-snap-type: x mandatory;
     }
@@ -113,5 +112,9 @@
     .drag-area::-webkit-scrollbar-thumb {
         background: #bdbdbd;
         border-radius: 4px;
+    }
+
+    .empty-message {
+        width: 100%;
     }
 }
