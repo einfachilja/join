@@ -188,9 +188,10 @@ function generateTodoHTML(element) {
   const title = typeof element.title === 'string' ? element.title : '';
   const description = typeof element.description === 'string' ? element.description : '';
 
+  // Nur das innere Card-Element bekommt das id-Attribut, kein onclick am äußeren Wrapper!
   return `
-    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
-        <div class="card">
+    <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
+        <div class="card" id="${element.firebaseKey}">
             <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
             <span class="card-title">${title}</span>
             <span class="card-description">${description}</span>
@@ -277,14 +278,26 @@ function updateHTML() {
       document.getElementById("done").innerHTML += generateTodoHTML(element);
     }
   }
+
+  // Korrigiert: Card-Click nur auf Card selbst
+  ['todo', 'progress', 'feedback', 'done'].forEach(section => {
+    const sectionEl = document.getElementById(section);
+    if (!sectionEl) return;
+    // Alle vorherigen EventListener entfernen (sicherstellen)
+    sectionEl.onclick = null;
+    // Event Delegation: Klicke nur auf Cards
+    sectionEl.addEventListener('click', function(event) {
+      const card = event.target.closest('.card');
+      if (card && card.id) {
+        openBoardCard(card.id);
+      }
+    });
+  });
 }
 
 /* ========== OPEN AND CLOSE OVERLAY ========== */
 function openBoardCard(firebaseKey) {
   let boardOverlayRef = document.getElementById("board_overlay");
-  // Neue Logik: Overlay-Status vor dem Anzeigen abfragen
-  const overlay = document.getElementById("board_overlay");
-  const wasHidden = overlay.classList.contains("d-none");
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
   let categoryClass = "";
   if (task.category === "User Story") {
@@ -295,17 +308,13 @@ function openBoardCard(firebaseKey) {
   document.getElementById("board_overlay").classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
   boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-  // Neue Logik für .open-Klasse
-  const card = document.querySelector('.board-overlay-card');
-  if (wasHidden) {
-    // Slide-in Animation nur beim ersten Öffnen
-    setTimeout(() => {
-      if (card) card.classList.add('open');
-    }, 10);
-  } else {
-    // Beim Refresh direkt sichtbar lassen
-    if (card) card.classList.add('open');
-  }
+  // Animation: .open-Klasse nach kurzem Timeout immer hinzufügen
+  setTimeout(() => {
+    const card = document.querySelector('.board-overlay-card');
+    if (card) {
+      card.classList.add('open');
+    }
+  }, 10);
   updateHTML();
 }
 
