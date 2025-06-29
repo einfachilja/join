@@ -194,7 +194,9 @@ function generateTodoHTML(element) {
         <div class="card" id="${element.firebaseKey}">
             <div class="card-header">
             <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
-            <img class="card-header-move-arrow" src="./assets/icons/board-move-arrow.svg">
+            <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
+              <img class="card-header-move-arrow" src="./assets/icons/board-move-arrow.svg" alt="Move Task" />
+            </button>
             </div>
             <span class="card-title">${title}</span>
             <span class="card-description">${description}</span>
@@ -1662,3 +1664,123 @@ function initAddTaskOverlayLogic() {
   setupDateValidation();
   resetForm();
 }
+// ========== MOVE TASK MENU DROPDOWN ==========
+function openMoveTaskMenu(taskKey, event) {
+  event.stopPropagation();
+  // Remove any existing dropdowns
+  closeMoveTaskMenu();
+
+  // Find the move arrow button (the one just clicked)
+  let btn = event.currentTarget;
+  // Find the closest .card element
+  let card = btn.closest('.card');
+  if (!card) return;
+
+  // Create dropdown container
+  const dropdown = document.createElement('div');
+  dropdown.className = 'move-task-dropdown-menu';
+  dropdown.style.position = 'absolute';
+  dropdown.style.zIndex = '1000';
+  dropdown.style.minWidth = '140px';
+  dropdown.style.background = '#2A3647';
+  dropdown.style.color = 'hsl(0, 0%, 80%)';
+  dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+  dropdown.style.borderRadius = '24px';
+  dropdown.style.padding = '8px 0';
+  dropdown.style.fontSize = '16px';
+  dropdown.style.userSelect = 'none';
+
+  // Status options
+  const statuses = [
+    { key: 'todo', label: 'To do' },
+    { key: 'progress', label: 'In progress' },
+    { key: 'feedback', label: 'Await feedback' },
+    { key: 'done', label: 'Done' }
+  ];
+
+  // Find the current task
+  const currentTask = arrayTasks.find(t => t.firebaseKey === taskKey);
+  const currentStatus = currentTask ? currentTask.status : null;
+
+  // Handler for option click
+  function handleMoveClick(statusKey) {
+    currentDraggedElement = taskKey; // set for moveTo
+    moveTo(statusKey);
+    closeMoveTaskMenu();
+  }
+
+  // Build menu options: exclude current status
+  statuses.forEach(s => {
+    if (s.key === currentStatus) return; // Skip the current status
+    const option = document.createElement('div');
+    option.className = 'move-task-dropdown-option';
+    option.textContent = s.label;
+    option.style.padding = '8px 16px';
+    option.style.cursor = 'pointer';
+    option.onclick = function (e) {
+      e.stopPropagation();
+      handleMoveClick(s.key);
+    };
+    dropdown.appendChild(option);
+  });
+
+  // Position dropdown: below the button, or fallback to card top right
+  // Get button position relative to page
+  const btnRect = btn.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  // Use scrollX/Y for page scroll offset
+  let left = btnRect.left + window.scrollX;
+  let top = btnRect.bottom + window.scrollY + 4; // 4px below button
+  // If would overflow right, adjust
+  if (left + 160 > window.innerWidth) {
+    left = window.innerWidth - 170;
+  }
+  // If would overflow bottom, show above
+  if (top + 180 > window.innerHeight + window.scrollY) {
+    top = btnRect.top + window.scrollY - 180;
+  }
+  dropdown.style.left = left + 'px';
+  dropdown.style.top = top + 'px';
+
+  // Add to body for absolute positioning
+  document.body.appendChild(dropdown);
+
+  // Store reference for later removal
+  window._moveTaskDropdown = dropdown;
+
+  // Close on outside click/touch
+  function handleOutside(e) {
+    // Don't close if click inside dropdown
+    if (dropdown.contains(e.target)) return;
+    closeMoveTaskMenu();
+  }
+  document.addEventListener('mousedown', handleOutside, { capture: true });
+  document.addEventListener('touchstart', handleOutside, { capture: true });
+
+  // Also close when scrolling
+  function handleScroll() {
+    closeMoveTaskMenu();
+  }
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  // Save cleanup for later
+  window._moveTaskDropdownCleanup = function () {
+    document.removeEventListener('mousedown', handleOutside, { capture: true });
+    document.removeEventListener('touchstart', handleOutside, { capture: true });
+    window.removeEventListener('scroll', handleScroll, { passive: true });
+  };
+}
+
+function closeMoveTaskMenu() {
+  if (window._moveTaskDropdown) {
+    window._moveTaskDropdown.remove();
+    window._moveTaskDropdown = null;
+  }
+  if (typeof window._moveTaskDropdownCleanup === 'function') {
+    window._moveTaskDropdownCleanup();
+    window._moveTaskDropdownCleanup = null;
+  }
+}
+
+// Also close on resize for safety
+window.addEventListener('resize', closeMoveTaskMenu);

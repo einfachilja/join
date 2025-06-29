@@ -952,3 +952,11 @@
 .form-actions-board {
     justify-content: flex-end;
 }
+
+.card-header-move-arrow-btn {
+    border: none;
+}
+
+.move-task-dropdown-menu {
+    background-color: #2A3647;
+}
