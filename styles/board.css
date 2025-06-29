@@ -297,6 +297,12 @@
     margin-right: 12px;
 }
 
+.board-overlay-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .overlay-card-category {
     color: #ffffff;
     width: 164px;
@@ -805,6 +811,12 @@
     gap: 24px;
 }
 
+.board-add-task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .board-add-task-modal .form-cols {
     display: flex;
     gap: 48px;
@@ -889,14 +901,17 @@
 .overlay-meta-row {
     display: flex;
     align-items: flex-start;
-    gap: 32px; /* Oder z.B. 24px, je nach Geschmack */
+    gap: 32px;
+    /* Oder z.B. 24px, je nach Geschmack */
     margin: 18px 0 6px 0;
 }
+
 .overlay-meta-row .assigned-list {
     min-width: 160px;
     max-width: 280px;
     flex: 1 1 auto;
 }
+
 .overlay-meta-row .priority-headline {
     min-width: 120px;
     flex: 0 0 auto;
@@ -904,8 +919,20 @@
     align-items: center;
     gap: 6px;
 }
+
 .overlay-meta-row .priority-container {
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+.board-close-icon {
+    width: 32px;
+}
+
+.board-close-icon:hover {
+    background-color: #D9D9D9;
+    border-radius: 50%;
+    cursor: pointer;
+
 }

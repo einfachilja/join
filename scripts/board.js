@@ -286,7 +286,7 @@ function updateHTML() {
     // Alle vorherigen EventListener entfernen (sicherstellen)
     sectionEl.onclick = null;
     // Event Delegation: Klicke nur auf Cards
-    sectionEl.addEventListener('click', function(event) {
+    sectionEl.addEventListener('click', function (event) {
       const card = event.target.closest('.card');
       if (card && card.id) {
         openBoardCard(card.id);
@@ -329,7 +329,10 @@ function getOpenBoardCardTemplate(categoryClass, task) {
   }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
+      <div class="board-overlay-card-header">
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
+      <img class="board-close-icon" src="./assets/icons/board-close.svg" onclick="closeBoardCard()">
+      </div>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date">Due date: <span>${task.dueDate}</span></span>
@@ -997,7 +1000,10 @@ function handleAddTaskOverlayClickOutside(event) {
 
 function getAddTaskOverlay() {
   return `          <div class="board-add-task-modal">
+            <div class="board-add-task-header">
             <h1 class="h1-add-task">Add Task</h1>
+            <img class="board-close-icon" src="./assets/icons/board-close.svg" onclick="closeAddTaskOverlay()">
+             </div>
             <form id="task-form" onsubmit="return false;">
               <div class="form-cols">
                 <!-- linke Spalte -->
