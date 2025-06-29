@@ -956,8 +956,10 @@
 
 .card-header-move-arrow-btn {
     border: none;
+    background-color: white;
 }
 
 .move-task-dropdown-menu {
     background-color: #2A3647;
+    
 }

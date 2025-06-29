@@ -8,6 +8,14 @@
         padding: 0;
     }
 
+    .board-container {
+        width: 100vw;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0 0 60px 0;
+        box-sizing: border-box;
+    }
+
     .board-header {
         display: block;
         padding: 24px 16px;
@@ -16,15 +24,9 @@
     .board-header-mobile {
         display: flex;
         justify-content: space-between;
+        margin-top: 96px;
         margin-bottom: 12px;
         padding: 8px 0;
-        margin-top: 96px;
-    }
-
-    .board-main-box {
-        width: auto;
-        padding: 24px;
-        margin-top: 12px;
     }
 
     .board-header-add-task {
@@ -34,35 +36,12 @@
 
     .board-add-task-btn {
         display: none;
-
     }
 
-    .drag-area {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
-        overflow-x: auto;
-        overflow-y: visible;
-        min-height: 120px;
-        padding-bottom: 8px;
-        box-sizing: border-box;
-        scroll-snap-type: x mandatory;
-    }
-
-    .board-container {
-        margin: 0;
-        padding: 0 0 60px 0;
-        width: 100vw;
-        min-height: 100vh;
-        box-sizing: border-box;
-    }
-
-    .card {
-        max-width: 250px;
-        min-width: 200px;
-        padding: 12px 8px;
-        width: 100%;
-        box-sizing: border-box;
+    .board-add-task-modal {
+        max-width: 500px;
+        padding: 24px;
+        gap: 0;
     }
 
     .board-add-task-modal .form-cols {
@@ -73,10 +52,16 @@
         padding: 0;
     }
 
-    .board-add-task-modal {
-        gap: 0;
-        padding: 24px;
-        max-width: 500px;
+    .drag-area {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        min-height: 120px;
+        padding-bottom: 8px;
+        overflow-x: auto;
+        overflow-y: visible;
+        box-sizing: border-box;
+        scroll-snap-type: x mandatory;
     }
 
     .drag-area::-webkit-scrollbar {
@@ -89,11 +74,35 @@
         border-radius: 4px;
     }
 
-    .empty-message {
+    .board-main-box {
+        width: auto;
+        margin-top: 12px;
+        padding: 24px;
+    }
+
+    .card {
         width: 100%;
+        min-width: 200px;
+        max-width: 250px;
+        padding: 12px 8px;
+        box-sizing: border-box;
     }
 
     .card-header-move-arrow {
         display: block;
+    }
+
+    .empty-message {
+        width: 100%;
+    }
+}
+
+@media(max-width: 450px) {
+    .board-overlay-card {
+        padding: 24px;
+    }
+
+    .overlay-card-title {
+        font-size: 32px;
     }
 }

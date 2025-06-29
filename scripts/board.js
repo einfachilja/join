@@ -1681,11 +1681,11 @@ function openMoveTaskMenu(taskKey, event) {
   dropdown.className = 'move-task-dropdown-menu';
   dropdown.style.position = 'absolute';
   dropdown.style.zIndex = '1000';
-  dropdown.style.minWidth = '140px';
+  dropdown.style.minWidth = '120px';
   dropdown.style.background = '#2A3647';
-  dropdown.style.color = 'hsl(0, 0%, 80%)';
+  dropdown.style.color = 'white';
   dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-  dropdown.style.borderRadius = '24px';
+  dropdown.style.borderRadius = '0 20px 20px 20px';
   dropdown.style.padding = '8px 0';
   dropdown.style.fontSize = '16px';
   dropdown.style.userSelect = 'none';
