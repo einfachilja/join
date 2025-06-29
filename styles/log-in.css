@@ -9,7 +9,6 @@ a {
   text-decoration: none;
 }
 
-/* ========== Logo Section ========== */
 .logo-section {
   position: absolute;
   top: 36px;
@@ -22,7 +21,6 @@ a {
   height: 121.97px;
 }
 
-/* ========== Loader ========== */
 .loader {
   position: fixed;
   top: 0;

@@ -1,5 +1,10 @@
 let confirmPasswordTouched = false;
 
+const firstName = document.getElementById("first-name");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const privacy = document.getElementById("privacy-policy");
+
 sessionStorage.removeItem("userName");
 sessionStorage.removeItem("userColor");
 sessionStorage.removeItem("email");
@@ -9,14 +14,9 @@ sessionStorage.removeItem("email");
  * @returns {boolean} True if valid, otherwise false.
  */
 function isEmailValid() {
-  const email = document.getElementById("email").value.trim();
+  const email = emailInput.value.trim();
   const error = document.getElementById("email-error");
-
-  if (email === "") {
-    error.classList.remove("visible");
-    return false;
-  }
-
+  if (email === "") return error.classList.remove("visible"), false;
   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   error.classList.toggle("visible", !valid);
   return valid;
@@ -27,14 +27,9 @@ function isEmailValid() {
  * @returns {boolean} True if valid, otherwise false.
  */
 function isPasswordValid() {
-  const password = document.getElementById("password").value.trim();
+  const password = passwordInput.value.trim();
   const error = document.getElementById("password-error");
-
-  if (password === "") {
-    error.classList.remove("visible");
-    return false;
-  }
-
+  if (password === "") return error.classList.remove("visible"), false;
   const valid = password.length >= 8;
   error.classList.toggle("visible", !valid);
   return valid;
@@ -45,68 +40,51 @@ function isPasswordValid() {
  * @returns {boolean} True if matching, otherwise false.
  */
 function doPasswordsMatch() {
-  const password = document.getElementById("password").value.trim();
+  const password = passwordInput.value.trim();
   const confirm = document.getElementById("confirm-password").value.trim();
   const error = document.getElementById("confirm-password-error");
-
-  if (shouldSkipPasswordMatchCheck(password, confirm)) {
-    error.classList.remove("visible");
-    return false;
-  }
-
-  const matches = password === confirm;
-  error.classList.toggle("visible", !matches);
-  return matches;
+  if (confirm === "" || !confirmPasswordTouched || password.length < 8 || confirm.length < password.length)
+    return error.classList.remove("visible"), false;
+  const match = password === confirm;
+  error.classList.toggle("visible", !match);
+  return match;
 }
 
-/**
- * Determines if password matching should be skipped.
- * @param {string} password - The main password.
- * @param {string} confirm - The confirmation input.
- * @returns {boolean} True if check should be skipped.
- */
-function shouldSkipPasswordMatchCheck(password, confirm) {
-  return (
-    confirm === "" ||
-    !confirmPasswordTouched ||
-    password.length < 8 ||
-    confirm.length < password.length
-  );
-}
-
-/**
- * Enables or disables the sign-up button based on form validity.
- */
 function checkFormValidity() {
-  const name = document.getElementById("first-name").value.trim();
-  const emailValid = isEmailValid();
-  const passwordValid = isPasswordValid();
-  const passwordsMatch = doPasswordsMatch();
-  const privacyPolicy = document.getElementById("privacy-policy").checked;
-
-  const allValid =
-    name && emailValid && passwordValid && passwordsMatch && privacyPolicy;
+  const name = firstName.value.trim();
+  const allValid = name && isEmailValid() && isPasswordValid() && doPasswordsMatch() && privacy.checked;
   document.getElementById("register-btn").disabled = !allValid;
 }
 
 /**
- * Starts user registration if all inputs are valid.
+ * Registers a new user after validating input and checking for duplicate emails.
+ * - Saves user to Firebase
+ * - Sets session storage
+ * - Redirects to summary page
+ * @returns {Promise<void>}
  */
-function registerUser() {
-  const name = document.getElementById("first-name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  const emailValid = isEmailValid();
-  const passwordValid = isPasswordValid();
-  const match = doPasswordsMatch();
-  const privacy = document.getElementById("privacy-policy").checked;
-
-  if (!emailValid || !passwordValid || !match || !privacy) {
+async function registerUser() {
+  const name = firstName.value.trim();
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!isEmailValid() || !isPasswordValid() || !doPasswordsMatch() || !privacy.checked) return;
+  const res = await fetch(userfirebaseURL);
+  const users = await res.json();
+  for (let k in users) if (users[k].email === email) {
+    showMessage("E-Mail already registered!", false);
     return;
   }
-
-  saveUser(name, email, password);
+  const color = addColorToUserProfile();
+  await fetch(userfirebaseURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password, color })
+  });
+  sessionStorage.setItem("userName", name);
+  sessionStorage.setItem("userColor", color);
+  sessionStorage.setItem("email", email);
+  showMessage("You Signed Up successfully", true);
+  setTimeout(() => location.href = "./summary.html", 2000);
 }
 
 /**
@@ -115,47 +93,12 @@ function registerUser() {
  */
 function addColorToUserProfile() {
   const colors = [
-    "rgb(255, 122, 0)",
-    "rgb(255, 94, 179)",
-    "rgb(110, 82, 255)",
-    "rgb(147, 39, 255)",
-    "rgb(0, 190, 232)",
-    "rgb(31, 215, 193)",
-    "rgb(255, 116, 94)",
-    "rgb(255, 163, 94)",
-    "rgb(252, 113, 255)",
-    "rgb(255, 199, 1)",
-    "rgb(0, 56, 255)",
-    "rgb(195, 255, 43)",
-    "rgb(255, 230, 43)",
-    "rgb(255, 70, 70)",
-    "rgb(255, 187, 43)",
+    "rgb(255, 122, 0)", "rgb(255, 94, 179)", "rgb(110, 82, 255)", "rgb(147, 39, 255)",
+    "rgb(0, 190, 232)", "rgb(31, 215, 193)", "rgb(255, 116, 94)", "rgb(255, 163, 94)",
+    "rgb(252, 113, 255)", "rgb(255, 199, 1)", "rgb(0, 56, 255)", "rgb(195, 255, 43)",
+    "rgb(255, 230, 43)", "rgb(255, 70, 70)", "rgb(255, 187, 43)",
   ];
   return colors[Math.floor(Math.random() * colors.length)];
-}
-
-/**
- * Saves a new user to Firebase and shows confirmation.
- * @param {string} name - The user's name.
- * @param {string} email - The user's email.
- * @param {string} password - The user's password.
- */
-function saveUser(name, email, password) {
-  const color = addColorToUserProfile();
-  fetch(userfirebaseURL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password, color }),
-  })
-    .then(() => {
-      sessionStorage.setItem("userName", name);
-      sessionStorage.setItem("userColor", color);
-      sessionStorage.setItem("email", email);
-
-      showMessage("You Signed Up successfully", true);
-      setTimeout(() => (window.location.href = "./summary.html"), 2000);
-    })
-    .catch(console.error);
 }
 
 /**
@@ -165,40 +108,27 @@ function saveUser(name, email, password) {
  */
 function showMessage(message, isSuccess = false) {
   const messageBox = document.getElementById("message-box");
-
   messageBox.textContent = message;
-  messageBox.style.backgroundColor = isSuccess
-    ? "rgb(42, 54, 71)"
-    : "rgb(220, 53, 69)";
+  messageBox.style.backgroundColor = isSuccess ? "rgb(42, 54, 71)" : "rgb(220, 53, 69)";
   messageBox.classList.add("visible");
   messageBox.classList.remove("d-none");
-
   setTimeout(() => {
     messageBox.classList.remove("visible");
     messageBox.classList.add("d-none");
   }, 2000);
 }
 
-/**
- * Handles email input event.
- */
 function handleEmailInput() {
   isEmailValid();
   checkFormValidity();
 }
 
-/**
- * Handles password input event.
- */
 function handlePasswordInput() {
   isPasswordValid();
   doPasswordsMatch();
   checkFormValidity();
 }
 
-/**
- * Handles confirm password input event.
- */
 function handleConfirmPasswordInput() {
   doPasswordsMatch();
   checkFormValidity();
@@ -211,12 +141,9 @@ function handleConfirmPasswordInput() {
 function updatePasswordIcon(input) {
   const icon = input.closest(".input-container").querySelector(".toggle-password");
   if (!icon) return;
-
-  if (input.value.length > 0) {
-    icon.src = "./assets/img/2. log-sign-page/visibility_off.svg";
-  } else {
-    icon.src = "./assets/img/2. log-sign-page/lock-icon.svg";
-  }
+  icon.src = input.value.length > 0
+    ? "./assets/img/2. log-sign-page/visibility_off.svg"
+    : "./assets/img/2. log-sign-page/lock-icon.svg";
 }
 
 /**
@@ -227,12 +154,9 @@ function updatePasswordIcon(input) {
 function togglePasswordWithIcon(inputId, icon) {
   const input = document.getElementById(inputId);
   if (!input) return;
-
   const isVisible = input.type === "text";
   input.type = isVisible ? "password" : "text";
-
   icon.src = isVisible
     ? "./assets/img/2. log-sign-page/visibility_off.svg"
     : "./assets/img/2. log-sign-page/visibility_eye.svg";
 }
-
