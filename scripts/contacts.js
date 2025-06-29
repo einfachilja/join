@@ -43,7 +43,7 @@ async function getFirebaseKeyAndLoadContacts(contact) {
 }
 
 
-function addNewContact(event) {
+async function addNewContact(event) {
   event.preventDefault();
 
   const name = new_contact_name.value.trim();
@@ -55,17 +55,25 @@ function addNewContact(event) {
   const contact = { name, email, phone, color: getRandomColor() };
   recentlyAddedContact = contact;
 
-  getFirebaseKeyAndLoadContacts(contact);
+  await getFirebaseKeyAndLoadContacts(contact);
 
   toggleOff();
   toggleOffMobile();
 
-  setTimeout(() => {
-    const initials = getInitials(contact.name);
-    toggleContactInfoOverlay(contact, initials);
-    showAddedContactMessage();
-  }, 300);
+  const fullContact = contacts.find(
+    (c) =>
+      c.name === contact.name &&
+      c.email === contact.email &&
+      c.phone === contact.phone
+  );
+
+  if (fullContact) {
+    const initials = getInitials(fullContact.name);
+    showContactInfo(fullContact, initials); 
+    showAddedContactMessage(); 
+  }
 }
+
 
 
 function showAddedContactMessage() {
