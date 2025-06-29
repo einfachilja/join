@@ -206,48 +206,7 @@
     </div>
   </div>
 
-  <script>
-    function showWelcomeMessage() {
-      const name = sessionStorage.getItem("userName") || "Guest";
-      const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
-      const hour = new Date().getHours();
-      const greeting =
-        hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-
-      const mobileTextEl = document.getElementById("welcome-message-text-mobile");
-      const mobileNameEl = document.getElementById("welcome-username-mobile");
-      const desktopTextEl = document.getElementById("welcome-message-text");
-      const desktopNameEl = document.getElementById("welcome-username");
-
-      if (window.innerWidth <= 800) {
-        // Overlay welcome message
-        const overlay = document.getElementById("mobile-welcome-overlay");
-        const overlayText = document.getElementById("mobile-welcome-overlay-text");
-        const overlayName = document.getElementById("mobile-welcome-overlay-username");
-
-        overlay.classList.remove("d_none");
-        overlayText.textContent = `${greeting},`;
-        overlayName.textContent = name;
-        overlayName.style.color = color;
-
-        document.querySelector("main").style.display = "none";
-
-        setTimeout(() => {
-          overlay.classList.add("d_none");
-          document.querySelector("main").style.display = "";
-        }, 4000);
-
-        mobileTextEl.textContent = `${greeting},`;
-        mobileNameEl.textContent = name;
-        mobileNameEl.style.color = color;
-      } else {
-        desktopTextEl.textContent = `${greeting},`;
-        desktopNameEl.textContent = name;
-        desktopNameEl.style.color = color;
-      }
-    }
-  </script>
-
+  
   <script src="./scripts/desktop-template.js"></script>
   <script src="./scripts/summary.js"></script>
 </body>
