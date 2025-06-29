@@ -6,53 +6,56 @@ let firebaseKey = localStorage.getItem("firebaseKey"); // Benutzer-spezifischer 
 window.addEventListener("DOMContentLoaded", showWelcomeMessage); // Begrüßung anzeigen beim Laden
 
 function showWelcomeMessage() {
-  const name = sessionStorage.getItem("userName") || " ";
+  const name = sessionStorage.getItem("userName") || "Guest";
   const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
+  // === MOBILE OVERLAY (bis 1040px) ===
   if (window.innerWidth <= 1040) {
-    // Show overlay welcome message for mobile
     const overlay = document.getElementById("mobile-welcome-overlay");
     const overlayText = document.getElementById("mobile-welcome-overlay-text");
-    const overlayName = document.getElementById(
-      "mobile-welcome-overlay-username"
-    );
+    const overlayName = document.getElementById("mobile-welcome-overlay-username");
+    const main = document.querySelector("main");
 
     overlay.classList.remove("d_none");
     overlayText.textContent = `${greeting}`;
     overlayName.textContent = name;
     overlayName.style.color = color;
 
-    // Hide main content for now
-    const main = document.querySelector("main");
     main.style.display = "none";
-
-    // Show after 4 seconds
     setTimeout(() => {
       overlay.classList.add("d_none");
       main.style.display = "";
     }, 1500);
-  } else {
-    const name = sessionStorage.getItem("userName") || " ";
-    const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
-    const hour = new Date().getHours();
-    const greeting =
-      hour < 12
-        ? "Good morning"
-        : hour < 18
-        ? "Good afternoon"
-        : "Good evening";
-
-    // Begrüßungstext und Benutzername einfügen
-    document.getElementById(
-      "welcome-message-text"
-    ).textContent = `${greeting}`;
-    const nameEl = document.getElementById("welcome-username");
-    nameEl.textContent = name;
-    nameEl.style.color = color;
   }
+
+  // === DESKTOP BEGRÜSSUNG ===
+  const welcomeText = document.getElementById("welcome-message-text");
+  const welcomeName = document.getElementById("welcome-username");
+
+  if (welcomeText && welcomeName) {
+    welcomeText.textContent = `${greeting}`;
+    welcomeName.textContent = name;
+    welcomeName.style.color = color;
+  }
+
+// === USER-PROFILE KREIS (Initialen + Hintergrund) ===
+const profileEl = document.querySelector(".user-profile");
+const initialsEl = document.getElementById("user-initials");
+
+if (profileEl && initialsEl) {
+  const initials = (name.match(/\b\w/g) || []).join("").toUpperCase().slice(0, 2);
+  initialsEl.textContent = initials;
+  profileEl.style.backgroundColor = color;
+
+  // 🧼 Entferne alte Styles, damit kein color überschreibt
+  initialsEl.removeAttribute("style");
+
+  // ✅ Setze weiße Schriftfarbe und erzwinge sie mit !important
+  initialsEl.style.setProperty("color", "#ffffff", "important");
+}
 }
 
 async function loadTasks() {
