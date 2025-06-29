@@ -168,6 +168,11 @@
   background-color: #29abe2;
 }
 
+.form-actions button#cancel-task-btn:hover {
+  color: #29abe2;
+  border-color: #29abe2;
+}
+
 .task-toast {
   position: fixed;
   top: 50%;

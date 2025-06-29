@@ -131,10 +131,10 @@ p {
     background-color: hsl(219, 67%, 12%);
 }
 
-button img {
+/* button img {
     width: 30px;
     height: 30px;
-}
+} */
 
 button p {
     color: hsla(0, 0%, 80%, 1);

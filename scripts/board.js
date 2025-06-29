@@ -1165,7 +1165,7 @@ function getAddTaskOverlay() {
               <p class="legend-required">
                 <span class="red_star">*</span>This field is required
               </p>
-                <button type="button" onclick="closeAddTaskOverlay()">Cancel</button>
+                <button id="cancel-task-btn" type="button" onclick="closeAddTaskOverlay()">Cancel</button>
                 <button
                   id="submit-task-btn"
                   type="button"
