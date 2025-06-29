@@ -1,0 +1,9 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1.5" y="1.5" width="29" height="29" rx="7" fill="#EDF2FA" stroke="#2A3647" stroke-width="2"/>
+  <!-- Up Arrow -->
+  <path d="M16 8 L16 14" stroke="#2A3647" stroke-width="2" stroke-linecap="round"/>
+  <path d="M13 11 L16 8 L19 11" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Down Arrow -->
+  <path d="M16 24 L16 18" stroke="#2A3647" stroke-width="2" stroke-linecap="round"/>
+  <path d="M13 21 L16 24 L19 21" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -73,8 +73,8 @@
     }
 
     .card {
-        max-width: 170px;
-        min-width: 160px;
+        max-width: 250px;
+        min-width: 200x;
         padding: 12px 8px;
         width: 100%;
         box-sizing: border-box;
@@ -116,5 +116,9 @@
 
     .empty-message {
         width: 100%;
+    }
+
+    .card-header-move-arrow {
+        display: block;
     }
 }

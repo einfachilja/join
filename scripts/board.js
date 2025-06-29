@@ -192,7 +192,10 @@ function generateTodoHTML(element) {
   return `
     <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
         <div class="card" id="${element.firebaseKey}">
+            <div class="card-header">
             <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
+            <img class="card-header-move-arrow" src="./assets/icons/board-move-arrow.svg">
+            </div>
             <span class="card-title">${title}</span>
             <span class="card-description">${description}</span>
             <div class="card-subtask-progress">

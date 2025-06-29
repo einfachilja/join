@@ -127,6 +127,18 @@
     align-items: flex-start;
 }
 
+.card-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.card-header-move-arrow {
+    display: none;
+    cursor: pointer;
+}
+
 .card-category {
     border-radius: 8px;
     padding: 4px 16px;
