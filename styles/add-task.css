@@ -8,10 +8,10 @@
 }
 
 .add-task-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
 }
 
 /* === Add-Task Modal & Layout === */
@@ -21,6 +21,11 @@
   margin-right: 48px;
   margin-top: 160px;
   padding-bottom: 32px;
+}
+
+.add-task-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .main {
@@ -140,18 +145,27 @@
 }
 
 .form-actions button {
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 10px;
   border: 1px solid #2a3647;
   background: #fff;
   color: #2a3647;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.form-actions button#create-task {
+.form-actions button#submit-task-btn {
   background: #2a3647;
   color: #fff;
   border: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+}
+
+.form-actions button#submit-task-btn:hover {
+  background-color: #29abe2;
 }
 
 .task-toast {
@@ -677,7 +691,8 @@ select::placeholder {
 
 @media (max-width: 500px) {
   .form-actions {
-    position: static; /* nicht mehr fixed */
+    position: static;
+    /* nicht mehr fixed */
     bottom: auto;
     left: auto;
     right: auto;

@@ -936,3 +936,7 @@
     cursor: pointer;
 
 }
+
+.form-actions-board {
+    justify-content: flex-end;
+}

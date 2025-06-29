@@ -1156,6 +1156,9 @@ function getAddTaskOverlay() {
                 </div>
               </div>
               <div class="form-actions">
+              <p class="legend-required">
+                <span class="red_star">*</span>This field is required
+              </p>
                 <button type="button" onclick="closeAddTaskOverlay()">Cancel</button>
                 <button
                   id="submit-task-btn"
@@ -1163,6 +1166,7 @@ function getAddTaskOverlay() {
                   onclick="createTask()"
                 >
                   Create Task
+                  <img class="add-task-icon" src="./assets/icons/add-task-check.svg" alt="">
                 </button>
               </div>
             </form>
