@@ -21,6 +21,7 @@ async function fetchContactsAndStore(userKey) {
 }
 
 let arrayTasks = [];
+let addTaskDefaultStatus = "todo";
 let firebaseKey = localStorage.getItem("firebaseKey");
 console.log("firebaseKey:", firebaseKey); // Debug-Ausgabe
 
@@ -187,10 +188,16 @@ function generateTodoHTML(element) {
   const title = typeof element.title === 'string' ? element.title : '';
   const description = typeof element.description === 'string' ? element.description : '';
 
+  // Nur das innere Card-Element bekommt das id-Attribut, kein onclick am äußeren Wrapper!
   return `
-    <div id="${element.firebaseKey}" draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')" onclick="openBoardCard('${element.firebaseKey}')">
-        <div class="card">
+    <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
+        <div class="card" id="${element.firebaseKey}">
+            <div class="card-header">
             <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
+            <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
+              <img class="card-header-move-arrow" src="./assets/icons/board-move-arrow.svg" alt="Move Task" />
+            </button>
+            </div>
             <span class="card-title">${title}</span>
             <span class="card-description">${description}</span>
             <div class="card-subtask-progress">
@@ -276,27 +283,43 @@ function updateHTML() {
       document.getElementById("done").innerHTML += generateTodoHTML(element);
     }
   }
+
+  // Korrigiert: Card-Click nur auf Card selbst
+  ['todo', 'progress', 'feedback', 'done'].forEach(section => {
+    const sectionEl = document.getElementById(section);
+    if (!sectionEl) return;
+    // Alle vorherigen EventListener entfernen (sicherstellen)
+    sectionEl.onclick = null;
+    // Event Delegation: Klicke nur auf Cards
+    sectionEl.addEventListener('click', function (event) {
+      const card = event.target.closest('.card');
+      if (card && card.id) {
+        openBoardCard(card.id);
+      }
+    });
+  });
 }
 
 /* ========== OPEN AND CLOSE OVERLAY ========== */
 function openBoardCard(firebaseKey) {
-
   let boardOverlayRef = document.getElementById("board_overlay");
-
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
-
   let categoryClass = "";
   if (task.category === "User Story") {
     categoryClass = "category-user";
   } else if (task.category === "Technical Task") {
     categoryClass = "category-technical";
   }
-
   document.getElementById("board_overlay").classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
-
   boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-
+  // Animation: .open-Klasse nach kurzem Timeout immer hinzufügen
+  setTimeout(() => {
+    const card = document.querySelector('.board-overlay-card');
+    if (card) {
+      card.classList.add('open');
+    }
+  }, 10);
   updateHTML();
 }
 
@@ -311,7 +334,10 @@ function getOpenBoardCardTemplate(categoryClass, task) {
   }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
+      <div class="board-overlay-card-header">
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
+      <img class="board-close-icon" src="./assets/icons/board-close.svg" onclick="closeBoardCard()">
+      </div>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date">Due date: <span>${task.dueDate}</span></span>
@@ -348,7 +374,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         </ul>
       </div>
       <div id="overlay_card_footer" class="overlay-card-footer">
-        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
+        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img class="delete-icon" src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
         <img id="seperator" src="./assets/icons/board-separator-icon.svg" alt="">
         <div id="edit_btn" class="edit-btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok</div>
@@ -407,16 +433,28 @@ async function toggleSubtask(taskKey, index) {
 
 function closeBoardCard() {
   if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
-  document.getElementById("board_overlay").classList.add("d-none");
-  document.getElementById("board_overlay_card").classList.remove("board-overlay-card-show");
-  document.getElementById("board_overlay_card").classList.add("board-overlay-card-hide");
-  document.getElementById("html").style.overflow = "";
-  // Remove labels if they exist
-  let titleLabel = document.getElementById("overlay_card_title_label");
-  if (titleLabel) titleLabel.remove();
-  let descLabel = document.getElementById("overlay_card_description_label");
-  if (descLabel) descLabel.remove();
-  updateHTML();
+  const card = document.querySelector('.board-overlay-card');
+  if (card) {
+    card.classList.remove('open');
+    setTimeout(() => {
+      document.getElementById("board_overlay").classList.add("d-none");
+      document.getElementById("html").style.overflow = "";
+      // Remove labels if they exist
+      let titleLabel = document.getElementById("overlay_card_title_label");
+      if (titleLabel) titleLabel.remove();
+      let descLabel = document.getElementById("overlay_card_description_label");
+      if (descLabel) descLabel.remove();
+      updateHTML();
+    }, 400);
+  } else {
+    document.getElementById("board_overlay").classList.add("d-none");
+    document.getElementById("html").style.overflow = "";
+    let titleLabel = document.getElementById("overlay_card_title_label");
+    if (titleLabel) titleLabel.remove();
+    let descLabel = document.getElementById("overlay_card_description_label");
+    if (descLabel) descLabel.remove();
+    updateHTML();
+  }
 }
 
 function onclickProtection(event) {
@@ -907,9 +945,19 @@ function searchTask() {
   }
 }
 
+function openAddTaskForStatus(status) {
+  addTaskDefaultStatus = status;
+  openAddTaskOverlay();
+}
+
 function openAddTaskOverlay() {
   let addTaskOverlayRef = document.getElementById("add_task_overlay");
   document.getElementById("add_task_overlay").classList.remove("d-none");
+  // Add modal open animation after rendering
+  setTimeout(() => {
+    const modal = document.querySelector('.board-add-task-modal');
+    if (modal) modal.classList.add('open');
+  }, 10);
   document.getElementById("html").style.overflow = "hidden";
 
   addTaskOverlayRef.innerHTML = getAddTaskOverlay();
@@ -919,15 +967,31 @@ function openAddTaskOverlay() {
   setTimeout(() => {
     document.addEventListener('mousedown', handleAddTaskOverlayClickOutside);
   }, 0);
+
+  initAddTaskOverlayLogic();
 }
 
 function closeAddTaskOverlay() {
-  let overlay = document.getElementById("add_task_overlay");
-  if (overlay) {
-    overlay.classList.add("d-none");
-    document.getElementById("html").style.overflow = "";
-    overlay.innerHTML = "";
+  const modal = document.querySelector('.board-add-task-modal');
+  if (modal) {
+    modal.classList.remove('open');
+    setTimeout(() => {
+      let overlay = document.getElementById("add_task_overlay");
+      if (overlay) {
+        overlay.classList.add("d-none");
+        document.getElementById("html").style.overflow = "";
+        overlay.innerHTML = "";
+      }
+    }, 400); // exakt so lang wie die CSS-Transition!
+  } else {
+    let overlay = document.getElementById("add_task_overlay");
+    if (overlay) {
+      overlay.classList.add("d-none");
+      document.getElementById("html").style.overflow = "";
+      overlay.innerHTML = "";
+    }
   }
+  addTaskDefaultStatus = "todo";
   document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);
 }
 
@@ -939,9 +1003,12 @@ function handleAddTaskOverlayClickOutside(event) {
   }
 }
 
-function getAddTaskOverlay () {
+function getAddTaskOverlay() {
   return `          <div class="board-add-task-modal">
+            <div class="board-add-task-header">
             <h1 class="h1-add-task">Add Task</h1>
+            <img class="board-close-icon" src="./assets/icons/board-close.svg" onclick="closeAddTaskOverlay()">
+             </div>
             <form id="task-form" onsubmit="return false;">
               <div class="form-cols">
                 <!-- linke Spalte -->
@@ -968,19 +1035,14 @@ function getAddTaskOverlay () {
                   <label for="dueDate"
                     >Due Date <span class="red_star">*</span></label
                   >
-                  <div class="date-wrapper">
+                  <div class="date-input-wrapper">
                     <input
                       id="dueDate"
-                      class="date-input"
+                      class="overlay-card-date-input"
                       type="date"
                       placeholder="dd/mm/yyyy"
                     />
-                    <img
-                      src="./assets/icons/calendar.svg"
-                      class="calendar-icon"
-                      alt="Kalender"
-                      onclick="document.getElementById('dueDate').showPicker()"
-                    />
+                    
                   </div>
                   <div class="error-message" id="error-dueDate">
                     This field is required
@@ -1099,6 +1161,9 @@ function getAddTaskOverlay () {
                 </div>
               </div>
               <div class="form-actions">
+              <p class="legend-required">
+                <span class="red_star">*</span>This field is required
+              </p>
                 <button type="button" onclick="closeAddTaskOverlay()">Cancel</button>
                 <button
                   id="submit-task-btn"
@@ -1106,8 +1171,616 @@ function getAddTaskOverlay () {
                   onclick="createTask()"
                 >
                   Create Task
+                  <img class="add-task-icon" src="./assets/icons/add-task-check.svg" alt="">
                 </button>
               </div>
             </form>
           </div>`;
 }
+// ==== STATE & HELPERS (Add-Task-Funktionalität) ====
+// Diese Blöcke stammen aus add-task.js und sind für das Add-Task-Modal im Board nötig.
+let selectedPriority = "medium";
+const subtasks = [];
+let contacts = [];
+let selectedContacts = [];
+let selectedCategory = "";
+
+// Globaler EventListener zum Schließen des Dropdowns bei Klick außerhalb
+document.addEventListener("mousedown", function (event) {
+  const dropdown = document.getElementById("dropdown-content");
+  const toggle = document.getElementById("dropdown-toggle");
+
+  if (dropdown && toggle) {
+    const isClickInside = dropdown.contains(event.target) || toggle.contains(event.target);
+    if (!isClickInside) {
+      dropdown.classList.remove("visible");
+      toggle.classList.remove("open");
+    }
+  }
+
+  // Category-Dropdown: Schließen wenn außerhalb geklickt wird
+  const catDropdown = document.getElementById("category-content");
+  const catToggle = document.getElementById("category-toggle");
+  if (catDropdown && catToggle) {
+    const isCatClickInside = catDropdown.contains(event.target) || catToggle.contains(event.target);
+    if (!isCatClickInside) {
+      catDropdown.classList.remove("visible");
+      catToggle.classList.remove("open");
+    }
+  }
+});
+
+// Priority auswählen
+function selectPriority(prio) {
+  selectedPriority = prio;
+  document.querySelectorAll("#buttons-prio button").forEach((b) => {
+    b.classList.toggle("selected", b.dataset.prio === prio);
+  });
+  updateSubmitState();
+}
+
+// Assigned Dropdown
+function handleAssignedToClick(e) {
+  e.stopPropagation();
+  toggleAssignDropdown(e);
+}
+function handleAssignedToInput(e) {
+  const value = e.target.value.trim().toLowerCase();
+  renderAssignOptions(value);
+}
+function toggleAssignDropdown(event) {
+  event.stopPropagation();
+  const tog = document.getElementById("dropdown-toggle");
+  const dd = document.getElementById("dropdown-content");
+  if (!tog || !dd) return;
+  tog.classList.toggle("open");
+  dd.classList.toggle("visible");
+  if (dd.innerHTML === "") renderAssignOptions();
+}
+function renderAssignOptions(filter = "") {
+  const dd = document.getElementById("dropdown-content");
+  clearAssignDropdownContent(dd);
+  const filteredContacts = contacts.filter((c) =>
+    c.name.toLowerCase().includes(filter)
+  );
+  filteredContacts.forEach((c) => {
+    const item = createContactDropdownItem(c, filter);
+    dd.appendChild(item);
+  });
+}
+function clearAssignDropdownContent(dd) {
+  const nodes = Array.from(dd.childNodes).filter((n) => n.tagName !== "INPUT");
+  nodes.forEach((n) => n.remove());
+}
+function createContactDropdownItem(contact, filter) {
+  const item = document.createElement("div");
+  item.className = "contact-item";
+  item.innerHTML = `
+    <span class="profile-icon" style="background:${contact.color}">
+      ${getContactInitials(contact.name)}
+    </span>
+    <span>${contact.name}</span>
+    <input type="checkbox" ${selectedContacts.some((s) => s.name === contact.name) ? "checked" : ""
+    }/>
+  `;
+  setupContactCheckbox(item, contact, filter);
+  setupContactItemClick(item);
+  return item;
+}
+function getContactInitials(name) {
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
+function setupContactCheckbox(item, contact, filter) {
+  const checkbox = item.querySelector("input[type='checkbox']");
+  checkbox.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const idx = selectedContacts.findIndex((s) => s.name === contact.name);
+    if (checkbox.checked && idx === -1) {
+      selectedContacts.push(contact);
+    } else if (!checkbox.checked && idx >= 0) {
+      selectedContacts.splice(idx, 1);
+      if (selectedContacts.length === 0) closeDropdown();
+    }
+    updateSelectedContactsUI();
+    renderAssignOptions(filter);
+    updateSubmitState();
+  });
+}
+function setupContactItemClick(item) {
+  const checkbox = item.querySelector("input[type='checkbox']");
+  item.addEventListener("click", (event) => {
+    if (event.target.tagName.toLowerCase() === "input") return;
+    event.stopPropagation();
+    checkbox.checked = !checkbox.checked;
+    const clickEvent = new Event("click", { bubbles: true });
+    checkbox.dispatchEvent(clickEvent);
+  });
+}
+function updateSelectedContactsUI() {
+  const box = document.getElementById("selected-contacts");
+  if (!box) return;
+  box.innerHTML = "";
+  selectedContacts.forEach((c) => {
+    const el = document.createElement("div");
+    el.className = "profile-icon";
+    el.style.background = c.color;
+    el.textContent = getContactInitials(c.name);
+    box.appendChild(el);
+  });
+}
+function closeDropdown() {
+  document.getElementById("dropdown-content")?.classList.remove("visible");
+  document.getElementById("dropdown-toggle")?.classList.remove("open");
+}
+
+// Kategorie Dropdown
+function toggleCategoryDropdown(event) {
+  event.stopPropagation();
+  const toggle = document.getElementById("category-toggle");
+  const content = document.getElementById("category-content");
+  toggle.classList.toggle("open");
+  content.classList.toggle("visible");
+  if (content.innerHTML.trim() === "") renderCategoryOptions();
+}
+function renderCategoryOptions() {
+  const content = document.getElementById("category-content");
+  content.innerHTML = "";
+  const categories = ["Technical Task", "User Story"];
+  categories.forEach((category) => {
+    const item = document.createElement("div");
+    item.className = "dropdown-item category-item";
+    item.innerHTML = `<span class="category-name">${category}</span>`;
+    item.onclick = () => {
+      selectCategory(category);
+      content.classList.remove("visible");
+      document.getElementById("category-toggle").classList.remove("open");
+      updateSubmitState();
+    };
+    content.appendChild(item);
+  });
+}
+function selectCategory(category) {
+  selectedCategory = category;
+  const placeholder = document.querySelector("#category-toggle span");
+  if (placeholder) placeholder.textContent = category;
+}
+
+// Subtasks
+function addSubtask() {
+  const input = document.getElementById("subtask-input");
+  const subtaskIcons = document.getElementById("subtask-icons");
+  const text = input.value.trim();
+  if (!validateSubtaskInput(text, subtaskIcons, input)) return;
+  subtasks.push(text);
+  const li = createSubtaskListItem(text);
+  document.getElementById("subtask-list").appendChild(li);
+  finalizeSubtaskInput(input, subtaskIcons);
+}
+function validateSubtaskInput(text, subtaskIcons, input) {
+  if (!text || subtaskIcons.classList.contains("hidden")) {
+    input.classList.add("error-border");
+    return false;
+  }
+  input.classList.remove("error-border");
+  return true;
+}
+function createSubtaskListItem(text) {
+  const li = document.createElement("li");
+  li.className = "subtask-list-item";
+  const label = document.createElement("span");
+  label.textContent = text;
+  label.className = "subtask-label";
+  const iconWrapper = document.createElement("div");
+  iconWrapper.className = "subtask-icons";
+  li.appendChild(label);
+  li.appendChild(iconWrapper);
+  li.addEventListener("dblclick", () => {
+    enterEditMode(li);
+  });
+  return li;
+}
+function finalizeSubtaskInput(input, subtaskIcons) {
+  updateSubmitState();
+  input.value = "";
+  subtaskIcons.classList.add("hidden");
+  const subtaskPlus = document.getElementById("subtask-plus");
+  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
+}
+function enterEditMode(subtaskElement) {
+  const currentText = getSubtaskCurrentText(subtaskElement);
+  if (!currentText) return;
+  subtaskElement.innerHTML = "";
+  const input = createSubtaskEditInput(currentText);
+  const cancelBtn = createSubtaskCancelBtn(currentText, subtaskElement);
+  const confirmBtn = createSubtaskConfirmBtn(currentText, subtaskElement, input);
+  assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn);
+  input.focus();
+}
+function getSubtaskCurrentText(subtaskElement) {
+  return subtaskElement.querySelector(".subtask-label")?.textContent || "";
+}
+function createSubtaskEditInput(currentText) {
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = currentText;
+  input.classList.add("subtask-edit-input");
+  return input;
+}
+function createSubtaskCancelBtn(currentText, subtaskElement) {
+  const cancelBtn = document.createElement("img");
+  cancelBtn.src = "./assets/icons/closeXSymbol.svg";
+  cancelBtn.alt = "Delete";
+  cancelBtn.className = "subtask-edit-cancel";
+  cancelBtn.addEventListener("click", () => {
+    const index = subtasks.indexOf(currentText);
+    if (index > -1) {
+      subtasks.splice(index, 1);
+    }
+    subtaskElement.remove();
+    updateSubmitState();
+  });
+  return cancelBtn;
+}
+function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
+  const confirmBtn = document.createElement("img");
+  confirmBtn.src = "./assets/icons/checked.svg";
+  confirmBtn.alt = "Confirm";
+  confirmBtn.className = "subtask-edit-confirm";
+  confirmBtn.addEventListener("click", () => {
+    const newValue = input.value.trim();
+    if (newValue) {
+      subtasks[subtasks.indexOf(currentText)] = newValue;
+      updateSubtaskLabel(subtaskElement, newValue);
+    }
+  });
+  return confirmBtn;
+}
+function updateSubtaskLabel(subtaskElement, newValue) {
+  subtaskElement.innerHTML = "";
+  const label = document.createElement("span");
+  label.textContent = newValue;
+  label.className = "subtask-label";
+  subtaskElement.appendChild(label);
+  subtaskElement.addEventListener("dblclick", () => {
+    enterEditMode(subtaskElement);
+  });
+}
+function assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn) {
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("subtask-edit-container");
+  const inputWrapper = document.createElement("div");
+  inputWrapper.classList.add("subtask-input-edit-wrapper");
+  inputWrapper.appendChild(input);
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("subtask-edit-buttons");
+  buttonContainer.appendChild(cancelBtn);
+  buttonContainer.appendChild(confirmBtn);
+  wrapper.appendChild(inputWrapper);
+  wrapper.appendChild(buttonContainer);
+  subtaskElement.appendChild(wrapper);
+}
+function handleSubtaskEnter(e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const subtaskIcons = document.getElementById("subtask-icons");
+    if (subtaskIcons && !subtaskIcons.classList.contains("hidden")) {
+      addSubtask();
+    }
+  }
+}
+function toggleSubtaskIcons() {
+  const input = document.getElementById("subtask-input");
+  const confirmIcon = document.getElementById("subtask-confirm");
+  const defaultIcon = document.getElementById("subtask-plus");
+  const cancelIcon = document.getElementById("subtask-cancel");
+  const isActive = document.activeElement === input;
+  confirmIcon?.classList.toggle("hidden", !isActive);
+  cancelIcon?.classList.toggle("hidden", !isActive);
+  defaultIcon?.classList.toggle("hidden", isActive);
+}
+function clearSubtaskInput() {
+  const subtaskInput = document.getElementById("subtask-input");
+  const subtaskIcons = document.getElementById("subtask-icons");
+  const subtaskPlus = document.getElementById("subtask-plus");
+  subtaskInput.value = "";
+  subtaskIcons.classList.add("hidden");
+  subtaskPlus.classList.remove("hidden");
+}
+
+// Kategorie-UI für Chip (optional)
+function updateCategoryUI() {
+  const box = document.getElementById("selected-category");
+  if (!box) return;
+  box.innerHTML = "";
+  if (selectedCategory) {
+    const el = document.createElement("div");
+    el.className = "profile-icon";
+    el.style.background = "#2a3647";
+    el.textContent = selectedCategory
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase();
+    box.appendChild(el);
+  }
+}
+
+// Kontakte laden
+async function fetchContacts() {
+  try {
+    const res = await fetch(
+      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`
+    );
+    const data = await res.json();
+    contacts = Object.entries(data || {})
+      .filter(([_, u]) => u && typeof u.name === "string" && u.name.trim())
+      .map(([_, u]) => ({
+        name: u.name.trim(),
+        color: u.color || "#888",
+      }));
+  } catch (err) {
+    console.error("Contacts fetch error:", err);
+  }
+}
+
+// Form Validation & Reset
+function validateForm() {
+  const titleEl = document.getElementById("title");
+  const dueDateEl = document.getElementById("dueDate");
+  const categoryToggle = document.getElementById("category-toggle");
+  const titleError = document.getElementById("error-title");
+  const dueDateError = document.getElementById("error-dueDate");
+  const categoryError = document.getElementById("error-category");
+  const title = titleEl.value.trim();
+  const dueDate = dueDateEl.value.trim();
+  const category = selectedCategory;
+  const titleValid = title !== "";
+  const dueDateValid = dueDate !== "";
+  const categoryValid = category !== "";
+  titleEl.classList.toggle("error", !titleValid);
+  if (titleError) titleError.classList.toggle("visible", !titleValid);
+  dueDateEl.classList.toggle("error-border", !dueDateValid);
+  if (dueDateError) dueDateError.classList.toggle("visible", !dueDateValid);
+  categoryToggle.classList.toggle("error-border", !categoryValid);
+  if (categoryError) categoryError.classList.toggle("visible", !categoryValid);
+  return titleValid && dueDateValid && categoryValid;
+}
+function updateSubmitState() {
+  const button = document.getElementById("submit-task-btn");
+  if (button) button.disabled = false;
+}
+function resetForm() {
+  document.getElementById("title").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("dueDate").value = "";
+  selectedPriority = "medium";
+  selectPriority("medium");
+  selectedContacts = [];
+  updateSelectedContactsUI();
+  selectedCategory = "";
+  const categoryPlaceholder = document.querySelector("#category-toggle span");
+  if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
+  subtasks.length = 0;
+  const subtaskList = document.getElementById("subtask-list");
+  if (subtaskList) subtaskList.innerHTML = "";
+  const subtaskInput = document.getElementById("subtask-input");
+  if (subtaskInput) subtaskInput.value = "";
+  const subtaskIcons = document.getElementById("subtask-icons");
+  if (subtaskIcons) subtaskIcons.classList.add("hidden");
+  const subtaskPlus = document.getElementById("subtask-plus");
+  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
+}
+
+// Date Validation
+function setupDateValidation() {
+  setTimeout(() => {
+    const dateInput = document.getElementById("dueDate");
+    const errorText = document.getElementById("error-dueDate");
+    if (!dateInput || !errorText) return;
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+    dateInput.addEventListener("input", () => {
+      dateInput.classList.remove("error-border");
+      errorText.classList.remove("visible");
+    });
+  }, 100);
+}
+
+// Task anlegen
+async function createTask() {
+  if (!validateForm()) return;
+  const dueDateValue = document.getElementById("dueDate").value;
+  const formattedDate = dueDateValue;
+  const task = {
+    title: document.getElementById("title").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    dueDate: formattedDate,
+    priority: selectedPriority,
+    assignedTo: selectedContacts.map((c) => c.name),
+    category: selectedCategory,
+    subtask: subtasks.map(st => ({ title: st, completed: false })),
+    createdAt: new Date().toISOString(),
+    status: addTaskDefaultStatus,
+  };
+  await fetch(
+    `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`,
+    {
+      method: "POST",
+      body: JSON.stringify(task),
+    }
+  );
+  closeAddTaskOverlay();
+  await loadTasks();
+  setTimeout(() => {
+    const lastTask = arrayTasks[arrayTasks.length - 1];
+    if (lastTask && lastTask.firebaseKey) {
+      const newTaskEl = document.getElementById(lastTask.firebaseKey);
+      if (newTaskEl) {
+        newTaskEl.classList.add("task-highlight");
+        setTimeout(() => {
+          newTaskEl.classList.remove("task-highlight");
+        }, 3000);
+      }
+    }
+  }, 100);
+}
+
+// Initialisiere alle Add-Task-Funktionen nach Modal-Render
+function setupEventListeners() {
+  document
+    .getElementById("dropdown-toggle")
+    .addEventListener("click", toggleAssignDropdown);
+  document
+    .getElementById("category-toggle")
+    .addEventListener("click", toggleCategoryDropdown);
+  document
+    .getElementById("dropdown-content")
+    ?.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  const subtaskInput = document.getElementById("subtask-input");
+  if (subtaskInput) {
+    subtaskInput.addEventListener("input", () => {
+      const value = subtaskInput.value.trim();
+      const iconWrapper = document.getElementById("subtask-icons");
+      if (value.length > 0) {
+        iconWrapper.classList.remove("hidden");
+      } else {
+        iconWrapper.classList.add("hidden");
+      }
+    });
+    subtaskInput.addEventListener("keydown", handleSubtaskEnter);
+  }
+}
+
+// Setup-Funktion nach Overlay-Render
+function initAddTaskOverlayLogic() {
+  fetchContacts();
+  setupEventListeners();
+  setupDateValidation();
+  resetForm();
+}
+// ========== MOVE TASK MENU DROPDOWN ==========
+function openMoveTaskMenu(taskKey, event) {
+  event.stopPropagation();
+  // Remove any existing dropdowns
+  closeMoveTaskMenu();
+
+  // Find the move arrow button (the one just clicked)
+  let btn = event.currentTarget;
+  // Find the closest .card element
+  let card = btn.closest('.card');
+  if (!card) return;
+
+  // Create dropdown container
+  const dropdown = document.createElement('div');
+  dropdown.className = 'move-task-dropdown-menu';
+  dropdown.style.position = 'absolute';
+  dropdown.style.zIndex = '1000';
+  dropdown.style.minWidth = '120px';
+  dropdown.style.background = '#2A3647';
+  dropdown.style.color = 'white';
+  dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+  dropdown.style.borderRadius = '0 20px 20px 20px';
+  dropdown.style.padding = '8px 0';
+  dropdown.style.fontSize = '16px';
+  dropdown.style.userSelect = 'none';
+
+  // Status options
+  const statuses = [
+    { key: 'todo', label: 'To do' },
+    { key: 'progress', label: 'In progress' },
+    { key: 'feedback', label: 'Await feedback' },
+    { key: 'done', label: 'Done' }
+  ];
+
+  // Find the current task
+  const currentTask = arrayTasks.find(t => t.firebaseKey === taskKey);
+  const currentStatus = currentTask ? currentTask.status : null;
+
+  // Handler for option click
+  function handleMoveClick(statusKey) {
+    currentDraggedElement = taskKey; // set for moveTo
+    moveTo(statusKey);
+    closeMoveTaskMenu();
+  }
+
+  // Build menu options: exclude current status
+  statuses.forEach(s => {
+    if (s.key === currentStatus) return; // Skip the current status
+    const option = document.createElement('div');
+    option.className = 'move-task-dropdown-option';
+    option.textContent = s.label;
+    option.style.padding = '8px 16px';
+    option.style.cursor = 'pointer';
+    option.onclick = function (e) {
+      e.stopPropagation();
+      handleMoveClick(s.key);
+    };
+    dropdown.appendChild(option);
+  });
+
+  // Position dropdown: below the button, or fallback to card top right
+  // Get button position relative to page
+  const btnRect = btn.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  // Use scrollX/Y for page scroll offset
+  let left = btnRect.left + window.scrollX;
+  let top = btnRect.bottom + window.scrollY + 4; // 4px below button
+  // If would overflow right, adjust
+  if (left + 160 > window.innerWidth) {
+    left = window.innerWidth - 170;
+  }
+  // If would overflow bottom, show above
+  if (top + 180 > window.innerHeight + window.scrollY) {
+    top = btnRect.top + window.scrollY - 180;
+  }
+  dropdown.style.left = left + 'px';
+  dropdown.style.top = top + 'px';
+
+  // Add to body for absolute positioning
+  document.body.appendChild(dropdown);
+
+  // Store reference for later removal
+  window._moveTaskDropdown = dropdown;
+
+  // Close on outside click/touch
+  function handleOutside(e) {
+    // Don't close if click inside dropdown
+    if (dropdown.contains(e.target)) return;
+    closeMoveTaskMenu();
+  }
+  document.addEventListener('mousedown', handleOutside, { capture: true });
+  document.addEventListener('touchstart', handleOutside, { capture: true });
+
+  // Also close when scrolling
+  function handleScroll() {
+    closeMoveTaskMenu();
+  }
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  // Save cleanup for later
+  window._moveTaskDropdownCleanup = function () {
+    document.removeEventListener('mousedown', handleOutside, { capture: true });
+    document.removeEventListener('touchstart', handleOutside, { capture: true });
+    window.removeEventListener('scroll', handleScroll, { passive: true });
+  };
+}
+
+function closeMoveTaskMenu() {
+  if (window._moveTaskDropdown) {
+    window._moveTaskDropdown.remove();
+    window._moveTaskDropdown = null;
+  }
+  if (typeof window._moveTaskDropdownCleanup === 'function') {
+    window._moveTaskDropdownCleanup();
+    window._moveTaskDropdownCleanup = null;
+  }
+}
+
+// Also close on resize for safety
+window.addEventListener('resize', closeMoveTaskMenu);

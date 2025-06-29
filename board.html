@@ -94,7 +94,7 @@
           <div class="board-header">
             <div class="board-header-mobile">
               <h1>Board</h1>
-              <img class="board-header-add-task d-none" src="assets/icons/board-header-add-task.svg" alt="">
+              <img class="board-header-add-task d-none" onclick="openAddTaskOverlay()" src="assets/icons/board-header-add-task.svg" alt="">
             </div>
             <div class="board-header-right">
               <div class="search-box">
@@ -113,7 +113,7 @@
           <div class="board-main">
             <div class="board-main-box">
               <span class="board-main-box-title">To do
-                <img onclick="addNewTask()" src="./assets/icons/plus-button.png" alt="">
+                <img onclick="openAddTaskForStatus('todo')" src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="todo" ondrop="moveTo('todo')" ondragleave="removeHighlight('todo')"
                 ondragover="allowDrop(event); highlight('todo')">
@@ -122,7 +122,7 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">In progress
-                <img onclick="addNewTask()" src="./assets/icons/plus-button.png" alt="">
+                <img onclick="openAddTaskForStatus('progress')" src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="progress" ondrop="moveTo('progress')" ondragleave="removeHighlight('progress')"
                 ondragover="allowDrop(event); highlight('progress')">
@@ -131,7 +131,7 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">Await feedback
-                <img onclick="addNewTask()" src="./assets/icons/plus-button.png" alt="">
+                <img onclick="openAddTaskForStatus('feedback')" src="./assets/icons/plus-button.png" alt="">
               </span>
               <div class="drag-area" id="feedback" ondrop="moveTo('feedback')" ondragleave="removeHighlight('feedback')"
                 ondragover="allowDrop(event); highlight('feedback')">
@@ -194,7 +194,6 @@
   <script src="./scripts/desktop-template.js"></script>
   <script src="./scripts/help.js"></script>
     <script src="./scripts/board.js"></script>
-  <script src="./scripts/add-task.js"></script>
 </body>
 
 </html>

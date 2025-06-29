@@ -1,33 +1,32 @@
-@media(max-width: 1232px) {}
-
 @media(max-width: 1040px) {
     .board-main {
+        display: flex;
         flex-direction: column;
-    }
-
-    .body-right .header {
-        left: 0;
-    }
-
-    .body-right {
+        width: 100%;
+        min-height: 100vh;
+        max-height: unset;
         padding: 0;
+    }
+
+    .board-container {
+        width: 100vw;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0 0 60px 0;
+        box-sizing: border-box;
     }
 
     .board-header {
         display: block;
+        padding: 24px 16px;
     }
 
     .board-header-mobile {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 24px;
-
-    }
-
-    .board-main-box {
-        width: auto;
-        padding: 0;
-        margin-top: 24px;
+        margin-top: 96px;
+        margin-bottom: 12px;
+        padding: 8px 0;
     }
 
     .board-header-add-task {
@@ -37,23 +36,73 @@
 
     .board-add-task-btn {
         display: none;
+    }
 
+    .board-add-task-modal {
+        max-width: 500px;
+        padding: 24px;
+        gap: 0;
+    }
+
+    .board-add-task-modal .form-cols {
+        gap: 0;
+    }
+
+    .form-actions {
+        padding: 0;
     }
 
     .drag-area {
+        display: flex;
         flex-direction: row;
-        overflow: auto;
-        max-height: 250px;
-
+        gap: 16px;
+        min-height: 120px;
+        padding-bottom: 8px;
+        overflow-x: auto;
+        overflow-y: visible;
+        box-sizing: border-box;
+        scroll-snap-type: x mandatory;
     }
 
-    .board-container {
+    .drag-area::-webkit-scrollbar {
+        height: 8px;
+        background: #f0f0f0;
+    }
 
-        margin-top: 100px;
-        margin-left: 0;
+    .drag-area::-webkit-scrollbar-thumb {
+        background: #bdbdbd;
+        border-radius: 4px;
+    }
+
+    .board-main-box {
+        width: auto;
+        margin-top: 12px;
+        padding: 24px;
+    }
+
+    .card {
+        width: 100%;
+        min-width: 200px;
+        max-width: 250px;
+        padding: 12px 8px;
+        box-sizing: border-box;
+    }
+
+    .card-header-move-arrow {
+        display: block;
+    }
+
+    .empty-message {
+        width: 100%;
     }
 }
 
-@media(max-width: 800px) {}
+@media(max-width: 450px) {
+    .board-overlay-card {
+        padding: 24px;
+    }
 
-@media(max-width: 500px) {}
+    .overlay-card-title {
+        font-size: 32px;
+    }
+}

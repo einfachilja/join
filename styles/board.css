@@ -46,6 +46,8 @@
 
 .board-input-search:focus {
     outline: none;
+    font-size: 16px;
+    align-content: center;
 }
 
 .board-input-search::placeholder {
@@ -125,6 +127,19 @@
     align-items: flex-start;
 }
 
+.card-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.card-header-move-arrow {
+    display: none;
+    cursor: pointer;
+}
+
 .card-category {
     border-radius: 8px;
     padding: 4px 16px;
@@ -183,6 +198,14 @@
     gap: 30px;
 }
 
+#due_date_input {
+    background-color: white;
+}
+
+#due_date_input:hover {
+    cursor: pointer;
+}
+
 .priority-headline {
     display: flex;
     align-items: center;
@@ -194,14 +217,14 @@
     align-items: center;
 }
 
+.priority-container img {
+    width: 40px;
+}
+
 .assigned-container {
     display: flex;
     align-items: center;
     padding-top: 5px;
-}
-
-.assigned-list {
-    display: contents;
 }
 
 .assigned-circle {
@@ -276,7 +299,7 @@
     background-color: #ffffff;
     border-radius: 30px;
     padding: 40px;
-    gap: 24px;
+    gap: 20px;
     box-shadow: 0px 0px 4px 0px #00000029;
     display: flex;
     flex-direction: column;
@@ -285,6 +308,12 @@
     overflow-y: auto;
     margin-left: 12px;
     margin-right: 12px;
+}
+
+.board-overlay-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .overlay-card-category {
@@ -328,7 +357,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding-top: 12px;
+    padding-bottom: 12px;
     font-size: 16px;
 }
 
@@ -348,7 +377,8 @@
     display: inline-block;
     vertical-align: middle;
     border: 2px solid #2A3647;
-    background: transparent
+    background: transparent;
+    padding: 0;
 }
 
 
@@ -510,7 +540,6 @@
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-weight: bold;
     font-size: 1rem;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
 }
@@ -531,14 +560,6 @@
     justify-content: space-between;
 }
 
-.dropdown-arrow {
-    border: solid #aaa;
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(45deg);
-    margin-left: 10px;
-}
 
 .assigned-dropdown-list {
     background: #fff;
@@ -578,13 +599,13 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    font-weight: bold;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
     border: 2px solid #fff;
+    padding: 2px;
 }
 
 .assigned-name {
@@ -606,7 +627,7 @@
     align-items: center;
     width: 100%;
     margin-top: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     box-shadow: none;
 }
 
@@ -698,8 +719,16 @@
     align-items: center;
 }
 
+.subtask-edit-btn img {
+    width: 24px;
+}
+
 .subtask-remove-btn:hover {
     color: #ff4d4d;
+}
+
+.subtask-remove-btn img {
+    width: 24px;
 }
 
 .subtask-list-row {
@@ -712,6 +741,10 @@
     font-size: 16px;
     font-family: inherit;
     font-weight: 500;
+}
+
+.subtask-list-row:hover {
+    background: #f6f7f8;
 }
 
 .subtask-list-row:last-child {
@@ -781,10 +814,152 @@
     margin: 24px;
     background-color: white;
     padding: 40px;
-    border-radius: 10px;
+    border-radius: 30px;
     flex: 1;
     max-width: 800px;
     max-height: 680px;
     overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
 
+.board-add-task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.board-add-task-modal .form-cols {
+    display: flex;
+    gap: 48px;
+}
+
+.board-add-task-modal .col-left>*,
+.board-add-task-modal .col-right>* {
+    margin-bottom: 16px;
+}
+
+.board-add-task-modal .col-left>*:last-child,
+.board-add-task-modal .col-right>*:last-child {
+    margin-bottom: 0;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+    }
+
+    50% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.task-highlight .card {
+    animation: blink 1s ease-in-out 3;
+}
+
+/* Animation für das Add Task Modal: Slide-in von links */
+.board-add-task-modal {
+    transform: translateX(100vw);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
+}
+
+.board-add-task-modal.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Animation für Board Overlay Card: Slide-in von rechts */
+.board-overlay-card {
+    transform: translateX(100vw);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
+}
+
+.board-overlay-card.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.board-overlay-card .subtask-list-row {
+    min-height: 20px;
+    padding: 2px 4px;
+    font-size: 14px;
+    gap: 4px;
+}
+
+.board-overlay-card .subtask-list-editinput {
+    height: 18px;
+    font-size: 13px;
+    padding: 1px 4px;
+}
+
+.board-overlay-card .subtask-edit-btn,
+.board-overlay-card .subtask-remove-btn {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    font-size: 12px;
+}
+
+.board-overlay-card .subtask-dot {
+    font-size: 14px;
+    margin-right: 2px;
+}
+
+.overlay-meta-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    /* Oder z.B. 24px, je nach Geschmack */
+    margin: 18px 0 6px 0;
+}
+
+.overlay-meta-row .assigned-list {
+    min-width: 160px;
+    max-width: 280px;
+    flex: 1 1 auto;
+}
+
+.overlay-meta-row .priority-headline {
+    min-width: 120px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.overlay-meta-row .priority-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.board-close-icon {
+    width: 32px;
+}
+
+.board-close-icon:hover {
+    background-color: #D9D9D9;
+    border-radius: 50%;
+    cursor: pointer;
+
+}
+
+.form-actions-board {
+    justify-content: flex-end;
+}
+
+.card-header-move-arrow-btn {
+    border: none;
+    background-color: white;
+}
+
+.move-task-dropdown-menu {
+    background-color: #2A3647;
+    
 }
