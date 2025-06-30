@@ -3,15 +3,18 @@ let arrayTasks = [];
 let firebaseKey = localStorage.getItem("firebaseKey");
 
 function showWelcomeMessage() {
-  const name = sessionStorage.getItem("userName") || " ";
+  const name = sessionStorage.getItem("userName");
+  const isGuest = name === "Guest";
+  const displayName = isGuest ? "" : name;
+
   const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   if (window.innerWidth <= 1040) {
-    showMobileWelcomeOverlay(greeting, name, color);
+    showMobileWelcomeOverlay(greeting, displayName, color);
   } else {
-    showDesktopWelcomeMessage(greeting, name, color);
+    showDesktopWelcomeMessage(greeting, displayName, color);
   }
 }
 
