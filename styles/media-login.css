@@ -51,15 +51,30 @@
 }
 
 @media (max-width: 500px) {
-    .logo-image {
-        Width: 64px;
-        Height: 78.03px;
-
-    }
 
     .logo-section {
-        top: 23px;
-        left: 21px;
+        top: 36px;
+        left: 32px;
+    }
+
+    .logo-image {
+    width: 71px;
+    height: 84px;
+    }
+
+    #static-logo {
+    position: absolute;
+    top: 36px;
+    left: 32px;
+    z-index: 999;
+    }
+
+    #animated-logo.logo-finished {
+    top: 36px;
+    left: 32px;
+    width: 71px;
+    height: 84px;
+    transform: none; 
     }
 
     .log-in-container {
