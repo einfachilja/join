@@ -10,7 +10,6 @@ a {
   color: rgb(41, 171, 226);
 }
 
-/* Logo Section */
 .logo-section {
   position: absolute !important;
   top: 36px !important;
@@ -23,8 +22,6 @@ a {
   height: 121.97px;
 }
 
-
-/* Main Page Layout */
 .register-page {
   display: flex;
   flex-direction: column;
@@ -53,7 +50,6 @@ a {
   cursor: pointer;
 }
 
-/* Header */
 .register-header {
   display: flex;
   justify-content: start;
@@ -74,7 +70,6 @@ a {
   width: 140px;
 }
 
-/* Form */
 .register-form {
   display: flex;
   flex-direction: column;
@@ -120,7 +115,6 @@ a {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Inputs */
 input {
   width: 100%;
   height: 45px;
@@ -142,7 +136,6 @@ input:focus-visible {
   opacity: 1;
 }
 
-/* Error message */
 .error-message {
   color: red;
   font-size: 12px;
@@ -156,7 +149,6 @@ input:focus-visible {
   visibility: visible;
 }
 
-/* Input icons */
 .input-container {
   position: relative;
   width: 100%;
@@ -186,7 +178,6 @@ input:focus-visible {
   object-fit: contain;
 }
 
-/* Privacy */
 .privacy-container {
   display: flex;
   align-items: center;
@@ -200,7 +191,6 @@ input:focus-visible {
   width: 15px;
 }
 
-/* Footer */
 footer {
   justify-content: center;
   display: flex;
@@ -222,7 +212,6 @@ footer {
   font-weight: 500;
   color: hsl(198, 76%, 52%) !important;
 }
-
 
 #message-box {
   position: fixed;

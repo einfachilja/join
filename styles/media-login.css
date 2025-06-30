@@ -9,9 +9,9 @@
    }
 
     #animated-logo {
-        width: 400.12px;              /* gleich groß wie normal */
+        width: 400.12px;             
         height: 487.88px;
-        transform: translate(-50%, -50%) scale(0.7); /* kleiner, aber bleibt exakt zentriert */
+        transform: translate(-50%, -50%) scale(0.7); 
     }
 
     #animated-logo.logo-finished {
@@ -19,7 +19,6 @@
         left: -132px;
         transform: scale(0.172); 
     }
-
 
     .logo-image {
         width: 71px;

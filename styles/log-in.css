@@ -53,25 +53,6 @@ a {
   transform: scale(0.25);
 }
 
-
-/* Die Version funktioniert
-#animated-logo {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  z-index: 9999;
-  transition: transform 0.8s ease, top 0.8s ease, left 0.8s ease;
-}
-
-#animated-logo.logo-finished {
-  position: fixed;
-  top: -90px;
-  left: -70px;
-  transform: scale(0.25); 
-}
-  */
-
 #static-logo {
   display: none;
 }
@@ -100,8 +81,6 @@ a {
   display: none;
 }
 
-/* ========== Layout ========== */
-/* Zentrierung */
 .login-page {
   display: flex;
   flex-direction: column;
@@ -111,7 +90,6 @@ a {
   background: rgb(246,247,248);
 }
 
-/* Kompakte Box */
 .log-in-container {
   position: relative;
   max-width: 500px;
@@ -125,7 +103,6 @@ a {
   box-shadow: 0 0 14px 3px rgba(0, 0, 0, 0.039);
 }
 
-/* ========== Headline ========== */
 .login-container-headline {
   display: flex;
   flex-direction: column;
@@ -142,7 +119,6 @@ a {
   width: 140px;
 }
 
-/* ========== Form ========== */
 .log-in-form {
   display: flex;
   flex-direction: column;
@@ -194,7 +170,6 @@ input:focus-visible {
   pointer-events: auto;
 }
 
-/* ========== Error Message ========== */
 .error-message {
   color: red;
   font-size: 16px;
@@ -208,7 +183,6 @@ input:focus-visible {
   visibility: visible;
 }
 
-/* ========== Buttons ========== */
 .submit-container {
   display: flex;
   justify-content: center;
@@ -261,7 +235,6 @@ input:focus-visible {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* ========== Registrierung unten ========== */
 .register-container {
   position: absolute;
   top: 40px;
@@ -273,7 +246,6 @@ input:focus-visible {
   z-index: 10;
 }
 
-/* ========== Footer ========== */
 footer {
   justify-content: center;
   display: flex;

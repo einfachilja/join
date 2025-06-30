@@ -1,10 +1,5 @@
 const LOGIN_SUCCESSFUL = "./summary.html";
 
-/**
- * Handles login page load:
- * - Skips loader if user returns from register
- * - Otherwise shows loader animation
- */
 function handleLoginPageLoad() {
   const skipLoader = sessionStorage.getItem("skipLoader");
 
@@ -20,9 +15,6 @@ function handleLoginPageLoad() {
 
 }
 
-/**
- * Plays loader animation and animates logo
- */
 function initLoaderAnimation() {
   const loader = document.getElementById("loader");
   const logo = document.getElementById("animated-logo");

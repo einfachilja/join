@@ -1,58 +1,56 @@
-const BASE_URL =
-  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
-let arrayTasks = []; // gespeicherte Aufgaben aus Firebase
-let firebaseKey = localStorage.getItem("firebaseKey"); // Benutzer-spezifischer Key für Firebase
-
-window.addEventListener("DOMContentLoaded", showWelcomeMessage); // Begrüßung anzeigen beim Laden
+const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
+let arrayTasks = [];
+let firebaseKey = localStorage.getItem("firebaseKey");
 
 function showWelcomeMessage() {
   const name = sessionStorage.getItem("userName") || " ";
   const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
   const hour = new Date().getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   if (window.innerWidth <= 1040) {
-    // Show overlay welcome message for mobile
-    const overlay = document.getElementById("mobile-welcome-overlay");
-    const overlayText = document.getElementById("mobile-welcome-overlay-text");
-    const overlayName = document.getElementById(
-      "mobile-welcome-overlay-username"
-    );
-
-    overlay.classList.remove("d_none");
-    overlayText.textContent = `${greeting}`;
-    overlayName.textContent = name;
-    overlayName.style.color = color;
-
-    // Hide main content for now
-    const main = document.querySelector("main");
-    main.style.display = "none";
-
-    // Show after 4 seconds
-    setTimeout(() => {
-      overlay.classList.add("d_none");
-      main.style.display = "";
-    }, 1500);
+    showMobileWelcomeOverlay(greeting, name, color);
   } else {
-    const name = sessionStorage.getItem("userName") || " ";
-    const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
-    const hour = new Date().getHours();
-    const greeting =
-      hour < 12
-        ? "Good morning"
-        : hour < 18
-        ? "Good afternoon"
-        : "Good evening";
-
-    // Begrüßungstext und Benutzername einfügen
-    document.getElementById(
-      "welcome-message-text"
-    ).textContent = `${greeting}`;
-    const nameEl = document.getElementById("welcome-username");
-    nameEl.textContent = name;
-    nameEl.style.color = color;
+    showDesktopWelcomeMessage(greeting, name, color);
   }
+}
+
+/**
+ * Shows welcome overlay on mobile view.
+ * @param {string} greeting - Greeting text (e.g. "Good morning").
+ * @param {string} name - User's name.
+ * @param {string} color - Color for username text.
+ */
+function showMobileWelcomeOverlay(greeting, name, color) {
+  const overlay = document.getElementById("mobile-welcome-overlay");
+  const overlayText = document.getElementById("mobile-welcome-overlay-text");
+  const overlayName = document.getElementById("mobile-welcome-overlay-username");
+
+  overlay.classList.remove("d_none");
+  overlayText.textContent = greeting;
+  overlayName.textContent = name;
+  overlayName.style.color = color;
+
+  const main = document.querySelector("main");
+  main.style.display = "none";
+
+  setTimeout(() => {
+    overlay.classList.add("d_none");
+    main.style.display = "";
+  }, 1500);
+}
+
+/**
+ * Displays the welcome message on desktop view.
+ * @param {string} greeting - Greeting text.
+ * @param {string} name - User's name.
+ * @param {string} color - Color for username text.
+ */
+function showDesktopWelcomeMessage(greeting, name, color) {
+  document.getElementById("welcome-message-text").textContent = greeting;
+  const nameEl = document.getElementById("welcome-username");
+  nameEl.textContent = name;
+  nameEl.style.color = color;
 }
 
 async function loadTasks() {
@@ -66,11 +64,11 @@ async function loadTasks() {
       return;
     }
 
-    // Tasks in ein Array umwandeln
     arrayTasks = Object.entries(data).map(([firebaseKey, task]) => ({
       ...task,
       firebaseKey,
     }));
+
     updateBasicTaskStats(arrayTasks);
     updatePriorityAndDeadlineSummary(arrayTasks);
   } catch (error) {
@@ -78,7 +76,10 @@ async function loadTasks() {
   }
 }
 
-// ========== STATISTIKEN: TASK-STATUS ==========
+/**
+ * Updates the number of tasks for each status and total.
+ * @param {Array} tasks - Array of task objects.
+ */
 function updateBasicTaskStats(tasks) {
   const counters = {
     todo: "summary_card_number_todo",
@@ -87,41 +88,44 @@ function updateBasicTaskStats(tasks) {
     done: "summary_card_number_done",
   };
 
-  // Alle Zähler aktualisieren
   for (const [status, elementId] of Object.entries(counters)) {
-    document.getElementById(elementId).textContent = tasks.filter(
-      (t) => t.status === status
-    ).length;
+    document.getElementById(elementId).textContent = tasks.filter(t => t.status === status).length;
   }
 
-  // Gesamtanzahl der Aufgaben
-  document.getElementById("summary_card_number_total").textContent =
-    tasks.length;
+  document.getElementById("summary_card_number_total").textContent = tasks.length;
 }
 
-// ========== PRIORITÄT & FÄLLIGKEIT ==========
+/**
+ * Updates priority display and nearest deadline summary.
+ * @param {Array} tasks - Array of task objects.
+ */
 function updatePriorityAndDeadlineSummary(tasks) {
-  // Wichtige Aufgaben: zuerst high, dann medium
-  const selected = getRelevantPriorityTasks(tasks);
+  const { priority, tasks: relevantTasks } = getRelevantPriorityTasks(tasks);
 
-  // UI-Elemente aktualisieren
-  updatePriorityUI(selected.priority, selected.tasks.length);
-  updateEarliestDeadline(selected.tasks);
+  updatePriorityUI(priority, relevantTasks.length);
+  updateEarliestDeadline(relevantTasks);
 }
 
-// Hilfsfunktion: finde relevante Aufgaben nach Priorität
+/**
+ * Filters open tasks and returns relevant ones by priority.
+ * @param {Array} tasks - Array of task objects.
+ * @returns {Object} An object with priority and filtered task list.
+ */
 function getRelevantPriorityTasks(tasks) {
-  const open = tasks.filter((t) => t.status !== "done");
-
-  const high = open.filter((t) => t.priority === "urgent");
-  const medium = open.filter((t) => t.priority === "medium");
+  const open = tasks.filter(t => t.status !== "done");
+  const high = open.filter(t => t.priority === "urgent");
+  const medium = open.filter(t => t.priority === "medium");
 
   if (high.length > 0) return { priority: "urgent", tasks: high };
   if (medium.length > 0) return { priority: "medium", tasks: medium };
   return { priority: null, tasks: [] };
 }
 
-// Hilfsfunktion: UI-Anzeige der Priorität (Text + Icon)
+/**
+ * Updates the UI with priority icon, label and count.
+ * @param {string|null} priority - "urgent", "medium", or null.
+ * @param {number} count - Number of tasks with the priority.
+ */
 function updatePriorityUI(priority, count) {
   const label = document.getElementById("priority-label");
   const icon = document.getElementById("priority-icon");
@@ -136,42 +140,42 @@ function updatePriorityUI(priority, count) {
 
   icon.style.display = "inline";
   const ts = Date.now();
-  icon.src =
-    priority === "urgent"
-      ? `./assets/icons/summary-urgent.png?${ts}`
-      : `./assets/icons/medium.svg?${ts}`;
+  icon.src = priority === "urgent"
+    ? `./assets/icons/summary-urgent.png?${ts}`
+    : `./assets/icons/medium.svg?${ts}`;
   icon.alt = priority;
 
   label.textContent = priority === "urgent" ? "Urgent" : "Medium";
   number.textContent = count;
 }
 
-// Hilfsfunktion: finde frühestes gültiges Fälligkeitsdatum
+/**
+ * Finds and displays the nearest upcoming deadline.
+ * @param {Array} tasks - Array of task objects.
+ */
 function updateEarliestDeadline(tasks) {
   const deadlines = tasks
-    .filter((t) => t.status !== "done") // erledigte Tasks ausschließen
-    .map((t) => convertDateStringToDate(t.dueDate))
-    .filter((date) => date instanceof Date && !isNaN(date)) // nur gültige Daten
+    .filter(t => t.status !== "done")
+    .map(t => convertDateStringToDate(t.dueDate))
+    .filter(date => date instanceof Date && !isNaN(date))
     .sort((a, b) => a - b);
 
   const deadlineEl = document.getElementById("upcoming-deadline-date");
-  if (deadlineEl) {
-    deadlineEl.textContent =
-      deadlines.length > 0
-        ? deadlines[0].toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        : "No upcoming deadline";
-  }
+  deadlineEl.textContent = deadlines.length > 0
+    ? deadlines[0].toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "No upcoming deadline";
 }
 
-function capitalizeFirstLetter(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-// Datumsstring in ein gültiges Date-Objekt konvertieren
+/**
+ * Converts a date string to a valid JavaScript Date object.
+ * Supports "dd/mm/yyyy" and "yyyy-mm-dd" formats.
+ * @param {string} dateStr - The date string to convert.
+ * @returns {Date|null} JavaScript Date object or null if invalid.
+ */
 function convertDateStringToDate(dateStr) {
   if (!dateStr) return null;
 
@@ -181,7 +185,7 @@ function convertDateStringToDate(dateStr) {
 
   if (ddmmyyyy.test(trimmed)) {
     const [day, month, year] = trimmed.split("/");
-    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)); // ← das ist sicher!
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
   } else if (yyyymmdd.test(trimmed)) {
     return new Date(trimmed);
   } else {
