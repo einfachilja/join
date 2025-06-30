@@ -176,13 +176,13 @@
                   <label>Assigned to</label>
                   <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
                     <div id="dropdown-toggle" tabindex="0" role="button">
-                      <input
+                      <span
                         id="assigned-to-input"
-                        type="text"
-                        placeholder="Select contacts"
-                        oninput="handleAssignedToInput(event)"
+                        class="assigned-to-display"
                         onclick="handleAssignedToClick(event)"
-                      />
+                      >
+                        Select contacts
+                      </span>
                       <div class="dropdown-arrow"></div>
                     </div>
                     <div id="dropdown-content" class="dropdown-content"></div>
@@ -194,7 +194,7 @@
 
                   <label>Category <span class="red_star">*</span></label>
                   <div class="custom-dropdown-wrapper" id="category-wrapper">
-                    <div id="category-toggle">
+                    <div id="category-toggle" tabindex="0">
                       <span id="selected-category-placeholder"
                         >Select category</span
                       >
@@ -255,10 +255,16 @@
               <p class="legend-required">
                 <span class="red_star">*</span>This field is required
               </p>
-              <button id="cancel-task-btn" type="button" onclick="resetForm()">Cancel</button>
+              <button id="cancel-task-btn" type="button" onclick="resetForm()">
+                Cancel
+              </button>
               <button id="submit-task-btn" type="button" onclick="createTask()">
                 Create Task
-                <img class="add-task-icon" src="./assets/icons/add-task-check.svg" alt="">
+                <img
+                  class="add-task-icon"
+                  src="./assets/icons/add-task-check.svg"
+                  alt=""
+                />
               </button>
             </div>
           </div>

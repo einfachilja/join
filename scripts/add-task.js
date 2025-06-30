@@ -97,8 +97,14 @@ document.addEventListener("DOMContentLoaded", () => {
     (document.getElementById("due-date").placeholder = "tt.mm.jjjj");
   // Ensure dueDate input has correct placeholder format before any listeners
   const dueDateInput = document.getElementById("dueDate");
+  // Replace dueDate logic with Figma-conform version
   if (dueDateInput) {
     dueDateInput.placeholder = "dd/mm/yyyy";
+    dueDateInput.type = "text";
+
+    dueDateInput.addEventListener("focus", () => {
+      showDatePicker(dueDateInput);
+    });
   }
 
   document
@@ -114,52 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Custom date input formatting and validation
   // Placeholder is now handled above
   setupDateValidation();
-
-  // Format date input as dd/mm/yyyy on display (custom formatting)
-  if (dueDateInput) {
-    dueDateInput.addEventListener("change", function (event) {
-      const selectedDate = new Date(event.target.value);
-      if (!isNaN(selectedDate)) {
-        const year = selectedDate.getFullYear();
-        const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-        const day = String(selectedDate.getDate()).padStart(2, "0");
-        // Set hidden input value in ISO format for form submission
-        const dueDateHidden = document.getElementById("dueDateHidden");
-        if (dueDateHidden) {
-          dueDateHidden.value = `${year}-${month}-${day}`;
-        }
-        // Set display value as dd/mm/yyyy for visual purposes
-        const formattedDate = `${day}/${month}/${year}`;
-        // REPLACEMENT: store formatted date in data attribute, and set input value as ISO
-        dateInput = this;
-        dateInput.setAttribute("data-formatted", formattedDate);
-        const [d, m, y] = formattedDate.split("/");
-        const isoDate = `${y}-${m}-${d}`;
-        dateInput.value = isoDate;
-      }
-    });
-    dueDateInput.addEventListener("focus", function () {
-      // On focus, revert to date type if possible for picker
-      if (/^\d{2}\/\d{2}\/\d{4}$/.test(this.value)) {
-        // Convert dd/mm/yyyy to yyyy-mm-dd for date input
-        const [day, month, year] = this.value.split("/");
-        this.type = "date";
-        this.value = `${year}-${month}-${day}`;
-      } else {
-        this.type = "date";
-      }
-    });
-    dueDateInput.addEventListener("blur", function () {
-      // On blur, if value is still yyyy-mm-dd, format visually
-      if (/^\d{4}-\d{2}-\d{2}$/.test(this.value)) {
-        const [year, month, day] = this.value.split("-");
-        this.type = "text";
-        this.value = `${day}/${month}/${year}`;
-      } else if (!this.value) {
-        this.type = "text";
-      }
-    });
-  }
 });
 
 // ==== FETCH CONTACTS ====
@@ -201,6 +161,7 @@ function setupEventListeners() {
   const subtaskInput = document.getElementById("subtask-input");
   if (subtaskInput) {
     subtaskInput.addEventListener("input", () => {
+      toggleSubtaskIcons();
       const value = subtaskInput.value.trim();
       const iconWrapper = document.getElementById("subtask-icons");
 
@@ -210,8 +171,24 @@ function setupEventListeners() {
         iconWrapper.classList.add("hidden");
       }
     });
+    subtaskInput.addEventListener("focus", () => {
+      toggleSubtaskIcons();
+    });
     subtaskInput.addEventListener("keydown", handleSubtaskEnter);
   }
+}
+// ==== SUBTASK ICONS TOGGLE ====
+function toggleSubtaskIcons() {
+  const input = document.getElementById("subtask-input");
+  const confirmIcon = document.getElementById("subtask-confirm");
+  const defaultIcon = document.getElementById("subtask-plus");
+  const cancelIcon = document.getElementById("subtask-cancel");
+
+  const isActive = document.activeElement === input;
+
+  confirmIcon?.classList.toggle("hidden", !isActive);
+  cancelIcon?.classList.toggle("hidden", !isActive);
+  defaultIcon?.classList.toggle("hidden", isActive);
 }
 
 // ==== PRIORITY ====
@@ -274,6 +251,10 @@ function createContactDropdownItem(contact, filter) {
   `;
   setupContactCheckbox(item, contact, filter);
   setupContactItemClick(item);
+  // Mark as selected if the contact is in selectedContacts
+  if (selectedContacts.some((s) => s.name === contact.name)) {
+    item.classList.add("selected");
+  }
   return item;
 }
 
@@ -341,7 +322,7 @@ function addSubtask() {
   const subtaskIcons = document.getElementById("subtask-icons");
   const text = input.value.trim();
   if (!validateSubtaskInput(text, subtaskIcons, input)) return;
-  subtasks.push(text);
+  subtasks.push({ title: text, completed: false });
   const li = createSubtaskListItem(text);
   document.getElementById("subtask-list").appendChild(li);
   finalizeSubtaskInput(input, subtaskIcons);
@@ -362,7 +343,7 @@ function createSubtaskListItem(text) {
   const li = document.createElement("li");
   li.className = "subtask-list-item";
   const label = document.createElement("span");
-  label.textContent = text;
+  label.textContent = text.title || text;
   label.className = "subtask-label";
   const iconWrapper = document.createElement("div");
   iconWrapper.className = "subtask-icons";
@@ -386,6 +367,7 @@ function finalizeSubtaskInput(input, subtaskIcons) {
 // Enter edit mode for a subtask, split into helpers
 function enterEditMode(subtaskElement) {
   const currentText = getSubtaskCurrentText(subtaskElement);
+  const subtaskObj = subtasks.find((s) => s.title === currentText);
   if (!currentText) return;
   subtaskElement.innerHTML = "";
   const input = createSubtaskEditInput(currentText);
@@ -413,23 +395,6 @@ function createSubtaskEditInput(currentText) {
   return input;
 }
 
-// Create cancel button for subtask edit
-function createSubtaskCancelBtn(currentText, subtaskElement) {
-  const cancelBtn = document.createElement("img");
-  cancelBtn.src = "./assets/icons/closeXSymbol.svg";
-  cancelBtn.alt = "Delete";
-  cancelBtn.className = "subtask-edit-cancel";
-  cancelBtn.addEventListener("click", () => {
-    const index = subtasks.indexOf(currentText);
-    if (index > -1) {
-      subtasks.splice(index, 1);
-    }
-    subtaskElement.remove();
-    updateSubmitState();
-  });
-  return cancelBtn;
-}
-
 // Create confirm button for subtask edit
 function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   const confirmBtn = document.createElement("img");
@@ -439,11 +404,31 @@ function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   confirmBtn.addEventListener("click", () => {
     const newValue = input.value.trim();
     if (newValue) {
-      subtasks[subtasks.indexOf(currentText)] = newValue;
-      updateSubtaskLabel(subtaskElement, newValue);
+      const index = subtasks.findIndex((s) => s.title === currentText);
+      if (index > -1) {
+        subtasks[index].title = newValue;
+        updateSubtaskLabel(subtaskElement, newValue);
+      }
     }
   });
   return confirmBtn;
+}
+
+// Create cancel button for subtask edit
+function createSubtaskCancelBtn(currentText, subtaskElement) {
+  const cancelBtn = document.createElement("img");
+  cancelBtn.src = "./assets/icons/closeXSymbol.svg";
+  cancelBtn.alt = "Delete";
+  cancelBtn.className = "subtask-edit-cancel";
+  cancelBtn.addEventListener("click", () => {
+    const index = subtasks.findIndex((s) => s.title === currentText);
+    if (index > -1) {
+      subtasks.splice(index, 1);
+    }
+    subtaskElement.remove();
+    updateSubmitState();
+  });
+  return cancelBtn;
 }
 
 // Update subtask label after editing
@@ -691,18 +676,22 @@ document.addEventListener("click", (e) => {
   }
 });
 
-function toggleSubtaskIcons() {
-  const input = document.getElementById("subtask-input");
-  const confirmIcon = document.getElementById("subtask-confirm");
-  const defaultIcon = document.getElementById("subtask-plus");
-  const cancelIcon = document.getElementById("subtask-cancel");
+subtaskInput.addEventListener("input", () => {
+  const value = subtaskInput.value.trim();
+  const iconWrapper = document.getElementById("subtask-icons");
 
-  const isActive = document.activeElement === input;
+  toggleSubtaskIcons(); // 👈 Hier einfügen
 
-  confirmIcon?.classList.toggle("hidden", !isActive);
-  cancelIcon?.classList.toggle("hidden", !isActive);
-  defaultIcon?.classList.toggle("hidden", isActive);
-}
+  if (value.length > 0) {
+    iconWrapper.classList.remove("hidden");
+  } else {
+    iconWrapper.classList.add("hidden");
+  }
+});
+
+subtaskInput.addEventListener("focus", () => {
+  toggleSubtaskIcons(); // 👈 Auch bei Fokus einbauen
+});
 
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
@@ -745,24 +734,28 @@ function showDatePicker(input) {
   input.addEventListener(
     "change",
     () => {
-      if (input.value) {
-        const date = new Date(input.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-
-        // Delay to avoid native validation error
-        setTimeout(() => {
-          input.type = "text";
-          input.value = `${day}/${month}/${year}`;
-        }, 0);
-      } else {
-        setTimeout(() => {
-          input.type = "text";
-          input.placeholder = "dd/mm/yyyy";
-          input.value = "";
-        }, 0);
+      const [year, month, day] = input.value?.split("-") ?? [];
+      if (
+        !day ||
+        !month ||
+        !year ||
+        isNaN(+day) ||
+        isNaN(+month) ||
+        isNaN(+year)
+      ) {
+        input.type = "text";
+        input.placeholder = "dd/mm/yyyy";
+        input.value = "";
+        return;
       }
+      const formatted = `${day.padStart(2, "0")}/${month.padStart(
+        2,
+        "0"
+      )}/${year}`;
+      setTimeout(() => {
+        input.type = "text";
+        input.value = formatted;
+      }, 0);
     },
     { once: true }
   );
@@ -777,4 +770,45 @@ function showDatePicker(input) {
     },
     { once: true }
   );
+}
+
+// === Focus border for assigned-to ===
+document.addEventListener("DOMContentLoaded", () => {
+  const assignedInput = document.getElementById("assigned-to-input");
+  const dropdownToggle = document.getElementById("dropdown-toggle");
+
+  if (assignedInput && dropdownToggle) {
+    assignedInput.addEventListener("click", () => {
+      dropdownToggle.classList.add("focused");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!dropdownToggle.contains(e.target)) {
+        dropdownToggle.classList.remove("focused");
+      }
+    });
+  }
+});
+
+// ==== SAVE UPDATED SUBTASKS ====
+/**
+ * Updates the subtasks array for a specific task in Firebase.
+ * @param {string} taskKey - The firebaseKey of the task to update.
+ */
+async function saveUpdatedSubtasks(taskKey) {
+  const task = arrayTasks.find((t) => t.firebaseKey === taskKey);
+  if (!task || !Array.isArray(task.subtask)) return;
+
+  try {
+    await fetch(
+      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks/${taskKey}/subtask.json`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task.subtask),
+      }
+    );
+  } catch (error) {
+    console.error("Failed to update subtasks in Firebase:", error);
+  }
 }
