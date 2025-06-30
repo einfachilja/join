@@ -1,7 +1,7 @@
-function openSubMenu(){
-    let supMenuRef = document.getElementById('sub_menu');
-    supMenuRef.classList.toggle('d_none');
-    supMenuRef.classList.toggle('sub-menu');
+function openSubMenu() {
+  const supMenuRef = document.getElementById('sub_menu');
+  supMenuRef.classList.toggle('d_none');
+  supMenuRef.classList.toggle('sub-menu');
 }
 
 function setUserInitials() {
@@ -14,12 +14,10 @@ function setUserInitials() {
   const initials = userName.toLowerCase() === "guest"
     ? "G"
     : (nameParts[0][0] + (nameParts.length > 1 ? nameParts.at(-1)[0] : "")).toUpperCase();
+
   initialsField.textContent = initials;
 
   const userColor = sessionStorage.getItem("userColor");
   if (userColor) initialsField.style.color = userColor;
 }
 
-window.addEventListener("load", () => {
-  setUserInitials();
-});

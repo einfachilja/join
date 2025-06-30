@@ -469,4 +469,7 @@ function OpenContactTemplates(contact) {
 }
 
 
-window.onload = loadContacts;
+window.onload = () => {
+  setUserInitials();
+  loadContacts();
+};
