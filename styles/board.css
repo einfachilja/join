@@ -91,6 +91,24 @@
     cursor: pointer;
 }
 
+@keyframes task-blink {
+    0% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    100% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.task-blink {
+    animation: task-blink 0.5s ease-in-out 0s infinite;
+}
+
 .board-main {
     display: flex;
     justify-content: space-between;
@@ -801,12 +819,6 @@
     gap: 6px;
 }
 
-.overlay-meta-row .priority-container {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
 .d-none {
     display: none;
 }
@@ -842,119 +854,4 @@
     display: flex;
     align-items: center;
     gap: 30px;
-}
-
-#due_date_input {
-    background-color: white;
-}
-
-#due_date_input:hover {
-    cursor: pointer;
-}
-
-.priority-headline {
-    display: flex;
-    align-items: center;
-    gap: 48px;
-}
-
-.priority-container {
-    display: flex;
-    align-items: center;
-}
-
-.priority-container img {
-    width: 40px;
-}
-
-.assigned-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 7px 12px;
-    cursor: pointer;
-    transition: background 0.2s;
-    border-radius: 8px;
-}
-
-.assigned-item.selected {
-    background: #242424;
-    color: #fff;
-}
-
-.assigned-name {
-    flex: 1;
-    font-size: 1rem;
-}
-
-.assigned-checkbox {
-    margin-left: auto;
-    accent-color: #5bb6fa;
-    width: 18px;
-    height: 18px;
-}
-
-/* Mülleimer-Button im Subtask Edit */
-.subtask-remove-btn {
-    background: none;
-    border: none;
-    color: #b2b2b2;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-/* Stift-Button im Subtask Edit */
-.subtask-edit-btn {
-    background: none;
-    border: none;
-    color: #b2b2b2;
-    font-size: 12px;
-    cursor: pointer;
-    transition: color 0.15s;
-    padding: 2px 6px;
-    display: flex;
-    align-items: center;
-}
-
-.subtask-edit-btn img {
-    width: 24px;
-}
-
-.subtask-remove-btn:hover {
-    color: #ff4d4d;
-}
-
-.subtask-remove-btn img {
-    width: 24px;
-}
-
-.board-add-task-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-@keyframes task-blink {
-    0% {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    50% {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    }
-
-    100% {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-}
-
-.task-blink {
-    animation: task-blink 0.5s ease-in-out 0s infinite;
-}
-
-.move-task-dropdown-menu {
-    background-color: #2A3647;
-
 }
