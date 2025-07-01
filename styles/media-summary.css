@@ -1,6 +1,4 @@
 @media(max-width: 1232px) {
-
-    /* Summary */
     .summary-container {
         margin-left: 280px;
         margin-top: 150px;
@@ -46,7 +44,6 @@
         margin-top: 100px;
     }
 
-    /* welcome message summary */
     .mobile-welcome-overlay {
         position: absolute;
         top: 80px;
@@ -82,7 +79,7 @@
         display: none !important;
     }
 
-        .card-container-right {
+    .card-container-right {
         display: none;
     }
 
@@ -135,6 +132,16 @@
     .summary-done-icon {
         height: 50px;
         width: 50px;
+    }
+
+    .priority-background {
+        height: 50px;
+        width: 50px;
+    }
+
+    .priority-img {
+        height: 25px;
+        width: 25px;
     }
 
     .summary-card-number {
@@ -192,7 +199,7 @@
         display: flex;
     }
 
-    .summary-header-container{
+    .summary-header-container {
         display: flex;
         justify-content: center;
         margin-left: -100px;
@@ -213,6 +220,16 @@
     .summary-done-icon {
         height: 30px;
         width: 30px;
+    }
+
+    .priority-background {
+        height: 30px;
+        width: 30px;
+    }
+
+    .priority-img {
+        height: 15px;
+        width: 15px;
     }
 
     .summary-card-number {

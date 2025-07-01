@@ -59,6 +59,7 @@ function showDesktopWelcomeMessage(greeting, name, color) {
 async function loadTasks() {
   try {
     const response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`);
+
     const data = await response.json();
 
     if (!data) {
@@ -119,9 +120,11 @@ function getRelevantPriorityTasks(tasks) {
   const open = tasks.filter(t => t.status !== "done");
   const high = open.filter(t => t.priority === "urgent");
   const medium = open.filter(t => t.priority === "medium");
+  const low = open.filter(t => t.priority === "low"); // <--- ADD THIS
 
   if (high.length > 0) return { priority: "urgent", tasks: high };
   if (medium.length > 0) return { priority: "medium", tasks: medium };
+  if (low.length > 0) return { priority: "low", tasks: low }; // <--- ADD THIS
   return { priority: null, tasks: [] };
 }
 
@@ -134,23 +137,38 @@ function updatePriorityUI(priority, count) {
   const label = document.getElementById("priority-label");
   const icon = document.getElementById("priority-icon");
   const number = document.getElementById("summary_card_number_priority_high");
+  const wrapper = document.getElementById("priority-wrapper");
 
-  if (!priority) {
+  if (priority === null || priority === undefined || priority === "") {
     icon.style.display = "none";
     label.textContent = "";
     number.textContent = "0";
+    wrapper.className = "priority-background";
     return;
   }
 
   icon.style.display = "inline";
-  const ts = Date.now();
-  icon.src = priority === "urgent"
-    ? `./assets/icons/summary-urgent.png?${ts}`
-    : `./assets/icons/medium.svg?${ts}`;
-  icon.alt = priority;
+  const timestamp = Date.now();
+  let iconSrc = "";
+  let labelText = "";
 
-  label.textContent = priority === "urgent" ? "Urgent" : "Medium";
+  if (priority === "urgent") {
+    iconSrc = "./assets/icons/summary-urgent.svg?" + timestamp;
+    labelText = "Urgent";
+  } else if (priority === "medium") {
+    iconSrc = "./assets/icons/summary-medium.svg?" + timestamp;
+    labelText = "Medium";
+  } else if (priority === "low") {
+    iconSrc = "./assets/icons/summary-low.svg?" + timestamp;
+    labelText = "Low";
+  }
+
+  icon.src = iconSrc;
+  icon.alt = priority;
+  label.textContent = labelText;
   number.textContent = count;
+
+  wrapper.className = "priority-background priority-" + priority;
 }
 
 /**
