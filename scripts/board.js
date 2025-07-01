@@ -379,7 +379,8 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img class="delete-icon" src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
         <img id="seperator" src="./assets/icons/board-separator-icon.svg" alt="">
         <div id="edit_btn" class="edit-btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
-        <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok</div>
+        <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok
+        <img src="./assets/icons/add-task-check.svg"</div>
       </div>
     </div>`;
 }
@@ -580,11 +581,47 @@ function editTask() {
     dropdown.id = 'assigned-dropdown';
     dropdown.className = 'assigned-dropdown';
 
+    // Dropdown-Liste
+    const list = document.createElement('div');
+    list.id = 'assigned-dropdown-list';
+    list.className = 'assigned-dropdown-list'; // entferne zusätzliche Klassen
+    list.classList.remove('open'); // diese Zeile sicherheitshalber beibehalten
+
     const toggle = document.createElement('div');
     toggle.className = 'assigned-dropdown-toggle';
-    toggle.onclick = function () {
-      list.classList.toggle('open');
-    };
+    // Ersetze onclick durch robusten EventListener mit Outside-Handling, nur einmal registrieren!
+    if (!toggle._dropdownClickHandlerAdded) {
+      toggle.addEventListener('click', function (event) {
+        event.stopPropagation();
+        const isOpen = list.classList.contains('open');
+        closeAllDropdowns(); // schließt andere ggf. offene Dropdowns
+        if (!isOpen) {
+          list.classList.add('open');
+        }
+      });
+      toggle._dropdownClickHandlerAdded = true;
+    }
+
+    // Hilfsfunktion zum Schließen aller Dropdowns
+    function closeAllDropdowns() {
+      document.querySelectorAll('.assigned-dropdown-list.open').forEach(el => {
+        el.classList.remove('open');
+      });
+    }
+
+    // Outside-Click-Handler nur einmal global hinzufügen
+    if (!window._assignedDropdownClickHandler) {
+      document.addEventListener('click', function (event) {
+        // Finde alle offenen Dropdowns und schließe, wenn außerhalb geklickt wurde
+        document.querySelectorAll('.assigned-dropdown').forEach(dropdown => {
+          const list = dropdown.querySelector('.assigned-dropdown-list');
+          if (list && list.classList.contains('open') && !dropdown.contains(event.target)) {
+            list.classList.remove('open');
+          }
+        });
+      });
+      window._assignedDropdownClickHandler = true;
+    }
 
     const placeholder = document.createElement('span');
     placeholder.id = 'assigned-placeholder';
@@ -595,11 +632,6 @@ function editTask() {
 
     toggle.appendChild(placeholder);
     toggle.appendChild(arrow);
-
-    // Dropdown-Liste
-    const list = document.createElement('div');
-    list.id = 'assigned-dropdown-list';
-    list.className = 'assigned-dropdown-list';
 
     dropdown.appendChild(toggle);
     dropdown.appendChild(list);
@@ -681,6 +713,8 @@ function editTask() {
       // Reihenfolge: Erst Dropdown, dann Kreise!
       // Wichtig: assignedListContainer.appendChild(dropdown) wurde bereits vor dem ersten renderAssignedSelectedCircles aufgerufen.
       renderAssignedSelectedCircles();
+      // --- Entferne automatisches Öffnen des Dropdowns beim Rendern ---
+      // entfernt: list.classList.add('open'); // Dropdown soll initial geschlossen bleiben!
     }
 
     // Funktion zum Rendern der ausgewählten Kreise (NEU gemäß Vorgabe)

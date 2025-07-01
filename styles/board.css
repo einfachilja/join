@@ -596,7 +596,7 @@
 .overlay-card-title {
     font-size: 48px;
     font-weight: 700;
-    word-break: break-all;
+    overflow-wrap: break-word;
 }
 
 .overlay-card-description {
@@ -618,6 +618,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-top: 4px;
 }
 
 .overlay-card-footer {
@@ -651,7 +652,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 10px;
-    padding: 16px;
+    padding: 12px;
     gap: 4px;
     background-color: #2A3647;
     font-size: 21px;
