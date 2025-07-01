@@ -157,11 +157,11 @@ function generateTodoHTML(element) {
   const priority = typeof element.priority === 'string' ? element.priority : 'low';
   let priorityIcon = "";
   if (priority.toLowerCase() === "low") {
-    priorityIcon = "./assets/icons/board-priority-low.svg";
+    priorityIcon = "./assets/icons/board/board-priority-low.svg";
   } else if (priority.toLowerCase() === "medium") {
-    priorityIcon = "./assets/icons/board-priority-medium.svg";
+    priorityIcon = "./assets/icons/board/board-priority-medium.svg";
   } else if (priority.toLowerCase() === "urgent") {
-    priorityIcon = "./assets/icons/board-priority-high.svg";
+    priorityIcon = "./assets/icons/board/board-priority-high.svg";
   }
 
   // assignedTo kann String oder Array sein, fallback zu []
@@ -196,7 +196,7 @@ function generateTodoHTML(element) {
             <div class="card-header">
             <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
             <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
-              <img class="card-header-move-arrow" src="./assets/icons/board-move-arrow.svg" alt="Move Task" />
+              <img class="card-header-move-arrow" src="./assets/icons/board/board-move-arrow.svg" alt="Move Task" />
             </button>
             </div>
             <span class="card-title">${title}</span>
@@ -328,17 +328,17 @@ function openBoardCard(firebaseKey) {
 function getOpenBoardCardTemplate(categoryClass, task) {
   let priorityIcon = "";
   if (task.priority && task.priority.toLowerCase() === "low") {
-    priorityIcon = "./assets/icons/board-priority-low.svg";
+    priorityIcon = "./assets/icons/board/board-priority-low.svg";
   } else if (task.priority && task.priority.toLowerCase() === "medium") {
-    priorityIcon = "./assets/icons/board-priority-medium.svg";
+    priorityIcon = "./assets/icons/board/board-priority-medium.svg";
   } else if (task.priority && task.priority.toLowerCase() === "urgent") {
-    priorityIcon = "./assets/icons/board-priority-high.svg";
+    priorityIcon = "./assets/icons/board/board-priority-high.svg";
   }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
       <div class="board-overlay-card-header edit-mode">
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
-      <img class="board-close-icon " src="./assets/icons/board-close.svg" onclick="closeBoardCard()">
+      <img class="board-close-icon " src="./assets/icons/board/board-close.svg" onclick="closeBoardCard()">
       </div>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
@@ -376,11 +376,11 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         </ul>
       </div>
       <div id="overlay_card_footer" class="overlay-card-footer">
-        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img class="delete-icon" src="./assets/icons/board-delete-icon.svg" alt="">Delete</div>
-        <img id="seperator" src="./assets/icons/board-separator-icon.svg" alt="">
-        <div id="edit_btn" class="edit-btn" onclick="editTask()"><img src="./assets/icons/board-edit-icon.svg" alt="">Edit</div>
+        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><img class="delete-icon" src="./assets/icons/board/board-delete-icon.svg" alt="">Delete</div>
+        <img id="seperator" src="./assets/icons/board/board-separator-icon.svg" alt="">
+        <div id="edit_btn" class="edit-btn" onclick="editTask()"><img src="./assets/icons/board/board-edit-icon.svg" alt="">Edit</div>
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok
-        <img src="./assets/icons/add-task-check.svg"</div>
+        <img src="./assets/icons/board/add-task-check.svg"</div>
       </div>
     </div>`;
 }
@@ -836,7 +836,7 @@ function editTask() {
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'subtask-remove-btn';
-        removeBtn.innerHTML = `<img src="assets/icons/board-delete-icon.svg">`;
+        removeBtn.innerHTML = `<img src="assets/icons/board/board-delete-icon.svg">`;
         removeBtn.onclick = (e) => {
           e.preventDefault();
           subtaskArr.splice(idx, 1);
@@ -847,7 +847,7 @@ function editTask() {
         const editBtn = document.createElement('button');
         editBtn.type = 'button';
         editBtn.className = 'subtask-edit-btn';
-        editBtn.innerHTML = `<img src="assets/icons/board-edit-icon.svg">`;
+        editBtn.innerHTML = `<img src="assets/icons/board/board-edit-icon.svg">`;
         editBtn.title = 'Bearbeiten';
         editBtn.onclick = (e) => {
           e.preventDefault();
@@ -1068,7 +1068,7 @@ function getAddTaskOverlay() {
   return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
             <h1 class="h1-add-task">Add Task</h1>
-            <img class="board-close-icon" src="./assets/icons/board-close.svg" onclick="closeAddTaskOverlay()">
+            <img class="board-close-icon" src="./assets/icons/board/board-close.svg" onclick="closeAddTaskOverlay()">
              </div>
             <form id="task-form" onsubmit="return false;">
               <div class="form-cols">
@@ -1122,7 +1122,7 @@ function getAddTaskOverlay() {
                       data-prio="urgent"
                       onclick="selectPriority('urgent')"
                     >
-                      Urgent <img src="./assets/icons/urgent.svg" alt="" />
+                      Urgent <img src="./assets/icons/board/urgent.svg" alt="" />
                     </button>
                     <button
                       type="button"
@@ -1130,14 +1130,14 @@ function getAddTaskOverlay() {
                       class="selected"
                       onclick="selectPriority('medium')"
                     >
-                      Medium <img src="./assets/icons/medium.svg" alt="" />
+                      Medium <img src="./assets/icons/board/medium.svg" alt="" />
                     </button>
                     <button
                       type="button"
                       data-prio="low"
                       onclick="selectPriority('low')"
                     >
-                      Low <img src="./assets/icons/low.svg" alt="" />
+                      Low <img src="./assets/board/icons/low.svg" alt="" />
                     </button>
                   </div>
                   <div class="error-message" id="error-priority">
@@ -1194,14 +1194,14 @@ function getAddTaskOverlay() {
                           <div id="subtask-icons" class="subtask-icons hidden">
                             <img
                               id="subtask-cancel"
-                              src="./assets/icons/closeXSymbol.svg"
+                              src="./assets/icons/board/closeXSymbol.svg"
                               alt="Cancel"
                               onclick="clearSubtaskInput()"
                             />
                             <div class="divider"></div>
                             <img
                               id="subtask-confirm"
-                              src="./assets/icons/checked.svg"
+                              src="./assets/icons/board/checked.svg"
                               alt="Confirm"
                               onclick="addSubtask()"
                             />
@@ -1209,7 +1209,7 @@ function getAddTaskOverlay() {
                           <img
                             id="subtask-plus"
                             class="subtask-plus"
-                            src="./assets/icons/add+symbol.svg"
+                            src="./assets/icons/board/add+symbol.svg"
                             alt="Add"
                             onclick="toggleSubtaskIcons()"
                           />
@@ -1232,7 +1232,7 @@ function getAddTaskOverlay() {
                   onclick="createTask()"
                 >
                   Create Task
-                  <img class="add-task-icon" src="./assets/icons/add-task-check.svg" alt="">
+                  <img class="add-task-icon" src="./assets/icons/baord/add-task-check.svg" alt="">
                 </button>
               </div>
             </form>
