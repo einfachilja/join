@@ -614,10 +614,12 @@
 .overlay-card-title {
     font-size: 48px;
     font-weight: 700;
+    word-break: break-all;
 }
 
 .overlay-card-description {
     font-size: 20px;
+    word-break: break-all;
 }
 
 .overlay-card-date-input {
@@ -718,12 +720,6 @@
     outline: none;
     font-size: inherit;
     line-height: inherit;
-}
-
-.board-overlay-card .overlay-card-title,
-.board-overlay-card .overlay-card-description {
-    display: block;
-    min-height: 1.2em;
 }
 
 .board-overlay-card [contenteditable="true"]:focus {
@@ -1239,25 +1235,6 @@
     font-size: 23px;
 }
 
-.overlay-card-title {
-    font-size: 48px;
-    font-weight: 700;
-}
-
-.overlay-card-description {
-    font-size: 20px;
-}
-
-.overlay-card-date-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #D1D1D1;
-    border-radius: 10px;
-    font-size: 20px;
-    font-weight: 400;
-    font-family: inherit;
-}
-
 .assigned-entry {
     display: flex;
     align-items: center;
@@ -1357,12 +1334,6 @@
     outline: none;
     font-size: inherit;
     line-height: inherit;
-}
-
-.board-overlay-card .overlay-card-title,
-.board-overlay-card .overlay-card-description {
-    display: block;
-    min-height: 1.2em;
 }
 
 .board-overlay-card [contenteditable="true"]:focus {
