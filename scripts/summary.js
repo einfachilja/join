@@ -148,14 +148,7 @@ function updatePriorityUI(priority, count) {
     return;
   }
 
-if (!priority) {
-  icon.style.display = "none";
-  icon.removeAttribute("src");  // <- diese Zeile ist entscheidend!
-  label.textContent = "";
-  number.textContent = "0";
-  wrapper.className = "priority-background";
-  return;
-}
+
 
 
   icon.style.display = "inline";
