@@ -1,6 +1,4 @@
 @media(max-width: 1232px) {
-
-    /* Summary */
     .summary-container {
         margin-left: 280px;
         margin-top: 150px;
@@ -46,7 +44,6 @@
         margin-top: 100px;
     }
 
-    /* welcome message summary */
     .mobile-welcome-overlay {
         position: absolute;
         top: 80px;
