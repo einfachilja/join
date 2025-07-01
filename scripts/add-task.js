@@ -1,4 +1,8 @@
-// Format date to DD/MM/YYYY
+/**
+ * Formats a date string from YYYY-MM-DD to DD/MM/YYYY.
+ * @param {string} dateString - The input date string, e.g., "2024-06-01".
+ * @returns {string} The formatted date string in DD/MM/YYYY format.
+ */
 function formatDateToDDMMYYYY(dateString) {
   if (!dateString) return "";
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
@@ -16,13 +20,24 @@ let selectedContacts = [];
 let selectedCategory = "";
 
 // ==== HELPERS ====
+/**
+ * Stops the propagation of the given event.
+ * @param {Event} [e=window.event] - The event to stop propagation for.
+ */
 function stopPropagation(e = window.event) {
   if (e && typeof e.stopPropagation === "function") e.stopPropagation();
 }
+/**
+ * Closes the assignment dropdown by removing visibility classes.
+ */
 function closeDropdown() {
   document.getElementById("dropdown-content")?.classList.remove("visible");
   document.getElementById("dropdown-toggle")?.classList.remove("open");
 }
+/**
+ * Selects a priority and updates UI accordingly.
+ * @param {string} prio - The priority to select ("low", "medium", "high").
+ */
 function selectPriority(prio) {
   selectedPriority = prio;
   document
@@ -32,6 +47,9 @@ function selectPriority(prio) {
 }
 
 // ==== INIT ====
+/**
+ * Initializes the Add Task page by setting up DOM defaults, event listeners, and fetching contacts.
+ */
 function initAddTaskPage() {
   setupDOMDefaults();
   setupDueDatePicker();
@@ -41,6 +59,9 @@ function initAddTaskPage() {
   initializeUIStates();
 }
 
+/**
+ * Initializes UI states such as subtask list, date validation, submit button, and assigned input focus.
+ */
 function initializeUIStates() {
   markSubtaskList();
   setupDateValidation();
@@ -48,6 +69,9 @@ function initializeUIStates() {
   setupAssignedInputFocus();
 }
 
+/**
+ * Sets up default DOM values for the due date input.
+ */
 function setupDOMDefaults() {
   const dueDateInputAlt = document.getElementById("due-date");
   if (dueDateInputAlt) {
@@ -56,6 +80,9 @@ function setupDOMDefaults() {
   }
 }
 
+/**
+ * Sets up the due date picker input with placeholder and event.
+ */
 function setupDueDatePicker() {
   const dueDateInput = document.getElementById("dueDate");
   if (dueDateInput) {
@@ -65,6 +92,9 @@ function setupDueDatePicker() {
   }
 }
 
+/**
+ * Sets the default priority selection to "medium".
+ */
 function setDefaultPriority() {
   const buttonsPrio = document.getElementById("buttons-prio");
   if (buttonsPrio) {
@@ -74,15 +104,24 @@ function setDefaultPriority() {
   }
 }
 
+/**
+ * Adds the "subtask-list" class to the subtask list element.
+ */
 function markSubtaskList() {
   document.getElementById("subtask-list")?.classList.add("subtask-list");
 }
 
+/**
+ * Enables the submit button if it exists.
+ */
 function enableSubmitButton() {
   const submitBtn = document.getElementById("submit-task-btn");
   if (submitBtn) submitBtn.disabled = false;
 }
 
+/**
+ * Sets up focus and blur event listeners for the assigned-to input.
+ */
 function setupAssignedInputFocus() {
   const assignedInput = document.getElementById("assigned-to-input");
   const dropdownToggle = document.getElementById("dropdown-toggle");
@@ -97,13 +136,24 @@ function setupAssignedInputFocus() {
   }
 }
 
+/**
+ * Handles click event on the assigned-to input, opening the dropdown.
+ * @param {Event} e - The click event.
+ */
 function handleAssignedToClick(e) {
   e.stopPropagation();
   toggleAssignDropdown(e);
 }
+/**
+ * Handles input event for filtering assign options.
+ * @param {Event} e - The input event.
+ */
 function handleAssignedToInput(e) {
   renderAssignOptions(e.target.value.trim().toLowerCase());
 }
+/**
+ * Sets up validation on the due date input and error message.
+ */
 function setupDateValidation() {
   setTimeout(() => {
     const dateInput = document.getElementById("dueDate");
@@ -116,6 +166,11 @@ function setupDateValidation() {
     });
   }, 100);
 }
+/**
+ * Hides the date error UI for the given input and error element.
+ * @param {HTMLElement} input - The date input element.
+ * @param {HTMLElement} error - The error element.
+ */
 function hideDateError(input, error) {
   input.style.border = "";
   error.classList.remove("visible");
@@ -123,6 +178,10 @@ function hideDateError(input, error) {
 document.addEventListener("DOMContentLoaded", initAddTaskPage);
 
 // ==== FETCH CONTACTS ====
+/**
+ * Fetches contacts from Firebase and populates the contacts array.
+ * @returns {Promise<void>}
+ */
 async function fetchContacts() {
   try {
     const res = await fetch(
@@ -135,16 +194,22 @@ async function fetchContacts() {
         name: u.name.trim(),
         color: u.color || "#888",
       }));
-  } catch (err) { }
+  } catch (err) {}
 }
 
 // ==== EVENTS ====
+/**
+ * Sets up all essential event listeners for dropdowns, subtasks, and outside clicks.
+ */
 function setupEventListeners() {
   setupDropdownEvents();
   setupSubtaskEvents();
   setupOutsideClickEvents();
 }
 
+/**
+ * Sets up event listeners for assignment and category dropdown toggles.
+ */
 function setupDropdownEvents() {
   const dropdownToggle = document.getElementById("dropdown-toggle");
   const categoryToggle = document.getElementById("category-toggle");
@@ -154,6 +219,9 @@ function setupDropdownEvents() {
   dropdownContent?.addEventListener("click", (e) => e.stopPropagation());
 }
 
+/**
+ * Sets up event listeners for subtask input and icons.
+ */
 function setupSubtaskEvents() {
   const subtaskInput = document.getElementById("subtask-input");
   if (subtaskInput) {
@@ -170,6 +238,9 @@ function setupSubtaskEvents() {
   }
 }
 
+/**
+ * Sets up event listeners to close dropdowns when clicking outside.
+ */
 function setupOutsideClickEvents() {
   document.addEventListener("click", (e) => {
     if (!document.getElementById("category-wrapper").contains(e.target)) {
@@ -182,6 +253,9 @@ function setupOutsideClickEvents() {
   });
 }
 // ==== SUBTASK ICONS TOGGLE ====
+/**
+ * Toggles the visibility of subtask icons depending on input focus.
+ */
 function toggleSubtaskIcons() {
   const input = document.getElementById("subtask-input");
   const confirmIcon = document.getElementById("subtask-confirm");
@@ -194,6 +268,10 @@ function toggleSubtaskIcons() {
 }
 
 // ==== ASSIGN-DROPDOWN ====
+/**
+ * Toggles the assignment dropdown open/closed and renders options if needed.
+ * @param {Event} event - The click event.
+ */
 function toggleAssignDropdown(event) {
   event.stopPropagation();
   const tog = document.getElementById("dropdown-toggle");
@@ -204,6 +282,10 @@ function toggleAssignDropdown(event) {
   if (dd.innerHTML === "") renderAssignOptions();
 }
 
+/**
+ * Renders the assignment options dropdown, filtered by the input string.
+ * @param {string} [filter=""] - Optional filter string for contact names.
+ */
 function renderAssignOptions(filter = "") {
   const dd = document.getElementById("dropdown-content");
   if (!dd) return;
@@ -213,11 +295,21 @@ function renderAssignOptions(filter = "") {
     .forEach((c) => dd.appendChild(createContactDropdownItem(c, filter)));
 }
 
+/**
+ * Removes all child nodes from the dropdown except the input.
+ * @param {HTMLElement} container - The dropdown container element.
+ */
 function clearOldAssignOptions(container) {
   Array.from(container.childNodes)
     .filter((n) => n.tagName !== "INPUT")
     .forEach((n) => n.remove());
 }
+/**
+ * Creates a dropdown item element for a contact.
+ * @param {{name: string, color: string}} contact - The contact object.
+ * @param {string} filter - The filter string.
+ * @returns {HTMLElement} The contact dropdown item element.
+ */
 function createContactDropdownItem(contact, filter) {
   const item = document.createElement("div");
   item.className = "contact-item";
@@ -226,7 +318,8 @@ function createContactDropdownItem(contact, filter) {
       ${getContactInitials(contact.name)}
     </span>
     <span>${contact.name}</span>
-    <input type="checkbox" ${selectedContacts.some((s) => s.name === contact.name) ? "checked" : ""
+    <input type="checkbox" ${
+      selectedContacts.some((s) => s.name === contact.name) ? "checked" : ""
     }/>
   `;
   setupContactCheckbox(item, contact, filter);
@@ -235,6 +328,11 @@ function createContactDropdownItem(contact, filter) {
     item.classList.add("selected");
   return item;
 }
+/**
+ * Gets the initials from a contact name.
+ * @param {string} name - The contact's full name.
+ * @returns {string} The initials in uppercase.
+ */
 function getContactInitials(name) {
   return name
     .split(" ")
@@ -242,6 +340,12 @@ function getContactInitials(name) {
     .join("")
     .toUpperCase();
 }
+/**
+ * Sets up the checkbox click event for a contact dropdown item.
+ * @param {HTMLElement} item - The contact item element.
+ * @param {{name: string, color: string}} contact - The contact object.
+ * @param {string} filter - The filter string.
+ */
 function setupContactCheckbox(item, contact, filter) {
   const checkbox = item.querySelector("input[type='checkbox']");
   checkbox.addEventListener("click", (event) => {
@@ -257,6 +361,10 @@ function setupContactCheckbox(item, contact, filter) {
     updateSubmitState();
   });
 }
+/**
+ * Sets up the click event for a contact item to toggle its checkbox.
+ * @param {HTMLElement} item - The contact item element.
+ */
 function setupContactItemClick(item) {
   const checkbox = item.querySelector("input[type='checkbox']");
   item.addEventListener("click", (event) => {
@@ -266,6 +374,9 @@ function setupContactItemClick(item) {
     checkbox.dispatchEvent(new Event("click", { bubbles: true }));
   });
 }
+/**
+ * Updates the UI to show selected contacts as icons.
+ */
 function updateSelectedContactsUI() {
   const box = document.getElementById("selected-contacts");
   if (!box) return;
@@ -279,7 +390,10 @@ function updateSelectedContactsUI() {
   });
 }
 
-// ==== SUBTASK ====
+// ==== SUBTASKS ====
+/**
+ * Adds a subtask to the subtasks list and updates the UI.
+ */
 function addSubtask() {
   const input = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
@@ -291,6 +405,13 @@ function addSubtask() {
     .appendChild(createSubtaskListItem(text));
   finalizeSubtaskInput(input, subtaskIcons);
 }
+/**
+ * Validates the subtask input field and UI state.
+ * @param {string} text - The input text.
+ * @param {HTMLElement} subtaskIcons - The subtask icons wrapper.
+ * @param {HTMLElement} input - The subtask input element.
+ * @returns {boolean} True if valid, false otherwise.
+ */
 function validateSubtaskInput(text, subtaskIcons, input) {
   if (!text || subtaskIcons.classList.contains("hidden")) {
     input.classList.add("error-border");
@@ -299,6 +420,11 @@ function validateSubtaskInput(text, subtaskIcons, input) {
   input.classList.remove("error-border");
   return true;
 }
+/**
+ * Creates a subtask list item element.
+ * @param {string|{title: string}} text - The subtask text or object.
+ * @returns {HTMLElement} The list item element for the subtask.
+ */
 function createSubtaskListItem(text) {
   const li = document.createElement("li");
   li.className = "subtask-list-item";
@@ -312,12 +438,21 @@ function createSubtaskListItem(text) {
   li.addEventListener("dblclick", () => enterEditMode(li));
   return li;
 }
+/**
+ * Finalizes subtask input by resetting input and icons.
+ * @param {HTMLElement} input - The subtask input element.
+ * @param {HTMLElement} subtaskIcons - The subtask icons wrapper.
+ */
 function finalizeSubtaskInput(input, subtaskIcons) {
   updateSubmitState();
   input.value = "";
   subtaskIcons.classList.add("hidden");
   document.getElementById("subtask-plus")?.classList.remove("hidden");
 }
+/**
+ * Enters edit mode for a subtask element, allowing inline editing.
+ * @param {HTMLElement} subtaskElement - The subtask list item element.
+ */
 function enterEditMode(subtaskElement) {
   const currentText = getSubtaskCurrentText(subtaskElement);
   if (!currentText) return;
@@ -332,9 +467,19 @@ function enterEditMode(subtaskElement) {
   assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn);
   input.focus();
 }
+/**
+ * Gets the current text of a subtask element.
+ * @param {HTMLElement} subtaskElement - The subtask list item element.
+ * @returns {string} The current subtask text.
+ */
 function getSubtaskCurrentText(subtaskElement) {
   return subtaskElement.querySelector(".subtask-label")?.textContent || "";
 }
+/**
+ * Creates an input element for subtask editing.
+ * @param {string} currentText - The current subtask text.
+ * @returns {HTMLInputElement} The input element for editing.
+ */
 function createSubtaskEditInput(currentText) {
   const input = document.createElement("input");
   input.type = "text";
@@ -342,6 +487,13 @@ function createSubtaskEditInput(currentText) {
   input.classList.add("subtask-edit-input");
   return input;
 }
+/**
+ * Creates a confirm button for subtask editing.
+ * @param {string} currentText - The current subtask text.
+ * @param {HTMLElement} subtaskElement - The subtask list item element.
+ * @param {HTMLInputElement} input - The input element for editing.
+ * @returns {HTMLImageElement} The confirm button image element.
+ */
 function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   const confirmBtn = document.createElement("img");
   confirmBtn.src = "./assets/icons/checked.svg";
@@ -359,6 +511,12 @@ function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   });
   return confirmBtn;
 }
+/**
+ * Creates a cancel button for subtask editing.
+ * @param {string} currentText - The current subtask text.
+ * @param {HTMLElement} subtaskElement - The subtask list item element.
+ * @returns {HTMLImageElement} The cancel button image element.
+ */
 function createSubtaskCancelBtn(currentText, subtaskElement) {
   const cancelBtn = document.createElement("img");
   cancelBtn.src = "./assets/icons/closeXSymbol.svg";
@@ -372,6 +530,11 @@ function createSubtaskCancelBtn(currentText, subtaskElement) {
   });
   return cancelBtn;
 }
+/**
+ * Updates the subtask label to the new value and re-enables edit on double click.
+ * @param {HTMLElement} subtaskElement - The subtask list item element.
+ * @param {string} newValue - The new subtask text.
+ */
 function updateSubtaskLabel(subtaskElement, newValue) {
   subtaskElement.innerHTML = "";
   const label = document.createElement("span");
@@ -382,6 +545,13 @@ function updateSubtaskLabel(subtaskElement, newValue) {
     enterEditMode(subtaskElement)
   );
 }
+/**
+ * Assembles the UI for subtask edit mode.
+ * @param {HTMLElement} subtaskElement - The subtask list item element.
+ * @param {HTMLInputElement} input - The editing input element.
+ * @param {HTMLImageElement} cancelBtn - The cancel button element.
+ * @param {HTMLImageElement} confirmBtn - The confirm button element.
+ */
 function assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn) {
   const wrapper = document.createElement("div");
   wrapper.classList.add("subtask-edit-container");
@@ -398,6 +568,10 @@ function assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn) {
 }
 
 // ==== VALIDATION ====
+/**
+ * Validates the task title input and shows/hides error messages.
+ * @returns {boolean} True if valid, false otherwise.
+ */
 function validateTitle() {
   const title = document.getElementById("title");
   const titleError = document.getElementById("error-title");
@@ -415,10 +589,17 @@ function validateTitle() {
 // ==== DATE VALIDATION ====
 // validateDate is not used anywhere except inside validateForm
 
+/**
+ * Updates the submit button state (always enables it here).
+ */
 function updateSubmitState() {
   const button = document.getElementById("submit-task-btn");
   if (button) button.disabled = false;
 }
+/**
+ * Validates the form fields for title, due date, and category.
+ * @returns {boolean} True if all fields are valid, false otherwise.
+ */
 function validateForm() {
   const titleEl = document.getElementById("title");
   const dueDateEl = document.getElementById("dueDate");
@@ -441,6 +622,9 @@ function validateForm() {
   return titleValid && dueDateValid && categoryValid;
 }
 
+/**
+ * Resets the add task form and related UI components.
+ */
 function resetForm() {
   document.getElementById("title").value = "";
   document.getElementById("description").value = "";
@@ -464,6 +648,10 @@ function resetForm() {
 }
 
 // ==== CREATE TASK ====
+/**
+ * Creates a new task, saves it to Firebase, and updates the UI.
+ * @returns {Promise<void>}
+ */
 async function createTask() {
   if (!validateForm()) return;
   const dueDateValue = document.getElementById("dueDate").value;
@@ -492,7 +680,9 @@ async function createTask() {
   }, 2000);
 }
 
-// Show confirmation toast
+/**
+ * Shows a confirmation popup that a task was added to the board.
+ */
 function showTaskAddedPopup() {
   const popup = document.createElement("div");
   popup.innerHTML = `<img src="./assets/icons/board.svg" alt="board icon"> Task added to Board`;
@@ -500,8 +690,24 @@ function showTaskAddedPopup() {
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 2500);
 }
+// Save task to board list
+async function saveTaskToFirebaseBoard(task) {
+  try {
+    await fetch(
+      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/boardTasks.json`,
+      {
+        method: "POST",
+        body: JSON.stringify(task),
+      }
+    );
+  } catch (error) {}
+}
 
 // ==== CATEGORY ====
+/**
+ * Toggles the category dropdown open/closed and renders options if needed.
+ * @param {Event} event - The click event.
+ */
 function toggleCategoryDropdown(event) {
   event.stopPropagation();
   const toggle = document.getElementById("category-toggle");
@@ -510,6 +716,9 @@ function toggleCategoryDropdown(event) {
   content.classList.toggle("visible");
   if (content.innerHTML.trim() === "") renderCategoryOptions();
 }
+/**
+ * Renders the available category options in the dropdown.
+ */
 function renderCategoryOptions() {
   const content = document.getElementById("category-content");
   content.innerHTML = "";
@@ -526,11 +735,18 @@ function renderCategoryOptions() {
     content.appendChild(item);
   });
 }
+/**
+ * Selects a category and updates the UI.
+ * @param {string} category - The category to select.
+ */
 function selectCategory(category) {
   selectedCategory = category;
   const placeholder = document.querySelector("#category-toggle span");
   placeholder.textContent = category;
 }
+/**
+ * Updates the category UI to display the selected category.
+ */
 function updateCategoryUI() {
   const box = document.getElementById("selected-category");
   if (!box) return;
@@ -547,6 +763,10 @@ function updateCategoryUI() {
     box.appendChild(el);
   }
 }
+/**
+ * Handles Enter key event for subtask input to add a subtask.
+ * @param {KeyboardEvent} e - The keyboard event.
+ */
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
     e.preventDefault();
@@ -555,6 +775,9 @@ function handleSubtaskEnter(e) {
       addSubtask();
   }
 }
+/**
+ * Clears the subtask input and resets icons.
+ */
 function clearSubtaskInput() {
   const subtaskInput = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
@@ -565,6 +788,10 @@ function clearSubtaskInput() {
 }
 
 // --- Custom Date Picker Helper ---
+/**
+ * Shows the native date picker for the input and formats the result.
+ * @param {HTMLInputElement} input - The input element to attach the picker to.
+ */
 function showDatePicker(input) {
   input.type = "date";
   input.focus();
@@ -609,7 +836,7 @@ function showDatePicker(input) {
 }
 
 // ==== SAVE UPDATED SUBTASKS ====
-async function saveUpdatedSubtask(taskKey) {
+async function saveUpdatedSubtasks(taskKey) {
   const task = arrayTasks.find((t) => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
   try {
@@ -621,5 +848,5 @@ async function saveUpdatedSubtask(taskKey) {
         body: JSON.stringify(task.subtask),
       }
     );
-  } catch (error) { }
+  } catch (error) {}
 }

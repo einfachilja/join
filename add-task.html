@@ -86,12 +86,35 @@
         </div>
 
         <main class="main">
+          <!-- 
+            @section Add Task Modal
+            @description Container for the add task form and related UI elements
+          -->
           <div class="add-task-modal">
+            <!-- 
+              @section Add Task Header
+              @description Title header for the add task modal
+            -->
             <h1 class="add-task-header">Add Task</h1>
+            <!-- 
+              @section Task Form
+              @description Form for entering task details
+            -->
             <form id="task-form" onsubmit="return false;">
+              <!-- 
+                @section Form Columns
+                @description Wrapper for left and right form sections with a divider
+              -->
               <div class="form-cols">
-                <!-- linke Spalte -->
+                <!-- 
+                  @section Left Form Section
+                  @description Contains title, description, and due date inputs
+                -->
                 <div class="form-section-left">
+                  <!-- 
+                    @section Title Label and Input
+                    @description Input field for the task title with validation
+                  -->
                   <label for="title"
                     >Title <span class="red_star">*</span></label
                   >
@@ -105,12 +128,20 @@
                     This field is required
                   </div>
 
+                  <!-- 
+                    @section Description Label and Textarea
+                    @description Textarea for task description
+                  -->
                   <label for="description">Description</label>
                   <textarea
                     id="description"
                     placeholder="Enter a description"
                   ></textarea>
 
+                  <!-- 
+                    @section Due Date Label and Input
+                    @description Input for due date with date picker and validation
+                  -->
                   <label for="dueDate"
                     >Due Date <span class="red_star">*</span></label
                   >
@@ -133,11 +164,21 @@
                   </div>
                 </div>
 
-                <!-- mittlerer Separator -->
+                <!-- 
+                  @section Form Divider
+                  @description Visual separator between left and right form sections
+                -->
                 <div class="form-divider"></div>
 
-                <!-- rechte Spalte -->
+                <!-- 
+                  @section Right Form Section
+                  @description Contains priority, assigned to, category, and subtasks inputs
+                -->
                 <div class="form-section-right">
+                  <!-- 
+                    @section Priority Label and Buttons
+                    @description Buttons to select task priority with validation
+                  -->
                   <label>Priority</label>
                   <div id="buttons-prio" class="priority-buttons">
                     <button
@@ -167,6 +208,10 @@
                     This field is required
                   </div>
 
+                  <!-- 
+                    @section Assigned To Label and Dropdown
+                    @description Dropdown to select contacts assigned to the task with validation
+                  -->
                   <label>Assigned to</label>
                   <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
                     <div id="dropdown-toggle" tabindex="0" role="button">
@@ -186,6 +231,10 @@
                     This field is required
                   </div>
 
+                  <!-- 
+                    @section Category Label and Dropdown
+                    @description Dropdown to select task category with validation
+                  -->
                   <label>Category <span class="red_star">*</span></label>
                   <div class="custom-dropdown-wrapper" id="category-wrapper">
                     <div id="category-toggle" tabindex="0">
@@ -201,10 +250,26 @@
                     This field is required
                   </div>
 
+                  <!-- 
+                    @section Subtasks Label and Input Container
+                    @description Input and list container for adding subtasks
+                  -->
                   <label>Subtasks</label>
                   <div class="subtask-input-container">
+                    <!-- 
+                      @section Subtasks Container
+                      @description Contains subtask input field and list of added subtasks
+                    -->
                     <div class="subtasks-container">
+                      <!-- 
+                        @section Subtask Input Wrapper
+                        @description Wrapper for subtask input field and control icons
+                      -->
                       <div class="subtask-input-wrapper">
+                        <!-- 
+                          @section Subtask Input Field
+                          @description Input for entering new subtasks with event handlers
+                        -->
                         <div class="subtask-input-field">
                           <input
                             id="subtask-input"
@@ -214,6 +279,10 @@
                             oninput="toggleSubtaskIcons()"
                             onkeydown="handleSubtaskEnter(event)"
                           />
+                          <!-- 
+                            @section Subtask Icons
+                            @description Icons for canceling or confirming subtask input
+                          -->
                           <div id="subtask-icons" class="subtask-icons hidden">
                             <img
                               id="subtask-cancel"
@@ -239,12 +308,20 @@
                         </div>
                       </div>
 
+                      <!-- 
+                        @section Subtask List
+                        @description List displaying all added subtasks
+                      -->
                       <ul id="subtask-list" class="subtask-list"></ul>
                     </div>
                   </div>
                 </div>
               </div>
             </form>
+            <!-- 
+              @section Form Actions
+              @description Contains legend for required fields and action buttons
+            -->
             <div class="form-actions">
               <p class="legend-required">
                 <span class="red_star">*</span>This field is required
