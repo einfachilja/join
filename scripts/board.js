@@ -201,12 +201,13 @@ function generateTodoHTML(element) {
             </div>
             <span class="card-title">${title}</span>
             <span class="card-description">${description}</span>
-            <div class="card-subtask-progress">
-              <div class="subtask-progress-bar-bg">
-                <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
-              </div>
-              <span class="subtask-progress-text">${completedSubtasks}/${totalSubtasks} Subtasks</span>
-            </div>
+            ${totalSubtasks > 0 ? `
+              <div class="card-subtask-progress">
+                <div class="subtask-progress-bar-bg">
+                  <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
+                </div>
+                <span class="subtask-progress-text">${completedSubtasks}/${totalSubtasks} Subtasks</span>
+              </div>` : ""}
                 <div class="card-footer">
                   <div class="assigned-container">
                     ${Array.isArray(assignedList)
@@ -335,16 +336,16 @@ function getOpenBoardCardTemplate(categoryClass, task) {
   }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
-      <div class="board-overlay-card-header">
+      <div class="board-overlay-card-header edit-mode">
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
-      <img class="board-close-icon" src="./assets/icons/board-close.svg" onclick="closeBoardCard()">
+      <img class="board-close-icon " src="./assets/icons/board-close.svg" onclick="closeBoardCard()">
       </div>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date">Due date: <span>${task.dueDate}</span></span>
       <span class="priority-headline">Priority: <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
       <div class="assigned-list">
-        <span>Assigned To:</span>
+        <span class="assigned-to-headline">Assigned To:</span>
         ${Array.isArray(task.assignedTo)
       ? task.assignedTo.map(name => {
         const contact = getContactByName(name);
@@ -424,9 +425,33 @@ async function toggleSubtask(taskKey, index) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(task.subtask)
     });
-    // Refresh UI
-    updateHTML();
-    openBoardCard(taskKey);
+    const boardOverlayRef = document.getElementById("board_overlay");
+    // const task = arrayTasks.find(t => t.firebaseKey === taskKey); // task already defined above
+    if (boardOverlayRef && task) {
+      updateHTML();
+      const categoryClass = task.category === "User Story"
+        ? "category-user"
+        : task.category === "Technical Task"
+          ? "category-technical"
+          : "";
+      boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
+      // Ensure card re-renders and animation matches openBoardCard
+      const cardRef = document.querySelector('.board-overlay-card');
+      if (cardRef) {
+        setTimeout(() => {
+          cardRef.classList.add('open');
+        }, 10);
+      }
+      document.getElementById("html").style.overflow = "hidden";
+      boardOverlayRef.classList.remove("d-none");
+      boardOverlayRef.scrollTop = 0;
+      // Fokus von der Checkbox entfernen
+      setTimeout(() => {
+        const checkboxId = `subtask-${taskKey}-${index}`;
+        const checkbox = document.getElementById(checkboxId);
+        if (checkbox) checkbox.blur();
+      }, 0);
+    }
   } catch (error) {
     console.error("Fehler beim Aktualisieren des Subtasks:", error);
   }
@@ -908,7 +933,8 @@ async function saveEditTask(taskKey) {
     // Lokales Array aktualisieren
     arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
     updateHTML();
-    openBoardCard(taskKey); // Overlay mit aktualisierten Daten neu laden
+    // Overlay mit aktualisierten Daten neu laden (direkter Aufruf)
+    openBoardCard(taskKey);
   } catch (error) {
     console.error("Fehler beim Bearbeiten des Tasks:", error);
   }
