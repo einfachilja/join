@@ -899,10 +899,6 @@
     display: none;
 }
 
-.hallo {
-    background-color: #0038FF;
-}
-
 
 /* 12. Dropdowns & Move-Task-Menu */
 .card-header-move-arrow-btn {
@@ -1078,20 +1074,6 @@
     font-size: 16px;
     font-weight: 400;
     color: #a8a8a8;
-}
-
-/* Zweizeiliges Limit mit Ellipsis für Titel und Beschreibung */
-.card-title,
-.card-description {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-height: 2.8em;
-    /* Passt die max-height ggf. je nach line-height an */
-    line-height: 1.4em;
-    word-break: break-word;
 }
 
 .card-footer {

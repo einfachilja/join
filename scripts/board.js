@@ -425,19 +425,26 @@ async function toggleSubtask(taskKey, index) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(task.subtask)
     });
-    // Nur Overlay Card aktualisieren ohne Animation
-    updateHTML();
     const boardOverlayRef = document.getElementById("board_overlay");
-    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+    // const task = arrayTasks.find(t => t.firebaseKey === taskKey); // task already defined above
     if (boardOverlayRef && task) {
+      updateHTML();
       const categoryClass = task.category === "User Story"
         ? "category-user"
         : task.category === "Technical Task"
           ? "category-technical"
           : "";
       boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
+      // Ensure card re-renders and animation matches openBoardCard
+      const cardRef = document.querySelector('.board-overlay-card');
+      if (cardRef) {
+        setTimeout(() => {
+          cardRef.classList.add('open');
+        }, 10);
+      }
       document.getElementById("html").style.overflow = "hidden";
       boardOverlayRef.classList.remove("d-none");
+      boardOverlayRef.scrollTop = 0;
       // Fokus von der Checkbox entfernen
       setTimeout(() => {
         const checkboxId = `subtask-${taskKey}-${index}`;
@@ -926,7 +933,8 @@ async function saveEditTask(taskKey) {
     // Lokales Array aktualisieren
     arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
     updateHTML();
-    openBoardCard(taskKey); // Overlay mit aktualisierten Daten neu laden
+    // Overlay mit aktualisierten Daten neu laden (direkter Aufruf)
+    openBoardCard(taskKey);
   } catch (error) {
     console.error("Fehler beim Bearbeiten des Tasks:", error);
   }
