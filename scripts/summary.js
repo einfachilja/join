@@ -138,8 +138,9 @@ function updatePriorityUI(priority, count) {
   const icon = document.getElementById("priority-icon");
   const number = document.getElementById("summary_card_number_priority_high");
   const wrapper = document.getElementById("priority-wrapper");
+  
 
-  if (priority === null || priority === undefined || priority === "") {
+  if (priority === null || priority === undefined || priority === "") {    
     icon.style.display = "none";
     label.textContent = "";
     number.textContent = "0";

@@ -10,7 +10,7 @@ let firebaseKey = localStorage.getItem("firebaseKey");
 
 // ==== STATE ====
 let selectedPriority = "medium";
-const subtasks = [];
+const subtask = [];
 let contacts = [];
 let selectedContacts = [];
 let selectedCategory = "";
@@ -135,7 +135,7 @@ async function fetchContacts() {
         name: u.name.trim(),
         color: u.color || "#888",
       }));
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // ==== EVENTS ====
@@ -226,8 +226,7 @@ function createContactDropdownItem(contact, filter) {
       ${getContactInitials(contact.name)}
     </span>
     <span>${contact.name}</span>
-    <input type="checkbox" ${
-      selectedContacts.some((s) => s.name === contact.name) ? "checked" : ""
+    <input type="checkbox" ${selectedContacts.some((s) => s.name === contact.name) ? "checked" : ""
     }/>
   `;
   setupContactCheckbox(item, contact, filter);
@@ -280,13 +279,13 @@ function updateSelectedContactsUI() {
   });
 }
 
-// ==== SUBTASKS ====
+// ==== SUBTASK ====
 function addSubtask() {
   const input = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
   const text = input.value.trim();
   if (!validateSubtaskInput(text, subtaskIcons, input)) return;
-  subtasks.push({ title: text, completed: false });
+  subtask.push({ title: text, completed: false });
   document
     .getElementById("subtask-list")
     .appendChild(createSubtaskListItem(text));
@@ -351,9 +350,9 @@ function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   confirmBtn.addEventListener("click", () => {
     const newValue = input.value.trim();
     if (newValue) {
-      const index = subtasks.findIndex((s) => s.title === currentText);
+      const index = subtask.findIndex((s) => s.title === currentText);
       if (index > -1) {
-        subtasks[index].title = newValue;
+        subtask[index].title = newValue;
         updateSubtaskLabel(subtaskElement, newValue);
       }
     }
@@ -366,8 +365,8 @@ function createSubtaskCancelBtn(currentText, subtaskElement) {
   cancelBtn.alt = "Delete";
   cancelBtn.className = "subtask-edit-cancel";
   cancelBtn.addEventListener("click", () => {
-    const index = subtasks.findIndex((s) => s.title === currentText);
-    if (index > -1) subtasks.splice(index, 1);
+    const index = subtask.findIndex((s) => s.title === currentText);
+    if (index > -1) subtask.splice(index, 1);
     subtaskElement.remove();
     updateSubmitState();
   });
@@ -453,7 +452,7 @@ function resetForm() {
   selectedCategory = "";
   const categoryPlaceholder = document.querySelector("#category-toggle span");
   if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
-  subtasks.length = 0;
+  subtask.length = 0;
   const subtaskList = document.getElementById("subtask-list");
   if (subtaskList) subtaskList.innerHTML = "";
   const subtaskInput = document.getElementById("subtask-input");
@@ -475,7 +474,7 @@ async function createTask() {
     priority: selectedPriority,
     assignedTo: selectedContacts.map((c) => c.name),
     category: selectedCategory,
-    subtasks,
+    subtask,
     createdAt: new Date().toISOString(),
     status: "todo",
   };
@@ -486,7 +485,6 @@ async function createTask() {
       body: JSON.stringify(task),
     }
   );
-  await saveTaskToFirebaseBoard(task);
   showTaskAddedPopup();
   setTimeout(() => {
     if (typeof renderBoardTasks === "function") renderBoardTasks();
@@ -501,18 +499,6 @@ function showTaskAddedPopup() {
   popup.className = "task-toast";
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 2500);
-}
-// Save task to board list
-async function saveTaskToFirebaseBoard(task) {
-  try {
-    await fetch(
-      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/boardTasks.json`,
-      {
-        method: "POST",
-        body: JSON.stringify(task),
-      }
-    );
-  } catch (error) {}
 }
 
 // ==== CATEGORY ====
@@ -623,7 +609,7 @@ function showDatePicker(input) {
 }
 
 // ==== SAVE UPDATED SUBTASKS ====
-async function saveUpdatedSubtasks(taskKey) {
+async function saveUpdatedSubtask(taskKey) {
   const task = arrayTasks.find((t) => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
   try {
@@ -635,5 +621,5 @@ async function saveUpdatedSubtasks(taskKey) {
         body: JSON.stringify(task.subtask),
       }
     );
-  } catch (error) {}
+  } catch (error) { }
 }
