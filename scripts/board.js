@@ -201,12 +201,13 @@ function generateTodoHTML(element) {
             </div>
             <span class="card-title">${title}</span>
             <span class="card-description">${description}</span>
-            <div class="card-subtask-progress">
-              <div class="subtask-progress-bar-bg">
-                <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
-              </div>
-              <span class="subtask-progress-text">${completedSubtasks}/${totalSubtasks} Subtasks</span>
-            </div>
+            ${totalSubtasks > 0 ? `
+              <div class="card-subtask-progress">
+                <div class="subtask-progress-bar-bg">
+                  <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
+                </div>
+                <span class="subtask-progress-text">${completedSubtasks}/${totalSubtasks} Subtasks</span>
+              </div>` : ""}
                 <div class="card-footer">
                   <div class="assigned-container">
                     ${Array.isArray(assignedList)
@@ -335,16 +336,16 @@ function getOpenBoardCardTemplate(categoryClass, task) {
   }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
-      <div class="board-overlay-card-header">
+      <div class="board-overlay-card-header edit-mode">
       <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
-      <img class="board-close-icon" src="./assets/icons/board-close.svg" onclick="closeBoardCard()">
+      <img class="board-close-icon " src="./assets/icons/board-close.svg" onclick="closeBoardCard()">
       </div>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date">Due date: <span>${task.dueDate}</span></span>
       <span class="priority-headline">Priority: <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
       <div class="assigned-list">
-        <span>Assigned To:</span>
+        <span class="assigned-to-headline">Assigned To:</span>
         ${Array.isArray(task.assignedTo)
       ? task.assignedTo.map(name => {
         const contact = getContactByName(name);

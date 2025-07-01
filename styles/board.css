@@ -1,4 +1,3 @@
-/* 1. General/Reset */
 * {
     margin: 0;
     padding: 0;
@@ -291,6 +290,7 @@
     background: #fff;
     padding: 8px 12px;
     cursor: pointer;
+    margin-top: 20px;
 }
 
 .assigned-dropdown-list {
@@ -342,8 +342,6 @@
 /* 7. Subtasks inkl. Input, Row, Progress-Bar, Checkbox */
 .subtask-input-wrapper {
     position: relative;
-    display: flex;
-    align-items: center;
     width: 100%;
     margin-top: 8px;
     margin-bottom: 8px;
@@ -880,6 +878,11 @@
     flex: 1 1 auto;
 }
 
+.assigned-to-headline {
+    display: block;
+    margin-bottom: 8px;
+}
+
 .overlay-meta-row .priority-headline {
     min-width: 120px;
     flex: 0 0 auto;
@@ -1224,12 +1227,6 @@
     margin-right: 12px;
 }
 
-.board-overlay-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .overlay-card-category {
     color: #ffffff;
     width: 164px;
@@ -1352,10 +1349,6 @@
     display: none;
 }
 
-.hallo {
-    background-color: #0038FF;
-}
-
 /* Editable overlay card fields */
 .board-overlay-card [contenteditable="true"] {
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1446,35 +1439,6 @@
     z-index: 0;
 }
 
-.initial-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1rem;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-}
-
-.assigned-dropdown {
-    width: 100%;
-    position: relative;
-}
-
-.assigned-dropdown-toggle {
-    border: 1px solid #D1D1D1;
-    border-radius: 8px;
-    background: #fff;
-    padding: 8px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-
 .assigned-dropdown-list {
     background: #fff;
     border: 1px solid #eee;
@@ -1488,6 +1452,7 @@
     z-index: 20;
     display: none;
     margin-top: 4px;
+    height: 100px;
 }
 
 .assigned-dropdown-list.open {
@@ -1532,17 +1497,6 @@
     accent-color: #5bb6fa;
     width: 18px;
     height: 18px;
-}
-
-/* Subtask Input Style mit Button im Inputfeld rechts */
-.subtask-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    box-shadow: none;
 }
 
 .add-subtask-input {
@@ -1835,12 +1789,6 @@
     margin: 18px 0 6px 0;
 }
 
-.overlay-meta-row .assigned-list {
-    min-width: 160px;
-    max-width: 280px;
-    flex: 1 1 auto;
-}
-
 .overlay-meta-row .priority-headline {
     min-width: 120px;
     flex: 0 0 auto;
@@ -1863,7 +1811,6 @@
     background-color: #D9D9D9;
     border-radius: 50%;
     cursor: pointer;
-
 }
 
 .form-actions-board {
@@ -1878,4 +1825,9 @@
 .move-task-dropdown-menu {
     background-color: #2A3647;
 
+}
+
+.edit-mode .board-close-icon {
+    margin-left: auto;
+    align-self: flex-end;
 }
