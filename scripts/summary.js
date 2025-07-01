@@ -67,10 +67,10 @@ async function loadTasks() {
       return;
     }
 
-    arrayTasks = Object.entries(data).map(([firebaseKey, task]) => ({
-      ...task,
-      firebaseKey,
-    }));
+    arrayTasks = [];
+    for (const key in data) {
+      arrayTasks.push({ ...data[key], firebaseKey: key });
+    }
 
     updateBasicTaskStats(arrayTasks);
     updatePriorityAndDeadlineSummary(arrayTasks);
@@ -91,7 +91,8 @@ function updateBasicTaskStats(tasks) {
     done: "summary_card_number_done",
   };
 
-  for (const [status, elementId] of Object.entries(counters)) {
+  for (const status in counters) {
+    const elementId = counters[status];
     document.getElementById(elementId).textContent = tasks.filter(t => t.status === status).length;
   }
 

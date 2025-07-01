@@ -115,12 +115,6 @@
                     >Due Date <span class="red_star">*</span></label
                   >
                   <input
-                    type="date"
-                    id="hiddenDateInput"
-                    style="position: absolute; left: -9999px"
-                    onchange="updateDueDateFromHidden()"
-                  />
-                  <input
                     type="text"
                     id="dueDate"
                     class="date-input"
@@ -176,13 +170,13 @@
                   <label>Assigned to</label>
                   <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
                     <div id="dropdown-toggle" tabindex="0" role="button">
-                      <span
+                      <input
                         id="assigned-to-input"
-                        class="assigned-to-display"
+                        type="text"
+                        placeholder="Select contacts"
                         onclick="handleAssignedToClick(event)"
-                      >
-                        Select contacts
-                      </span>
+                        readonly
+                      />
                       <div class="dropdown-arrow"></div>
                     </div>
                     <div id="dropdown-content" class="dropdown-content"></div>
