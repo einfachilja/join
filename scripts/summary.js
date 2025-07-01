@@ -148,6 +148,9 @@ function updatePriorityUI(priority, count) {
     return;
   }
 
+
+
+
   icon.style.display = "inline";
   const timestamp = Date.now();
   let iconSrc = "";
@@ -168,30 +171,39 @@ function updatePriorityUI(priority, count) {
   icon.alt = priority;
   label.textContent = labelText;
   number.textContent = count;
-
   wrapper.className = "priority-background priority-" + priority;
 }
+
 
 /**
  * Finds and displays the nearest upcoming deadline.
  * @param {Array} tasks - Array of task objects.
  */
 function updateEarliestDeadline(tasks) {
+  const deadlineEl = document.getElementById("upcoming-deadline-date");
+  const deadlineSublineEl = document.querySelector(".summary-date-subline");
+
   const deadlines = tasks
-    .filter(t => t.status !== "done")
+    .filter(t => t.status !== "done" && t.dueDate)
     .map(t => convertDateStringToDate(t.dueDate))
     .filter(date => date instanceof Date && !isNaN(date))
     .sort((a, b) => a - b);
 
-  const deadlineEl = document.getElementById("upcoming-deadline-date");
-  deadlineEl.textContent = deadlines.length > 0
-    ? deadlines[0].toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "No upcoming deadline";
+  if (deadlines.length > 0) {
+    const earliestDate = deadlines[0].toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    deadlineEl.textContent = earliestDate;
+    deadlineSublineEl.textContent = "Upcoming Deadline";
+  } else {
+    deadlineEl.textContent = "No upcoming deadline";
+    deadlineSublineEl.textContent = "";
+  }
 }
+
+
 
 /**
  * Converts a date string to a valid JavaScript Date object.
