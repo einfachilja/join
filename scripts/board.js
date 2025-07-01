@@ -425,9 +425,26 @@ async function toggleSubtask(taskKey, index) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(task.subtask)
     });
-    // Refresh UI
+    // Nur Overlay Card aktualisieren ohne Animation
     updateHTML();
-    openBoardCard(taskKey);
+    const boardOverlayRef = document.getElementById("board_overlay");
+    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+    if (boardOverlayRef && task) {
+      const categoryClass = task.category === "User Story"
+        ? "category-user"
+        : task.category === "Technical Task"
+          ? "category-technical"
+          : "";
+      boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
+      document.getElementById("html").style.overflow = "hidden";
+      boardOverlayRef.classList.remove("d-none");
+      // Fokus von der Checkbox entfernen
+      setTimeout(() => {
+        const checkboxId = `subtask-${taskKey}-${index}`;
+        const checkbox = document.getElementById(checkboxId);
+        if (checkbox) checkbox.blur();
+      }, 0);
+    }
   } catch (error) {
     console.error("Fehler beim Aktualisieren des Subtasks:", error);
   }

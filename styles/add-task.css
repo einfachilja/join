@@ -209,7 +209,7 @@ textarea:focus,
 select:focus,
 #dropdown-toggle:focus,
 #category-toggle:focus {
-  border: 2px solid #29abe2 !important;
+  /* border: 2px solid #29abe2 !important; */
   outline: none !important;
   background-color: #fff;
   border-radius: 10px;
@@ -918,14 +918,4 @@ select::placeholder {
   filter: brightness(0) invert(1);
 }
 
-input:focus,
-textarea:focus,
-select:focus,
-#dropdown-toggle:focus,
-#category-toggle:focus {
-  border: 2px solid #29abe2 !important;
-  outline: none !important;
-  background-color: #fff;
-  border-radius: 10px;
-  transition: box-shadow 0.1s ease-in-out, border 0.1s ease-in-out;
-}
+
