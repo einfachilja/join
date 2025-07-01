@@ -209,7 +209,7 @@ textarea:focus,
 select:focus,
 #dropdown-toggle:focus,
 #category-toggle:focus {
-  /* border: 2px solid #29abe2 !important; */
+  border: 2px solid #29abe2 !important;
   outline: none !important;
   background-color: #fff;
   border-radius: 10px;
@@ -273,7 +273,6 @@ select:focus {
   border: 2px solid #d1d1d1;
   border-radius: 12px;
   padding-right: 16px;
-  padding-left: 16px;
   background: #fff;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -358,20 +357,7 @@ select:focus {
 }
 
 /* === Selected Contact Item Styles for Dropdown === */
-.dropdown-content .contact-item.selected {
-  background-color: #2a3647 !important;
-  color: #ffffff;
-}
-
-.dropdown-content .contact-item.selected img,
-.dropdown-content .contact-item.selected .checkbox-icon {
-  filter: brightness(0) invert(1);
-}
-
-.contact-item.selected {
-  background-color: #2a3647;
-  color: white;
-}
+/* .dropdown-content .contact-item.selected and .contact-item.selected merged below for consistency */
 
 .selected-contacts {
   margin-top: 8px;
@@ -668,10 +654,12 @@ select::placeholder {
   gap: 8px;
 }
 
+/* Unified .subtask-icons img styling */
 .subtask-icons img {
   width: 20px;
   height: 20px;
   cursor: pointer;
+  transition: filter 0.2s ease;
 }
 
 #subtask-plus {
@@ -853,11 +841,7 @@ select::placeholder {
   gap: 8px;
 }
 
-.subtask-icons img {
-  cursor: pointer;
-  transition: filter 0.2s ease;
-}
-
+/* Only keep a single hover state for .subtask-icons img */
 .subtask-icons img:hover {
   filter: brightness(0.8);
 }
@@ -904,18 +888,18 @@ select::placeholder {
   }
 }
 
-/* === Selected Contact Item Styles === */
-.contact-item.selected {
-  background-color: #2a3647;
+/* === Selected Contact Item Styles (Unified) === */
+.contact-item.selected,
+.dropdown-content .contact-item.selected {
+  background-color: #2a3647 !important;
   color: #ffffff;
 }
-
-.contact-item.selected .contact-name {
+.contact-item.selected .contact-name,
+.dropdown-content .contact-item.selected .contact-name {
   color: #ffffff;
 }
-
-.contact-item.selected .contact-checkbox img {
+.contact-item.selected .contact-checkbox img,
+.dropdown-content .contact-item.selected img,
+.dropdown-content .contact-item.selected .checkbox-icon {
   filter: brightness(0) invert(1);
 }
-
-
