@@ -1,212 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join | Summary</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./styles/summary.css" />
+    <link rel="stylesheet" href="./styles/fonts.css" />
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/favicon.svg"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="./styles/media-summary.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Join | Summary</title>
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="./styles/summary.css" />
-  <link rel="stylesheet" href="./styles/fonts.css">
-  <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
-  <link rel="stylesheet" href="./styles/media-summary.css">
-</head>
-
-<body onload="loadTasks(); showWelcomeMessage(); setUserInitials();">
-  <div class="body">
-    <div class="desktop-menu">
-      <div>
-        <img class="logo" src="./assets/img/logo.svg" alt="logo" />
-      </div>
-      <div class="menu">
-        <a href="./summary.html">
-          <button class="active">
-            <img src="./assets/icons/summary.svg" alt="" />
-            <p>Summary</p>
-          </button>
-        </a>
-
-        <a href="./add-task.html">
-          <button>
-            <img src="./assets/icons/add-task.svg" alt="" />
-            <p>Add Task</p>
-          </button>
-        </a>
-
-        <a href="./board.html">
-          <button>
-            <img src="./assets/icons/board.svg" alt="" />
-            <p>Board</p>
-          </button>
-        </a>
-
-        <a href="./contacts.html">
-          <button>
-            <img src="./assets/icons/contacts.svg" alt="" />
-            <p>Contacts</p>
-          </button>
-        </a>
-      </div>
-      <div class="desktop-footer">
-        <div class="desktop-footer-content">
-          <a href="./Privacy-Policy.html">
-            <button>
-              <p>Privacy Policy</p>
-            </button>
-          </a>
-          <a href="./legal-notice.html">
-            <button>
-              <p>Legal notice</p>
-            </button>
-          </a>
+  <body onload="loadTasks(); showWelcomeMessage(); setUserInitials();">
+    <div class="body">
+      <div class="desktop-menu">
+        <div>
+          <img class="logo" src="./assets/img/logo.svg" alt="logo" />
         </div>
-      </div>
-    </div>
-
-    <div class="body-right">
-      <div class="header">
-        <span class="header-title">Kanban Project Management Tool</span>
-        <img class="logo-mobile" src="./assets/icons/favicon.svg" alt="logo" />
-        <div class="header-right">
-          <div onclick="openSubMenu()" class="user-profile"><b id="user-initials"></b></div>
-          <a class="help-img" href="./help.html">
-            <img src="./assets/img/help.svg" alt="" />
-          </a>
-        </div>
-      </div>
-
-      <div id="sub_menu" class="d_none sub_menu">
-        <a href="./legal-notice.html">
-          <p class="sub-menu-content">Legal Notice</p>
-        </a>
-        <a href="./Privacy-Policy.html">
-          <p class="sub-menu-content">Privacy Policy</p>
-        </a>
-        <a href="./log-in.html">
-          <p class="sub-menu-content">Log out</p>
-        </a>
-      </div>
-
-      <div id="mobile-welcome-overlay" class="mobile-welcome-overlay d_none">
-        <div class="mobile-welcome-message-centered">
-          <h2 id="mobile-welcome-overlay-text"></h2>
-          <p id="mobile-welcome-overlay-username"></p>
-        </div>
-      </div>
-
-      <main class="main">
-        <div class="welcome-message-mobile">
-          <h2 id="welcome-message-text-mobile"></h2>
-          <p id="welcome-username-mobile"></p>
-        </div>
-
-        <div class="summary-container">
-          <div class="summary-header-container">
-            <div class="summary-header">
-              <h1>Join 360</h1>
-              <img class="summary-header-vector" src="./assets/icons/summary-line.png" alt="">
-              <span class="summary-subtitle">Key Metrics at a Glance</span>
-              <img class="summary-header-vector-mobile" src="./assets/img/contacts-icons/blue-line-mobile.svg" alt="">
-            </div>
-
-          </div>
-          
-          <div class="summary-main">
-            <div class="card-container">
-              <div class="card-container-left">
-                <div class="card-box-top">
-                  <a href="./board.html" class="card-top">
-                    <div class="summary-to-do-icon"></div>
-                    <div class="card-top-text">
-                      <div id="summary_card_number_todo" class="summary-card-number"></div>
-                      <div class="summary-card-text">To-Do</div>
-                    </div>
-                  </a>
-                  <a href="./board.html" class="card-top">
-                    <div class="summary-done-icon"></div>
-                    <div class="card-top-text">
-                      <div id="summary_card_number_done" class="summary-card-number">1</div>
-                      <div class="summary-card-text">Done</div>
-                    </div>
-                  </a>
-                </div>
-                <div class="card-box-center">
-                  <a href="./board.html" class="card-center">
-                    <div class="card-center-left">
-                      <img id="priority-icon" src="./assets/icons/summary-urgent.png" alt="priority icon">
-                      <div class="card-center-text">
-                        <div id="summary_card_number_priority_high" class="summary-card-number"></div>
-                        <div id="priority-label" class="summary-card-text">Urgent</div>
-                      </div>
-                    </div>
-                    <img class="card-center-vector" src="./assets/icons/summary-center-line.png" alt="">
-                    <div class="card-center-right">
-                      <span class="summary-date" id="upcoming-deadline-date">Upcoming Date</span> 
-                      <span class="summary-date-subline">Upcoming Deadline</span>
-                    </div>
-                  </a>
-                </div>
-                <div class="card-box-bottom">
-                  <a href="./board.html" class="card-bottom">
-                    <div id="summary_card_number_total" class="summary-card-number"></div>
-                    <div class="summary-card-text">Tasks<br>in Board</div>
-                  </a>
-                  <a href="./board.html" class="card-bottom">
-                    <div id="summary_card_number_in_progress" class="summary-card-number"></div>
-                    <div class="summary-card-text">Tasks in Progress</div>
-                  </a>
-                  <a href="./board.html" class="card-bottom">
-                    <div id="summary_card_number_await_feedback" class="summary-card-number"></div>
-                    <div class="summary-card-text">Awaiting<br>Feedback</div>
-                  </a>
-                </div>
-              </div>
-
-              <div class="card-container-right">
-                <div class="welcome-message">
-                  <h2 id="welcome-message-text"></h2>
-                  <p id="welcome-username"></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <footer>
-        <div class="mobile-menu">
-          <button>
-            <a href="./summary.html" class="active">
+        <div class="menu">
+          <a href="./summary.html">
+            <button class="active">
               <img src="./assets/icons/summary.svg" alt="" />
               <p>Summary</p>
-            </a>
-          </button>
-          <button>
-            <a href="./add-task.html">
+            </button>
+          </a>
+
+          <a href="./add-task.html">
+            <button>
               <img src="./assets/icons/add-task.svg" alt="" />
               <p>Add Task</p>
-            </a>
-          </button>
-          <button>
-            <a href="./board.html">
+            </button>
+          </a>
+
+          <a href="./board.html">
+            <button>
               <img src="./assets/icons/board.svg" alt="" />
               <p>Board</p>
-            </a>
-          </button>
-          <button>
-            <a href="./contacts.html">
+            </button>
+          </a>
+
+          <a href="./contacts.html">
+            <button>
               <img src="./assets/icons/contacts.svg" alt="" />
               <p>Contacts</p>
-            </a>
-          </button>
+            </button>
+          </a>
         </div>
-      </footer>
+        <div class="desktop-footer">
+          <div class="desktop-footer-content">
+            <a href="./Privacy-Policy.html">
+              <button>
+                <p>Privacy Policy</p>
+              </button>
+            </a>
+            <a href="./legal-notice.html">
+              <button>
+                <p>Legal notice</p>
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="body-right">
+        <div class="header">
+          <span class="header-title">Kanban Project Management Tool</span>
+          <img
+            class="logo-mobile"
+            src="./assets/icons/favicon.svg"
+            alt="logo"
+          />
+          <div class="header-right">
+            <div onclick="openSubMenu()" class="user-profile">
+              <b id="user-initials"></b>
+            </div>
+            <a class="help-img" href="./help.html">
+              <img src="./assets/img/help.svg" alt="" />
+            </a>
+          </div>
+        </div>
+
+        <div id="sub_menu" class="d_none sub_menu">
+          <a href="./legal-notice.html">
+            <p class="sub-menu-content">Legal Notice</p>
+          </a>
+          <a href="./Privacy-Policy.html">
+            <p class="sub-menu-content">Privacy Policy</p>
+          </a>
+          <a href="./log-in.html">
+            <p class="sub-menu-content">Log out</p>
+          </a>
+        </div>
+
+        <div id="mobile-welcome-overlay" class="mobile-welcome-overlay d_none">
+          <div class="mobile-welcome-message-centered">
+            <h2 id="mobile-welcome-overlay-text"></h2>
+            <p id="mobile-welcome-overlay-username"></p>
+          </div>
+        </div>
+
+        <main class="main">
+          <div class="welcome-message-mobile">
+            <h2 id="welcome-message-text-mobile"></h2>
+            <p id="welcome-username-mobile"></p>
+          </div>
+
+          <div class="summary-container">
+            <div class="summary-header-container">
+              <div class="summary-header">
+                <h1>Join 360</h1>
+                <img
+                  class="summary-header-vector"
+                  src="./assets/icons/summary-line.png"
+                  alt=""
+                />
+                <span class="summary-subtitle">Key Metrics at a Glance</span>
+                <img
+                  class="summary-header-vector-mobile"
+                  src="./assets/img/contacts-icons/blue-line-mobile.svg"
+                  alt=""
+                />
+              </div>
+            </div>
+
+            <div class="summary-main">
+              <div class="card-container">
+                <div class="card-container-left">
+                  <div class="card-box-top">
+                    <a href="./board.html" class="card-top">
+                      <div class="summary-to-do-icon"></div>
+                      <div class="card-top-text">
+                        <div
+                          id="summary_card_number_todo"
+                          class="summary-card-number"
+                        ></div>
+                        <div class="summary-card-text">To-Do</div>
+                      </div>
+                    </a>
+                    <a href="./board.html" class="card-top">
+                      <div class="summary-done-icon"></div>
+                      <div class="card-top-text">
+                        <div
+                          id="summary_card_number_done"
+                          class="summary-card-number"
+                        >
+                          1
+                        </div>
+                        <div class="summary-card-text">Done</div>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="card-box-center">
+                    <a href="./board.html" class="card-center">
+                      <div class="card-center-left">
+                        <div id="priority-wrapper" class="priority-background">
+                          <img id="priority-icon" class="priority-img" src="" alt="" />
+                        </div>
+                        <div class="card-center-text">
+                          <div
+                            id="summary_card_number_priority_high"
+                            class="summary-card-number"
+                          ></div>
+                          <div id="priority-label" class="summary-card-text">
+                            Urgent
+                          </div>
+                        </div>
+                      </div>
+                      <img
+                        class="card-center-vector"
+                        src="./assets/icons/summary-center-line.png"
+                        alt=""
+                      />
+                      <div class="card-center-right">
+                        <span class="summary-date" id="upcoming-deadline-date"
+                          >Upcoming Date</span
+                        >
+                        <span class="summary-date-subline"
+                          >Upcoming Deadline</span
+                        >
+                      </div>
+                    </a>
+                  </div>
+                  <div class="card-box-bottom">
+                    <a href="./board.html" class="card-bottom">
+                      <div
+                        id="summary_card_number_total"
+                        class="summary-card-number"
+                      ></div>
+                      <div class="summary-card-text">Tasks<br />in Board</div>
+                    </a>
+                    <a href="./board.html" class="card-bottom">
+                      <div
+                        id="summary_card_number_in_progress"
+                        class="summary-card-number"
+                      ></div>
+                      <div class="summary-card-text">Tasks in Progress</div>
+                    </a>
+                    <a href="./board.html" class="card-bottom">
+                      <div
+                        id="summary_card_number_await_feedback"
+                        class="summary-card-number"
+                      ></div>
+                      <div class="summary-card-text">
+                        Awaiting<br />Feedback
+                      </div>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="card-container-right">
+                  <div class="welcome-message">
+                    <h2 id="welcome-message-text"></h2>
+                    <p id="welcome-username"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer>
+          <div class="mobile-menu">
+            <button>
+              <a href="./summary.html" class="active">
+                <img src="./assets/icons/summary.svg" alt="" />
+                <p>Summary</p>
+              </a>
+            </button>
+            <button>
+              <a href="./add-task.html">
+                <img src="./assets/icons/add-task.svg" alt="" />
+                <p>Add Task</p>
+              </a>
+            </button>
+            <button>
+              <a href="./board.html">
+                <img src="./assets/icons/board.svg" alt="" />
+                <p>Board</p>
+              </a>
+            </button>
+            <button>
+              <a href="./contacts.html">
+                <img src="./assets/icons/contacts.svg" alt="" />
+                <p>Contacts</p>
+              </a>
+            </button>
+          </div>
+        </footer>
+      </div>
     </div>
-  </div>
 
-  
-  <script src="./scripts/desktop-template.js"></script>
-  <script src="./scripts/summary.js"></script>
-</body>
-
+    <script src="./scripts/desktop-template.js"></script>
+    <script src="./scripts/summary.js"></script>
+  </body>
 </html>

@@ -189,7 +189,6 @@
     text-align: center;
 }
 
-/*NEU HINZUGEFÜGT*/
 .welcome-message {
     text-align: left;
     margin-top: 12px;
@@ -213,4 +212,32 @@
 
 .summary-header-vector-mobile {
     display: none;
+}
+
+.priority-background {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.priority-img{
+    height: 30px;
+    width: 30px;
+}
+
+.priority-urgent {
+  background-color: hsl(14, 100%, 50%); 
+}
+
+.priority-medium {
+  background-color: hsl(40, 100%, 50%); 
+}
+
+.priority-low {
+  background-color: hsl(94, 76%, 52%); 
 }
