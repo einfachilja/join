@@ -1,3 +1,10 @@
+/**
+ * @file add-task.css
+ * @description Stylesheet for the "Add Task" section of the Join application.
+ * Contains layout, input styles, priority buttons, dropdown menus, subtask handling,
+ * error highlighting, and responsive breakpoints.
+ * All styles are scoped for maintainability and follow clean code principles.
+ */
 .desktop-menu {
   position: fixed;
   top: 0;
