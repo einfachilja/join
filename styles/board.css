@@ -4,16 +4,12 @@
     text-decoration: none;
 }
 
-
-/* 2. Board-Container und Grundlayout */
 .board-container {
     margin-left: 275px;
     margin-top: 160px;
     max-width: 1440px;
 }
 
-
-/* 3. Header inkl. Suchfeld, Add-Task-Button */
 .board-header {
     display: flex;
     align-items: center;
@@ -39,6 +35,18 @@
     justify-content: space-between;
 }
 
+.search-box-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-icon {
+    height: 20px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
 .board-input-search {
     border: none;
     width: 100%;
@@ -58,18 +66,6 @@
     font-size: 16px;
     color: #d1d1d1;
     align-content: center;
-}
-
-.search-box-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.search-icon {
-    height: 20px;
-    padding-left: 12px;
-    padding-right: 12px;
 }
 
 .board-add-task-btn {
@@ -95,8 +91,6 @@
     cursor: pointer;
 }
 
-
-/* 4. Board Main, Main-Boxen, Drag-Area */
 .board-main {
     display: flex;
     justify-content: space-between;
@@ -149,8 +143,6 @@
     padding: 4px;
 }
 
-
-/* 5. Card inkl. Header, Footer, Category, etc. */
 .card {
     display: flex;
     flex-direction: column;
@@ -161,6 +153,10 @@
     padding: 16px;
     gap: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    cursor: grab;
 }
 
 .card-header {
@@ -174,6 +170,11 @@
 .card-header-move-arrow {
     display: none;
     cursor: pointer;
+}
+
+.card-header-move-arrow-btn {
+    border: none;
+    background-color: white;
 }
 
 .card-category {
@@ -220,12 +221,6 @@
     justify-content: space-between;
 }
 
-.card:hover {
-    cursor: grab;
-}
-
-
-/* 6. Assigned/Contacts */
 .assigned-container {
     display: flex;
     align-items: center;
@@ -305,6 +300,8 @@
     overflow-y: auto;
     z-index: 20;
     margin-top: 4px;
+    display: block;
+
 }
 
 .assigned-dropdown-list.open {
@@ -338,8 +335,6 @@
     height: 18px;
 }
 
-
-/* 7. Subtasks inkl. Input, Row, Progress-Bar, Checkbox */
 .subtask-input-wrapper {
     position: relative;
     width: 100%;
@@ -395,21 +390,6 @@
     color: #29abe2;
 }
 
-.subtask-list-editinput {
-    font-size: 18px;
-    border-radius: 8px;
-    padding: 6px 10px;
-    margin-right: 10px;
-    border: 1px solid #d1d1d1;
-    outline: none;
-    font-family: inherit;
-    color: #1d2b3a;
-    width: auto;
-    min-width: 60px;
-    max-width: 75%;
-    background: #fff;
-}
-
 .subtask-remove-btn {
     background: none;
     border: none;
@@ -447,30 +427,15 @@
 .subtask-list-row {
     display: flex;
     align-items: center;
-    background: #fff;
-    border: 1px solid #d1d1d1;
+    border: 1px solid #D1D1D1;
     border-radius: 10px;
-    margin-bottom: 4px;
-    font-size: 16px;
-    font-family: inherit;
-    font-weight: 500;
-}
-
-.subtask-list-row:hover {
-    background: #f6f7f8;
-}
-
-.subtask-list-row:last-child {
-    margin-bottom: 0;
+    margin: 4px;
 }
 
 .subtask-dot {
-    font-size: 20px;
-    margin-right: 10px;
     color: #222f3e;
-    display: inline-block;
-    min-width: 16px;
-    text-align: center;
+    padding-right: 8px;
+    padding-left: 8px;
 }
 
 .subtask-list-editinput {
@@ -482,12 +447,8 @@
     color: #222f3e;
     padding: 0;
     outline: none;
-    width: 100%;
-    min-width: 40px;
-}
-
-.subtask-list-editinput:focus {
-    background: #f4f7fc;
+    margin: 0;
+    height: 20px;
 }
 
 .card-subtask-progress {
@@ -591,6 +552,9 @@
     flex-direction: column;
     font-size: 20px;
     overflow-y: auto;
+    transform: translateX(100vw);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
 }
 
 .board-overlay-card-header {
@@ -659,6 +623,11 @@
     cursor: pointer;
 }
 
+.board-overlay-card.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+
 .ok-btn {
     display: flex;
     justify-content: center;
@@ -690,6 +659,9 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    transform: translateX(100vw);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
 }
 
 .board-add-task-header {
@@ -737,12 +709,15 @@
     cursor: pointer;
 }
 
+.edit-mode .board-close-icon {
+    margin-left: auto;
+    align-self: flex-end;
+}
+
 .form-actions-board {
     justify-content: flex-end;
 }
 
-
-/* 9. Priority Buttons */
 #priority-edit-buttons {
     display: flex;
     gap: 12px;
@@ -795,70 +770,9 @@
     background-color: #4BB543;
 }
 
-
-/* 10. Animations */
-@keyframes blink {
-
-    0%,
-    100% {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
-    }
-
-    50% {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    }
-}
-
-.task-highlight .card {
-    animation: blink 1s ease-in-out 3;
-}
-
-.board-add-task-modal {
-    transform: translateX(100vw);
-    opacity: 0;
-    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
-}
-
 .board-add-task-modal.open {
     transform: translateX(0);
     opacity: 1;
-}
-
-.board-overlay-card {
-    transform: translateX(100vw);
-    opacity: 0;
-    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
-}
-
-.board-overlay-card.open {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.board-overlay-card .subtask-list-row {
-    min-height: 20px;
-    padding: 2px 4px;
-    font-size: 14px;
-    gap: 4px;
-}
-
-.board-overlay-card .subtask-list-editinput {
-    height: 18px;
-    font-size: 13px;
-    padding: 1px 4px;
-}
-
-.board-overlay-card .subtask-edit-btn,
-.board-overlay-card .subtask-remove-btn {
-    width: 18px;
-    height: 18px;
-    padding: 0;
-    font-size: 12px;
-}
-
-.board-overlay-card .subtask-dot {
-    font-size: 14px;
-    margin-right: 2px;
 }
 
 .overlay-meta-row {
@@ -893,17 +807,8 @@
     gap: 6px;
 }
 
-
-/* 11. Utility-Klassen */
 .d-none {
     display: none;
-}
-
-
-/* 12. Dropdowns & Move-Task-Menu */
-.card-header-move-arrow-btn {
-    border: none;
-    background-color: white;
 }
 
 .move-task-dropdown-menu {
@@ -931,160 +836,6 @@
 
 .priority-container img {
     width: 40px;
-}
-
-.board-container {
-    margin-left: 275px;
-    margin-top: 160px;
-    max-width: 1440px;
-}
-
-.board-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 24px;
-}
-
-.board-header-right {
-    display: flex;
-    gap: 40px;
-    align-items: center;
-}
-
-.search-box {
-    display: flex;
-    align-items: center;
-    background: #ffffff;
-    border: 1px solid #a8a8a8;
-    border-radius: 10px;
-    padding: 4px 12px;
-    width: 300px;
-    height: 38px;
-    justify-content: space-between;
-}
-
-.board-input-search {
-    border: none;
-    font-family: inherit;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
-}
-
-.board-input-search:focus {
-    outline: none;
-    font-size: 16px;
-    align-content: center;
-}
-
-.board-input-search::placeholder {
-    font-size: 16px;
-    color: #d1d1d1;
-    align-content: center;
-}
-
-.search-box-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.search-icon {
-    height: 20px;
-    padding-left: 12px;
-    padding-right: 12px;
-}
-
-.board-main {
-    display: flex;
-    justify-content: space-between;
-    padding: 24px;
-}
-
-.board-main-box {
-    gap: 24px;
-    display: flex;
-    flex-direction: column;
-    padding: 16px 16px 16px 0;
-    width: 350px;
-}
-
-.board-main-box-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #2a3647;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.board-main-box-title img:hover {
-    cursor: pointer;
-}
-
-.card {
-    background-color: #ffffff;
-    border-radius: 24px;
-    padding: 16px;
-    gap: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-.card-header-move-arrow {
-    display: none;
-    cursor: pointer;
-}
-
-.card-category {
-    border-radius: 8px;
-    padding: 4px 16px;
-    color: #ffffff;
-}
-
-.category-user {
-    background-color: #0038FF;
-}
-
-.category-technical {
-    background-color: #1FD7C1;
-    ;
-}
-
-.card-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #2a3647;
-}
-
-.card-description {
-    font-size: 16px;
-    font-weight: 400;
-    color: #a8a8a8;
-}
-
-.card-footer {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.card:hover {
-    cursor: grab;
-
 }
 
 .due-date-headline {
@@ -1116,186 +867,6 @@
     width: 40px;
 }
 
-.assigned-container {
-    display: flex;
-    align-items: center;
-    padding-top: 5px;
-}
-
-.assigned-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: #ccc;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    border: 1px solid white;
-    margin-left: -8px;
-    z-index: 1;
-    position: relative;
-    transition: z-index 0.2s;
-}
-
-.assigned-circle:first-child {
-    margin-left: 0;
-}
-
-.drag-area {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    min-height: 350px;
-}
-
-/* .drag-area-highlight {
-    background-color: rgba(0, 0, 0, 0.05);
-} */
-
-.dragging {
-    transform: rotate(5deg);
-
-    transition: transform 0.2s ease;
-}
-
-.empty-message {
-    background-color: rgba(231, 231, 231, 1.0);
-    color: rgba(168, 168, 168, 1.0);
-    border-radius: 10px;
-    height: 38px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: dashed 1px rgba(168, 168, 168, 1.0);
-    text-align: center;
-    padding: 4px;
-}
-
-.board-overlay {
-    height: 100vh;
-    width: 100%;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 3000;
-    background-color: rgba(22, 31, 44, 0.294);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.d-none {
-    display: none;
-}
-
-/* Editable overlay card fields */
-.board-overlay-card [contenteditable="true"] {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 0.5rem;
-    outline: none;
-    font-size: inherit;
-    line-height: inherit;
-}
-
-.board-overlay-card [contenteditable="true"]:focus {
-    border-color: rgba(0, 123, 255, 0.5);
-    box-shadow: inset 0 0 0 1px rgba(0, 123, 255, 0.25);
-}
-
-/* Container für die drei Priority-Buttons */
-#priority-edit-buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: space-between;
-}
-
-/* Grundstil für alle Buttons */
-.priority-edit-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    padding: 16px 10px;
-    gap: 12px;
-    border: 1px solid #D1D1D1;
-    background-color: #ffffff;
-    font-size: 18px;
-    color: #2A3647;
-    cursor: pointer;
-    box-shadow: 0px 0px 4px 0px #0000001A;
-    height: 48px;
-    width: 158px;
-}
-
-/* Icon-Größe anpassen */
-.priority-edit-btn img {
-    width: 20px;
-}
-
-/* Hover-Zustand (leicht grau hinterlegen) */
-.priority-edit-btn:hover {
-    background-color: #f5f5f5;
-}
-
-/* Ausgewählter Button: weiße Schrift, kein Rahmen */
-.priority-edit-btn.selected {
-    color: #ffffff;
-    border-color: transparent;
-}
-
-.priority-edit-btn.selected img {
-    filter: brightness(0) invert(1);
-}
-
-/* Spezifische Hintergrundfarben je nach Priority */
-.priority-edit-btn[data-priority="urgent"].selected {
-    background-color: #FF4D4D;
-}
-
-.priority-edit-btn[data-priority="medium"].selected {
-    background-color: #FFAA40;
-}
-
-.priority-edit-btn[data-priority="low"].selected {
-    background-color: #4BB543;
-}
-
-.selected-initials-wrapper {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-    min-height: 32px;
-    position: static;
-    z-index: 0;
-}
-
-.assigned-dropdown-list {
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.09);
-    max-height: 200px;
-    overflow-y: auto;
-    position: static;
-    /* NEU: von absolute auf static setzen! */
-    width: 100%;
-    z-index: 20;
-    display: none;
-    margin-top: 4px;
-    height: 100px;
-}
-
-.assigned-dropdown-list.open {
-    display: block;
-}
-
 .assigned-item {
     display: flex;
     align-items: center;
@@ -1311,19 +882,6 @@
     color: #fff;
 }
 
-.assigned-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    border: 2px solid #fff;
-    padding: 2px;
-}
-
 .assigned-name {
     flex: 1;
     font-size: 1rem;
@@ -1334,66 +892,6 @@
     accent-color: #5bb6fa;
     width: 18px;
     height: 18px;
-}
-
-.add-subtask-input {
-    flex: 1;
-    border: 1px solid #D1D1D1;
-    border-radius: 12px;
-    padding: 10px 48px 10px 16px;
-    /* Rechts Platz für Button */
-    font-size: 16px;
-    color: #1d2b3a;
-    background: #fff;
-    font-family: inherit;
-    outline: none;
-    box-sizing: border-box;
-}
-
-.add-subtask-input::placeholder {
-    color: #d1d1d1;
-    font-size: 18px;
-    font-family: inherit;
-}
-
-.add-subtask-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #2a3647;
-    font-size: 28px;
-    font-weight: 400;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    height: 32px;
-    width: 32px;
-    justify-content: center;
-    transition: color 0.2s;
-}
-
-.add-subtask-btn:hover {
-    color: #29abe2;
-}
-
-/* Subtask Edit Input */
-.subtask-list-editinput {
-    font-size: 18px;
-    border-radius: 8px;
-    padding: 6px 10px;
-    margin-right: 10px;
-    border: 1px solid #d1d1d1;
-    outline: none;
-    font-family: inherit;
-    color: #1d2b3a;
-    width: auto;
-    min-width: 60px;
-    max-width: 75%;
-    background: #fff;
 }
 
 /* Mülleimer-Button im Subtask Edit */
@@ -1432,118 +930,10 @@
     width: 24px;
 }
 
-.subtask-list-row {
-    display: flex;
-    align-items: center;
-    background: #fff;
-    border: 1px solid #d1d1d1;
-    border-radius: 10px;
-    margin-bottom: 4px;
-    font-size: 16px;
-    font-family: inherit;
-    font-weight: 500;
-}
-
-.subtask-list-row:hover {
-    background: #f6f7f8;
-}
-
-.subtask-list-row:last-child {
-    margin-bottom: 0;
-}
-
-.subtask-dot {
-    font-size: 20px;
-    margin-right: 10px;
-    color: #222f3e;
-    display: inline-block;
-    min-width: 16px;
-    text-align: center;
-}
-
-/* Damit Inputs und der Mülleimer-Button in der Zeile gut aussehen */
-.subtask-list-editinput {
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    font-family: inherit;
-    font-weight: 500;
-    color: #222f3e;
-    padding: 0;
-    outline: none;
-    width: 100%;
-    min-width: 40px;
-}
-
-.subtask-list-editinput:focus {
-    background: #f4f7fc;
-}
-
-.card-subtask-progress {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 12px;
-    margin: 8px 0 2px 0;
-}
-
-.subtask-progress-bar-bg {
-    background: #eaeaea;
-    border-radius: 10px;
-    height: 8px;
-    overflow: hidden;
-    flex: 1;
-    /* Nimmt die komplette verfügbare Breite */
-    min-width: 45px;
-    max-width: 100%;
-    margin-right: 8px;
-}
-
-.subtask-progress-bar-fill {
-    background: #497cff;
-    height: 100%;
-    transition: width 0.3s;
-}
-
-.subtask-progress-text {
-    font-size: 12px;
-    color: #555;
-    white-space: nowrap;
-}
-
-.board-add-task-modal {
-    margin: 24px;
-    background-color: white;
-    padding: 40px;
-    border-radius: 30px;
-    flex: 1;
-    max-width: 800px;
-    max-height: 680px;
-    overflow: scroll;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
 .board-add-task-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.board-add-task-modal .form-cols {
-    display: flex;
-    gap: 48px;
-}
-
-.board-add-task-modal .col-left>*,
-.board-add-task-modal .col-right>* {
-    margin-bottom: 16px;
-}
-
-.board-add-task-modal .col-left>*:last-child,
-.board-add-task-modal .col-right>*:last-child {
-    margin-bottom: 0;
 }
 
 @keyframes task-blink {
@@ -1564,103 +954,7 @@
     animation: task-blink 0.5s ease-in-out 0s infinite;
 }
 
-/* Animation für das Add Task Modal: Slide-in von links */
-.board-add-task-modal {
-    transform: translateX(100vw);
-    opacity: 0;
-    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
-}
-
-.board-add-task-modal.open {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-/* Animation für Board Overlay Card: Slide-in von rechts */
-.board-overlay-card {
-    transform: translateX(100vw);
-    opacity: 0;
-    transition: transform 0.4s cubic-bezier(.45, .05, .55, 1), opacity 0.4s cubic-bezier(.45, .05, .55, 1);
-}
-
-.board-overlay-card.open {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.board-overlay-card .subtask-list-row {
-    min-height: 20px;
-    padding: 2px 4px;
-    font-size: 14px;
-    gap: 4px;
-}
-
-.board-overlay-card .subtask-list-editinput {
-    height: 18px;
-    font-size: 13px;
-    padding: 1px 4px;
-}
-
-.board-overlay-card .subtask-edit-btn,
-.board-overlay-card .subtask-remove-btn {
-    width: 18px;
-    height: 18px;
-    padding: 0;
-    font-size: 12px;
-}
-
-.board-overlay-card .subtask-dot {
-    font-size: 14px;
-    margin-right: 2px;
-}
-
-.overlay-meta-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 32px;
-    /* Oder z.B. 24px, je nach Geschmack */
-    margin: 18px 0 6px 0;
-}
-
-.overlay-meta-row .priority-headline {
-    min-width: 120px;
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.overlay-meta-row .priority-container {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.board-close-icon {
-    width: 32px;
-}
-
-.board-close-icon:hover {
-    background-color: #D9D9D9;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.form-actions-board {
-    justify-content: flex-end;
-}
-
-.card-header-move-arrow-btn {
-    border: none;
-    background-color: white;
-}
-
 .move-task-dropdown-menu {
     background-color: #2A3647;
 
-}
-
-.edit-mode .board-close-icon {
-    margin-left: auto;
-    align-self: flex-end;
 }
