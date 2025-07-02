@@ -17,7 +17,7 @@
   <div class="body">
     <div class="desktop-menu">
       <div>
-        <img class="logo" src="./assets/img/logo.svg" alt="logo" />
+        <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
       </div>
       <div class="menu">
         <a href="./summary.html">
@@ -101,19 +101,19 @@
                 <input id="input_find_task" class="board-input-search" type="text" placeholder="Find Task"
                   onkeyup="searchTask()" />
                 <div class="search-box-right">
-                  <img src="./assets/icons/search-line.png" alt="">
-                  <img class="search-icon" src="./assets/icons/search.png" alt="">
+                  <img src="./assets/icons/board/board-search-line.svg" alt="">
+                  <img class="search-icon" src="./assets/icons/board/board-search-icon.svg" alt="">
                 </div>
               </div>
               <button onclick="openAddTaskOverlay()" class="board-add-task-btn">Add task <img
-                  src="./assets/icons/add.png" alt=""></button>
+                  src="./assets/icons/board/board-add-task-icon.svg" alt=""></button>
             </div>
           </div>
 
           <div class="board-main">
             <div class="board-main-box">
               <span class="board-main-box-title">To do
-                <img onclick="openAddTaskForStatus('todo')" src="./assets/icons/plus-button.png" alt="">
+                <img onclick="openAddTaskForStatus('todo')" src="./assets/icons/board/board-plus-button.svg" alt="">
               </span>
               <div class="drag-area" id="todo" ondrop="moveTo('todo')" ondragleave="removeHighlight('todo')"
                 ondragover="allowDrop(event); highlight('todo')">
@@ -122,7 +122,7 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">In progress
-                <img onclick="openAddTaskForStatus('progress')" src="./assets/icons/plus-button.png" alt="">
+                <img onclick="openAddTaskForStatus('progress')" src="./assets/icons/board/board-plus-button.svg" alt="">
               </span>
               <div class="drag-area" id="progress" ondrop="moveTo('progress')" ondragleave="removeHighlight('progress')"
                 ondragover="allowDrop(event); highlight('progress')">
@@ -131,7 +131,7 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">Await feedback
-                <img onclick="openAddTaskForStatus('feedback')" src="./assets/icons/plus-button.png" alt="">
+                <img onclick="openAddTaskForStatus('feedback')" src="./assets/icons/board/board-plus-button.svg" alt="">
               </span>
               <div class="drag-area" id="feedback" ondrop="moveTo('feedback')" ondragleave="removeHighlight('feedback')"
                 ondragover="allowDrop(event); highlight('feedback')">

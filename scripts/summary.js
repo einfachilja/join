@@ -146,7 +146,7 @@ function updatePriorityUI(priority, count) {
   };
 
   const label = priority.charAt(0).toUpperCase() + priority.slice(1);
-  const icon = `./assets/icons/${config[priority]}?${Date.now()}`;
+  const icon = `./assets/icons/summary/${config[priority]}?${Date.now()}`;
   const className = `priority-background priority-${priority}`;
   setPriorityElements("inline", label, count, className, icon, priority);
 }

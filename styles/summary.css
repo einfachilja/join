@@ -47,7 +47,7 @@
 }
 
 .summary-to-do-icon {
-    background-image: url("/assets/icons/summary-to-do.png");
+    background-image: url("/assets/icons/summary/summary-to-do.svg");
     background-size: cover;
     background-position: center;
     height: 70px;
@@ -63,11 +63,11 @@
 }
 
 .card-top:hover .summary-to-do-icon {
-    background-image: url("/assets/icons/summary-to-do-hover.png");
+    background-image: url("/assets/icons/summary/summary-to-do-hover.svg");
 }
 
 .summary-done-icon {
-    background-image: url("/assets/icons/summary-done.png");
+    background-image: url("/assets/icons/summary/summary-done.svg");
     background-size: cover;
     background-position: center;
     height: 70px;
@@ -75,7 +75,7 @@
 }
 
 .card-top:hover .summary-done-icon {
-    background-image: url("/assets/icons/summary-done-hover.png");
+    background-image: url("/assets/icons/summary/summary-done-hover.svg");
 }
 
 .card-top-text {
