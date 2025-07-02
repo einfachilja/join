@@ -216,7 +216,7 @@ textarea:focus,
 select:focus,
 #dropdown-toggle:focus,
 #category-toggle:focus {
-  /* border: 2px solid #29abe2 !important; */
+  border: 2px solid #29abe2 !important;
   outline: none !important;
   background-color: #fff;
   border-radius: 10px;
@@ -644,12 +644,6 @@ select::placeholder {
   padding-right: 96px;
   /* Platz für zwei Icons rechts */
   box-sizing: border-box;
-}
-
-#subtask-input:focus {
-  border: 2px solid #29abe2;
-  outline: none;
-  background-color: #fff;
 }
 
 .subtask-icons {
