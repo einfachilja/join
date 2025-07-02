@@ -23,26 +23,26 @@ function handleLoginPageLoad() {
 function initLoaderAnimation() {
   const loader = document.getElementById("loader");
   const logo = document.getElementById("animated-logo");
+  const staticLogo = document.getElementById("static-logo");
 
   if (window.innerWidth <= 800) {
-    document.getElementById("animated-logo").src =
-      "./assets/icons/index-register/join-logo-white.svg";
+    logo.src = "./assets/icons/index-register/join-logo-white.svg";
   }
 
   setTimeout(() => {
-
     if (window.innerWidth <= 800) {
       logo.src = "./assets/icons/index-register/join-logo.svg";
     }
-
     logo.classList.add("logo-finished");
     loader.style.background = "transparent";
 
     setTimeout(() => {
-      loader.style.pointerEvents = "none";
+      loader.style.display = "none";
+      staticLogo.style.display = "block";
     }, 800);
   }, 500);
 }
+
 
 /**
  * Validates login email format

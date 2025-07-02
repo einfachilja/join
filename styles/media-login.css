@@ -69,14 +69,6 @@
     z-index: 999;
     }
 
-    #animated-logo.logo-finished {
-    top: 36px;
-    left: 32px;
-    width: 71px;
-    height: 84px;
-    transform: none; 
-    }
-
     .log-in-container {
         padding: 30px 25px;
         border-radius: 20px;
