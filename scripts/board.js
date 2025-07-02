@@ -161,7 +161,7 @@ function generateTodoHTML(element) {
   } else if (priority.toLowerCase() === "medium") {
     priorityIcon = "./assets/icons/board/board-priority-medium.svg";
   } else if (priority.toLowerCase() === "urgent") {
-    priorityIcon = "./assets/icons/board/board-priority-high.svg";
+    priorityIcon = "./assets/icons/board/board-priority-urgent.svg";
   }
 
   // assignedTo kann String oder Array sein, fallback zu []
@@ -332,7 +332,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
   } else if (task.priority && task.priority.toLowerCase() === "medium") {
     priorityIcon = "./assets/icons/board/board-priority-medium.svg";
   } else if (task.priority && task.priority.toLowerCase() === "urgent") {
-    priorityIcon = "./assets/icons/board/board-priority-high.svg";
+    priorityIcon = "./assets/icons/board/board-priority-urgent.svg";
   }
   return /*html*/ `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
@@ -359,7 +359,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       : ""}
       </div>
       <div class="subtask-list">
-        <span class="overlay-headline-color">Subtasks</span>
+        <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
         <ul>
           ${Array.isArray(task.subtask)
       ? task.subtask.map((sub, idx) => {
@@ -380,7 +380,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <img id="seperator" src="./assets/icons/board/board-separator-icon.svg" alt="">
         <div id="edit_btn" class="edit-btn" onclick="editTask()"><div class="edit-btn-icon"></div>Edit</div>
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok
-        <img src="./assets/icons/board/add-task-check.svg"</div>
+        <img src="./assets/icons/board/board-check.svg"</div>
       </div>
     </div>`;
 }
@@ -388,9 +388,9 @@ function getOpenBoardCardTemplate(categoryClass, task) {
 // Generate HTML for priority buttons in edit mode
 function getPriorityButtonsHTML(currentPriority) {
   const priorities = [
-    { value: 'urgent', label: 'Urgent', icon: './assets/icons/urgent.svg' },
-    { value: 'medium', label: 'Medium', icon: './assets/icons/medium.svg' },
-    { value: 'low', label: 'Low', icon: './assets/icons/low.svg' }
+    { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
+    { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
+    { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
   ];
   return priorities.map(p => `
     <button 
@@ -1194,14 +1194,14 @@ function getAddTaskOverlay() {
                           <div id="subtask-icons" class="subtask-icons hidden">
                             <img
                               id="subtask-cancel"
-                              src="./assets/icons/board/closeXSymbol.svg"
+                              src="./assets/icons/add-task/add-task-closeXSymbol.svg"
                               alt="Cancel"
                               onclick="clearSubtaskInput()"
                             />
                             <div class="divider"></div>
                             <img
                               id="subtask-confirm"
-                              src="./assets/icons/board/checked.svg"
+                              src="./assets/icons/add-task/add-task-checked.svg"
                               alt="Confirm"
                               onclick="addSubtask()"
                             />
@@ -1209,7 +1209,7 @@ function getAddTaskOverlay() {
                           <img
                             id="subtask-plus"
                             class="subtask-plus"
-                            src="./assets/icons/board/add+symbol.svg"
+                            src="./assets/icons/add-task/add-task-add+symbol.svg"
                             alt="Add"
                             onclick="toggleSubtaskIcons()"
                           />
@@ -1232,7 +1232,7 @@ function getAddTaskOverlay() {
                   onclick="createTask()"
                 >
                   Create Task
-                  <img class="add-task-icon" src="./assets/icons/baord/add-task-check.svg" alt="">
+                  <img class="add-task-icon" src="./assets/icons/add-task/add-task-check.svg" alt="">
                 </button>
               </div>
             </form>
