@@ -496,7 +496,7 @@ function createSubtaskEditInput(currentText) {
  */
 function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   const confirmBtn = document.createElement("img");
-  confirmBtn.src = "./assets/icons/checked.svg";
+  confirmBtn.src = "./assets/icons/add-task/add-task-check.svg";
   confirmBtn.alt = "Confirm";
   confirmBtn.className = "subtask-edit-confirm";
   confirmBtn.addEventListener("click", () => {
