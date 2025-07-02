@@ -120,11 +120,11 @@ function getRelevantPriorityTasks(tasks) {
   const open = tasks.filter(t => t.status !== "done");
   const high = open.filter(t => t.priority === "urgent");
   const medium = open.filter(t => t.priority === "medium");
-  const low = open.filter(t => t.priority === "low"); // <--- ADD THIS
+  const low = open.filter(t => t.priority === "low");
 
   if (high.length > 0) return { priority: "urgent", tasks: high };
   if (medium.length > 0) return { priority: "medium", tasks: medium };
-  if (low.length > 0) return { priority: "low", tasks: low }; // <--- ADD THIS
+  if (low.length > 0) return { priority: "low", tasks: low }; 
   return { priority: null, tasks: [] };
 }
 
@@ -134,46 +134,48 @@ function getRelevantPriorityTasks(tasks) {
  * @param {number} count - Number of tasks with the priority.
  */
 function updatePriorityUI(priority, count) {
-  const label = document.getElementById("priority-label");
-  const icon = document.getElementById("priority-icon");
-  const number = document.getElementById("summary_card_number_priority_high");
-  const wrapper = document.getElementById("priority-wrapper");
-  
-
-  if (priority === null || priority === undefined || priority === "") {    
-    icon.style.display = "none";
-    label.textContent = "";
-    number.textContent = "0";
-    wrapper.className = "priority-background";
+  if (!priority) {
+    setPriorityElements("none", "", "0", "priority-background");
     return;
   }
 
+  const config = {
+    urgent: "summary-urgent.svg",
+    medium: "summary-medium.svg",
+    low: "summary-low.svg",
+  };
 
-
-
-  icon.style.display = "inline";
-  const timestamp = Date.now();
-  let iconSrc = "";
-  let labelText = "";
-
-  if (priority === "urgent") {
-    iconSrc = "./assets/icons/summary-urgent.svg?" + timestamp;
-    labelText = "Urgent";
-  } else if (priority === "medium") {
-    iconSrc = "./assets/icons/summary-medium.svg?" + timestamp;
-    labelText = "Medium";
-  } else if (priority === "low") {
-    iconSrc = "./assets/icons/summary-low.svg?" + timestamp;
-    labelText = "Low";
-  }
-
-  icon.src = iconSrc;
-  icon.alt = priority;
-  label.textContent = labelText;
-  number.textContent = count;
-  wrapper.className = "priority-background priority-" + priority;
+  const label = priority.charAt(0).toUpperCase() + priority.slice(1);
+  const icon = `./assets/icons/${config[priority]}?${Date.now()}`;
+  const className = `priority-background priority-${priority}`;
+  setPriorityElements("inline", label, count, className, icon, priority);
 }
 
+/**
+ * Sets UI elements for displaying task priority.
+ *
+ * @param {string} display - CSS display value for the icon (e.g. "inline", "none").
+ * @param {string} text - Label text for the priority level.
+ * @param {string|number} count - Number of tasks with the given priority.
+ * @param {string} className - CSS class to apply to the priority wrapper.
+ * @param {string} [iconSrc=""] - Optional path to the priority icon.
+ * @param {string} [alt=""] - Optional alt text for the priority icon.
+ */
+function setPriorityElements(display, text, count, className, iconSrc = "", alt = "") {
+  const icon = document.getElementById("priority-icon");
+  const label = document.getElementById("priority-label");
+  const number = document.getElementById("summary_card_number_priority_high");
+  const wrapper = document.getElementById("priority-wrapper");
+
+  icon.style.display = display;
+  label.textContent = text;
+  number.textContent = count;
+  wrapper.className = className;
+  if (iconSrc) {
+    icon.src = iconSrc;
+    icon.alt = alt;
+  }
+}
 
 /**
  * Finds and displays the nearest upcoming deadline.
@@ -181,27 +183,24 @@ function updatePriorityUI(priority, count) {
  */
 function updateEarliestDeadline(tasks) {
   const deadlineEl = document.getElementById("upcoming-deadline-date");
-  const deadlineSublineEl = document.querySelector(".summary-date-subline");
+  const sublineEl = document.querySelector(".summary-date-subline");
 
-  const deadlines = tasks
+  const dates = tasks
     .filter(t => t.status !== "done" && t.dueDate)
     .map(t => convertDateStringToDate(t.dueDate))
-    .filter(date => date instanceof Date && !isNaN(date))
+    .filter(d => d instanceof Date && !isNaN(d))
     .sort((a, b) => a - b);
 
-  if (deadlines.length > 0) {
-    const earliestDate = deadlines[0].toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    deadlineEl.textContent = earliestDate;
-    deadlineSublineEl.textContent = "Upcoming Deadline";
-  } else {
+  if (dates.length === 0) {
     deadlineEl.textContent = "No upcoming deadline";
-    deadlineSublineEl.textContent = "";
+    sublineEl.textContent = "";
+    return;
   }
+
+  deadlineEl.textContent = dates[0].toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  sublineEl.textContent = "Upcoming Deadline";
 }
+
 
 
 
