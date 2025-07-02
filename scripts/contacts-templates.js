@@ -210,7 +210,7 @@ function getOpenContactMobileTemplate(contact, initials) {
             </div>
             <div class="arrow-left-mobile">
               <a href="contacts.html">
-                <img class="arrow-mobile" src="./assets/img/arrow-left-line.svg" alt="Go Back" />
+                <img class="arrow-mobile" src="./assets/icons/arrow-left-line.svg" alt="Go Back" />
               </a>
             </div>
           </div>

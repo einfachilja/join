@@ -88,7 +88,6 @@ function setupDueDatePicker() {
   if (dueDateInput) {
     dueDateInput.placeholder = "dd/mm/yyyy";
     dueDateInput.type = "text";
-    dueDateInput.addEventListener("focus", () => showDatePicker(dueDateInput));
   }
 }
 
@@ -126,13 +125,14 @@ function setupAssignedInputFocus() {
   const assignedInput = document.getElementById("assigned-to-input");
   const dropdownToggle = document.getElementById("dropdown-toggle");
   if (assignedInput && dropdownToggle) {
-    assignedInput.addEventListener("click", () =>
-      dropdownToggle.classList.add("focused")
-    );
-    document.addEventListener("click", (e) => {
-      if (!dropdownToggle.contains(e.target))
+    assignedInput.onclick = function () {
+      dropdownToggle.classList.add("focused");
+    };
+    document.onclick = function (e) {
+      if (!dropdownToggle.contains(e.target)) {
         dropdownToggle.classList.remove("focused");
-    });
+      }
+    };
   }
 }
 
@@ -160,10 +160,10 @@ function setupDateValidation() {
     const errorText = document.getElementById("error-dueDate");
     if (!dateInput || !errorText) return;
     dateInput.min = new Date().toISOString().split("T")[0];
-    dateInput.addEventListener("input", () => {
+    dateInput.oninput = function () {
       dateInput.classList.remove("error-border");
       errorText.classList.remove("visible");
-    });
+    };
   }, 100);
 }
 /**
@@ -214,9 +214,13 @@ function setupDropdownEvents() {
   const dropdownToggle = document.getElementById("dropdown-toggle");
   const categoryToggle = document.getElementById("category-toggle");
   const dropdownContent = document.getElementById("dropdown-content");
-  dropdownToggle?.addEventListener("click", toggleAssignDropdown);
-  categoryToggle?.addEventListener("click", toggleCategoryDropdown);
-  dropdownContent?.addEventListener("click", (e) => e.stopPropagation());
+  if (dropdownToggle) dropdownToggle.onclick = toggleAssignDropdown;
+  if (categoryToggle) categoryToggle.onclick = toggleCategoryDropdown;
+  if (dropdownContent) {
+    dropdownContent.onclick = function (e) {
+      e.stopPropagation();
+    };
+  }
 }
 
 /**
@@ -225,16 +229,16 @@ function setupDropdownEvents() {
 function setupSubtaskEvents() {
   const subtaskInput = document.getElementById("subtask-input");
   if (subtaskInput) {
-    subtaskInput.addEventListener("input", () => {
+    subtaskInput.oninput = function () {
       toggleSubtaskIcons();
       const iconWrapper = document.getElementById("subtask-icons");
       iconWrapper?.classList.toggle(
         "hidden",
         subtaskInput.value.trim().length === 0
       );
-    });
-    subtaskInput.addEventListener("focus", toggleSubtaskIcons);
-    subtaskInput.addEventListener("keydown", handleSubtaskEnter);
+    };
+    subtaskInput.onfocus = toggleSubtaskIcons;
+    subtaskInput.onkeydown = handleSubtaskEnter;
   }
 }
 
@@ -242,7 +246,7 @@ function setupSubtaskEvents() {
  * Sets up event listeners to close dropdowns when clicking outside.
  */
 function setupOutsideClickEvents() {
-  document.addEventListener("click", (e) => {
+  document.onclick = function (e) {
     if (!document.getElementById("category-wrapper").contains(e.target)) {
       document.getElementById("category-toggle")?.classList.remove("open");
       document.getElementById("category-content")?.classList.remove("visible");
@@ -250,7 +254,7 @@ function setupOutsideClickEvents() {
     if (!document.getElementById("dropdown-wrapper").contains(e.target)) {
       closeDropdown();
     }
-  });
+  };
 }
 // ==== SUBTASK ICONS TOGGLE ====
 /**
@@ -348,7 +352,7 @@ function getContactInitials(name) {
  */
 function setupContactCheckbox(item, contact, filter) {
   const checkbox = item.querySelector("input[type='checkbox']");
-  checkbox.addEventListener("click", (event) => {
+  checkbox.onclick = function (event) {
     event.stopPropagation();
     const idx = selectedContacts.findIndex((s) => s.name === contact.name);
     if (checkbox.checked && idx === -1) selectedContacts.push(contact);
@@ -359,7 +363,7 @@ function setupContactCheckbox(item, contact, filter) {
     updateSelectedContactsUI();
     renderAssignOptions(filter);
     updateSubmitState();
-  });
+  };
 }
 /**
  * Sets up the click event for a contact item to toggle its checkbox.
@@ -367,12 +371,12 @@ function setupContactCheckbox(item, contact, filter) {
  */
 function setupContactItemClick(item) {
   const checkbox = item.querySelector("input[type='checkbox']");
-  item.addEventListener("click", (event) => {
+  item.onclick = function (event) {
     if (event.target.tagName.toLowerCase() === "input") return;
     event.stopPropagation();
     checkbox.checked = !checkbox.checked;
     checkbox.dispatchEvent(new Event("click", { bubbles: true }));
-  });
+  };
 }
 /**
  * Updates the UI to show selected contacts as icons.
@@ -435,7 +439,9 @@ function createSubtaskListItem(text) {
   iconWrapper.className = "subtask-icons";
   li.appendChild(label);
   li.appendChild(iconWrapper);
-  li.addEventListener("dblclick", () => enterEditMode(li));
+  li.ondblclick = function () {
+    enterEditMode(li);
+  };
   return li;
 }
 /**
@@ -499,7 +505,7 @@ function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   confirmBtn.src = "./assets/icons/add-task/add-task-check.svg";
   confirmBtn.alt = "Confirm";
   confirmBtn.className = "subtask-edit-confirm";
-  confirmBtn.addEventListener("click", () => {
+  confirmBtn.onclick = function () {
     const newValue = input.value.trim();
     if (newValue) {
       const index = subtask.findIndex((s) => s.title === currentText);
@@ -508,7 +514,7 @@ function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
         updateSubtaskLabel(subtaskElement, newValue);
       }
     }
-  });
+  };
   return confirmBtn;
 }
 /**
@@ -522,12 +528,12 @@ function createSubtaskCancelBtn(currentText, subtaskElement) {
   cancelBtn.src = "./assets/icons/closeXSymbol.svg";
   cancelBtn.alt = "Delete";
   cancelBtn.className = "subtask-edit-cancel";
-  cancelBtn.addEventListener("click", () => {
+  cancelBtn.onclick = function () {
     const index = subtask.findIndex((s) => s.title === currentText);
     if (index > -1) subtask.splice(index, 1);
     subtaskElement.remove();
     updateSubmitState();
-  });
+  };
   return cancelBtn;
 }
 /**
@@ -690,7 +696,11 @@ function showTaskAddedPopup() {
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 2500);
 }
-// Save task to board list
+/**
+ * Saves a task object to the Firebase boardTasks list.
+ * @param {Object} task - The task object to save.
+ * @returns {Promise<void>}
+ */
 async function saveTaskToFirebaseBoard(task) {
   try {
     await fetch(
@@ -836,6 +846,11 @@ function showDatePicker(input) {
 }
 
 // ==== SAVE UPDATED SUBTASKS ====
+/**
+ * Saves updated subtasks for a given task to Firebase.
+ * @param {string} taskKey - The Firebase key of the task to update.
+ * @returns {Promise<void>}
+ */
 async function saveUpdatedSubtasks(taskKey) {
   const task = arrayTasks.find((t) => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
