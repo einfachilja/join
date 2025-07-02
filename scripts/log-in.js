@@ -13,6 +13,11 @@ function handleLoginPageLoad() {
     initLoaderAnimation();
   }
 
+  const passwordField = document.getElementById("password");
+  if (passwordField) {
+  togglePasswordIcon(passwordField);
+  }
+
 }
 
 function initLoaderAnimation() {
@@ -21,13 +26,13 @@ function initLoaderAnimation() {
 
   if (window.innerWidth <= 800) {
     document.getElementById("animated-logo").src =
-      "./assets/img/1. join-frontpage/join-logo-white.svg";
+      "./assets/icons/index-register/join-logo-white.svg";
   }
 
   setTimeout(() => {
 
     if (window.innerWidth <= 800) {
-      logo.src = "./assets/img/1. join-frontpage/join-logo.svg";
+      logo.src = "./assets/icons/index-register/join-logo.svg";
     }
 
     logo.classList.add("logo-finished");
@@ -173,8 +178,8 @@ function togglePasswordWithIcon(inputId, iconElement) {
 
   input.type = isVisible ? "password" : "text";
   iconElement.src = isVisible
-    ? "./assets/img/2. log-sign-page/visibility_off.svg"
-    : "./assets/img/2. log-sign-page/visibility_eye.svg";
+    ? "./assets/icons/index-register/visibility_off.svg"
+    : "./assets/icons/index-register/visibility_eye.svg";
 }
 
 /**
@@ -185,7 +190,14 @@ function togglePasswordIcon(input) {
   const icon = input.closest(".input-container").querySelector(".toggle-password");
   if (!icon) return;
 
-  icon.src = input.value.length > 0
-    ? "./assets/img/2. log-sign-page/visibility_off.svg"
-    : "./assets/img/2. log-sign-page/lock-icon.svg";
+  if (input.value.length > 0) {
+    icon.src = "./assets/icons/index-register/visibility_off.svg";
+    icon.style.pointerEvents = "auto";
+    icon.style.cursor = "pointer";
+  } else {
+    icon.src = "./assets/icons/index-register/lock-icon.svg";
+    icon.style.pointerEvents = "none";
+    icon.style.cursor = "default";
+    input.type = "password";
+  }
 }

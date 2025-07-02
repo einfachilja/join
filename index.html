@@ -15,11 +15,11 @@
 <body onload="handleLoginPageLoad()">
   
   <section class="logo-section" id="static-logo">
-    <img class="logo-image" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
+    <img class="logo-image" src="./assets/icons/index-register/join-logo.svg" alt="Logo" />
   </section>
 
   <div class="loader d-none" id="loader">
-    <img id="animated-logo" src="./assets/img/1. join-frontpage/join-logo.svg" alt="Logo" />
+    <img id="animated-logo" src="./assets/icons/index-register/join-logo.svg" alt="Logo" />
   </div>
 
   <section class="register-container">
@@ -33,7 +33,7 @@
     <div class="log-in-container">
       <div class="login-container-headline">
         <h1 class="login-headline">Log in</h1>
-        <img class="blue-line" src="./assets/img/2. log-sign-page/blue-line.svg" alt="blue line" />
+        <img class="blue-line" src="./assets/icons/index-register/blue-line.svg" alt="Blue underline" />
       </div>
 
       <form class="log-in-form" onsubmit="login(); return false;">
@@ -49,7 +49,7 @@
                 required
                 oninput="validateLoginEmail()"
               />
-              <img class="input-icon" src="./assets/img/2. log-sign-page/mail-icon.svg" alt="Email Icon" />
+              <img class="input-icon" src="./assets/icons/index-register/mail-icon.svg" alt="Email Icon" />
             </label>
             <small id="login-email-error" class="error-message">&nbsp;</small>
           </div>
@@ -66,7 +66,7 @@
               />
               <img
                 class="input-icon-password toggle-password"
-                src="./assets/img/2. log-sign-page/lock-icon.svg"
+                src="./assets/icons/index-register/lock-icon.svg"
                 alt="Password Icon"
                 data-target="password"
                 onclick="togglePasswordWithIcon('password', this)"
