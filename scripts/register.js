@@ -127,11 +127,13 @@ function handlePasswordInput() {
   isPasswordValid();
   doPasswordsMatch();
   checkFormValidity();
+  updatePasswordIcon(passwordInput);
 }
 
 function handleConfirmPasswordInput() {
   doPasswordsMatch();
   checkFormValidity();
+  updatePasswordIcon(document.getElementById("confirm-password"));
 }
 
 /**
@@ -141,9 +143,17 @@ function handleConfirmPasswordInput() {
 function updatePasswordIcon(input) {
   const icon = input.closest(".input-container").querySelector(".toggle-password");
   if (!icon) return;
-  icon.src = input.value.length > 0
-    ? "./assets/img/2. log-sign-page/visibility_off.svg"
-    : "./assets/img/2. log-sign-page/lock-icon.svg";
+
+  if (input.value.length > 0) {
+    icon.src = "./assets/icons/index-register/visibility_off.svg";
+    icon.style.pointerEvents = "auto";
+    icon.style.cursor = "pointer";
+  } else {
+    icon.src = "./assets/icons/index-register/lock-icon.svg";
+    icon.style.pointerEvents = "none";
+    icon.style.cursor = "default";
+    input.type = "password";
+  }
 }
 
 /**
@@ -157,6 +167,6 @@ function togglePasswordWithIcon(inputId, icon) {
   const isVisible = input.type === "text";
   input.type = isVisible ? "password" : "text";
   icon.src = isVisible
-    ? "./assets/img/2. log-sign-page/visibility_off.svg"
-    : "./assets/img/2. log-sign-page/visibility_eye.svg";
+    ? "./assets/icons/index-register/visibility_off.svg"
+    : "./assets/icons/index-register/visibility_eye.svg";
 }
