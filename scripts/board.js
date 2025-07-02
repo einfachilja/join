@@ -24,7 +24,6 @@ let arrayTasks = [];
 let addTaskDefaultStatus = "todo";
 let firebaseKey = localStorage.getItem("firebaseKey");
 let lastCreatedTaskKey = null;
-console.log("firebaseKey:", firebaseKey); // Debug-Ausgabe
 
 /* ========== LOAD TASKS FROM FIREBASE ========== */
 async function loadTasks() {
@@ -961,8 +960,6 @@ async function saveEditTask(taskKey) {
       },
       body: JSON.stringify(updatedTask)
     });
-
-    console.log("task.firebaseKey:", task.firebaseKey);
 
     // Lokales Array aktualisieren
     arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
