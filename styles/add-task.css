@@ -310,6 +310,7 @@ select:focus {
   height: 100%;
   padding-left: 16px;
 }
+
 #dropdown-toggle input:focus {
   border: none !important;
   outline: none !important;
@@ -795,6 +796,7 @@ select::placeholder {
     width: 16px;
     height: 16px;
   }
+
 }
 
 .subtask-list-item.subtask-edit-mode {
@@ -915,10 +917,12 @@ select::placeholder {
   background-color: #2a3647 !important;
   color: #ffffff;
 }
+
 .contact-item.selected .contact-name,
 .dropdown-content .contact-item.selected .contact-name {
   color: #ffffff;
 }
+
 .contact-item.selected .contact-checkbox img,
 .dropdown-content .contact-item.selected img,
 .dropdown-content .contact-item.selected .checkbox-icon {

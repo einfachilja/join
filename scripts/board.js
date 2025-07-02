@@ -61,6 +61,7 @@ async function loadTasks() {
       ...task
     };
   });
+  await fetchContacts();
   updateHTML(arrayTasks);
 }
 
@@ -125,17 +126,9 @@ function stopDragging(firebaseKey) {
 
 
 function getContactByName(name) {
-  // Beispiel: Holt den aktuellen User aus dem localStorage
-  let currentUser = localStorage.getItem("firebaseKey");
-  let userData = JSON.parse(localStorage.getItem("firebaseUsers"));
-  if (!userData || !userData[currentUser] || !userData[currentUser].contacts) return null;
-
-  for (let key in userData[currentUser].contacts) {
-    if (userData[currentUser].contacts[key].name === name) {
-      return userData[currentUser].contacts[key];
-    }
-  }
-  return null;
+  let userKey = localStorage.getItem("firebaseKey");
+  let userContacts = contacts || [];
+  return userContacts.find(c => c.name === name) || null;
 }
 
 function getInitials(name) {
@@ -210,12 +203,15 @@ function generateTodoHTML(element) {
                 <div class="card-footer">
                   <div class="assigned-container">
                     ${Array.isArray(assignedList)
-      ? assignedList.map(name => {
-        let contact = getContactByName(name);
-        let color = contact && contact.color ? contact.color : "#ccc";
-        return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
-      }).join("")
-      : ""}
+    ? assignedList
+        .map(name => {
+          const contact = getContactByName(name);
+          if (!contact) return ''; // Kontakt wurde gelöscht
+          const color = contact.color || "#ccc";
+          return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
+        })
+        .join("")
+    : ""}
                   </div>
                   <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
                 </div>
@@ -346,16 +342,17 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       <div class="assigned-list">
         <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
         ${Array.isArray(task.assignedTo)
-      ? task.assignedTo.map(name => {
-        const contact = getContactByName(name);
-        const color = contact?.color || "#ccc";
-        return `
+          ? task.assignedTo.map(name => {
+              const contact = getContactByName(name);
+              if (!contact) return ''; // Nicht existierende Kontakte überspringen
+              const color = contact.color || "#ccc";
+              return `
                 <div class="assigned-entry">
                   <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
                   <span class="assigned-name">${name}</span>
                 </div>`;
-      }).join("")
-      : ""}
+            }).join("")
+          : ""}
       </div>
       <div class="subtask-list">
         <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
@@ -743,8 +740,9 @@ function editTask() {
       wrapper.innerHTML = '';
       selectedContacts.forEach(name => {
         const contact = contacts.find(c => c.name === name);
-        const initials = contact ? getInitials(contact.name) : '';
-        const color = contact && contact.color ? contact.color : '#ccc';
+        if (!contact) return; // ausgelöschte Kontakte überspringen
+        const initials = getInitials(contact.name);
+        const color = contact.color || '#ccc';
         const div = document.createElement('div');
         div.className = 'initial-circle';
         div.style.backgroundColor = color;
@@ -1581,6 +1579,8 @@ async function fetchContacts() {
         name: u.name.trim(),
         color: u.color || "#888",
       }));
+    // Board nach Laden der Kontakte aktualisieren
+    updateHTML();
   } catch (err) {
     console.error("Contacts fetch error:", err);
   }
