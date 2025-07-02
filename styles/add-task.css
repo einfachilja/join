@@ -1,10 +1,10 @@
-/**
- * @file add-task.css
- * @description Stylesheet for the "Add Task" section of the Join application.
- * Contains layout, input styles, priority buttons, dropdown menus, subtask handling,
- * error highlighting, and responsive breakpoints.
- * All styles are scoped for maintainability and follow clean code principles.
- */
+.add-task-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  padding-left: 0px;
+}
 .desktop-menu {
   position: fixed;
   top: 0;
@@ -14,15 +14,8 @@
   min-width: 200px;
 }
 
-.add-task-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px;
-}
-
-/* === Add-Task Modal & Layout === */
 .add-task-modal {
+  /* Modal Layout */
   max-width: 1040px;
   margin-left: 275px;
   margin-right: 48px;
@@ -36,10 +29,12 @@
 }
 
 .main {
+  /* Main Content Padding */
   padding-right: 8px;
 }
 
 .form-cols {
+  /* Form Columns Layout */
   display: flex;
   align-items: stretch;
   gap: 24px;
@@ -49,6 +44,7 @@
 
 .form-section-left,
 .form-section-right {
+  /* Left and Right Form Sections */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -57,6 +53,7 @@
 }
 
 .form-divider {
+  /* Vertical Divider */
   width: 1px;
   background-color: #d1d1d1;
   height: auto;
@@ -68,8 +65,8 @@
   object-fit: cover;
 }
 
-/* === Priority-Buttons: Default === */
 .priority-buttons {
+  /* Priority Button Group */
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -135,13 +132,12 @@
   background-color: #7ae229;
 }
 
-/* Entfernt: filter: none; da bereits oben bei button:not(.selected) img definiert */
-
 .priority-buttons button:not(.selected):hover {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .form-actions {
+  /* Form Action Buttons */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -180,6 +176,7 @@
 }
 
 .task-toast {
+  /* Toast Notification */
   position: fixed;
   top: 50%;
   left: 50%;
@@ -198,11 +195,12 @@
 
 input,
 textarea {
+  /* Input and Textarea Fields */
   border: 1px solid #d1d1d1;
   border-radius: 10px;
   padding: 0 16px;
   font-size: 16px;
-  background: #f6f7f8;
+  background: #ffffff;
   height: 48px;
   box-sizing: border-box;
   width: 100%;
@@ -216,15 +214,15 @@ textarea:focus,
 select:focus,
 #dropdown-toggle:focus,
 #category-toggle:focus {
-  border: 2px solid #29abe2 !important;
+  border: 1px solid #29abe2;
   outline: none !important;
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 10px;
   transition: box-shadow 0.1s ease-in-out, border 0.1s ease-in-out;
 }
 
-/* Consistent style for date input */
 #dateInput {
+  /* Date Input Field */
   padding: 12px 16px;
   border: 1px solid #d1d1d1;
   border-radius: 10px;
@@ -238,7 +236,7 @@ select:focus,
 #dateInput:focus {
   border: 2px solid #29abe2;
   outline: none;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
 #dateInput::placeholder {
@@ -253,8 +251,8 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: #fff;
-  border: 2px solid #ccc;
+  background: #ffffff;
+  border: 1px solid #d1d1d1;
   border-radius: 12px;
   padding: 12px 40px 12px 16px;
   font-size: 16px;
@@ -271,16 +269,16 @@ select:focus {
   border-color: #2a3647;
 }
 
-/* Dropdown „Assign to“ */
 #dropdown-wrapper {
+  /* Dropdown Menu: Assign To */
   position: relative;
 }
 
 #dropdown-toggle {
-  border: 2px solid #d1d1d1;
+  border: 1px solid #d1d1d1;
   border-radius: 12px;
   padding-right: 16px;
-  background: #fff;
+  background: #ffffff;
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
@@ -292,11 +290,11 @@ select:focus {
 }
 
 #dropdown-toggle:focus-within {
-  border: 2px solid #29abe2 !important;
+  border: 1px solid #29abe2 !important;
   outline: none !important;
   border-radius: 10px;
-  background-color: #fff;
-  transition: box-shadow 0.1s ease-in-out, border 0.1s ease-in-out;
+  background-color: #ffffff;
+  transition: box-shadow 0.1s ease-in-out;
 }
 
 #dropdown-toggle input {
@@ -318,6 +316,7 @@ select:focus {
 }
 
 .dropdown-arrow {
+  /* Dropdown Arrow Icon */
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
@@ -332,6 +331,7 @@ select:focus {
 }
 
 .dropdown-content {
+  /* Dropdown Content List */
   position: absolute;
   top: 100%;
   left: 0;
@@ -368,6 +368,7 @@ select:focus {
 /* .dropdown-content .contact-item.selected and .contact-item.selected merged below for consistency */
 
 .selected-contacts {
+  /* Selected Contacts Avatars */
   margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
@@ -387,6 +388,7 @@ select:focus {
 }
 
 .profile-icon {
+  /* Contact Profile Icon */
   border-radius: 45px;
   height: 42px;
   width: 42px;
@@ -400,24 +402,36 @@ select:focus {
   margin-right: 8px;
 }
 
-.error-border {
-  border-color: #e74c3c !important;
-}
-
+/* Einheitlicher Fehlerrahmen für alle Pflichtfelder */
+input.error-border,
+textarea.error-border,
+select.error-border,
 #dropdown-toggle.error-border,
 #category-toggle.error-border {
-  border: 1px solid red !important;
+  border: 1px solid #e74c3c !important;
   border-radius: 10px;
-  background: #f6f7f8;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
+  transition: border 0.1s linear, box-shadow 0.1s linear;
+}
+
+/* Spezifisch für Toggle-Elemente: keine doppelte Umrahmung/Animation */
+#dropdown-toggle.error-border,
+#category-toggle.error-border {
+  border: 1px solid #e74c3c !important;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
+  transition: border 0.1s linear, box-shadow 0.1s linear;
 }
 
 #dueDate.error-border,
-#title.error {
-  border-color: #e74c3c !important;
+#title.error-border {
+  border: 1px solid #e74c3c !important;
 }
 
 .error {
-  border: 1px solid red !important;
+  border: 1px solid #e74c3c !important;
 }
 
 input::placeholder,
@@ -427,8 +441,8 @@ select::placeholder {
   font-family: inherit;
 }
 
-/* === Custom Select Wrapper === */
 .custom-select-wrapper {
+  /* Custom Select Dropdown */
   position: relative;
   width: 100%;
   margin-bottom: 4px;
@@ -452,8 +466,8 @@ select::placeholder {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: #fff;
-  border: 2px solid #ccc;
+  background: #ffffff;
+  border: 1px solid #d1d1d1;
   border-radius: 12px;
   padding: 12px 40px 12px 16px;
   font-size: 16px;
@@ -468,16 +482,16 @@ select::placeholder {
   outline: none;
 }
 
-/* === Category Dropdown (wie Assigned to) === */
 #category-wrapper {
+  /* Category Dropdown Menu */
   position: relative;
 }
 
 #category-toggle {
   padding: 12px 16px 12px 16px;
-  border: 2px solid #d1d1d1;
+  border: 1px solid #d1d1d1;
   border-radius: 12px;
-  background: #fff;
+  background: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -490,6 +504,15 @@ select::placeholder {
 
 #category-toggle.open .dropdown-arrow {
   transform: rotate(180deg);
+}
+
+#category-toggle:focus,
+#category-toggle:focus-within {
+  outline: none !important;
+  border: 1px solid #29abe2 !important;
+  border-radius: 10px;
+  background-color: #ffffff;
+  transition: box-shadow 0.1s ease-in-out;
 }
 
 #category-arrow {
@@ -570,14 +593,15 @@ select::placeholder {
   width: 100%;
 }
 
-/* === Subtasks – Figma-Style === */
 .subtask-wrapper {
+  /* Subtask List Wrapper */
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 .subtask-edit {
+  /* Subtask Edit Row */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -588,7 +612,7 @@ select::placeholder {
 .subtask-edit input {
   flex: 1;
   height: 48px;
-  background-color: #fff;
+  background-color: #ffffff;
   border: 2px solid #2a3647;
   border-radius: 10px;
   padding: 0 16px;
@@ -604,17 +628,15 @@ select::placeholder {
   transition: background-color 0.2s ease;
 }
 
-.subtask-edit img:hover {
-  background-color: #e0e0e0;
-}
-
 .subtask-list {
+  /* Subtask List */
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .subtask-list-item {
+  /* Subtask List Item */
   list-style-type: disc;
   margin-left: 20px;
   background: none;
@@ -628,26 +650,27 @@ select::placeholder {
   flex: 1;
 }
 
-/* === Subtask Input mit Plus-Icon innen rechts === */
 .subtask-input-wrapper {
+  /* Subtask Input with Icons */
   position: relative;
   width: 100%;
 }
 
 #subtask-input {
   height: 48px;
-  background-color: #f6f7f8;
+  background-color: #ffffff;
   border: 1px solid #d1d1d1;
   border-radius: 10px;
   font-size: 16px;
   width: 100%;
   padding: 0 16px;
   padding-right: 96px;
-  /* Platz für zwei Icons rechts */
+  /* Space for two icons right */
   box-sizing: border-box;
 }
 
 .subtask-icons {
+  /* Subtask Icons Row */
   position: absolute;
   top: 50%;
   right: 12px;
@@ -655,8 +678,6 @@ select::placeholder {
   display: flex;
   gap: 8px;
 }
-
-/* Unified .subtask-icons img styling */
 
 .subtask-icons img {
   width: 20px;
@@ -673,6 +694,7 @@ select::placeholder {
 }
 
 #subtask-plus {
+  /* Subtask Add Button */
   position: absolute;
   top: 50%;
   right: 12px;
@@ -701,6 +723,7 @@ select::placeholder {
 }
 
 .subtask-icon {
+  /* Subtask Icon Button */
   width: 24px;
   height: 24px;
   padding: 6px;
@@ -714,88 +737,17 @@ select::placeholder {
 }
 
 .hidden {
+  /* Utility: Hide Element */
   display: none !important;
 }
 
-/* === Responsive Breakpoints === */
-
-@media (max-width: 1040px) {
-  .add-task-modal {
-    margin: 100px 12px 24px 12px;
-    padding: 24px;
-  }
-
-  .form-cols {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .form-divider {
-    display: none;
-  }
-
-  .form-actions {
-    padding-bottom: 80px;
-  }
-}
-
-@media (max-width: 800px) {
-  .add-task-modal {
-    margin: 80px 8px 16px 8px;
-    padding: 16px;
-  }
-}
-
-@media (max-width: 500px) {
-  .form-actions {
-    position: static;
-    /* nicht mehr fixed */
-    bottom: auto;
-    left: auto;
-    right: auto;
-    padding: 0;
-    background: none;
-    z-index: auto;
-    box-shadow: none;
-    flex-direction: column;
-    gap: 8px;
-    padding-bottom: 48px;
-    align-items: center;
-  }
-
-  .form-actions button {
-    width: 100%;
-  }
-
-  .add-task-modal {
-    padding: 12px;
-    margin-bottom: 48px;
-  }
-}
-
-@media (max-width: 420px) {
-  .priority-buttons {
-    gap: 8px;
-  }
-
-  .priority-buttons button {
-    padding: 8px 12px;
-    height: 40px;
-    font-size: 14px;
-    gap: 6px;
-    min-width: 0;
-  }
-
-  .priority-buttons button img {
-    width: 16px;
-    height: 16px;
-  }
-
+.responsive-breakpoints {
+  /* Responsive Breakpoints (just for comment structure) */
 }
 
 .subtask-list-item.subtask-edit-mode {
-  background-color: #fff;
-  border: 2px solid #29abe2;
+  background-color: transparent;
+  border: 1px solid #29abe2;
   border-radius: 10px;
   padding: 0 12px;
   list-style-type: none;
@@ -816,32 +768,38 @@ select::placeholder {
 
 .subtask-edit-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: white;
-  border: 2px solid #29abe2;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #29abe2;
   border-radius: 10px;
-  padding: 4px 12px;
+  box-sizing: border-box;
+  background-color: transparent;
 }
 
 .subtask-input-edit-wrapper {
+  /* Subtask Edit Input Wrapper */
   flex: 1;
   margin-right: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .subtask-input-edit-wrapper input {
-  flex: 1;
-  height: 28px;
-  line-height: 28px;
-  background-color: #fff;
-  border-radius: 4px;
-  padding: 0 8px;
-  font-size: 16px;
   width: 100%;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background: transparent;
   box-sizing: border-box;
-  border: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
+  height: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .subtask-edit-container img {
@@ -852,22 +810,36 @@ select::placeholder {
   border-radius: 4px;
   background-color: transparent;
   filter: brightness(0);
+  transition: background-color 0.2s ease;
 }
 
 .subtask-edit-container img:hover {
+  background-color: transparent !important;
+}
+
+.subtask-edit-confirm {
+  cursor: pointer;
   background-color: transparent;
 }
 
+.subtask-edit-confirm:hover {
+  background-color: #e0e0e0;
+}
+
 .subtask-edit-icons {
+  /* Subtask Edit Icons Group */
   display: flex;
   gap: 8px;
+  margin-left: auto;
 }
 
 .red_star {
+  /* Required Field Star */
   color: red;
 }
 
 .legend-required {
+  /* Required Field Legend */
   padding-left: 0;
   font-size: 14px;
   color: #6e6e6e;
@@ -877,8 +849,8 @@ select::placeholder {
   flex-grow: 1;
 }
 
-/* Added for consistent error message layout and field wrappers */
 .error-message {
+  /* Error Message */
   color: red;
   font-size: 12px;
   margin-top: 6px;
@@ -891,23 +863,15 @@ select::placeholder {
 }
 
 .field-wrapper {
+  /* Field Wrapper */
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-@media (max-width: 500px) {
-  .legend-required {
-    font-size: 12px;
-    justify-content: center;
-    margin: 0 auto;
-    padding: 0;
-  }
-}
-
-/* === Selected Contact Item Styles (Unified) === */
 .contact-item.selected,
 .dropdown-content .contact-item.selected {
+  /* Selected Contact Item */
   background-color: #2a3647 !important;
   color: #ffffff;
 }
@@ -923,8 +887,8 @@ select::placeholder {
   filter: brightness(0) invert(1);
 }
 
-/* === Category Dropdown Icons (wie Subtask-Icons) === */
 .category-item img {
+  /* Category Dropdown Icon */
   width: 20px;
   height: 20px;
   padding: 4px;
@@ -935,4 +899,50 @@ select::placeholder {
 
 .category-item img:hover {
   background-color: #e0e0e0;
+}
+
+#subtask-input:focus {
+  /* Subtask Input Focus */
+  border: 1px solid #29abe2 !important;
+  outline: none !important;
+  background-color: #ffffff;
+  border-radius: 10px;
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+/* Basis-Stil */
+#submit-task-btn {
+  background-color: #2a3647;
+  color: white;
+  border: none;
+  pointer-events: auto; /* wichtig! */
+  opacity: 1;
+}
+
+/* Hover-Stil, wenn Button noch disabled (Pflichtfelder fehlen) */
+#submit-task-btn:disabled:hover {
+  background-color: #2a3647;
+  cursor: not-allowed;
+}
+
+/* Hover-Stil, wenn Button aktiviert (alle Pflichtfelder erfüllt) */
+#submit-task-btn:not(:disabled):hover {
+  background-color: #29abe2;
+  cursor: pointer;
+}
+
+#submit-task-btn.disabled-warning {
+  background-color: #a4a4a4;
+  color: white;
+  cursor: default;
+  pointer-events: auto;
+  border: none;
+}
+
+#submit-task-btn.disabled-warning:hover {
+  background-color: #2a3647;
+}
+
+#dropdown-toggle input::placeholder {
+  color: #000000;
 }
