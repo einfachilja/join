@@ -494,6 +494,7 @@ function editTask() {
   document.getElementById("edit_btn").classList.add("d-none");
   document.getElementById("seperator").classList.add("d-none");
   document.getElementById("overlay_card_category").classList.add("d-none");
+  document.getElementById("board_overlay_card").classList.add("board-overlay-card-edit");
 
   document.getElementById("overlay_card_title").contentEditable = "true";
   document.getElementById("overlay_card_description").contentEditable = "true";
