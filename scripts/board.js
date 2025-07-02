@@ -342,10 +342,10 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       </div>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
-      <span class="due-date-headline" id="due_date">Due date: <span>${task.dueDate}</span></span>
-      <span class="priority-headline">Priority: <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
+      <span class="due-date-headline" id="due_date"><span class="overlay-headline-color">Due date:</span><span>${task.dueDate}</span></span>
+      <span class="priority-headline"><span class="overlay-headline-color">Priority:</span><span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
       <div class="assigned-list">
-        <span class="assigned-to-headline">Assigned To:</span>
+        <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
         ${Array.isArray(task.assignedTo)
       ? task.assignedTo.map(name => {
         const contact = getContactByName(name);
@@ -359,7 +359,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       : ""}
       </div>
       <div class="subtask-list">
-        <span>Subtasks:</span>
+        <span class="overlay-headline-color">Subtasks</span>
         <ul>
           ${Array.isArray(task.subtask)
       ? task.subtask.map((sub, idx) => {

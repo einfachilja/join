@@ -341,7 +341,7 @@
 
 .assigned-name {
     flex: 1;
-    font-size: 1rem;
+    font-size: 20px;
 }
 
 .assigned-checkbox {
@@ -500,43 +500,44 @@
 
 .subtask-item {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 12px;
     font-size: 16px;
+    gap: 12px;
+    padding: 4px;
+    padding-left: 12px;
+}
+
+.subtask-item:hover {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    cursor: pointer;
+
+    width: fit-content;
+}
+
+.subtask-item label:hover {
+    cursor: pointer;
 }
 
 .subtask-item input[type="checkbox"] {
+    content: url("/assets/icons/board/board-check-icon.svg");
     appearance: none;
     -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    outline: none;
-    margin-right: 12px;
-    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    border: 2px solid #2A3647;
+    width: 24px;
+    height: 24px;
     background: transparent;
     padding: 0;
+    margin: 0;
+    border: none;
+    cursor: pointer;
 }
 
-.subtask-item input[type="checkbox"]:checked::after {
-    content: "✔";
-    font-size: 20px;
-    color: #2A3647;
-    display: block;
-    text-align: center;
-    position: absolute;
-    left: 5px;
-    top: -5px;
+.subtask-item input[type="checkbox"]:checked {
+    content: url("/assets/icons/board/board-check-icon-checked.svg");
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
 }
 
-
-/* 8. Overlay & Modals (Overlay, Overlay-Card, Add-Task-Modal) */
 .board-overlay {
     position: fixed;
     left: 0;
@@ -579,6 +580,10 @@
     justify-content: space-between;
 }
 
+.overlay-headline-color {
+    color: #42526e;
+}
+
 .overlay-card-category {
     display: flex;
     justify-content: center;
@@ -617,6 +622,7 @@
     align-items: center;
     gap: 12px;
     margin-top: 4px;
+    padding-left: 12px;
 }
 
 .overlay-card-footer {
