@@ -634,11 +634,41 @@
     gap: 4px;
 }
 
-.delete-btn:hover,
-.edit-btn:hover {
-    color: #29abe2;
+.edit-btn-icon {
+    background-image: url("/assets/icons/board/board-edit-icon.svg");
+    height: 24px;
+    width: 24px;
+}
+
+.edit-btn:hover .edit-btn-icon {
+    background-image: url("/assets/icons/board/board-edit-icon-hover.svg");
     cursor: pointer;
 }
+
+.edit-btn:hover {
+    color: #29ABE2;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.delete-btn-icon {
+    background-image: url("/assets/icons/board/board-delete-icon.svg");
+    height: 24px;
+    width: 24px;
+}
+
+.delete-btn:hover .delete-btn-icon {
+    background-image: url("/assets/icons/board/board-delete-icon-hover.svg");
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    color: #29ABE2;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
 
 .board-overlay-card.open {
     transform: translateX(0);
