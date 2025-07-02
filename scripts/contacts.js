@@ -168,22 +168,40 @@ function updateLocalContact(original, updated) {
  */
 async function saveEditContact(event, contactKey) {
   event.preventDefault();
-  const { name, email, phone } = getTrimmedContactInput();
-  if (!isValidContactInput(name, email, phone, "edit_contact_phone", "edit-phone-error", "edit_contact_email", "edit-email-error")) return;
 
-  const originalContact = contacts.find((c) => c.firebaseKey === contactKey);
+  const { name, email, phone } = getTrimmedContactInput();
+  if (
+    !isValidContactInput(
+      name,
+      email,
+      phone,
+      "edit_contact_phone",
+      "edit-phone-error",
+      "edit_contact_email",
+      "edit-email-error"
+    )
+  ) return;
+
+  const originalContact = contacts.find(c => c.firebaseKey === contactKey);
   const updatedContact = buildUpdatedContact(name, email, phone, originalContact);
 
   try {
     await updateContactInFirebase(contactKey, updatedContact);
-    updateLocalContact(originalContact, updatedContact);
-    renderContacts();
-    const initials = getInitials(updatedContact.name);
-    showContactInfo({ ...updatedContact, firebaseKey: contactKey }, initials);
+
+    await loadContacts();
+
+    const refreshedContact = contacts.find(c => c.firebaseKey === contactKey);
+    const initials = getInitials(refreshedContact.name);
+
+    if (window.innerWidth <= 800) {
+      toggleContactInfoOverlay(refreshedContact, initials);
+    } else {
+      showContactInfo(refreshedContact, initials);
+    }
+
   } catch (error) {
     console.error("Failed to save contact:", error);
   }
-  toggleOff();
   toggleOffMobile();
 }
 

@@ -260,7 +260,7 @@ function getEditDeleteMenuTemplate(contact) {
               <span>Edit</span>
             </button>
 
-            <button class="edit-delete-sub-section" onclick='deleteContact("${contact.firebaseKey}")'>
+            <button class="edit-delete-sub-section" onclick="deleteContact('${contact.firebaseKey}')">
               <img class="icon-default" src="./assets/icons/contacts/delete.svg" />
               <img class="icon-hover" src="./assets/icons/contacts/delete-blue.svg" />
               <span>Delete</span>
