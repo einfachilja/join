@@ -48,14 +48,14 @@ function selectPriority(prio) {
 
 // ==== INIT ====
 /**
- * Initializes the Add Task page by setting up DOM defaults, event listeners, and fetching contacts.
+ * Initializes the Add Task page by setting up DOM defaults, classic DOM event bindings, and fetching contacts.
  */
 function initAddTaskPage() {
   setupDOMDefaults();
   setupDueDatePicker();
   setDefaultPriority();
   fetchContacts();
-  setupEventListeners();
+  setupInteractions();
   initializeUIStates();
 }
 
@@ -67,6 +67,14 @@ function initializeUIStates() {
   setupDateValidation();
   enableSubmitButton();
   setupAssignedInputFocus();
+  const submitBtn = document.getElementById("submit-task-btn");
+  if (submitBtn) {
+    submitBtn.onclick = function (e) {
+      e.preventDefault();
+      const isValid = validateForm(true);
+      if (isValid) createTask();
+    };
+  }
 }
 
 /**
@@ -88,7 +96,6 @@ function setupDueDatePicker() {
   if (dueDateInput) {
     dueDateInput.placeholder = "dd/mm/yyyy";
     dueDateInput.type = "text";
-    dueDateInput.addEventListener("focus", () => showDatePicker(dueDateInput));
   }
 }
 
@@ -126,13 +133,14 @@ function setupAssignedInputFocus() {
   const assignedInput = document.getElementById("assigned-to-input");
   const dropdownToggle = document.getElementById("dropdown-toggle");
   if (assignedInput && dropdownToggle) {
-    assignedInput.addEventListener("click", () =>
-      dropdownToggle.classList.add("focused")
-    );
-    document.addEventListener("click", (e) => {
-      if (!dropdownToggle.contains(e.target))
+    assignedInput.onclick = function () {
+      dropdownToggle.classList.add("focused");
+    };
+    document.onclick = function (e) {
+      if (!dropdownToggle.contains(e.target)) {
         dropdownToggle.classList.remove("focused");
-    });
+      }
+    };
   }
 }
 
@@ -160,10 +168,10 @@ function setupDateValidation() {
     const errorText = document.getElementById("error-dueDate");
     if (!dateInput || !errorText) return;
     dateInput.min = new Date().toISOString().split("T")[0];
-    dateInput.addEventListener("input", () => {
+    dateInput.oninput = function () {
       dateInput.classList.remove("error-border");
       errorText.classList.remove("visible");
-    });
+    };
   }, 100);
 }
 /**
@@ -175,7 +183,6 @@ function hideDateError(input, error) {
   input.style.border = "";
   error.classList.remove("visible");
 }
-document.addEventListener("DOMContentLoaded", initAddTaskPage);
 
 // ==== FETCH CONTACTS ====
 /**
@@ -197,52 +204,71 @@ async function fetchContacts() {
   } catch (err) {}
 }
 
-// ==== EVENTS ====
+// ==== INTERACTIONS ====
 /**
- * Sets up all essential event listeners for dropdowns, subtasks, and outside clicks.
+ * Sets up all interactive behavior for dropdowns, subtasks, and outside clicks.
  */
-function setupEventListeners() {
+function setupInteractions() {
   setupDropdownEvents();
   setupSubtaskEvents();
   setupOutsideClickEvents();
+
+  // Enable submit button only if all required fields are filled
+  const titleInput = document.getElementById("title");
+  const dueDateInput = document.getElementById("dueDate");
+  const categoryToggle = document.getElementById("category-toggle");
+
+  if (titleInput) titleInput.oninput = updateSubmitState;
+  if (dueDateInput) dueDateInput.oninput = updateSubmitState;
+
+  if (categoryToggle) {
+    categoryToggle.onclick = function (e) {
+      toggleCategoryDropdown(e);
+      updateSubmitState();
+    };
+  }
 }
 
 /**
- * Sets up event listeners for assignment and category dropdown toggles.
+ * Sets up interactive behavior for assignment and category dropdown toggles.
  */
 function setupDropdownEvents() {
   const dropdownToggle = document.getElementById("dropdown-toggle");
   const categoryToggle = document.getElementById("category-toggle");
   const dropdownContent = document.getElementById("dropdown-content");
-  dropdownToggle?.addEventListener("click", toggleAssignDropdown);
-  categoryToggle?.addEventListener("click", toggleCategoryDropdown);
-  dropdownContent?.addEventListener("click", (e) => e.stopPropagation());
+  if (dropdownToggle) dropdownToggle.onclick = toggleAssignDropdown;
+  if (categoryToggle) categoryToggle.onclick = toggleCategoryDropdown;
+  if (dropdownContent) {
+    dropdownContent.onclick = function (e) {
+      e.stopPropagation();
+    };
+  }
 }
 
 /**
- * Sets up event listeners for subtask input and icons.
+ * Sets up interactive behavior for subtask input and icons.
  */
 function setupSubtaskEvents() {
   const subtaskInput = document.getElementById("subtask-input");
   if (subtaskInput) {
-    subtaskInput.addEventListener("input", () => {
+    subtaskInput.oninput = function () {
       toggleSubtaskIcons();
       const iconWrapper = document.getElementById("subtask-icons");
       iconWrapper?.classList.toggle(
         "hidden",
         subtaskInput.value.trim().length === 0
       );
-    });
-    subtaskInput.addEventListener("focus", toggleSubtaskIcons);
-    subtaskInput.addEventListener("keydown", handleSubtaskEnter);
+    };
+    subtaskInput.onfocus = toggleSubtaskIcons;
+    subtaskInput.onkeydown = handleSubtaskEnter;
   }
 }
 
 /**
- * Sets up event listeners to close dropdowns when clicking outside.
+ * Sets up interactive behavior to close dropdowns when clicking outside.
  */
 function setupOutsideClickEvents() {
-  document.addEventListener("click", (e) => {
+  document.onclick = function (e) {
     if (!document.getElementById("category-wrapper").contains(e.target)) {
       document.getElementById("category-toggle")?.classList.remove("open");
       document.getElementById("category-content")?.classList.remove("visible");
@@ -250,7 +276,7 @@ function setupOutsideClickEvents() {
     if (!document.getElementById("dropdown-wrapper").contains(e.target)) {
       closeDropdown();
     }
-  });
+  };
 }
 // ==== SUBTASK ICONS TOGGLE ====
 /**
@@ -348,7 +374,7 @@ function getContactInitials(name) {
  */
 function setupContactCheckbox(item, contact, filter) {
   const checkbox = item.querySelector("input[type='checkbox']");
-  checkbox.addEventListener("click", (event) => {
+  checkbox.onclick = function (event) {
     event.stopPropagation();
     const idx = selectedContacts.findIndex((s) => s.name === contact.name);
     if (checkbox.checked && idx === -1) selectedContacts.push(contact);
@@ -359,7 +385,7 @@ function setupContactCheckbox(item, contact, filter) {
     updateSelectedContactsUI();
     renderAssignOptions(filter);
     updateSubmitState();
-  });
+  };
 }
 /**
  * Sets up the click event for a contact item to toggle its checkbox.
@@ -367,12 +393,12 @@ function setupContactCheckbox(item, contact, filter) {
  */
 function setupContactItemClick(item) {
   const checkbox = item.querySelector("input[type='checkbox']");
-  item.addEventListener("click", (event) => {
+  item.onclick = function (event) {
     if (event.target.tagName.toLowerCase() === "input") return;
     event.stopPropagation();
     checkbox.checked = !checkbox.checked;
     checkbox.dispatchEvent(new Event("click", { bubbles: true }));
-  });
+  };
 }
 /**
  * Updates the UI to show selected contacts as icons.
@@ -435,8 +461,20 @@ function createSubtaskListItem(text) {
   iconWrapper.className = "subtask-icons";
   li.appendChild(label);
   li.appendChild(iconWrapper);
-  li.addEventListener("dblclick", () => enterEditMode(li));
+  setupSubtaskHover(li);
   return li;
+}
+
+function setupSubtaskHover(li) {
+  li.onmouseenter = function () {
+    if (li.classList.contains("editing")) return;
+    li.editTimeout = setTimeout(() => {
+      if (!li.classList.contains("editing")) enterEditMode(li);
+    }, 600);
+  };
+  li.onmouseleave = function () {
+    clearTimeout(li.editTimeout);
+  };
 }
 /**
  * Finalizes subtask input by resetting input and icons.
@@ -456,6 +494,7 @@ function finalizeSubtaskInput(input, subtaskIcons) {
 function enterEditMode(subtaskElement) {
   const currentText = getSubtaskCurrentText(subtaskElement);
   if (!currentText) return;
+  subtaskElement.classList.add("editing");
   subtaskElement.innerHTML = "";
   const input = createSubtaskEditInput(currentText);
   const cancelBtn = createSubtaskCancelBtn(currentText, subtaskElement);
@@ -485,6 +524,7 @@ function createSubtaskEditInput(currentText) {
   input.type = "text";
   input.value = currentText;
   input.classList.add("subtask-edit-input");
+  input.setAttribute("autocomplete", "off");
   return input;
 }
 /**
@@ -499,7 +539,7 @@ function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
   confirmBtn.src = "./assets/icons/add-task/add-task-check.svg";
   confirmBtn.alt = "Confirm";
   confirmBtn.className = "subtask-edit-confirm";
-  confirmBtn.addEventListener("click", () => {
+  confirmBtn.onclick = function () {
     const newValue = input.value.trim();
     if (newValue) {
       const index = subtask.findIndex((s) => s.title === currentText);
@@ -508,7 +548,8 @@ function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
         updateSubtaskLabel(subtaskElement, newValue);
       }
     }
-  });
+    subtaskElement.classList.remove("editing");
+  };
   return confirmBtn;
 }
 /**
@@ -522,12 +563,13 @@ function createSubtaskCancelBtn(currentText, subtaskElement) {
   cancelBtn.src = "./assets/icons/closeXSymbol.svg";
   cancelBtn.alt = "Delete";
   cancelBtn.className = "subtask-edit-cancel";
-  cancelBtn.addEventListener("click", () => {
+  cancelBtn.onclick = function () {
     const index = subtask.findIndex((s) => s.title === currentText);
     if (index > -1) subtask.splice(index, 1);
     subtaskElement.remove();
     updateSubmitState();
-  });
+    subtaskElement.classList.remove("editing");
+  };
   return cancelBtn;
 }
 /**
@@ -537,13 +579,11 @@ function createSubtaskCancelBtn(currentText, subtaskElement) {
  */
 function updateSubtaskLabel(subtaskElement, newValue) {
   subtaskElement.innerHTML = "";
+  subtaskElement.classList.remove("editing");
   const label = document.createElement("span");
   label.textContent = newValue;
   label.className = "subtask-label";
   subtaskElement.appendChild(label);
-  subtaskElement.addEventListener("dblclick", () =>
-    enterEditMode(subtaskElement)
-  );
 }
 /**
  * Assembles the UI for subtask edit mode.
@@ -555,16 +595,26 @@ function updateSubtaskLabel(subtaskElement, newValue) {
 function assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn) {
   const wrapper = document.createElement("div");
   wrapper.classList.add("subtask-edit-container");
+  const inputWrapper = wrapSubtaskInput(input);
+  const buttonContainer = createSubtaskButtonGroup(cancelBtn, confirmBtn);
+  wrapper.appendChild(inputWrapper);
+  wrapper.appendChild(buttonContainer);
+  subtaskElement.appendChild(wrapper);
+}
+
+function wrapSubtaskInput(input) {
   const inputWrapper = document.createElement("div");
   inputWrapper.classList.add("subtask-input-edit-wrapper");
   inputWrapper.appendChild(input);
+  return inputWrapper;
+}
+
+function createSubtaskButtonGroup(cancelBtn, confirmBtn) {
   const buttonContainer = document.createElement("div");
   buttonContainer.classList.add("subtask-edit-buttons");
   buttonContainer.appendChild(cancelBtn);
   buttonContainer.appendChild(confirmBtn);
-  wrapper.appendChild(inputWrapper);
-  wrapper.appendChild(buttonContainer);
-  subtaskElement.appendChild(wrapper);
+  return buttonContainer;
 }
 
 // ==== VALIDATION ====
@@ -592,51 +642,87 @@ function validateTitle() {
 /**
  * Updates the submit button state (always enables it here).
  */
+/**
+ * Updates the submit button state based on form validation.
+ * Disables the button only if required fields are not filled.
+ */
 function updateSubmitState() {
   const button = document.getElementById("submit-task-btn");
-  if (button) button.disabled = false;
+  if (button) {
+    const isValid = validateForm(false);
+    if (!isValid) {
+      button.classList.add("disabled-warning");
+    } else {
+      button.classList.remove("disabled-warning");
+    }
+  }
 }
 /**
  * Validates the form fields for title, due date, and category.
+ * @param {boolean} [showErrors=true] - Whether to show error messages and styles.
  * @returns {boolean} True if all fields are valid, false otherwise.
  */
-function validateForm() {
+function validateForm(showErrors = true) {
   const titleEl = document.getElementById("title");
   const dueDateEl = document.getElementById("dueDate");
   const categoryToggle = document.getElementById("category-toggle");
   const titleError = document.getElementById("error-title");
   const dueDateError = document.getElementById("error-dueDate");
   const categoryError = document.getElementById("error-category");
+
   const title = titleEl.value.trim();
   const dueDate = dueDateEl.value.trim();
   const category = selectedCategory;
+
   const titleValid = title !== "";
   const dueDateValid = dueDate !== "";
   const categoryValid = category !== "";
-  titleEl.classList.toggle("error", !titleValid);
-  if (titleError) titleError.classList.toggle("visible", !titleValid);
-  dueDateEl.classList.toggle("error-border", !dueDateValid);
-  if (dueDateError) dueDateError.classList.toggle("visible", !dueDateValid);
-  categoryToggle.classList.toggle("error-border", !categoryValid);
-  if (categoryError) categoryError.classList.toggle("visible", !categoryValid);
+
+  if (showErrors) {
+    showValidationErrors(titleEl, titleError, titleValid);
+    showValidationErrors(dueDateEl, dueDateError, dueDateValid, true);
+    showValidationErrors(categoryToggle, categoryError, categoryValid, true);
+  } else {
+    hideValidationErrors(titleEl, titleError, titleValid);
+    hideValidationErrors(dueDateEl, dueDateError, dueDateValid, true);
+    hideValidationErrors(categoryToggle, categoryError, categoryValid, true);
+  }
+
   return titleValid && dueDateValid && categoryValid;
+}
+
+function showValidationErrors(el, errorEl, isValid, border = false) {
+  el.classList.toggle(border ? "error-border" : "error", !isValid);
+  errorEl?.classList.toggle("visible", !isValid);
+}
+
+function hideValidationErrors(el, errorEl, isValid, border = false) {
+  if (isValid) {
+    el.classList.remove(border ? "error-border" : "error");
+    errorEl?.classList.remove("visible");
+  }
 }
 
 /**
  * Resets the add task form and related UI components.
  */
-function resetForm() {
+function clearFormInputs() {
   document.getElementById("title").value = "";
   document.getElementById("description").value = "";
   document.getElementById("dueDate").value = "";
-  selectedPriority = "medium";
-  selectPriority("medium");
-  selectedContacts = [];
-  updateSelectedContactsUI();
-  selectedCategory = "";
-  const categoryPlaceholder = document.querySelector("#category-toggle span");
-  if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
-  subtask.length = 0;
+}
+
+function clearErrorUI() {
+  document.getElementById("title").classList.remove("error");
+  document.getElementById("dueDate").classList.remove("error-border");
+  document.getElementById("category-toggle").classList.remove("error-border");
+
+  document.getElementById("error-title")?.classList.remove("visible");
+  document.getElementById("error-dueDate")?.classList.remove("visible");
+  document.getElementById("error-category")?.classList.remove("visible");
+}
+
+function resetSubtaskUI() {
   const subtaskList = document.getElementById("subtask-list");
   if (subtaskList) subtaskList.innerHTML = "";
   const subtaskInput = document.getElementById("subtask-input");
@@ -647,18 +733,53 @@ function resetForm() {
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
+function resetSubmitButton() {
+  const submitButton = document.getElementById("submit-task-btn");
+  if (submitButton) {
+    submitButton.classList.remove("active", "hover", "disabled-warning");
+    submitButton.classList.add("disabled-warning");
+    submitButton.onclick = function (e) {
+      e.preventDefault();
+      validateForm(true);
+    };
+  }
+}
+
+function clearEditTimeouts() {
+  const subtaskItems = document.querySelectorAll(".subtask-list-item");
+  subtaskItems.forEach((item) => {
+    clearTimeout(item.editTimeout);
+    item.classList.remove("editing");
+  });
+}
+
+function resetForm() {
+  clearFormInputs();
+  selectedPriority = "medium";
+  selectPriority("medium");
+  selectedContacts = [];
+  updateSelectedContactsUI();
+  selectedCategory = "";
+  const categoryPlaceholder = document.querySelector("#category-toggle span");
+  if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
+  subtask.length = 0;
+  resetSubtaskUI();
+  clearErrorUI();
+  updateSubmitState();
+  resetSubmitButton();
+  clearEditTimeouts();
+}
+
 // ==== CREATE TASK ====
 /**
  * Creates a new task, saves it to Firebase, and updates the UI.
  * @returns {Promise<void>}
  */
-async function createTask() {
-  if (!validateForm()) return;
-  const dueDateValue = document.getElementById("dueDate").value;
-  const task = {
+function createTaskObject() {
+  return {
     title: document.getElementById("title").value.trim(),
     description: document.getElementById("description").value.trim(),
-    dueDate: dueDateValue,
+    dueDate: document.getElementById("dueDate").value,
     priority: selectedPriority,
     assignedTo: selectedContacts.map((c) => c.name),
     category: selectedCategory,
@@ -666,6 +787,11 @@ async function createTask() {
     createdAt: new Date().toISOString(),
     status: "todo",
   };
+}
+
+async function createTask() {
+  if (!validateForm(true)) return;
+  const task = createTaskObject();
   await fetch(
     `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`,
     {
@@ -690,7 +816,11 @@ function showTaskAddedPopup() {
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 2500);
 }
-// Save task to board list
+/**
+ * Saves a task object to the Firebase boardTasks list.
+ * @param {Object} task - The task object to save.
+ * @returns {Promise<void>}
+ */
 async function saveTaskToFirebaseBoard(task) {
   try {
     await fetch(
@@ -795,47 +925,46 @@ function clearSubtaskInput() {
 function showDatePicker(input) {
   input.type = "date";
   input.focus();
-  input.addEventListener(
-    "change",
-    () => {
-      const [year, month, day] = input.value?.split("-") ?? [];
-      if (
-        !day ||
-        !month ||
-        !year ||
-        isNaN(+day) ||
-        isNaN(+month) ||
-        isNaN(+year)
-      ) {
-        input.type = "text";
-        input.placeholder = "dd/mm/yyyy";
-        input.value = "";
-        return;
-      }
-      const formatted = `${day.padStart(2, "0")}/${month.padStart(
-        2,
-        "0"
-      )}/${year}`;
-      setTimeout(() => {
-        input.type = "text";
-        input.value = formatted;
-      }, 0);
-    },
-    { once: true }
-  );
-  input.addEventListener(
-    "blur",
-    () => {
-      if (!input.value) {
-        input.type = "text";
-        input.placeholder = "dd/mm/yyyy";
-      }
-    },
-    { once: true }
-  );
+  // Bind date formatting on input change
+  input.onchange = function () {
+    const [year, month, day] = input.value?.split("-") ?? [];
+    if (
+      !day ||
+      !month ||
+      !year ||
+      isNaN(+day) ||
+      isNaN(+month) ||
+      isNaN(+year)
+    ) {
+      input.type = "text";
+      input.placeholder = "dd/mm/yyyy";
+      input.value = "";
+      return;
+    }
+    const formatted = `${day.padStart(2, "0")}/${month.padStart(
+      2,
+      "0"
+    )}/${year}`;
+    setTimeout(() => {
+      input.type = "text";
+      input.value = formatted;
+    }, 0);
+  };
+  // Restore placeholder if input is empty on blur
+  input.onblur = function () {
+    if (!input.value) {
+      input.type = "text";
+      input.placeholder = "dd/mm/yyyy";
+    }
+  };
 }
 
 // ==== SAVE UPDATED SUBTASKS ====
+/**
+ * Saves updated subtasks for a given task to Firebase.
+ * @param {string} taskKey - The Firebase key of the task to update.
+ * @returns {Promise<void>}
+ */
 async function saveUpdatedSubtasks(taskKey) {
   const task = arrayTasks.find((t) => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;

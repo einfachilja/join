@@ -35,7 +35,7 @@
 .card-top {
     background-color: #ffffff;
     border-radius: 30px;
-    height: 160px;
+   
     flex: 1;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -92,7 +92,6 @@
 .card-center {
     background-color: #ffffff;
     border-radius: 30px;
-    height: 160px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     display: flex;
@@ -148,8 +147,6 @@
 .card-bottom {
     background-color: #ffffff;
     border-radius: 30px;
-    height: 160px;
-    width: 160px;
     flex: 1;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;

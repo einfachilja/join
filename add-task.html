@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./style.css" />
     <!-- help styles -->
     <link rel="stylesheet" href="./styles/add-task.css" />
+    <link rel="stylesheet" href="./styles/media-add-task.css" />
     <link rel="stylesheet" href="./styles/fonts.css" />
     <link
       rel="shortcut icon"
@@ -15,7 +16,7 @@
     />
   </head>
 
-  <body onload="setUserInitials()" onclick="closeDropdown()">
+  <body onload="setUserInitials(); initAddTaskPage()" onclick="closeDropdown()">
     <div class="body">
       <div class="desktop-menu">
         <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
@@ -112,8 +113,8 @@
                 -->
                 <div class="form-section-left">
                   <!-- 
-                    @section Title Label and Input
-                    @description Input field for the task title with validation
+                    @section Title Input
+                    @description Input field for task title with validation
                   -->
                   <label for="title"
                     >Title <span class="red_star">*</span></label
@@ -122,14 +123,14 @@
                     id="title"
                     type="text"
                     placeholder="Enter a title"
-                    onkeyup="updateSubmitState()"
+                    oninput="updateSubmitState()"
                   />
                   <div class="error-message" id="error-title">
                     This field is required
                   </div>
 
                   <!-- 
-                    @section Description Label and Textarea
+                    @section Description Input
                     @description Textarea for task description
                   -->
                   <label for="description">Description</label>
@@ -139,8 +140,8 @@
                   ></textarea>
 
                   <!-- 
-                    @section Due Date Label and Input
-                    @description Input for due date with date picker and validation
+                    @section Due Date Input
+                    @description Input field for due date with date picker and validation
                   -->
                   <label for="dueDate"
                     >Due Date <span class="red_star">*</span></label
@@ -176,7 +177,7 @@
                 -->
                 <div class="form-section-right">
                   <!-- 
-                    @section Priority Label and Buttons
+                    @section Priority Selection
                     @description Buttons to select task priority with validation
                   -->
                   <label>Priority</label>
@@ -221,7 +222,7 @@
                   </div>
 
                   <!-- 
-                    @section Assigned To Label and Dropdown
+                    @section Assigned To Selection
                     @description Dropdown to select contacts assigned to the task with validation
                   -->
                   <label>Assigned to</label>
@@ -244,7 +245,7 @@
                   </div>
 
                   <!-- 
-                    @section Category Label and Dropdown
+                    @section Category Selection
                     @description Dropdown to select task category with validation
                   -->
                   <label>Category <span class="red_star">*</span></label>
@@ -263,8 +264,8 @@
                   </div>
 
                   <!-- 
-                    @section Subtasks Label and Input Container
-                    @description Input and list container for adding subtasks
+                    @section Subtasks Input
+                    @description Input field and list container for adding subtasks
                   -->
                   <label>Subtasks</label>
                   <div class="subtask-input-container">
@@ -274,14 +275,10 @@
                     -->
                     <div class="subtasks-container">
                       <!-- 
-                        @section Subtask Input Wrapper
-                        @description Wrapper for subtask input field and control icons
+                        @section Subtask Input Area
+                        @description Input field for adding new subtasks
                       -->
                       <div class="subtask-input-wrapper">
-                        <!-- 
-                          @section Subtask Input Field
-                          @description Input for entering new subtasks with event handlers
-                        -->
                         <div class="subtask-input-field">
                           <input
                             id="subtask-input"
@@ -292,8 +289,8 @@
                             onkeydown="handleSubtaskEnter(event)"
                           />
                           <!-- 
-                            @section Subtask Icons
-                            @description Icons for canceling or confirming subtask input
+                            @section Subtask Controls
+                            @description Icons to cancel or confirm subtask input
                           -->
                           <div id="subtask-icons" class="subtask-icons hidden">
                             <img
