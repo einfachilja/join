@@ -48,7 +48,7 @@ function selectPriority(prio) {
 
 // ==== INIT ====
 /**
- * Initializes the Add Task page by setting up DOM defaults, event listeners, and fetching contacts.
+ * Initializes the Add Task page by setting up DOM defaults, classic DOM event bindings, and fetching contacts.
  */
 function initAddTaskPage() {
   setupDOMDefaults();
@@ -199,7 +199,7 @@ async function fetchContacts() {
 
 // ==== EVENTS ====
 /**
- * Sets up all essential event listeners for dropdowns, subtasks, and outside clicks.
+ * Sets up all essential classic DOM event bindings for dropdowns, subtasks, and outside clicks.
  */
 function setupEventListeners() {
   setupDropdownEvents();
@@ -208,7 +208,7 @@ function setupEventListeners() {
 }
 
 /**
- * Sets up event listeners for assignment and category dropdown toggles.
+ * Sets up classic DOM event bindings for assignment and category dropdown toggles.
  */
 function setupDropdownEvents() {
   const dropdownToggle = document.getElementById("dropdown-toggle");
@@ -224,7 +224,7 @@ function setupDropdownEvents() {
 }
 
 /**
- * Sets up event listeners for subtask input and icons.
+ * Sets up classic DOM event bindings for subtask input and icons.
  */
 function setupSubtaskEvents() {
   const subtaskInput = document.getElementById("subtask-input");
@@ -243,7 +243,7 @@ function setupSubtaskEvents() {
 }
 
 /**
- * Sets up event listeners to close dropdowns when clicking outside.
+ * Sets up classic DOM event bindings to close dropdowns when clicking outside.
  */
 function setupOutsideClickEvents() {
   document.onclick = function (e) {
