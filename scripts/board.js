@@ -1198,7 +1198,7 @@ function getAddTaskOverlay() {
                             <div class="divider"></div>
                             <img
                               id="subtask-confirm"
-                              src="./assets/icons/add-task/add-task-check.svg"
+                              src="./assets/icons/add-task/add-task-checked.svg"
                               alt="Confirm"
                               onclick="addSubtask()"
                             />
