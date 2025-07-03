@@ -1,10 +1,14 @@
 const BASE_URL =
   "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
 
-// Neue Funktion zum Laden der Kontakte und Speichern im localStorage
-async function fetchContactsAndStore(userKey) {
-  const url = `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${userKey}/contacts.json`;
+let arrayTasks = [];
+let addTaskDefaultStatus = "todo";
+let firebaseKey = localStorage.getItem("firebaseKey");
+let lastCreatedTaskKey = null;
 
+/* ========== FETCH CONTACTS AND STORE IN LOCALSTORAGE ========== */
+async function fetchContactsAndStore(userKey) {
+  const url = `${BASE_URL}${userKey}/contacts.json`;
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -19,11 +23,6 @@ async function fetchContactsAndStore(userKey) {
     console.error("Fehler beim Abrufen der Kontakte:", error);
   }
 }
-
-let arrayTasks = [];
-let addTaskDefaultStatus = "todo";
-let firebaseKey = localStorage.getItem("firebaseKey");
-let lastCreatedTaskKey = null;
 
 /* ========== LOAD TASKS FROM FIREBASE ========== */
 async function loadTasks() {
@@ -111,12 +110,14 @@ async function moveTo(status) {
 
 let currentDraggedElement;
 
+/* ========== START DRAGGING TASK ========== */
 function startDragging(firebaseKey) {
   currentDraggedElement = firebaseKey;
   const taskElement = document.getElementById(firebaseKey);
   taskElement.classList.add("dragging");
 }
 
+/* ========== STOP DRAGGING TASK ========== */
 function stopDragging(firebaseKey) {
   const taskElement = document.getElementById(firebaseKey);
   if (taskElement) {
@@ -124,18 +125,20 @@ function stopDragging(firebaseKey) {
   }
 }
 
-
+/* ========== GET CONTACT BY NAME HELPER ========== */
 function getContactByName(name) {
   let userKey = localStorage.getItem("firebaseKey");
   let userContacts = contacts || [];
   return userContacts.find(c => c.name === name) || null;
 }
 
+/* ========== GET INITIALS HELPER ========== */
 function getInitials(name) {
   if (!name || typeof name !== 'string') return '';
   return name.split(" ").map(n => n[0]).join("").toUpperCase();
 }
 
+/* ========== GENERATE TASK CARD HTML ========== */
 function generateTodoHTML(element) {
   // Fallback-Logik: Setze Defaults für fehlende Felder
   const category = typeof element.category === 'string' ? element.category : '';
@@ -203,7 +206,7 @@ function generateTodoHTML(element) {
                 <div class="card-footer">
                   <div class="assigned-container">
                     ${Array.isArray(assignedList)
-    ? assignedList
+      ? assignedList
         .map(name => {
           const contact = getContactByName(name);
           if (!contact) return ''; // Kontakt wurde gelöscht
@@ -211,7 +214,7 @@ function generateTodoHTML(element) {
           return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
         })
         .join("")
-    : ""}
+      : ""}
                   </div>
                   <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
                 </div>
@@ -219,6 +222,7 @@ function generateTodoHTML(element) {
     </div>`;
 }
 
+/* ========== DRAG & DROP HELPERS ========== */
 function allowDrop(ev) {
   ev.preventDefault();
   const target = ev.currentTarget;
@@ -297,7 +301,7 @@ function updateHTML() {
   });
 }
 
-/* ========== OPEN AND CLOSE OVERLAY ========== */
+/* ========== OPEN BOARD CARD OVERLAY ========== */
 function openBoardCard(firebaseKey) {
   let boardOverlayRef = document.getElementById("board_overlay");
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
@@ -320,6 +324,7 @@ function openBoardCard(firebaseKey) {
   updateHTML();
 }
 
+/* ========== GENERATE BOARD CARD OVERLAY HTML ========== */
 function getOpenBoardCardTemplate(categoryClass, task) {
   let priorityIcon = "";
   if (task.priority && task.priority.toLowerCase() === "low") {
@@ -343,17 +348,17 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       <div class="assigned-list">
         <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
         ${Array.isArray(task.assignedTo)
-          ? task.assignedTo.map(name => {
-              const contact = getContactByName(name);
-              if (!contact) return ''; // Nicht existierende Kontakte überspringen
-              const color = contact.color || "#ccc";
-              return `
+      ? task.assignedTo.map(name => {
+        const contact = getContactByName(name);
+        if (!contact) return ''; // Nicht existierende Kontakte überspringen
+        const color = contact.color || "#ccc";
+        return `
                 <div class="assigned-entry">
                   <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
                   <span class="assigned-name">${name}</span>
                 </div>`;
-            }).join("")
-          : ""}
+      }).join("")
+      : ""}
       </div>
       <div class="subtask-list">
         <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
@@ -382,7 +387,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
     </div>`;
 }
 
-// Generate HTML for priority buttons in edit mode
+/* ========== GENERATE PRIORITY BUTTONS HTML (OVERLAY EDIT MODE) ========== */
 function getPriorityButtonsHTML(currentPriority) {
   const priorities = [
     { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
@@ -400,7 +405,7 @@ function getPriorityButtonsHTML(currentPriority) {
   `).join('');
 }
 
-// Handle priority button selection in overlay edit mode
+/* ========== SELECT PRIORITY IN BOARD CARD OVERLAY EDIT MODE ========== */
 function selectOverlayPriority(priority, btn) {
   document.querySelectorAll('.priority-edit-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -408,7 +413,7 @@ function selectOverlayPriority(priority, btn) {
 }
 
 
-// ========== TOGGLE SUBTASK COMPLETION & UPDATE FIREBASE ==========
+/* ========== TOGGLE SUBTASK COMPLETION & UPDATE FIREBASE ========== */
 async function toggleSubtask(taskKey, index) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
@@ -455,6 +460,7 @@ async function toggleSubtask(taskKey, index) {
   }
 }
 
+/* ========== CLOSE BOARD CARD OVERLAY ========== */
 function closeBoardCard() {
   if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
   const card = document.querySelector('.board-overlay-card');
@@ -481,11 +487,12 @@ function closeBoardCard() {
   }
 }
 
+/* ========== OVERLAY CLICK PROTECTION ========== */
 function onclickProtection(event) {
   event.stopPropagation();
 }
 
-
+/* ========== EDIT TASK IN OVERLAY ========== */
 function editTask() {
   document.getElementById("ok_btn").classList.remove("d-none");
   document.getElementById("delete_btn").classList.add("d-none");
@@ -493,7 +500,6 @@ function editTask() {
   document.getElementById("seperator").classList.add("d-none");
   document.getElementById("overlay_card_category").classList.add("d-none");
   document.getElementById("board_overlay_card").classList.add("board-overlay-card-edit");
-
   document.getElementById("overlay_card_title").contentEditable = "true";
   document.getElementById("overlay_card_description").contentEditable = "true";
 
@@ -887,6 +893,7 @@ function editTask() {
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
+/* ========== SAVE EDITED TASK IN FIREBASE ========== */
 async function saveEditTask(taskKey) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task) {
@@ -971,7 +978,7 @@ async function saveEditTask(taskKey) {
   }
 }
 
-/* ========== SEARCH FUNCTION ========== */
+/* ========== SEARCH TASKS FUNCTION ========== */
 function searchTask() {
   let inputFindTaskRef = document.getElementById("input_find_task");
   let inputValue = inputFindTaskRef.value.trim().toLowerCase();
@@ -1003,11 +1010,13 @@ function searchTask() {
   }
 }
 
+/* ========== OPEN ADD TASK OVERLAY FOR STATUS ========== */
 function openAddTaskForStatus(status) {
   addTaskDefaultStatus = status;
   openAddTaskOverlay();
 }
 
+/* ========== OPEN ADD TASK OVERLAY ========== */
 function openAddTaskOverlay() {
   let addTaskOverlayRef = document.getElementById("add_task_overlay");
   document.getElementById("add_task_overlay").classList.remove("d-none");
@@ -1029,6 +1038,7 @@ function openAddTaskOverlay() {
   initAddTaskOverlayLogic();
 }
 
+/* ========== CLOSE ADD TASK OVERLAY ========== */
 function closeAddTaskOverlay() {
   const modal = document.querySelector('.board-add-task-modal');
   if (modal) {
@@ -1053,6 +1063,7 @@ function closeAddTaskOverlay() {
   document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);
 }
 
+/* ========== HANDLE CLICK OUTSIDE ADD TASK OVERLAY ========== */
 function handleAddTaskOverlayClickOutside(event) {
   const modal = document.querySelector('.board-add-task-modal');
   if (!modal) return;
@@ -1061,6 +1072,7 @@ function handleAddTaskOverlayClickOutside(event) {
   }
 }
 
+/* ========== GENERATE ADD TASK OVERLAY HTML ========== */
 function getAddTaskOverlay() {
   return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
@@ -1237,6 +1249,7 @@ function getAddTaskOverlay() {
 }
 // ==== STATE & HELPERS (Add-Task-Funktionalität) ====
 // Diese Blöcke stammen aus add-task.js und sind für das Add-Task-Modal im Board nötig.
+/* ========== ADD TASK STATE ========== */
 let selectedPriority = "medium";
 const subtasks = [];
 let contacts = [];
@@ -1244,6 +1257,7 @@ let selectedContacts = [];
 let selectedCategory = "";
 
 // Globaler EventListener zum Schließen des Dropdowns bei Klick außerhalb
+/* ========== CLOSE DROPDOWNS ON OUTSIDE CLICK (ADD TASK) ========== */
 document.addEventListener("mousedown", function (event) {
   const dropdown = document.getElementById("dropdown-content");
   const toggle = document.getElementById("dropdown-toggle");
@@ -1268,7 +1282,7 @@ document.addEventListener("mousedown", function (event) {
   }
 });
 
-// Priority auswählen
+/* ========== SELECT PRIORITY (ADD TASK) ========== */
 function selectPriority(prio) {
   selectedPriority = prio;
   document.querySelectorAll("#buttons-prio button").forEach((b) => {
@@ -1277,7 +1291,7 @@ function selectPriority(prio) {
   updateSubmitState();
 }
 
-// Assigned Dropdown
+/* ========== ASSIGNED TO DROPDOWN HANDLERS (ADD TASK) ========== */
 function handleAssignedToClick(e) {
   e.stopPropagation();
   toggleAssignDropdown(e);
@@ -1380,7 +1394,7 @@ function closeDropdown() {
   document.getElementById("dropdown-toggle")?.classList.remove("open");
 }
 
-// Kategorie Dropdown
+/* ========== CATEGORY DROPDOWN HANDLERS (ADD TASK) ========== */
 function toggleCategoryDropdown(event) {
   event.stopPropagation();
   const toggle = document.getElementById("category-toggle");
@@ -1412,7 +1426,7 @@ function selectCategory(category) {
   if (placeholder) placeholder.textContent = category;
 }
 
-// Subtasks
+/* ========== SUBTASKS HANDLERS (ADD TASK) ========== */
 function addSubtask() {
   const input = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
@@ -1441,9 +1455,6 @@ function createSubtaskListItem(text) {
   iconWrapper.className = "subtask-icons";
   li.appendChild(label);
   li.appendChild(iconWrapper);
-  li.addEventListener("dblclick", () => {
-    enterEditMode(li);
-  });
   return li;
 }
 function finalizeSubtaskInput(input, subtaskIcons) {
@@ -1452,79 +1463,6 @@ function finalizeSubtaskInput(input, subtaskIcons) {
   subtaskIcons.classList.add("hidden");
   const subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
-}
-function enterEditMode(subtaskElement) {
-  const currentText = getSubtaskCurrentText(subtaskElement);
-  if (!currentText) return;
-  subtaskElement.innerHTML = "";
-  const input = createSubtaskEditInput(currentText);
-  const cancelBtn = createSubtaskCancelBtn(currentText, subtaskElement);
-  const confirmBtn = createSubtaskConfirmBtn(currentText, subtaskElement, input);
-  assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn);
-  input.focus();
-}
-function getSubtaskCurrentText(subtaskElement) {
-  return subtaskElement.querySelector(".subtask-label")?.textContent || "";
-}
-function createSubtaskEditInput(currentText) {
-  const input = document.createElement("input");
-  input.type = "text";
-  input.value = currentText;
-  input.classList.add("subtask-edit-input");
-  return input;
-}
-function createSubtaskCancelBtn(currentText, subtaskElement) {
-  const cancelBtn = document.createElement("img");
-  cancelBtn.src = "./assets/icons/closeXSymbol.svg";
-  cancelBtn.alt = "Delete";
-  cancelBtn.className = "subtask-edit-cancel";
-  cancelBtn.addEventListener("click", () => {
-    const index = subtasks.indexOf(currentText);
-    if (index > -1) {
-      subtasks.splice(index, 1);
-    }
-    subtaskElement.remove();
-    updateSubmitState();
-  });
-  return cancelBtn;
-}
-function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
-  const confirmBtn = document.createElement("img");
-  confirmBtn.src = "./assets/icons/checked.svg";
-  confirmBtn.alt = "Confirm";
-  confirmBtn.className = "subtask-edit-confirm";
-  confirmBtn.addEventListener("click", () => {
-    const newValue = input.value.trim();
-    if (newValue) {
-      subtasks[subtasks.indexOf(currentText)] = newValue;
-      updateSubtaskLabel(subtaskElement, newValue);
-    }
-  });
-  return confirmBtn;
-}
-function updateSubtaskLabel(subtaskElement, newValue) {
-  subtaskElement.innerHTML = "";
-  const label = document.createElement("span");
-  label.textContent = newValue;
-  label.className = "subtask-label";
-  subtaskElement.appendChild(label);
-  subtaskElement.addEventListener("dblclick", () => {
-    enterEditMode(subtaskElement);
-  });
-}
-function assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn) {
-  const wrapper = document.createElement("div");
-  wrapper.classList.add("subtask-edit-container");
-  const inputWrapper = document.createElement("div");
-  inputWrapper.classList.add("subtask-input-edit-wrapper");
-  inputWrapper.appendChild(input);
-  const buttonContainer = document.createElement("div");
-  buttonContainer.classList.add("subtask-edit-buttons");
-  buttonContainer.appendChild(cancelBtn);
-  buttonContainer.appendChild(confirmBtn);
-  wrapper.appendChild(inputWrapper);
-  wrapper.appendChild(buttonContainer);
-  subtaskElement.appendChild(wrapper);
 }
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
@@ -1555,6 +1493,7 @@ function clearSubtaskInput() {
 }
 
 // Kategorie-UI für Chip (optional)
+/* ========== UPDATE CATEGORY UI CHIP (OPTIONAL) ========== */
 function updateCategoryUI() {
   const box = document.getElementById("selected-category");
   if (!box) return;
@@ -1572,7 +1511,7 @@ function updateCategoryUI() {
   }
 }
 
-// Kontakte laden
+/* ========== FETCH CONTACTS FROM FIREBASE ========== */
 async function fetchContacts() {
   try {
     const res = await fetch(
@@ -1592,7 +1531,7 @@ async function fetchContacts() {
   }
 }
 
-// Form Validation & Reset
+/* ========== FORM VALIDATION & RESET (ADD TASK) ========== */
 function validateForm() {
   const titleEl = document.getElementById("title");
   const dueDateEl = document.getElementById("dueDate");
@@ -1640,7 +1579,7 @@ function resetForm() {
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
-// Date Validation
+/* ========== DATE VALIDATION (ADD TASK) ========== */
 function setupDateValidation() {
   setTimeout(() => {
     const dateInput = document.getElementById("dueDate");
@@ -1655,7 +1594,7 @@ function setupDateValidation() {
   }, 100);
 }
 
-// Task anlegen
+/* ========== CREATE TASK IN FIREBASE ========== */
 async function createTask() {
   if (!validateForm()) return;
   const dueDateValue = document.getElementById("dueDate").value;
@@ -1696,7 +1635,7 @@ async function createTask() {
   }, 100);
 }
 
-// Initialisiere alle Add-Task-Funktionen nach Modal-Render
+/* ========== INIT EVENT LISTENERS FOR ADD TASK OVERLAY ========== */
 function setupEventListeners() {
   document
     .getElementById("dropdown-toggle")
@@ -1724,14 +1663,14 @@ function setupEventListeners() {
   }
 }
 
-// Setup-Funktion nach Overlay-Render
+/* ========== INIT ADD TASK OVERLAY LOGIC ========== */
 function initAddTaskOverlayLogic() {
   fetchContacts();
   setupEventListeners();
   setupDateValidation();
   resetForm();
 }
-// ========== MOVE TASK MENU DROPDOWN ==========
+/* ========== OPEN MOVE TASK MENU DROPDOWN ========== */
 function openMoveTaskMenu(taskKey, event) {
   event.stopPropagation();
   // Remove any existing dropdowns
@@ -1838,6 +1777,7 @@ function openMoveTaskMenu(taskKey, event) {
   };
 }
 
+/* ========== CLOSE MOVE TASK MENU DROPDOWN ========== */
 function closeMoveTaskMenu() {
   if (window._moveTaskDropdown) {
     window._moveTaskDropdown.remove();
