@@ -9,7 +9,7 @@ function init() {
 const BASE_URL =
   "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
 
-let contacts = []; // stores all contacts
+let contacts = []; 
 let recentlyAddedContact = null;
 let firebaseKey = localStorage.getItem("firebaseKey");
 
@@ -371,18 +371,30 @@ function showContactInfo(contact, initials) {
  */
 async function deleteContact(contactKey) {
   try {
-    let response = await fetch(
+    const response = await fetch(
       `${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`,
       { method: "DELETE" }
     );
     if (!response.ok) throw new Error("Delete failed");
 
     contacts = contacts.filter((c) => c.firebaseKey !== contactKey);
+
     const contactInfoRef = document.getElementById("open_contact_Template");
     if (contactInfoRef) contactInfoRef.innerHTML = "";
 
+    const mobileOverlay = document.getElementById("user_contact_information_section_mobile");
+    if (mobileOverlay) {
+      mobileOverlay.remove(); 
+    }
+
+    const mobileMenu = document.getElementById("edit_delete_menu");
+    if (mobileMenu) {
+      mobileMenu.innerHTML = "";
+    }
+
     toggleOff();
     await loadContacts();
+
   } catch (error) {
     console.error("Error deleting contact:", error);
   }
