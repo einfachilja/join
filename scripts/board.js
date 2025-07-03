@@ -4,12 +4,25 @@ let arrayTasks = [];
 let addTaskDefaultStatus = "todo";
 let firebaseKey = localStorage.getItem("firebaseKey");
 let lastCreatedTaskKey = null;
+let currentDraggedElement;
 
-/* ========== FETCH CONTACTS AND STORE IN LOCALSTORAGE ========== */
+async function loadTasks() {
+  const responseJson = await fetchTasksFromFirebase(firebaseKey);
+  await fetchContactsAndStore(firebaseKey);
+  arrayTasks = normalizeTasks(responseJson);
+  await fetchContacts();
+  updateHTML(arrayTasks);
+}
+
+async function fetchTasksFromFirebase(userKey) {
+  const response = await fetch(`${BASE_URL}${userKey}/tasks.json`);
+  const data = await response.json();
+  return data;
+}
+
 async function fetchContactsAndStore(userKey) {
-  const url = `${BASE_URL}${userKey}/contacts.json`;
   try {
-    const response = await fetch(url);
+    const response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
     const data = await response.json();
 
     if (data) {
@@ -23,59 +36,39 @@ async function fetchContactsAndStore(userKey) {
   }
 }
 
-/* ========== LOAD TASKS FROM FIREBASE ========== */
-async function loadTasks() {
-  let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`);
-  let responseJson = await response.json();
-  await fetchContactsAndStore(firebaseKey);
-
-  if (!responseJson) {
-    arrayTasks = [];
-    updateHTML([]);
-    return;
-  }
-
-  // Fallback/default logic: Setze sinnvolle Defaults für fehlende Felder
-  arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
-    return {
-      firebaseKey,
-      title: typeof task.title === 'string' ? task.title : '',
-      description: typeof task.description === 'string' ? task.description : '',
-      dueDate: typeof task.dueDate === 'string' ? task.dueDate : '',
-      priority: typeof task.priority === 'string' ? task.priority : 'low',
-      status: typeof task.status === 'string' ? task.status : 'todo',
-      category: typeof task.category === 'string' ? task.category : '',
-      assignedTo: Array.isArray(task.assignedTo)
-        ? task.assignedTo
-        : (typeof task.assignedTo === 'string'
-          ? task.assignedTo.split(',').map(n => n.trim()).filter(Boolean)
-          : []),
-      subtask: Array.isArray(task.subtask)
-        ? task.subtask
-        : (typeof task.subtask === 'string'
-          ? [{ title: task.subtask, completed: false }]
-          : []),
-      // Kopiere ggf. weitere Felder
-      ...task
-    };
-  });
-  await fetchContacts();
-  updateHTML(arrayTasks);
+function normalizeTasks(responseJson) {
+  if (!responseJson) return [];
+  return Object.entries(responseJson).map(([firebaseKey, task]) => ({
+    firebaseKey,
+    ...task
+  }));
 }
 
-/* ========== DELETE TASK FROM FIREBASE ========== */
+async function fetchContacts() {
+  try {
+    const response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
+    const data = await response.json();
+    contacts = Object.values(data || {})
+      .filter(u => u && typeof u.name === "string" && u.name.trim())
+      .map(u => ({
+        name: u.name.trim(),
+        color: u.color || "#888"
+      }));
+    updateHTML();
+  } catch (err) {
+    console.error("Contacts fetch error:", err);
+  }
+}
+
 async function deleteTask(taskKey) {
   try {
     let response = await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
       method: "DELETE",
     });
-
     if (!response.ok) {
       throw new Error("Löschen fehlgeschlagen");
     }
-
     arrayTasks = arrayTasks.filter((task) => task.firebaseKey !== taskKey);
-
     closeBoardCard();
     updateHTML();
   } catch (error) {
@@ -83,82 +76,80 @@ async function deleteTask(taskKey) {
   }
 }
 
-/* ========== MOVE TASK STATUS IN FIREBASE ========== */
 async function moveTo(status) {
-  let task = arrayTasks.find((t) => t.firebaseKey === currentDraggedElement);
-  if (task) {
-    task.status = status;
-
-    try {
-      await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: status }),
-      });
-    } catch (error) {
-      console.error("Fehler beim Aktualisieren des Status in Firebase:", error);
-    }
-
-    updateHTML();
-  } else {
-    console.warn("Task nicht gefunden für ID:", currentDraggedElement);
+  let task = arrayTasks.find(t => t.firebaseKey === currentDraggedElement);
+  if (!task) {
+    alert("Aufgabe wurde nicht gefunden!");
+    return;
   }
-}
-
-let currentDraggedElement;
-
-/* ========== START DRAGGING TASK ========== */
-function startDragging(firebaseKey) {
-  currentDraggedElement = firebaseKey;
-  const taskElement = document.getElementById(firebaseKey);
-  taskElement.classList.add("dragging");
-}
-
-/* ========== STOP DRAGGING TASK ========== */
-function stopDragging(firebaseKey) {
-  const taskElement = document.getElementById(firebaseKey);
-  if (taskElement) {
-    taskElement.classList.remove("dragging");
+  task.status = status;
+  try {
+    await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: status })
+    });
+  } catch (error) {
+    alert("Fehler beim Speichern des Status!");
+    console.error(error);
   }
+  updateHTML();
 }
 
-/* ========== GET CONTACT BY NAME HELPER ========== */
 function getContactByName(name) {
-  let userKey = localStorage.getItem("firebaseKey");
-  let userContacts = contacts || [];
-  return userContacts.find(c => c.name === name) || null;
+  return contacts.find(c => c.name === name) || null;
 }
 
-/* ========== GET INITIALS HELPER ========== */
 function getInitials(name) {
   if (!name || typeof name !== 'string') return '';
   return name.split(" ").map(n => n[0]).join("").toUpperCase();
 }
 
-/* ========== GENERATE TASK CARD HTML ========== */
+function getCategoryClass(category) {
+  if (category === "User Story") return "category-user";
+  if (category === "Technical Task") return "category-technical";
+  return "";
+}
+
+function getPriorityIcon(priority) {
+  switch ((priority || '').toLowerCase()) {
+    case "low": return "./assets/icons/board/board-priority-low.svg";
+    case "medium": return "./assets/icons/board/board-priority-medium.svg";
+    case "urgent": return "./assets/icons/board/board-priority-urgent.svg";
+    default: return "./assets/icons/board/board-priority-low.svg";
+  }
+}
+
+function generateAssignedCircles(assignedList) {
+  if (!Array.isArray(assignedList)) return "";
+  return assignedList.map(name => {
+    const contact = getContactByName(name);
+    if (!contact) return '';
+    const color = contact.color || "#ccc";
+    return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
+  }).join("");
+}
+
+function generateSubtaskProgress(subtasksArr) {
+  const total = subtasksArr.length;
+  const completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
+  const percent = total > 0 ? (completed / total) * 100 : 0;
+  if (total === 0) return "";
+  return `
+    <div class="card-subtask-progress">
+      <div class="subtask-progress-bar-bg">
+        <div class="subtask-progress-bar-fill" style="width: ${percent}%;"></div>
+      </div>
+      <span class="subtask-progress-text">${completed}/${total} Subtasks</span>
+    </div>`;
+}
+
 function generateTodoHTML(element) {
-  // Fallback-Logik: Setze Defaults für fehlende Felder
   const category = typeof element.category === 'string' ? element.category : '';
-  let categoryClass = "";
-  if (category === "User Story") {
-    categoryClass = "category-user";
-  } else if (category === "Technical Task") {
-    categoryClass = "category-technical";
-  }
-
+  const categoryClass = getCategoryClass(category);
   const priority = typeof element.priority === 'string' ? element.priority : 'low';
-  let priorityIcon = "";
-  if (priority.toLowerCase() === "low") {
-    priorityIcon = "./assets/icons/board/board-priority-low.svg";
-  } else if (priority.toLowerCase() === "medium") {
-    priorityIcon = "./assets/icons/board/board-priority-medium.svg";
-  } else if (priority.toLowerCase() === "urgent") {
-    priorityIcon = "./assets/icons/board/board-priority-urgent.svg";
-  }
+  const priorityIcon = getPriorityIcon(priority);
 
-  // assignedTo kann String oder Array sein, fallback zu []
   let assignedList = [];
   if (Array.isArray(element.assignedTo)) {
     assignedList = element.assignedTo.filter(name => !!name && typeof name === 'string');
@@ -166,62 +157,47 @@ function generateTodoHTML(element) {
     assignedList = element.assignedTo.split(",").map(name => name.trim()).filter(Boolean);
   }
 
-  // ==== Subtasks tracking ====
-  let totalSubtasks = 0;
-  let completedSubtasks = 0;
-  let subtasksArr = [];
-  if (Array.isArray(element.subtask)) {
-    subtasksArr = element.subtask;
-    totalSubtasks = subtasksArr.length;
-    completedSubtasks = subtasksArr.filter(
-      sub => typeof sub === "object" ? sub.completed : false
-    ).length;
-  }
-  let progressPercent = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
+  let subtasksArr = Array.isArray(element.subtask) ? element.subtask : [];
+  const subtaskProgressHTML = generateSubtaskProgress(subtasksArr);
 
-  // Fallback für title/description
   const title = typeof element.title === 'string' ? element.title : '';
   const description = typeof element.description === 'string' ? element.description : '';
 
-  // Nur das innere Card-Element bekommt das id-Attribut, kein onclick am äußeren Wrapper!
   return `
     <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
-        <div class="card${element.firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${element.firebaseKey}">
-            <div class="card-header">
-            <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
-            <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
-              <img class="card-header-move-arrow" src="./assets/icons/board/board-move-arrow.svg" alt="Move Task" />
-            </button>
-            </div>
-            <span class="card-title">${title}</span>
-            <span class="card-description">${description}</span>
-            ${totalSubtasks > 0 ? `
-              <div class="card-subtask-progress">
-                <div class="subtask-progress-bar-bg">
-                  <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
-                </div>
-                <span class="subtask-progress-text">${completedSubtasks}/${totalSubtasks} Subtasks</span>
-              </div>` : ""}
-                <div class="card-footer">
-                  <div class="assigned-container">
-                    ${Array.isArray(assignedList)
-      ? assignedList
-        .map(name => {
-          const contact = getContactByName(name);
-          if (!contact) return ''; // Kontakt wurde gelöscht
-          const color = contact.color || "#ccc";
-          return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
-        })
-        .join("")
-      : ""}
-                  </div>
-                  <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
-                </div>
+      <div class="card${element.firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${element.firebaseKey}">
+        <div class="card-header">
+          <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
+          <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
+            <img class="card-header-move-arrow" src="./assets/icons/board/board-move-arrow.svg" alt="Move Task" />
+          </button>
         </div>
+        <span class="card-title">${title}</span>
+        <span class="card-description">${description}</span>
+        ${subtaskProgressHTML}
+        <div class="card-footer">
+          <div class="assigned-container">
+            ${generateAssignedCircles(assignedList)}
+          </div>
+          <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
+        </div>
+      </div>
     </div>`;
 }
 
-/* ========== DRAG & DROP HELPERS ========== */
+function startDragging(firebaseKey) {
+  currentDraggedElement = firebaseKey;
+  const taskElement = document.getElementById(firebaseKey);
+  taskElement.classList.add("dragging");
+}
+
+function stopDragging(firebaseKey) {
+  const taskElement = document.getElementById(firebaseKey);
+  if (taskElement) {
+    taskElement.classList.remove("dragging");
+  }
+}
+
 function allowDrop(ev) {
   ev.preventDefault();
   const target = ev.currentTarget;
@@ -239,65 +215,44 @@ function removeHighlight(status) {
   document.getElementById(status).classList.remove("drag-area-highlight");
 }
 
-/* ========== UPDATE BOARD PAGE ========== */
-function updateHTML() {
-  // Fallback/Default-Logik: handle tasks with missing or undefined fields robustly
-  let todo = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : 'todo') === "todo");
-  let progress = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "progress");
-  let feedback = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "feedback");
-  let done = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "done");
+function getTasksByStatus(status) {
+  return arrayTasks.filter(t =>
+    t && typeof t.status === 'string'
+      ? t.status === status
+      : status === 'todo'
+  );
+}
 
-  document.getElementById("todo").innerHTML = "";
-  document.getElementById("progress").innerHTML = "";
-  document.getElementById("feedback").innerHTML = "";
-  document.getElementById("done").innerHTML = "";
-
-  if (todo.length === 0) {
-    document.getElementById("todo").innerHTML = `<span class="empty-message">No Tasks in To do</span>`;
+function renderSection(sectionId, tasks, emptyMessage) {
+  const section = document.getElementById(sectionId);
+  section.innerHTML = "";
+  if (tasks.length === 0) {
+    section.innerHTML = `<span class="empty-message">${emptyMessage}</span>`;
   } else {
-    for (let element of todo) {
-      document.getElementById("todo").innerHTML += generateTodoHTML(element);
+    for (let task of tasks) {
+      section.innerHTML += generateTodoHTML(task);
     }
   }
+}
 
-  if (progress.length === 0) {
-    document.getElementById("progress").innerHTML = `<span class="empty-message">No Tasks In progress</span>`;
-  } else {
-    for (let element of progress) {
-      document.getElementById("progress").innerHTML += generateTodoHTML(element);
-    }
-  }
-
-  if (feedback.length === 0) {
-    document.getElementById("feedback").innerHTML = `<span class="empty-message">No Tasks in Await feedback</span>`;
-  } else {
-    for (let element of feedback) {
-      document.getElementById("feedback").innerHTML += generateTodoHTML(element);
-    }
-  }
-
-  if (done.length === 0) {
-    document.getElementById("done").innerHTML = `<span class="empty-message">No Tasks in Done</span>`;
-  } else {
-    for (let element of done) {
-      document.getElementById("done").innerHTML += generateTodoHTML(element);
-    }
-  }
-
-  // Korrigiert: Card-Click nur auf Card selbst
-  ['todo', 'progress', 'feedback', 'done'].forEach(section => {
-    const sectionEl = document.getElementById(section);
-    if (!sectionEl) return;
-    // Alle vorherigen EventListener entfernen (sicherstellen)
-    sectionEl.onclick = null;
-    // Event Delegation: Klicke nur auf Cards
-    sectionEl.addEventListener('click', function (event) {
+function addCardClickListeners() {
+  ['todo', 'progress', 'feedback', 'done'].forEach(sectionId => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    section.onclick = null;
+    section.addEventListener('click', function (event) {
       const card = event.target.closest('.card');
-      if (card && card.id) {
-        openBoardCard(card.id);
-      }
+      if (card && card.id) openBoardCard(card.id);
     });
   });
+}
+
+function updateHTML() {
+  renderSection("todo", getTasksByStatus("todo"), "No Tasks in To do");
+  renderSection("progress", getTasksByStatus("progress"), "No Tasks In progress");
+  renderSection("feedback", getTasksByStatus("feedback"), "No Tasks in Await feedback");
+  renderSection("done", getTasksByStatus("done"), "No Tasks in Done");
+  addCardClickListeners();
 }
 
 /* ========== OPEN BOARD CARD OVERLAY ========== */
@@ -648,10 +603,7 @@ function editTask() {
     const task = arrayTasks.find(t => t.firebaseKey === taskKey);
     let selectedContacts = [...(task.assignedTo || [])];
 
-    // Initialen-Hilfsfunktion
-    function getInitials(name) {
-      return name.split(' ').map(n => n[0]).join('').toUpperCase();
-    }
+
 
     function toggleContact(name) {
       if (selectedContacts.includes(name)) {
@@ -1506,26 +1458,6 @@ function updateCategoryUI() {
       .join("")
       .toUpperCase();
     box.appendChild(el);
-  }
-}
-
-/* ========== FETCH CONTACTS FROM FIREBASE ========== */
-async function fetchContacts() {
-  try {
-    const res = await fetch(
-      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`
-    );
-    const data = await res.json();
-    contacts = Object.entries(data || {})
-      .filter(([_, u]) => u && typeof u.name === "string" && u.name.trim())
-      .map(([_, u]) => ({
-        name: u.name.trim(),
-        color: u.color || "#888",
-      }));
-    // Board nach Laden der Kontakte aktualisieren
-    updateHTML();
-  } catch (err) {
-    console.error("Contacts fetch error:", err);
   }
 }
 
