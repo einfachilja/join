@@ -676,13 +676,11 @@ select::placeholder {
   right: 12px;
   transform: translateY(-50%);
   display: flex;
-  gap: 8px;
 }
 
 .subtask-icons img {
   width: 20px;
   height: 20px;
-  padding: 4px;
   cursor: pointer;
   border-radius: 4px;
   background-color: transparent;

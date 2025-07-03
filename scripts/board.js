@@ -1198,7 +1198,7 @@ function getAddTaskOverlay() {
                             <div class="divider"></div>
                             <img
                               id="subtask-confirm"
-                              src="./assets/icons/add-task/add-task-checked.svg"
+                              src="./assets/icons/add-task/add-task-check.svg"
                               alt="Confirm"
                               onclick="addSubtask()"
                             />
@@ -1313,6 +1313,11 @@ function clearAssignDropdownContent(dd) {
 function createContactDropdownItem(contact, filter) {
   const item = document.createElement("div");
   item.className = "contact-item";
+  // Hintergrund setzen, wenn ausgewählt
+  if (selectedContacts.some((s) => s.name === contact.name)) {
+    item.style.background = "#091931";
+    item.style.color = "#FFFFFF";
+  }
   item.innerHTML = `
     <span class="profile-icon" style="background:${contact.color}">
       ${getContactInitials(contact.name)}
