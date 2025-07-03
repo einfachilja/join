@@ -1,9 +1,17 @@
+/**
+ * Toggles the sub-menu visibility by adding or removing CSS classes.
+ * It shows the menu if hidden and hides it if already shown.
+ */
 function openSubMenu() {
   const supMenuRef = document.getElementById('sub_menu');
   supMenuRef.classList.toggle('d_none');
   supMenuRef.classList.toggle('sub-menu');
 }
 
+/**
+ * Sets the user's initials in the profile area based on the name stored in sessionStorage.
+ * If the user is a guest, it displays "G". If a custom color is saved, it applies that color to the initials.
+ */
 function setUserInitials() {
   const userName = sessionStorage.getItem("userName") || "Guest";
   const initialsField = document.getElementById("user-initials");
@@ -20,4 +28,5 @@ function setUserInitials() {
   const userColor = sessionStorage.getItem("userColor");
   if (userColor) initialsField.style.color = userColor;
 }
+
 
