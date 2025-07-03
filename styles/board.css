@@ -892,7 +892,26 @@
 
 .move-task-dropdown-menu {
     background-color: #2A3647;
+    position: absolute;
+    z-index: 1000;
+    min-width: 140px;
+    color: #a8a8a8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 0 20px 20px 20px;
+    padding: 8px 0;
+    font-size: 16px;
+    user-select: none;
 }
+
+.move-task-dropdown-option {
+    padding: 8px 16px;
+    cursor:  pointer;
+}
+
+.move-task-dropdown-option:hover {
+    color: white
+}
+
 
 #due_date_input {
     background-color: white;
@@ -921,4 +940,13 @@
     display: flex;
     align-items: center;
     gap: 30px;
+}
+
+.contact-selected {
+    background-color: #091931;
+    color: #FFFFFF;
+}
+
+.contact-selected:hover {
+    background-color: #091931;
 }

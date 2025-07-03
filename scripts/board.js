@@ -1,5 +1,4 @@
-const BASE_URL =
-  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
+const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
 
 let arrayTasks = [];
 let addTaskDefaultStatus = "todo";
@@ -1329,8 +1328,7 @@ function createContactDropdownItem(contact, filter) {
   item.className = "contact-item";
   // Hintergrund setzen, wenn ausgewählt
   if (selectedContacts.some((s) => s.name === contact.name)) {
-    item.style.background = "#091931";
-    item.style.color = "#FFFFFF";
+    item.classList.add('contact-selected');
   }
   item.innerHTML = `
     <span class="profile-icon" style="background:${contact.color}">
@@ -1685,16 +1683,6 @@ function openMoveTaskMenu(taskKey, event) {
   // Create dropdown container
   const dropdown = document.createElement('div');
   dropdown.className = 'move-task-dropdown-menu';
-  dropdown.style.position = 'absolute';
-  dropdown.style.zIndex = '1000';
-  dropdown.style.minWidth = '140px';
-  dropdown.style.background = '#2A3647';
-  dropdown.style.color = 'white';
-  dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-  dropdown.style.borderRadius = '0 20px 20px 20px';
-  dropdown.style.padding = '8px 0';
-  dropdown.style.fontSize = '16px';
-  dropdown.style.userSelect = 'none';
 
   // Status options
   const statuses = [
@@ -1721,8 +1709,6 @@ function openMoveTaskMenu(taskKey, event) {
     const option = document.createElement('div');
     option.className = 'move-task-dropdown-option';
     option.textContent = s.label;
-    option.style.padding = '8px 16px';
-    option.style.cursor = 'pointer';
     option.onclick = function (e) {
       e.stopPropagation();
       handleMoveClick(s.key);
