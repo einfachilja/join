@@ -56,8 +56,14 @@
 
 .board-input-search:focus {
     outline: none;
+    border: none;
     font-size: 16px;
     align-content: center;
+    background-color: transparent;
+}
+
+.search-box:focus-within {
+    border: 1px solid #29abe2;
 }
 
 .board-input-search::placeholder {
@@ -472,6 +478,7 @@
     padding: 0;
     margin: 0;
     height: 24px;
+    cursor: pointer;
 }
 
 .subtask-dot {
@@ -629,7 +636,7 @@
     padding: 8px;
     border: 1px solid #D1D1D1;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     font-family: inherit;
 }
@@ -754,6 +761,7 @@
 .board-add-task-modal .col-left>*,
 .board-add-task-modal .col-right>* {
     margin-bottom: 16px;
+    margin-top: 8px;
 }
 
 .board-add-task-modal .col-left>*:last-child,

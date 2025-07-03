@@ -338,7 +338,8 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date"><span class="overlay-headline-color">Due date:</span><span>${task.dueDate}</span></span>
-      <span class="priority-headline"><span class="overlay-headline-color">Priority:</span><span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
+      <span class="priority-headline"><span class="overlay-headline-color">Priority:</span>
+      <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
       <div class="assigned-list">
         <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
         ${Array.isArray(task.assignedTo)
@@ -1118,7 +1119,7 @@ function getAddTaskOverlay() {
                       data-prio="urgent"
                       onclick="selectPriority('urgent')"
                     >
-                      Urgent <img src="./assets/icons/board/urgent.svg" alt="" />
+                      Urgent <img src="./assets/icons/add-task/add-task-urgent.svg" alt="" />
                     </button>
                     <button
                       type="button"
@@ -1126,14 +1127,14 @@ function getAddTaskOverlay() {
                       class="selected"
                       onclick="selectPriority('medium')"
                     >
-                      Medium <img src="./assets/icons/board/medium.svg" alt="" />
+                      Medium <img src="./assets/icons/add-task/add-task-medium.svg" alt="" />
                     </button>
                     <button
                       type="button"
                       data-prio="low"
                       onclick="selectPriority('low')"
                     >
-                      Low <img src="./assets/board/icons/low.svg" alt="" />
+                      Low <img src="./assets/icons/add-task/add-task-low.svg" alt="">
                     </button>
                   </div>
                   <div class="error-message" id="error-priority">
