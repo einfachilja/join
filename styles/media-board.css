@@ -82,6 +82,7 @@
 
     .board-add-task-modal .form-cols {
         gap: 0;
+        flex-direction: column;
     }
 
     .form-actions {
@@ -97,10 +98,61 @@
     }
 }
 
+@media(max-width: 600px) {
+
+    #priority-edit-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .priority-edit-btn {
+        width: 100%;
+    }
+
+}
+
+@media(max-width: 500px) {
+
+    .h1-add-task {
+        font-size: 40px;
+    }
+
+    .board-add-task-modal {
+        margin: 8px;
+    }
+
+    .priority-buttons button {
+        gap: 4px;
+    }
+
+    .legend-required {
+        font-size: 10px;
+    }
+
+    #cancel-task-btn,
+    #submit-task-btn {
+        font-size: 12px;
+        height: 40px;
+        padding: 8px;
+    }
+
+    #submit-task-btn {
+        width: fit-content;
+        justify-content: center;
+    }
+
+
+
+
+
+}
+
+
 @media(max-width: 450px) {
 
     .board-overlay-card {
         padding: 24px;
+        font-size: 16px;
     }
 
     .overlay-card-title {

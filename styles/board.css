@@ -56,8 +56,14 @@
 
 .board-input-search:focus {
     outline: none;
+    border: none;
     font-size: 16px;
     align-content: center;
+    background-color: transparent;
+}
+
+.search-box:focus-within {
+    border: 1px solid #29abe2;
 }
 
 .board-input-search::placeholder {
@@ -472,6 +478,7 @@
     padding: 0;
     margin: 0;
     height: 24px;
+    cursor: pointer;
 }
 
 .subtask-dot {
@@ -629,7 +636,7 @@
     padding: 8px;
     border: 1px solid #D1D1D1;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     font-family: inherit;
 }
@@ -754,6 +761,7 @@
 .board-add-task-modal .col-left>*,
 .board-add-task-modal .col-right>* {
     margin-bottom: 16px;
+    margin-top: 8px;
 }
 
 .board-add-task-modal .col-left>*:last-child,
@@ -884,7 +892,26 @@
 
 .move-task-dropdown-menu {
     background-color: #2A3647;
+    position: absolute;
+    z-index: 1000;
+    min-width: 140px;
+    color: #a8a8a8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 0 20px 20px 20px;
+    padding: 8px 0;
+    font-size: 16px;
+    user-select: none;
 }
+
+.move-task-dropdown-option {
+    padding: 8px 16px;
+    cursor:  pointer;
+}
+
+.move-task-dropdown-option:hover {
+    color: white
+}
+
 
 #due_date_input {
     background-color: white;
@@ -913,4 +940,13 @@
     display: flex;
     align-items: center;
     gap: 30px;
+}
+
+.contact-selected {
+    background-color: #091931;
+    color: #FFFFFF;
+}
+
+.contact-selected:hover {
+    background-color: #091931;
 }

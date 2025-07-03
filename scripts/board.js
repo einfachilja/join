@@ -1,12 +1,28 @@
-const BASE_URL =
-  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
+const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
 
-// Neue Funktion zum Laden der Kontakte und Speichern im localStorage
+let arrayTasks = [];
+let addTaskDefaultStatus = "todo";
+let firebaseKey = localStorage.getItem("firebaseKey");
+let lastCreatedTaskKey = null;
+let currentDraggedElement;
+
+async function loadTasks() {
+  const responseJson = await fetchTasksFromFirebase(firebaseKey);
+  await fetchContactsAndStore(firebaseKey);
+  arrayTasks = normalizeTasks(responseJson);
+  await fetchContacts();
+  updateHTML(arrayTasks);
+}
+
+async function fetchTasksFromFirebase(userKey) {
+  const response = await fetch(`${BASE_URL}${userKey}/tasks.json`);
+  const data = await response.json();
+  return data;
+}
+
 async function fetchContactsAndStore(userKey) {
-  const url = `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${userKey}/contacts.json`;
-
   try {
-    const response = await fetch(url);
+    const response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
     const data = await response.json();
 
     if (data) {
@@ -20,64 +36,39 @@ async function fetchContactsAndStore(userKey) {
   }
 }
 
-let arrayTasks = [];
-let addTaskDefaultStatus = "todo";
-let firebaseKey = localStorage.getItem("firebaseKey");
-let lastCreatedTaskKey = null;
-
-/* ========== LOAD TASKS FROM FIREBASE ========== */
-async function loadTasks() {
-  let response = await fetch(`${BASE_URL}${firebaseKey}/tasks.json`);
-  let responseJson = await response.json();
-  await fetchContactsAndStore(firebaseKey);
-
-  if (!responseJson) {
-    arrayTasks = [];
-    updateHTML([]);
-    return;
-  }
-
-  // Fallback/default logic: Setze sinnvolle Defaults für fehlende Felder
-  arrayTasks = Object.entries(responseJson).map(([firebaseKey, task]) => {
-    return {
-      firebaseKey,
-      title: typeof task.title === 'string' ? task.title : '',
-      description: typeof task.description === 'string' ? task.description : '',
-      dueDate: typeof task.dueDate === 'string' ? task.dueDate : '',
-      priority: typeof task.priority === 'string' ? task.priority : 'low',
-      status: typeof task.status === 'string' ? task.status : 'todo',
-      category: typeof task.category === 'string' ? task.category : '',
-      assignedTo: Array.isArray(task.assignedTo)
-        ? task.assignedTo
-        : (typeof task.assignedTo === 'string'
-          ? task.assignedTo.split(',').map(n => n.trim()).filter(Boolean)
-          : []),
-      subtask: Array.isArray(task.subtask)
-        ? task.subtask
-        : (typeof task.subtask === 'string'
-          ? [{ title: task.subtask, completed: false }]
-          : []),
-      // Kopiere ggf. weitere Felder
-      ...task
-    };
-  });
-  await fetchContacts();
-  updateHTML(arrayTasks);
+function normalizeTasks(responseJson) {
+  if (!responseJson) return [];
+  return Object.entries(responseJson).map(([firebaseKey, task]) => ({
+    firebaseKey,
+    ...task
+  }));
 }
 
-/* ========== DELETE TASK FROM FIREBASE ========== */
+async function fetchContacts() {
+  try {
+    const response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
+    const data = await response.json();
+    contacts = Object.values(data || {})
+      .filter(u => u && typeof u.name === "string" && u.name.trim())
+      .map(u => ({
+        name: u.name.trim(),
+        color: u.color || "#888"
+      }));
+    updateHTML();
+  } catch (err) {
+    console.error("Contacts fetch error:", err);
+  }
+}
+
 async function deleteTask(taskKey) {
   try {
     let response = await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
       method: "DELETE",
     });
-
     if (!response.ok) {
       throw new Error("Löschen fehlgeschlagen");
     }
-
     arrayTasks = arrayTasks.filter((task) => task.firebaseKey !== taskKey);
-
     closeBoardCard();
     updateHTML();
   } catch (error) {
@@ -85,31 +76,114 @@ async function deleteTask(taskKey) {
   }
 }
 
-/* ========== MOVE TASK STATUS IN FIREBASE ========== */
 async function moveTo(status) {
-  let task = arrayTasks.find((t) => t.firebaseKey === currentDraggedElement);
-  if (task) {
-    task.status = status;
+  let task = arrayTasks.find(t => t.firebaseKey === currentDraggedElement);
+  if (!task) {
+    alert("Aufgabe wurde nicht gefunden!");
+    return;
+  }
+  task.status = status;
+  try {
+    await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: status })
+    });
+  } catch (error) {
+    alert("Fehler beim Speichern des Status!");
+    console.error(error);
+  }
+  updateHTML();
+}
 
-    try {
-      await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: status }),
-      });
-    } catch (error) {
-      console.error("Fehler beim Aktualisieren des Status in Firebase:", error);
-    }
+function getContactByName(name) {
+  return contacts.find(c => c.name === name) || null;
+}
 
-    updateHTML();
-  } else {
-    console.warn("Task nicht gefunden für ID:", currentDraggedElement);
+function getInitials(name) {
+  if (!name || typeof name !== 'string') return '';
+  return name.split(" ").map(n => n[0]).join("").toUpperCase();
+}
+
+function getCategoryClass(category) {
+  if (category === "User Story") return "category-user";
+  if (category === "Technical Task") return "category-technical";
+  return "";
+}
+
+function getPriorityIcon(priority) {
+  switch ((priority || '').toLowerCase()) {
+    case "low": return "./assets/icons/board/board-priority-low.svg";
+    case "medium": return "./assets/icons/board/board-priority-medium.svg";
+    case "urgent": return "./assets/icons/board/board-priority-urgent.svg";
+    default: return "./assets/icons/board/board-priority-low.svg";
   }
 }
 
-let currentDraggedElement;
+function generateAssignedCircles(assignedList) {
+  if (!Array.isArray(assignedList)) return "";
+  return assignedList.map(name => {
+    const contact = getContactByName(name);
+    if (!contact) return '';
+    const color = contact.color || "#ccc";
+    return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
+  }).join("");
+}
+
+function generateSubtaskProgress(subtasksArr) {
+  const total = subtasksArr.length;
+  const completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
+  const percent = total > 0 ? (completed / total) * 100 : 0;
+  if (total === 0) return "";
+  return `
+    <div class="card-subtask-progress">
+      <div class="subtask-progress-bar-bg">
+        <div class="subtask-progress-bar-fill" style="width: ${percent}%;"></div>
+      </div>
+      <span class="subtask-progress-text">${completed}/${total} Subtasks</span>
+    </div>`;
+}
+
+function generateTodoHTML(element) {
+  const category = typeof element.category === 'string' ? element.category : '';
+  const categoryClass = getCategoryClass(category);
+  const priority = typeof element.priority === 'string' ? element.priority : 'low';
+  const priorityIcon = getPriorityIcon(priority);
+
+  let assignedList = [];
+  if (Array.isArray(element.assignedTo)) {
+    assignedList = element.assignedTo.filter(name => !!name && typeof name === 'string');
+  } else if (typeof element.assignedTo === "string") {
+    assignedList = element.assignedTo.split(",").map(name => name.trim()).filter(Boolean);
+  }
+
+  let subtasksArr = Array.isArray(element.subtask) ? element.subtask : [];
+  const subtaskProgressHTML = generateSubtaskProgress(subtasksArr);
+
+  const title = typeof element.title === 'string' ? element.title : '';
+  const description = typeof element.description === 'string' ? element.description : '';
+
+  return `
+    <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
+      <div class="card${element.firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${element.firebaseKey}">
+        <div class="card-header">
+          <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
+          <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
+            <img class="card-header-move-arrow" src="./assets/icons/board/board-move-arrow.svg" alt="Move Task" />
+          </button>
+        </div>
+        <span class="card-title">${title}</span>
+        <span class="card-description">${description}</span>
+        ${subtaskProgressHTML}
+        <div class="card-footer">
+          <div class="assigned-container">
+            ${generateAssignedCircles(assignedList)}
+          </div>
+          <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
+        </div>
+      </div>
+    </div>`;
+}
 
 function startDragging(firebaseKey) {
   currentDraggedElement = firebaseKey;
@@ -122,101 +196,6 @@ function stopDragging(firebaseKey) {
   if (taskElement) {
     taskElement.classList.remove("dragging");
   }
-}
-
-
-function getContactByName(name) {
-  let userKey = localStorage.getItem("firebaseKey");
-  let userContacts = contacts || [];
-  return userContacts.find(c => c.name === name) || null;
-}
-
-function getInitials(name) {
-  if (!name || typeof name !== 'string') return '';
-  return name.split(" ").map(n => n[0]).join("").toUpperCase();
-}
-
-function generateTodoHTML(element) {
-  // Fallback-Logik: Setze Defaults für fehlende Felder
-  const category = typeof element.category === 'string' ? element.category : '';
-  let categoryClass = "";
-  if (category === "User Story") {
-    categoryClass = "category-user";
-  } else if (category === "Technical Task") {
-    categoryClass = "category-technical";
-  }
-
-  const priority = typeof element.priority === 'string' ? element.priority : 'low';
-  let priorityIcon = "";
-  if (priority.toLowerCase() === "low") {
-    priorityIcon = "./assets/icons/board/board-priority-low.svg";
-  } else if (priority.toLowerCase() === "medium") {
-    priorityIcon = "./assets/icons/board/board-priority-medium.svg";
-  } else if (priority.toLowerCase() === "urgent") {
-    priorityIcon = "./assets/icons/board/board-priority-urgent.svg";
-  }
-
-  // assignedTo kann String oder Array sein, fallback zu []
-  let assignedList = [];
-  if (Array.isArray(element.assignedTo)) {
-    assignedList = element.assignedTo.filter(name => !!name && typeof name === 'string');
-  } else if (typeof element.assignedTo === "string") {
-    assignedList = element.assignedTo.split(",").map(name => name.trim()).filter(Boolean);
-  }
-
-  // ==== Subtasks tracking ====
-  let totalSubtasks = 0;
-  let completedSubtasks = 0;
-  let subtasksArr = [];
-  if (Array.isArray(element.subtask)) {
-    subtasksArr = element.subtask;
-    totalSubtasks = subtasksArr.length;
-    completedSubtasks = subtasksArr.filter(
-      sub => typeof sub === "object" ? sub.completed : false
-    ).length;
-  }
-  let progressPercent = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
-
-  // Fallback für title/description
-  const title = typeof element.title === 'string' ? element.title : '';
-  const description = typeof element.description === 'string' ? element.description : '';
-
-  // Nur das innere Card-Element bekommt das id-Attribut, kein onclick am äußeren Wrapper!
-  return `
-    <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
-        <div class="card${element.firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${element.firebaseKey}">
-            <div class="card-header">
-            <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
-            <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
-              <img class="card-header-move-arrow" src="./assets/icons/board/board-move-arrow.svg" alt="Move Task" />
-            </button>
-            </div>
-            <span class="card-title">${title}</span>
-            <span class="card-description">${description}</span>
-            ${totalSubtasks > 0 ? `
-              <div class="card-subtask-progress">
-                <div class="subtask-progress-bar-bg">
-                  <div class="subtask-progress-bar-fill" style="width: ${progressPercent}%;"></div>
-                </div>
-                <span class="subtask-progress-text">${completedSubtasks}/${totalSubtasks} Subtasks</span>
-              </div>` : ""}
-                <div class="card-footer">
-                  <div class="assigned-container">
-                    ${Array.isArray(assignedList)
-    ? assignedList
-        .map(name => {
-          const contact = getContactByName(name);
-          if (!contact) return ''; // Kontakt wurde gelöscht
-          const color = contact.color || "#ccc";
-          return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
-        })
-        .join("")
-    : ""}
-                  </div>
-                  <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
-                </div>
-        </div>
-    </div>`;
 }
 
 function allowDrop(ev) {
@@ -236,68 +215,47 @@ function removeHighlight(status) {
   document.getElementById(status).classList.remove("drag-area-highlight");
 }
 
-/* ========== UPDATE BOARD PAGE ========== */
-function updateHTML() {
-  // Fallback/Default-Logik: handle tasks with missing or undefined fields robustly
-  let todo = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : 'todo') === "todo");
-  let progress = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "progress");
-  let feedback = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "feedback");
-  let done = arrayTasks.filter((t) => (t && typeof t.status === 'string' ? t.status : '') === "done");
+function getTasksByStatus(status) {
+  return arrayTasks.filter(t =>
+    t && typeof t.status === 'string'
+      ? t.status === status
+      : status === 'todo'
+  );
+}
 
-  document.getElementById("todo").innerHTML = "";
-  document.getElementById("progress").innerHTML = "";
-  document.getElementById("feedback").innerHTML = "";
-  document.getElementById("done").innerHTML = "";
-
-  if (todo.length === 0) {
-    document.getElementById("todo").innerHTML = `<span class="empty-message">No Tasks in To do</span>`;
+function renderSection(sectionId, tasks, emptyMessage) {
+  const section = document.getElementById(sectionId);
+  section.innerHTML = "";
+  if (tasks.length === 0) {
+    section.innerHTML = `<span class="empty-message">${emptyMessage}</span>`;
   } else {
-    for (let element of todo) {
-      document.getElementById("todo").innerHTML += generateTodoHTML(element);
+    for (let task of tasks) {
+      section.innerHTML += generateTodoHTML(task);
     }
   }
+}
 
-  if (progress.length === 0) {
-    document.getElementById("progress").innerHTML = `<span class="empty-message">No Tasks In progress</span>`;
-  } else {
-    for (let element of progress) {
-      document.getElementById("progress").innerHTML += generateTodoHTML(element);
-    }
-  }
-
-  if (feedback.length === 0) {
-    document.getElementById("feedback").innerHTML = `<span class="empty-message">No Tasks in Await feedback</span>`;
-  } else {
-    for (let element of feedback) {
-      document.getElementById("feedback").innerHTML += generateTodoHTML(element);
-    }
-  }
-
-  if (done.length === 0) {
-    document.getElementById("done").innerHTML = `<span class="empty-message">No Tasks in Done</span>`;
-  } else {
-    for (let element of done) {
-      document.getElementById("done").innerHTML += generateTodoHTML(element);
-    }
-  }
-
-  // Korrigiert: Card-Click nur auf Card selbst
-  ['todo', 'progress', 'feedback', 'done'].forEach(section => {
-    const sectionEl = document.getElementById(section);
-    if (!sectionEl) return;
-    // Alle vorherigen EventListener entfernen (sicherstellen)
-    sectionEl.onclick = null;
-    // Event Delegation: Klicke nur auf Cards
-    sectionEl.addEventListener('click', function (event) {
+function addCardClickListeners() {
+  ['todo', 'progress', 'feedback', 'done'].forEach(sectionId => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    section.onclick = null;
+    section.addEventListener('click', function (event) {
       const card = event.target.closest('.card');
-      if (card && card.id) {
-        openBoardCard(card.id);
-      }
+      if (card && card.id) openBoardCard(card.id);
     });
   });
 }
 
-/* ========== OPEN AND CLOSE OVERLAY ========== */
+function updateHTML() {
+  renderSection("todo", getTasksByStatus("todo"), "No Tasks in To do");
+  renderSection("progress", getTasksByStatus("progress"), "No Tasks In progress");
+  renderSection("feedback", getTasksByStatus("feedback"), "No Tasks in Await feedback");
+  renderSection("done", getTasksByStatus("done"), "No Tasks in Done");
+  addCardClickListeners();
+}
+
+/* ========== OPEN BOARD CARD OVERLAY ========== */
 function openBoardCard(firebaseKey) {
   let boardOverlayRef = document.getElementById("board_overlay");
   let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
@@ -320,6 +278,7 @@ function openBoardCard(firebaseKey) {
   updateHTML();
 }
 
+/* ========== GENERATE BOARD CARD OVERLAY HTML ========== */
 function getOpenBoardCardTemplate(categoryClass, task) {
   let priorityIcon = "";
   if (task.priority && task.priority.toLowerCase() === "low") {
@@ -338,21 +297,22 @@ function getOpenBoardCardTemplate(categoryClass, task) {
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date"><span class="overlay-headline-color">Due date:</span><span>${task.dueDate}</span></span>
-      <span class="priority-headline"><span class="overlay-headline-color">Priority:</span><span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
+      <span class="priority-headline"><span class="overlay-headline-color">Priority:</span>
+      <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
       <div class="assigned-list">
         <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
         ${Array.isArray(task.assignedTo)
-          ? task.assignedTo.map(name => {
-              const contact = getContactByName(name);
-              if (!contact) return ''; // Nicht existierende Kontakte überspringen
-              const color = contact.color || "#ccc";
-              return `
+      ? task.assignedTo.map(name => {
+        const contact = getContactByName(name);
+        if (!contact) return ''; // Nicht existierende Kontakte überspringen
+        const color = contact.color || "#ccc";
+        return `
                 <div class="assigned-entry">
                   <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
                   <span class="assigned-name">${name}</span>
                 </div>`;
-            }).join("")
-          : ""}
+      }).join("")
+      : ""}
       </div>
       <div class="subtask-list">
         <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
@@ -381,7 +341,7 @@ function getOpenBoardCardTemplate(categoryClass, task) {
     </div>`;
 }
 
-// Generate HTML for priority buttons in edit mode
+/* ========== GENERATE PRIORITY BUTTONS HTML (OVERLAY EDIT MODE) ========== */
 function getPriorityButtonsHTML(currentPriority) {
   const priorities = [
     { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
@@ -399,7 +359,7 @@ function getPriorityButtonsHTML(currentPriority) {
   `).join('');
 }
 
-// Handle priority button selection in overlay edit mode
+/* ========== SELECT PRIORITY IN BOARD CARD OVERLAY EDIT MODE ========== */
 function selectOverlayPriority(priority, btn) {
   document.querySelectorAll('.priority-edit-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -407,7 +367,7 @@ function selectOverlayPriority(priority, btn) {
 }
 
 
-// ========== TOGGLE SUBTASK COMPLETION & UPDATE FIREBASE ==========
+/* ========== TOGGLE SUBTASK COMPLETION & UPDATE FIREBASE ========== */
 async function toggleSubtask(taskKey, index) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
@@ -454,6 +414,7 @@ async function toggleSubtask(taskKey, index) {
   }
 }
 
+/* ========== CLOSE BOARD CARD OVERLAY ========== */
 function closeBoardCard() {
   if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
   const card = document.querySelector('.board-overlay-card');
@@ -480,11 +441,12 @@ function closeBoardCard() {
   }
 }
 
+/* ========== OVERLAY CLICK PROTECTION ========== */
 function onclickProtection(event) {
   event.stopPropagation();
 }
 
-
+/* ========== EDIT TASK IN OVERLAY ========== */
 function editTask() {
   document.getElementById("ok_btn").classList.remove("d-none");
   document.getElementById("delete_btn").classList.add("d-none");
@@ -492,7 +454,6 @@ function editTask() {
   document.getElementById("seperator").classList.add("d-none");
   document.getElementById("overlay_card_category").classList.add("d-none");
   document.getElementById("board_overlay_card").classList.add("board-overlay-card-edit");
-
   document.getElementById("overlay_card_title").contentEditable = "true";
   document.getElementById("overlay_card_description").contentEditable = "true";
 
@@ -642,10 +603,7 @@ function editTask() {
     const task = arrayTasks.find(t => t.firebaseKey === taskKey);
     let selectedContacts = [...(task.assignedTo || [])];
 
-    // Initialen-Hilfsfunktion
-    function getInitials(name) {
-      return name.split(' ').map(n => n[0]).join('').toUpperCase();
-    }
+
 
     function toggleContact(name) {
       if (selectedContacts.includes(name)) {
@@ -886,6 +844,7 @@ function editTask() {
 }
 
 /* ========== EDIT TASK IN FIREBASE ========== */
+/* ========== SAVE EDITED TASK IN FIREBASE ========== */
 async function saveEditTask(taskKey) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task) {
@@ -970,7 +929,7 @@ async function saveEditTask(taskKey) {
   }
 }
 
-/* ========== SEARCH FUNCTION ========== */
+/* ========== SEARCH TASKS FUNCTION ========== */
 function searchTask() {
   let inputFindTaskRef = document.getElementById("input_find_task");
   let inputValue = inputFindTaskRef.value.trim().toLowerCase();
@@ -1002,11 +961,13 @@ function searchTask() {
   }
 }
 
+/* ========== OPEN ADD TASK OVERLAY FOR STATUS ========== */
 function openAddTaskForStatus(status) {
   addTaskDefaultStatus = status;
   openAddTaskOverlay();
 }
 
+/* ========== OPEN ADD TASK OVERLAY ========== */
 function openAddTaskOverlay() {
   let addTaskOverlayRef = document.getElementById("add_task_overlay");
   document.getElementById("add_task_overlay").classList.remove("d-none");
@@ -1028,6 +989,7 @@ function openAddTaskOverlay() {
   initAddTaskOverlayLogic();
 }
 
+/* ========== CLOSE ADD TASK OVERLAY ========== */
 function closeAddTaskOverlay() {
   const modal = document.querySelector('.board-add-task-modal');
   if (modal) {
@@ -1052,6 +1014,7 @@ function closeAddTaskOverlay() {
   document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);
 }
 
+/* ========== HANDLE CLICK OUTSIDE ADD TASK OVERLAY ========== */
 function handleAddTaskOverlayClickOutside(event) {
   const modal = document.querySelector('.board-add-task-modal');
   if (!modal) return;
@@ -1060,6 +1023,7 @@ function handleAddTaskOverlayClickOutside(event) {
   }
 }
 
+/* ========== GENERATE ADD TASK OVERLAY HTML ========== */
 function getAddTaskOverlay() {
   return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
@@ -1118,7 +1082,7 @@ function getAddTaskOverlay() {
                       data-prio="urgent"
                       onclick="selectPriority('urgent')"
                     >
-                      Urgent <img src="./assets/icons/board/urgent.svg" alt="" />
+                      Urgent <img src="./assets/icons/add-task/add-task-urgent.svg" alt="" />
                     </button>
                     <button
                       type="button"
@@ -1126,14 +1090,14 @@ function getAddTaskOverlay() {
                       class="selected"
                       onclick="selectPriority('medium')"
                     >
-                      Medium <img src="./assets/icons/board/medium.svg" alt="" />
+                      Medium <img src="./assets/icons/add-task/add-task-medium.svg" alt="" />
                     </button>
                     <button
                       type="button"
                       data-prio="low"
                       onclick="selectPriority('low')"
                     >
-                      Low <img src="./assets/board/icons/low.svg" alt="" />
+                      Low <img src="./assets/icons/add-task/add-task-low.svg" alt="">
                     </button>
                   </div>
                   <div class="error-message" id="error-priority">
@@ -1236,6 +1200,7 @@ function getAddTaskOverlay() {
 }
 // ==== STATE & HELPERS (Add-Task-Funktionalität) ====
 // Diese Blöcke stammen aus add-task.js und sind für das Add-Task-Modal im Board nötig.
+/* ========== ADD TASK STATE ========== */
 let selectedPriority = "medium";
 const subtasks = [];
 let contacts = [];
@@ -1243,6 +1208,7 @@ let selectedContacts = [];
 let selectedCategory = "";
 
 // Globaler EventListener zum Schließen des Dropdowns bei Klick außerhalb
+/* ========== CLOSE DROPDOWNS ON OUTSIDE CLICK (ADD TASK) ========== */
 document.addEventListener("mousedown", function (event) {
   const dropdown = document.getElementById("dropdown-content");
   const toggle = document.getElementById("dropdown-toggle");
@@ -1267,7 +1233,7 @@ document.addEventListener("mousedown", function (event) {
   }
 });
 
-// Priority auswählen
+/* ========== SELECT PRIORITY (ADD TASK) ========== */
 function selectPriority(prio) {
   selectedPriority = prio;
   document.querySelectorAll("#buttons-prio button").forEach((b) => {
@@ -1276,7 +1242,7 @@ function selectPriority(prio) {
   updateSubmitState();
 }
 
-// Assigned Dropdown
+/* ========== ASSIGNED TO DROPDOWN HANDLERS (ADD TASK) ========== */
 function handleAssignedToClick(e) {
   e.stopPropagation();
   toggleAssignDropdown(e);
@@ -1312,6 +1278,10 @@ function clearAssignDropdownContent(dd) {
 function createContactDropdownItem(contact, filter) {
   const item = document.createElement("div");
   item.className = "contact-item";
+  // Hintergrund setzen, wenn ausgewählt
+  if (selectedContacts.some((s) => s.name === contact.name)) {
+    item.classList.add('contact-selected');
+  }
   item.innerHTML = `
     <span class="profile-icon" style="background:${contact.color}">
       ${getContactInitials(contact.name)}
@@ -1374,7 +1344,7 @@ function closeDropdown() {
   document.getElementById("dropdown-toggle")?.classList.remove("open");
 }
 
-// Kategorie Dropdown
+/* ========== CATEGORY DROPDOWN HANDLERS (ADD TASK) ========== */
 function toggleCategoryDropdown(event) {
   event.stopPropagation();
   const toggle = document.getElementById("category-toggle");
@@ -1406,7 +1376,7 @@ function selectCategory(category) {
   if (placeholder) placeholder.textContent = category;
 }
 
-// Subtasks
+/* ========== SUBTASKS HANDLERS (ADD TASK) ========== */
 function addSubtask() {
   const input = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
@@ -1435,9 +1405,6 @@ function createSubtaskListItem(text) {
   iconWrapper.className = "subtask-icons";
   li.appendChild(label);
   li.appendChild(iconWrapper);
-  li.addEventListener("dblclick", () => {
-    enterEditMode(li);
-  });
   return li;
 }
 function finalizeSubtaskInput(input, subtaskIcons) {
@@ -1446,79 +1413,6 @@ function finalizeSubtaskInput(input, subtaskIcons) {
   subtaskIcons.classList.add("hidden");
   const subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
-}
-function enterEditMode(subtaskElement) {
-  const currentText = getSubtaskCurrentText(subtaskElement);
-  if (!currentText) return;
-  subtaskElement.innerHTML = "";
-  const input = createSubtaskEditInput(currentText);
-  const cancelBtn = createSubtaskCancelBtn(currentText, subtaskElement);
-  const confirmBtn = createSubtaskConfirmBtn(currentText, subtaskElement, input);
-  assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn);
-  input.focus();
-}
-function getSubtaskCurrentText(subtaskElement) {
-  return subtaskElement.querySelector(".subtask-label")?.textContent || "";
-}
-function createSubtaskEditInput(currentText) {
-  const input = document.createElement("input");
-  input.type = "text";
-  input.value = currentText;
-  input.classList.add("subtask-edit-input");
-  return input;
-}
-function createSubtaskCancelBtn(currentText, subtaskElement) {
-  const cancelBtn = document.createElement("img");
-  cancelBtn.src = "./assets/icons/closeXSymbol.svg";
-  cancelBtn.alt = "Delete";
-  cancelBtn.className = "subtask-edit-cancel";
-  cancelBtn.addEventListener("click", () => {
-    const index = subtasks.indexOf(currentText);
-    if (index > -1) {
-      subtasks.splice(index, 1);
-    }
-    subtaskElement.remove();
-    updateSubmitState();
-  });
-  return cancelBtn;
-}
-function createSubtaskConfirmBtn(currentText, subtaskElement, input) {
-  const confirmBtn = document.createElement("img");
-  confirmBtn.src = "./assets/icons/checked.svg";
-  confirmBtn.alt = "Confirm";
-  confirmBtn.className = "subtask-edit-confirm";
-  confirmBtn.addEventListener("click", () => {
-    const newValue = input.value.trim();
-    if (newValue) {
-      subtasks[subtasks.indexOf(currentText)] = newValue;
-      updateSubtaskLabel(subtaskElement, newValue);
-    }
-  });
-  return confirmBtn;
-}
-function updateSubtaskLabel(subtaskElement, newValue) {
-  subtaskElement.innerHTML = "";
-  const label = document.createElement("span");
-  label.textContent = newValue;
-  label.className = "subtask-label";
-  subtaskElement.appendChild(label);
-  subtaskElement.addEventListener("dblclick", () => {
-    enterEditMode(subtaskElement);
-  });
-}
-function assembleSubtaskEditUI(subtaskElement, input, cancelBtn, confirmBtn) {
-  const wrapper = document.createElement("div");
-  wrapper.classList.add("subtask-edit-container");
-  const inputWrapper = document.createElement("div");
-  inputWrapper.classList.add("subtask-input-edit-wrapper");
-  inputWrapper.appendChild(input);
-  const buttonContainer = document.createElement("div");
-  buttonContainer.classList.add("subtask-edit-buttons");
-  buttonContainer.appendChild(cancelBtn);
-  buttonContainer.appendChild(confirmBtn);
-  wrapper.appendChild(inputWrapper);
-  wrapper.appendChild(buttonContainer);
-  subtaskElement.appendChild(wrapper);
 }
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
@@ -1549,6 +1443,7 @@ function clearSubtaskInput() {
 }
 
 // Kategorie-UI für Chip (optional)
+/* ========== UPDATE CATEGORY UI CHIP (OPTIONAL) ========== */
 function updateCategoryUI() {
   const box = document.getElementById("selected-category");
   if (!box) return;
@@ -1566,27 +1461,7 @@ function updateCategoryUI() {
   }
 }
 
-// Kontakte laden
-async function fetchContacts() {
-  try {
-    const res = await fetch(
-      `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/contacts.json`
-    );
-    const data = await res.json();
-    contacts = Object.entries(data || {})
-      .filter(([_, u]) => u && typeof u.name === "string" && u.name.trim())
-      .map(([_, u]) => ({
-        name: u.name.trim(),
-        color: u.color || "#888",
-      }));
-    // Board nach Laden der Kontakte aktualisieren
-    updateHTML();
-  } catch (err) {
-    console.error("Contacts fetch error:", err);
-  }
-}
-
-// Form Validation & Reset
+/* ========== FORM VALIDATION & RESET (ADD TASK) ========== */
 function validateForm() {
   const titleEl = document.getElementById("title");
   const dueDateEl = document.getElementById("dueDate");
@@ -1634,7 +1509,7 @@ function resetForm() {
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
-// Date Validation
+/* ========== DATE VALIDATION (ADD TASK) ========== */
 function setupDateValidation() {
   setTimeout(() => {
     const dateInput = document.getElementById("dueDate");
@@ -1649,7 +1524,7 @@ function setupDateValidation() {
   }, 100);
 }
 
-// Task anlegen
+/* ========== CREATE TASK IN FIREBASE ========== */
 async function createTask() {
   if (!validateForm()) return;
   const dueDateValue = document.getElementById("dueDate").value;
@@ -1690,7 +1565,7 @@ async function createTask() {
   }, 100);
 }
 
-// Initialisiere alle Add-Task-Funktionen nach Modal-Render
+/* ========== INIT EVENT LISTENERS FOR ADD TASK OVERLAY ========== */
 function setupEventListeners() {
   document
     .getElementById("dropdown-toggle")
@@ -1718,14 +1593,14 @@ function setupEventListeners() {
   }
 }
 
-// Setup-Funktion nach Overlay-Render
+/* ========== INIT ADD TASK OVERLAY LOGIC ========== */
 function initAddTaskOverlayLogic() {
   fetchContacts();
   setupEventListeners();
   setupDateValidation();
   resetForm();
 }
-// ========== MOVE TASK MENU DROPDOWN ==========
+/* ========== OPEN MOVE TASK MENU DROPDOWN ========== */
 function openMoveTaskMenu(taskKey, event) {
   event.stopPropagation();
   // Remove any existing dropdowns
@@ -1740,16 +1615,6 @@ function openMoveTaskMenu(taskKey, event) {
   // Create dropdown container
   const dropdown = document.createElement('div');
   dropdown.className = 'move-task-dropdown-menu';
-  dropdown.style.position = 'absolute';
-  dropdown.style.zIndex = '1000';
-  dropdown.style.minWidth = '140px';
-  dropdown.style.background = '#2A3647';
-  dropdown.style.color = 'white';
-  dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-  dropdown.style.borderRadius = '0 20px 20px 20px';
-  dropdown.style.padding = '8px 0';
-  dropdown.style.fontSize = '16px';
-  dropdown.style.userSelect = 'none';
 
   // Status options
   const statuses = [
@@ -1776,8 +1641,6 @@ function openMoveTaskMenu(taskKey, event) {
     const option = document.createElement('div');
     option.className = 'move-task-dropdown-option';
     option.textContent = s.label;
-    option.style.padding = '8px 16px';
-    option.style.cursor = 'pointer';
     option.onclick = function (e) {
       e.stopPropagation();
       handleMoveClick(s.key);
@@ -1832,6 +1695,7 @@ function openMoveTaskMenu(taskKey, event) {
   };
 }
 
+/* ========== CLOSE MOVE TASK MENU DROPDOWN ========== */
 function closeMoveTaskMenu() {
   if (window._moveTaskDropdown) {
     window._moveTaskDropdown.remove();

@@ -5,6 +5,7 @@
   padding: 24px;
   padding-left: 0px;
 }
+
 .desktop-menu {
   position: fixed;
   top: 0;
@@ -351,13 +352,14 @@ select:focus {
 }
 
 .dropdown-content .contact-item {
-  padding: 16px 20px;
+  padding: 2px 12px;
   font-size: 18px;
   display: grid;
   grid-template-columns: 40px 1fr auto;
   align-items: center;
   gap: 20px;
   cursor: pointer;
+  margin-bottom: 2px;
 }
 
 .dropdown-content .contact-item:hover {
@@ -676,13 +678,11 @@ select::placeholder {
   right: 12px;
   transform: translateY(-50%);
   display: flex;
-  gap: 8px;
 }
 
 .subtask-icons img {
   width: 20px;
   height: 20px;
-  padding: 4px;
   cursor: pointer;
   border-radius: 4px;
   background-color: transparent;
@@ -872,8 +872,9 @@ select::placeholder {
 .contact-item.selected,
 .dropdown-content .contact-item.selected {
   /* Selected Contact Item */
-  background-color: #2a3647 !important;
+  background-color: #091931 !important;
   color: #ffffff;
+  border-radius: 10px;
 }
 
 .contact-item.selected .contact-name,
@@ -885,6 +886,26 @@ select::placeholder {
 .dropdown-content .contact-item.selected img,
 .dropdown-content .contact-item.selected .checkbox-icon {
   filter: brightness(0) invert(1);
+}
+
+.contact-item input[type="checkbox"] {
+  content: url("/assets/icons/board/board-check-icon.svg");
+  appearance: none;
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.contact-item input[type="checkbox"]:checked {
+  content: url("/assets/icons/board/board-assigned-check-icon-checked.svg");
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 }
 
 .category-item img {
@@ -915,7 +936,8 @@ select::placeholder {
   background-color: #2a3647;
   color: white;
   border: none;
-  pointer-events: auto; /* wichtig! */
+  pointer-events: auto;
+  /* wichtig! */
   opacity: 1;
 }
 
