@@ -255,80 +255,86 @@ function updateHTML() {
   addCardClickListeners();
 }
 
-/* ========== OPEN BOARD CARD OVERLAY ========== */
 function openBoardCard(firebaseKey) {
-  let boardOverlayRef = document.getElementById("board_overlay");
-  let task = arrayTasks.find((t) => t.firebaseKey === firebaseKey);
+  const overlayElement = document.getElementById("board_overlay");
+  const task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
   let categoryClass = "";
-  if (task.category === "User Story") {
-    categoryClass = "category-user";
-  } else if (task.category === "Technical Task") {
-    categoryClass = "category-technical";
-  }
-  document.getElementById("board_overlay").classList.remove("d-none");
+  if (task.category === "User Story") categoryClass = "category-user";
+  else if (task.category === "Technical Task") categoryClass = "category-technical";
+  overlayElement.classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
-  boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-  // Animation: .open-Klasse nach kurzem Timeout immer hinzufügen
+  overlayElement.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
   setTimeout(() => {
     const card = document.querySelector('.board-overlay-card');
-    if (card) {
-      card.classList.add('open');
-    }
+    if (card) card.classList.add('open');
   }, 10);
   updateHTML();
 }
 
-/* ========== GENERATE BOARD CARD OVERLAY HTML ========== */
-function getOpenBoardCardTemplate(categoryClass, task) {
-  let priorityIcon = "";
-  if (task.priority && task.priority.toLowerCase() === "low") {
-    priorityIcon = "./assets/icons/board/board-priority-low.svg";
-  } else if (task.priority && task.priority.toLowerCase() === "medium") {
-    priorityIcon = "./assets/icons/board/board-priority-medium.svg";
-  } else if (task.priority && task.priority.toLowerCase() === "urgent") {
-    priorityIcon = "./assets/icons/board/board-priority-urgent.svg";
+function getPriorityIcon(priority) {
+  if (!priority) return "";
+  switch (priority.toLowerCase()) {
+    case "low": return "./assets/icons/board/board-priority-low.svg";
+    case "medium": return "./assets/icons/board/board-priority-medium.svg";
+    case "urgent": return "./assets/icons/board/board-priority-urgent.svg";
+    default: return "";
   }
-  return /*html*/ `
+}
+
+function renderAssignedList(assignedTo) {
+  if (!Array.isArray(assignedTo)) return "";
+  return assignedTo.map(name => {
+    const contact = getContactByName(name);
+    if (!contact) return '';
+    const color = contact.color || "#ccc";
+    return `
+      <div class="assigned-entry">
+        <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
+        <span class="assigned-name">${name}</span>
+      </div>`;
+  }).join("");
+}
+
+function renderSubtasks(task) {
+  if (!Array.isArray(task.subtask)) return "";
+  return task.subtask.map((sub, idx) => {
+    const title = typeof sub === 'string' ? sub : sub.title;
+    const checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
+    const id = `subtask-${task.firebaseKey}-${idx}`;
+    return `
+      <div class="subtask-item">
+        <input type="checkbox" id="${id}" ${checked} onchange="toggleSubtask('${task.firebaseKey}', ${idx})" />
+        <label for="${id}">${title}</label>
+      </div>`;
+  }).join("");
+}
+
+// auslagern
+function getOpenBoardCardTemplate(categoryClass, task) {
+  const priorityIcon = getPriorityIcon(task.priority);
+  const assignedHTML = renderAssignedList(task.assignedTo);
+  const subtaskHTML = renderSubtasks(task);
+
+  return `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
       <div class="board-overlay-card-header edit-mode">
-      <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
-      <img class="board-close-icon " src="./assets/icons/board/board-close.svg" onclick="closeBoardCard()">
+        <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
+        <img class="board-close-icon" src="./assets/icons/board/board-close.svg" onclick="closeBoardCard()">
       </div>
       <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
       <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
       <span class="due-date-headline" id="due_date"><span class="overlay-headline-color">Due date:</span><span>${task.dueDate}</span></span>
       <span class="priority-headline"><span class="overlay-headline-color">Priority:</span>
-      <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span></span>
+        <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span>
+      </span>
       <div class="assigned-list">
         <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
-        ${Array.isArray(task.assignedTo)
-      ? task.assignedTo.map(name => {
-        const contact = getContactByName(name);
-        if (!contact) return ''; // Nicht existierende Kontakte überspringen
-        const color = contact.color || "#ccc";
-        return `
-                <div class="assigned-entry">
-                  <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
-                  <span class="assigned-name">${name}</span>
-                </div>`;
-      }).join("")
-      : ""}
+        ${assignedHTML}
       </div>
       <div class="subtask-list">
         <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
         <ul>
-          ${Array.isArray(task.subtask)
-      ? task.subtask.map((sub, idx) => {
-        const title = typeof sub === 'string' ? sub : sub.title;
-        const checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
-        const id = `subtask-${task.firebaseKey}-${idx}`;
-        return `
-            <div class="subtask-item">
-              <input type="checkbox" id="${id}" ${checked} onchange="toggleSubtask('${task.firebaseKey}', ${idx})" />
-              <label for="${id}">${title}</label>
-            </div>`;
-      }).join("")
-      : ""}
+          ${subtaskHTML}
         </ul>
       </div>
       <div id="overlay_card_footer" class="overlay-card-footer">
@@ -336,12 +342,12 @@ function getOpenBoardCardTemplate(categoryClass, task) {
         <img id="seperator" src="./assets/icons/board/board-separator-icon.svg" alt="">
         <div id="edit_btn" class="edit-btn" onclick="editTask()"><div class="edit-btn-icon"></div>Edit</div>
         <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok
-        <img src="./assets/icons/board/board-check.svg"</div>
+        <img src="./assets/icons/board/board-check.svg"></div>
       </div>
     </div>`;
 }
 
-/* ========== GENERATE PRIORITY BUTTONS HTML (OVERLAY EDIT MODE) ========== */
+// auslagern
 function getPriorityButtonsHTML(currentPriority) {
   const priorities = [
     { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
@@ -359,95 +365,146 @@ function getPriorityButtonsHTML(currentPriority) {
   `).join('');
 }
 
-/* ========== SELECT PRIORITY IN BOARD CARD OVERLAY EDIT MODE ========== */
 function selectOverlayPriority(priority, btn) {
   document.querySelectorAll('.priority-edit-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('priority-edit-buttons').dataset.selectedPriority = priority;
 }
 
+function convertSubtasksToObjects(subtasks) {
+  return subtasks.map(sub => typeof sub === 'string' ? { title: sub, completed: false } : sub);
+}
 
-/* ========== TOGGLE SUBTASK COMPLETION & UPDATE FIREBASE ========== */
+function toggleSubtaskCompleted(subtasks, index) {
+  if (Array.isArray(subtasks) && subtasks[index]) {
+    subtasks[index].completed = !subtasks[index].completed;
+  }
+}
+
+async function saveSubtasksToFirebase(taskKey, subtasks) {
+  await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}/subtask.json`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(subtasks)
+  });
+}
+
+function renderBoardOverlay(task) {
+  const boardOverlayRef = document.getElementById("board_overlay");
+  if (boardOverlayRef && task) {
+    const categoryClass = task.category === "User Story"
+      ? "category-user"
+      : task.category === "Technical Task"
+        ? "category-technical"
+        : "";
+    boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
+    // Ensure card re-renders and animation matches openBoardCard
+    const cardRef = document.querySelector('.board-overlay-card');
+    if (cardRef) {
+      setTimeout(() => {
+        cardRef.classList.add('open');
+      }, 10);
+    }
+    document.getElementById("html").style.overflow = "hidden";
+    boardOverlayRef.classList.remove("d-none");
+    boardOverlayRef.scrollTop = 0;
+  }
+}
+
+function blurCheckbox(taskKey, index) {
+  setTimeout(() => {
+    const checkboxId = `subtask-${taskKey}-${index}`;
+    const checkbox = document.getElementById(checkboxId);
+    if (checkbox) checkbox.blur();
+  }, 0);
+}
+
 async function toggleSubtask(taskKey, index) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
-  // Convert string subtasks to objects for backward compatibility
-  task.subtask = task.subtask.map(sub => typeof sub === 'string' ? { title: sub, completed: false } : sub);
-  // Toggle the completed flag
-  task.subtask[index].completed = !task.subtask[index].completed;
+
+  // Schritt 1: Konvertieren
+  task.subtask = convertSubtasksToObjects(task.subtask);
+
+  // Schritt 2: Toggle
+  toggleSubtaskCompleted(task.subtask, index);
+
+  // Schritt 3: Speichern
   try {
-    // Persist updated subtasks array to Firebase
-    await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}/subtask.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(task.subtask)
-    });
-    const boardOverlayRef = document.getElementById("board_overlay");
-    // const task = arrayTasks.find(t => t.firebaseKey === taskKey); // task already defined above
-    if (boardOverlayRef && task) {
-      updateHTML();
-      const categoryClass = task.category === "User Story"
-        ? "category-user"
-        : task.category === "Technical Task"
-          ? "category-technical"
-          : "";
-      boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-      // Ensure card re-renders and animation matches openBoardCard
-      const cardRef = document.querySelector('.board-overlay-card');
-      if (cardRef) {
-        setTimeout(() => {
-          cardRef.classList.add('open');
-        }, 10);
-      }
-      document.getElementById("html").style.overflow = "hidden";
-      boardOverlayRef.classList.remove("d-none");
-      boardOverlayRef.scrollTop = 0;
-      // Fokus von der Checkbox entfernen
-      setTimeout(() => {
-        const checkboxId = `subtask-${taskKey}-${index}`;
-        const checkbox = document.getElementById(checkboxId);
-        if (checkbox) checkbox.blur();
-      }, 0);
-    }
+    await saveSubtasksToFirebase(taskKey, task.subtask);
+
+    // Schritt 4: UI-Update
+    updateHTML();
+    renderBoardOverlay(task);
+    // Schritt 5: Fokus entfernen
+    blurCheckbox(taskKey, index);
+
   } catch (error) {
     console.error("Fehler beim Aktualisieren des Subtasks:", error);
   }
 }
 
-/* ========== CLOSE BOARD CARD OVERLAY ========== */
+function removeOverlayAnimation(card) {
+  card.classList.remove('open');
+}
+
+function hideBoardOverlay() {
+  document.getElementById("board_overlay").classList.add("d-none");
+}
+
+function resetHtmlOverflow() {
+  document.getElementById("html").style.overflow = "";
+}
+
+function removeOverlayLabels() {
+  let titleLabel = document.getElementById("overlay_card_title_label");
+  if (titleLabel) titleLabel.remove();
+  let descLabel = document.getElementById("overlay_card_description_label");
+  if (descLabel) descLabel.remove();
+}
+
+function closeOverlayWithDelay(ms) {
+  setTimeout(() => {
+    hideBoardOverlay();
+    resetHtmlOverflow();
+    removeOverlayLabels();
+    updateHTML();
+  }, ms);
+}
+
+function closeOverlayImmediately() {
+  hideBoardOverlay();
+  resetHtmlOverflow();
+  removeOverlayLabels();
+  updateHTML();
+}
+
 function closeBoardCard() {
   if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
   const card = document.querySelector('.board-overlay-card');
   if (card) {
-    card.classList.remove('open');
-    setTimeout(() => {
-      document.getElementById("board_overlay").classList.add("d-none");
-      document.getElementById("html").style.overflow = "";
-      // Remove labels if they exist
-      let titleLabel = document.getElementById("overlay_card_title_label");
-      if (titleLabel) titleLabel.remove();
-      let descLabel = document.getElementById("overlay_card_description_label");
-      if (descLabel) descLabel.remove();
-      updateHTML();
-    }, 400);
+    removeOverlayAnimation(card);
+    closeOverlayWithDelay(400);
   } else {
-    document.getElementById("board_overlay").classList.add("d-none");
-    document.getElementById("html").style.overflow = "";
-    let titleLabel = document.getElementById("overlay_card_title_label");
-    if (titleLabel) titleLabel.remove();
-    let descLabel = document.getElementById("overlay_card_description_label");
-    if (descLabel) descLabel.remove();
-    updateHTML();
+    closeOverlayImmediately();
   }
 }
 
-/* ========== OVERLAY CLICK PROTECTION ========== */
 function onclickProtection(event) {
   event.stopPropagation();
 }
 
-/* ========== EDIT TASK IN OVERLAY ========== */
 function editTask() {
+  editTaskUI();
+  addTitleLabel();
+  addDescriptionLabel();
+  addDueDateLabelAndInput();
+  setupPriorityEdit();
+  setupAssignedDropdown();
+  setupSubtasksEdit();
+}
+
+function editTaskUI() {
   document.getElementById("ok_btn").classList.remove("d-none");
   document.getElementById("delete_btn").classList.add("d-none");
   document.getElementById("edit_btn").classList.add("d-none");
@@ -456,8 +513,9 @@ function editTask() {
   document.getElementById("board_overlay_card").classList.add("board-overlay-card-edit");
   document.getElementById("overlay_card_title").contentEditable = "true";
   document.getElementById("overlay_card_description").contentEditable = "true";
+}
 
-  // Insert label "Title" above the editable title
+function addTitleLabel() {
   let titleElement = document.getElementById("overlay_card_title");
   if (!document.getElementById("overlay_card_title_label")) {
     let titleLabel = document.createElement("span");
@@ -466,7 +524,9 @@ function editTask() {
     titleLabel.className = "overlay-card-label";
     titleElement.parentNode.insertBefore(titleLabel, titleElement);
   }
-  // Insert label "Description" above the editable description
+}
+
+function addDescriptionLabel() {
   let descElement = document.getElementById("overlay_card_description");
   if (!document.getElementById("overlay_card_description_label")) {
     let descLabel = document.createElement("span");
@@ -475,39 +535,52 @@ function editTask() {
     descLabel.className = "overlay-card-label";
     descElement.parentNode.insertBefore(descLabel, descElement);
   }
+}
 
-  // ==== HIER kommt dein neues Due Date Label ====
+function extractDueDateText(dueDateSpan) {
+  let match = dueDateSpan.innerText.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
+  return match ? match[0] : "";
+}
+
+function formatDateForInput(dateStr) {
+  if (dateStr.match(/\d{2}\/\d{2}\/\d{4}/)) {
+    let [d, m, y] = dateStr.split("/");
+    return `${y}-${m}-${d}`;
+  }
+  return dateStr;
+}
+
+function addDueDateLabel(dueDateSpan) {
+  if (!document.getElementById("overlay_card_due_date_label")) {
+    let dueLabel = document.createElement("span");
+    dueLabel.textContent = "Due Date";
+    dueLabel.id = "overlay_card_due_date_label";
+    dueLabel.className = "overlay-card-label";
+    dueDateSpan.parentNode.insertBefore(dueLabel, dueDateSpan);
+  }
+}
+
+function addDueDateInput(dueDateSpan, formattedDate) {
+  let input = document.createElement("input");
+  input.type = "date";
+  input.id = "due_date_input";
+  input.className = "overlay-card-date-input";
+  input.value = formattedDate;
+  dueDateSpan.innerHTML = "";
+  dueDateSpan.appendChild(input);
+}
+
+function addDueDateLabelAndInput() {
   let dueDateSpan = document.getElementById("due_date");
   if (dueDateSpan && !document.getElementById("due_date_input")) {
-    // Aktuelles Datum extrahieren
-    let match = dueDateSpan.innerText.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
-    let currentDueDate = match ? match[0] : "";
-    let formattedDate = "";
-    if (currentDueDate.match(/\d{2}\/\d{2}\/\d{4}/)) {
-      let [d, m, y] = currentDueDate.split("/");
-      formattedDate = `${y}-${m}-${d}`;
-    } else {
-      formattedDate = currentDueDate;
-    }
-    // Neues Label erzeugen
-    if (!document.getElementById("overlay_card_due_date_label")) {
-      let dueLabel = document.createElement("span");
-      dueLabel.textContent = "Due Date";
-      dueLabel.id = "overlay_card_due_date_label";
-      dueLabel.className = "overlay-card-label";
-      dueDateSpan.parentNode.insertBefore(dueLabel, dueDateSpan);
-    }
-    // Input erzeugen und ersetzen
-    let input = document.createElement("input");
-    input.type = "date";
-    input.id = "due_date_input";
-    input.className = "overlay-card-date-input";
-    input.value = formattedDate;
-    dueDateSpan.innerHTML = "";
-    dueDateSpan.appendChild(input);
+    let currentDueDate = extractDueDateText(dueDateSpan);
+    let formattedDate = formatDateForInput(currentDueDate);
+    addDueDateLabel(dueDateSpan);
+    addDueDateInput(dueDateSpan, formattedDate);
   }
+}
 
-  // Priority bearbeiten
+function setupPriorityEdit() {
   const priorityHeadline = document.querySelector('.priority-headline');
   if (priorityHeadline && !document.getElementById('priority-edit-buttons')) {
     const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
@@ -523,384 +596,421 @@ function editTask() {
     priorityHeadline.innerHTML = '';
     priorityHeadline.appendChild(wrapper);
   }
+}
 
-  // Custom Dropdown für "Assigned To"
-  const assignedListContainer = document.querySelector('.assigned-list');
-  if (assignedListContainer && !document.getElementById('assigned-dropdown')) {
-    assignedListContainer.innerHTML = '';
-    // Label
-    const labelA = document.createElement('span');
-    labelA.textContent = 'Assigned to';
-    labelA.className = 'overlay-card-label';
-    assignedListContainer.appendChild(labelA);
+function createLabel() {
+  const label = document.createElement('span');
+  label.textContent = 'Assigned to';
+  label.className = 'overlay-card-label';
+  return label;
+}
 
-    // Dropdown-Toggle
-    const dropdown = document.createElement('div');
-    dropdown.id = 'assigned-dropdown';
-    dropdown.className = 'assigned-dropdown';
+function createDropdown() {
+  const dropdown = document.createElement('div');
+  dropdown.id = 'assigned-dropdown';
+  dropdown.className = 'assigned-dropdown';
+  return dropdown;
+}
 
-    // Dropdown-Liste
-    const list = document.createElement('div');
-    list.id = 'assigned-dropdown-list';
-    list.className = 'assigned-dropdown-list'; // entferne zusätzliche Klassen
-    list.classList.remove('open'); // diese Zeile sicherheitshalber beibehalten
+function createList() {
+  const list = document.createElement('div');
+  list.id = 'assigned-dropdown-list';
+  list.className = 'assigned-dropdown-list';
+  list.classList.remove('open');
+  return list;
+}
 
-    const toggle = document.createElement('div');
-    toggle.className = 'assigned-dropdown-toggle';
-    // Ersetze onclick durch robusten EventListener mit Outside-Handling, nur einmal registrieren!
-    if (!toggle._dropdownClickHandlerAdded) {
-      toggle.addEventListener('click', function (event) {
-        event.stopPropagation();
-        const isOpen = list.classList.contains('open');
-        closeAllDropdowns(); // schließt andere ggf. offene Dropdowns
-        if (!isOpen) {
-          list.classList.add('open');
-        }
-      });
-      toggle._dropdownClickHandlerAdded = true;
-    }
+function createToggle() {
+  const toggle = document.createElement('div');
+  toggle.className = 'assigned-dropdown-toggle';
+  return toggle;
+}
 
-    // Hilfsfunktion zum Schließen aller Dropdowns
-    function closeAllDropdowns() {
-      document.querySelectorAll('.assigned-dropdown-list.open').forEach(el => {
-        el.classList.remove('open');
-      });
-    }
+function createPlaceholder() {
+  const placeholder = document.createElement('span');
+  placeholder.id = 'assigned-placeholder';
+  placeholder.textContent = 'Select contacts to assign';
+  return placeholder;
+}
 
-    // Outside-Click-Handler nur einmal global hinzufügen
-    if (!window._assignedDropdownClickHandler) {
-      document.addEventListener('click', function (event) {
-        // Finde alle offenen Dropdowns und schließe, wenn außerhalb geklickt wurde
-        document.querySelectorAll('.assigned-dropdown').forEach(dropdown => {
-          const list = dropdown.querySelector('.assigned-dropdown-list');
-          if (list && list.classList.contains('open') && !dropdown.contains(event.target)) {
-            list.classList.remove('open');
-          }
-        });
-      });
-      window._assignedDropdownClickHandler = true;
-    }
+function createArrow() {
+  const arrow = document.createElement('span');
+  arrow.className = 'dropdown-arrow';
+  return arrow;
+}
 
-    const placeholder = document.createElement('span');
-    placeholder.id = 'assigned-placeholder';
-    placeholder.textContent = 'Select contacts to assign';
+function createAssignedDropdownElements(assignedListContainer) {
+  assignedListContainer.innerHTML = '';
+  const label = createLabel();
+  const dropdown = createDropdown();
+  const list = createList();
+  const toggle = createToggle();
+  const placeholder = createPlaceholder();
+  const arrow = createArrow();
 
-    const arrow = document.createElement('span');
-    arrow.className = 'dropdown-arrow';
+  toggle.appendChild(placeholder);
+  toggle.appendChild(arrow);
+  dropdown.appendChild(toggle);
+  dropdown.appendChild(list);
+  assignedListContainer.appendChild(label);
+  assignedListContainer.appendChild(dropdown);
 
-    toggle.appendChild(placeholder);
-    toggle.appendChild(arrow);
+  return { dropdown, list, toggle, placeholder, arrow };
+}
 
-    dropdown.appendChild(toggle);
-    dropdown.appendChild(list);
-    assignedListContainer.appendChild(dropdown);
-
-    // Kontakte aus localStorage holen
-    const userKey = localStorage.getItem('firebaseKey');
-    const usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
-    const contacts = Object.values(usersData[userKey]?.contacts || {});
-    const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
-    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
-    let selectedContacts = [...(task.assignedTo || [])];
-
-
-
-    function toggleContact(name) {
-      if (selectedContacts.includes(name)) {
-        selectedContacts = selectedContacts.filter(n => n !== name);
-      } else {
-        selectedContacts.push(name);
+function addToggleClickHandler(toggle, list) {
+  if (!toggle._dropdownClickHandlerAdded) {
+    toggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      const isOpen = list.classList.contains('open');
+      closeAllAssignedDropdowns();
+      if (!isOpen) {
+        list.classList.add('open');
       }
-      renderAssignedDropdown();
-      // Outside-Click schließt Dropdown
-      function handleDropdownClickOutside(e) {
-        const dropdown = document.getElementById('assigned-dropdown');
-        if (dropdown && !dropdown.contains(e.target)) {
-          list.classList.remove('open');
-        }
-      }
-      document.addEventListener('mousedown', handleDropdownClickOutside);
-
-      // Cleanup-Funktion merken, um Event Listener später zu entfernen
-      if (!window._assignedDropdownCleanup) {
-        window._assignedDropdownCleanup = () => {
-          document.removeEventListener('mousedown', handleDropdownClickOutside);
-        };
-      }
-    }
-
-    function renderAssignedDropdown() {
-      list.innerHTML = '';
-      contacts.forEach(contact => {
-        const initials = getInitials(contact.name);
-        const isChecked = selectedContacts.includes(contact.name);
-
-        const item = document.createElement('div');
-        item.className = 'assigned-item' + (isChecked ? ' selected' : '');
-        item.onclick = () => toggleContact(contact.name);
-
-        const circle = document.createElement('span');
-        circle.className = 'assigned-circle';
-        circle.style.backgroundColor = contact.color || '#ccc';
-        circle.textContent = initials;
-
-        const name = document.createElement('span');
-        name.className = 'assigned-name';
-        name.textContent = contact.name;
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'assigned-checkbox';
-        checkbox.checked = isChecked;
-        checkbox.onclick = (e) => {
-          e.stopPropagation();
-          toggleContact(contact.name);
-        };
-
-        item.appendChild(circle);
-        item.appendChild(name);
-        item.appendChild(checkbox);
-
-        list.appendChild(item);
-      });
-      // Placeholder immer gleich lassen
-      placeholder.textContent = 'Select contacts to assign';
-      // Reihenfolge: Erst Dropdown, dann Kreise!
-      // Wichtig: assignedListContainer.appendChild(dropdown) wurde bereits vor dem ersten renderAssignedSelectedCircles aufgerufen.
-      renderAssignedSelectedCircles();
-      // --- Entferne automatisches Öffnen des Dropdowns beim Rendern ---
-      // entfernt: list.classList.add('open'); // Dropdown soll initial geschlossen bleiben!
-    }
-
-    // Funktion zum Rendern der ausgewählten Kreise (NEU gemäß Vorgabe)
-    function renderAssignedSelectedCircles() {
-      let wrapper = document.getElementById('assigned-selected-circles');
-      if (!wrapper) {
-        wrapper = document.createElement('div');
-        wrapper.id = 'assigned-selected-circles';
-        wrapper.className = 'selected-initials-wrapper';
-        // WICHTIG: Nicht als Kind von dropdown/list, sondern direkt NACH dropdown!
-        assignedListContainer.appendChild(wrapper);
-      } else {
-        // Falls wrapper aktuell NICHT direkt nach dropdown steht, positioniere es um
-        const dropdown = document.getElementById('assigned-dropdown');
-        if (dropdown && wrapper.previousSibling !== dropdown) {
-          assignedListContainer.insertBefore(wrapper, dropdown.nextSibling);
-        }
-      }
-      // Sichtbarkeit abhängig von ausgewählten Kontakten
-      if (selectedContacts.length === 0) {
-        wrapper.style.display = "none";
-        return;
-      } else {
-        wrapper.style.display = "flex";
-      }
-      wrapper.innerHTML = '';
-      selectedContacts.forEach(name => {
-        const contact = contacts.find(c => c.name === name);
-        if (!contact) return; // ausgelöschte Kontakte überspringen
-        const initials = getInitials(contact.name);
-        const color = contact.color || '#ccc';
-        const div = document.createElement('div');
-        div.className = 'initial-circle';
-        div.style.backgroundColor = color;
-        div.textContent = initials;
-        wrapper.appendChild(div);
-      });
-    }
-
-    // Update Save/Edit Logik (AssignedTo für saveEditTask)
-    assignedListContainer.dataset.selectedContacts = JSON.stringify(selectedContacts);
-    renderAssignedDropdown();
-
-    // Save Selected auf global speichern, damit saveEditTask das findet
-    window.getAssignedOverlaySelection = () => selectedContacts;
-  }
-
-  // === Subtasks Edit: Input-Feld & Listendarstellung wie Screenshot ===
-  const subtaskList = document.querySelector('.subtask-list ul');
-  if (subtaskList && !document.getElementById('subtasks-edit-container')) {
-    // Container für Subtasks-Edit
-    const container = document.createElement('div');
-    container.id = 'subtasks-edit-container';
-    container.className = 'subtasks-edit-container';
-
-    // Inputfeld und + Button oben wie im Screenshot
-    const inputWrapper = document.createElement('div');
-    inputWrapper.className = 'subtask-input-wrapper';
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Add new subtask';
-    input.id = 'add-subtask-input';
-    input.className = 'add-subtask-input';
-
-    const addBtn = document.createElement('button');
-    addBtn.type = 'button';
-    addBtn.id = 'add-subtask-btn';
-    addBtn.textContent = '+';
-    addBtn.className = 'add-subtask-btn';
-
-    inputWrapper.appendChild(input);
-    inputWrapper.appendChild(addBtn);
-    container.appendChild(inputWrapper);
-
-    // Bestehende Subtasks auslesen
-    const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
-    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
-    let subtasks = Array.isArray(task.subtask) ? task.subtask : [];
-
-    // NEUE renderSubtasksList-Funktion und Initialaufruf gemäß Instruktion
-    function renderSubtasksList(subtaskArr) {
-      let listDiv = document.getElementById('subtask-list-edit');
-      if (!listDiv) {
-        listDiv = document.createElement('div');
-        listDiv.id = 'subtask-list-edit';
-        container.appendChild(listDiv);
-      }
-      listDiv.innerHTML = '';
-      subtaskArr.forEach((sub, idx) => {
-        const row = document.createElement('div');
-        row.className = 'subtask-list-row';
-
-        // Sofort als Inputfeld anzeigen
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = typeof sub === 'string' ? sub : sub.title;
-        input.className = 'subtask-list-editinput';
-        input.readOnly = true; // Input zunächst nicht editierbar
-
-        // Funktion für Editieren (Input aktivieren und fokussieren)
-        function activateEdit() {
-          input.readOnly = false;
-          input.focus();
-          // Markiere den Text (optional)
-          input.setSelectionRange(0, input.value.length);
-        }
-
-        input.onblur = () => {
-          if (input.value.trim() !== '') {
-            subtaskArr[idx].title = input.value.trim();
-          }
-          input.readOnly = true; // Nach Bearbeitung wieder nicht editierbar
-        };
-        input.onkeydown = (e) => {
-          if (e.key === 'Enter') input.blur();
-        };
-
-        // Löschen-Button
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.className = 'subtask-remove-btn';
-        removeBtn.innerHTML = `<img src="assets/icons/board/board-delete-icon.svg">`;
-        removeBtn.onclick = (e) => {
-          e.preventDefault();
-          subtaskArr.splice(idx, 1);
-          renderSubtasksList(subtaskArr);
-        };
-
-        // Edit-Button (Stift)
-        const editBtn = document.createElement('button');
-        editBtn.type = 'button';
-        editBtn.className = 'subtask-edit-btn';
-        editBtn.innerHTML = `<img src="assets/icons/board/board-edit-icon.svg">`;
-        editBtn.title = 'Bearbeiten';
-        editBtn.onclick = (e) => {
-          e.preventDefault();
-          activateEdit();
-        };
-
-        const dot = document.createElement('span');
-        dot.className = 'subtask-dot';
-        dot.textContent = '•';
-
-        row.appendChild(dot);
-        row.appendChild(input);
-        row.appendChild(editBtn);
-        row.appendChild(removeBtn);
-
-        listDiv.appendChild(row);
-      });
-    }
-    renderSubtasksList(subtasks);
-
-    // Beim Klick auf + neuen Subtask zur Liste hinzufügen
-    addBtn.onclick = () => {
-      const val = input.value.trim();
-      if (val) {
-        subtasks.push({ title: val, completed: false });
-        renderSubtasksList(subtasks);
-        input.value = '';
-      }
-    };
-
-    // Im UI einfügen (anstelle alter .subtask-list ul)
-    subtaskList.innerHTML = '';
-    subtaskList.appendChild(container);
-
-    // Speichern-Hook (für saveEditTask): Aktuelle Subtask-Liste global speichern
-    window.getEditedSubtasks = () => subtasks;
+    });
+    toggle._dropdownClickHandlerAdded = true;
   }
 }
 
-/* ========== EDIT TASK IN FIREBASE ========== */
-/* ========== SAVE EDITED TASK IN FIREBASE ========== */
-async function saveEditTask(taskKey) {
-  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
-  if (!task) {
-    console.warn("Task nicht gefunden für ID:", taskKey);
-    return;
+function closeAllAssignedDropdowns() {
+  document.querySelectorAll('.assigned-dropdown-list.open').forEach(el => {
+    el.classList.remove('open');
+  });
+}
+
+function addGlobalDropdownCloseHandler() {
+  if (!window._assignedDropdownClickHandler) {
+    document.addEventListener('click', function (event) {
+      document.querySelectorAll('.assigned-dropdown').forEach(dropdown => {
+        const list = dropdown.querySelector('.assigned-dropdown-list');
+        if (list && list.classList.contains('open') && !dropdown.contains(event.target)) {
+          list.classList.remove('open');
+        }
+      });
+    });
+    window._assignedDropdownClickHandler = true;
+  }
+}
+
+function setupAssignedDropdownEvents(toggle, list) {
+  addToggleClickHandler(toggle, list);
+  addGlobalDropdownCloseHandler();
+}
+
+function fetchAssignedContacts() {
+  const userKey = localStorage.getItem('firebaseKey');
+  const usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
+  return Object.values(usersData[userKey]?.contacts || {});
+}
+
+function getInitialAssignedContacts(taskKey) {
+  const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  return [...(task?.assignedTo || [])];
+}
+
+function toggleContactSelection(name, selectedContacts) {
+  if (selectedContacts.includes(name)) {
+    return selectedContacts.filter(n => n !== name);
+  } else {
+    return [...selectedContacts, name];
+  }
+}
+
+function renderAssignedDropdownList(contacts, selectedContacts, list, toggleContact, renderAssignedSelectedCircles) {
+  list.innerHTML = '';
+  contacts.forEach(contact => {
+    const item = createAssignedItem(contact, selectedContacts, toggleContact);
+    list.appendChild(item);
+  });
+  renderAssignedSelectedCircles(selectedContacts, contacts, list.parentElement.parentElement);
+}
+
+function createAssignedItem(contact, selectedContacts, toggleContact) {
+  const initials = getInitials(contact.name);
+  const isChecked = selectedContacts.includes(contact.name);
+  const item = document.createElement('div');
+  item.className = 'assigned-item' + (isChecked ? ' selected' : '');
+  item.onclick = () => toggleContact(contact.name);
+  const circle = createAssignedCircle(initials, contact.color);
+  const name = document.createElement('span');
+  name.className = 'assigned-name';
+  name.textContent = contact.name;
+  const checkbox = createAssignedCheckbox(isChecked, toggleContact, contact.name);
+  item.appendChild(circle);
+  item.appendChild(name);
+  item.appendChild(checkbox);
+  return item;
+}
+
+function createAssignedCircle(initials, color) {
+  const circle = document.createElement('span');
+  circle.className = 'assigned-circle';
+  circle.style.backgroundColor = color || '#ccc';
+  circle.textContent = initials;
+  return circle;
+}
+
+function createAssignedCheckbox(isChecked, toggleContact, name) {
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.className = 'assigned-checkbox';
+  checkbox.checked = isChecked;
+  checkbox.onclick = (e) => {
+    e.stopPropagation();
+    toggleContact(name);
+  };
+  return checkbox;
+}
+
+function renderAssignedSelectedCircles(selectedContacts, contacts, assignedListContainer) {
+  const wrapper = getOrCreateCirclesWrapper(assignedListContainer);
+  positionCirclesWrapper(wrapper, assignedListContainer);
+  updateCirclesVisibility(wrapper, selectedContacts);
+  updateCirclesContent(wrapper, selectedContacts, contacts);
+}
+
+function getOrCreateCirclesWrapper(assignedListContainer) {
+  let wrapper = document.getElementById('assigned-selected-circles');
+  if (!wrapper) {
+    wrapper = document.createElement('div');
+    wrapper.id = 'assigned-selected-circles';
+    wrapper.className = 'selected-initials-wrapper';
+    assignedListContainer.appendChild(wrapper);
+  }
+  return wrapper;
+}
+
+function positionCirclesWrapper(wrapper, assignedListContainer) {
+  const dropdown = document.getElementById('assigned-dropdown');
+  if (dropdown && wrapper.previousSibling !== dropdown) {
+    assignedListContainer.insertBefore(wrapper, dropdown.nextSibling);
+  }
+}
+
+function updateCirclesVisibility(wrapper, selectedContacts) {
+  wrapper.style.display = selectedContacts.length === 0 ? "none" : "flex";
+}
+
+function updateCirclesContent(wrapper, selectedContacts, contacts) {
+  wrapper.innerHTML = '';
+  selectedContacts.forEach(name => {
+    const contact = contacts.find(c => c.name === name);
+    if (!contact) return;
+    const initials = getInitials(contact.name);
+    const color = contact.color || '#ccc';
+    const div = document.createElement('div');
+    div.className = 'initial-circle';
+    div.style.backgroundColor = color;
+    div.textContent = initials;
+    wrapper.appendChild(div);
+  });
+}
+
+function handleAssignedContactToggle(name, contacts, list, assignedListContainer, selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList) {
+  selectedContacts.value = toggleContactSelection(name, selectedContacts.value);
+  renderAssignedDropdownList(contacts, selectedContacts.value, list, (n) =>
+    handleAssignedContactToggle(n, contacts, list, assignedListContainer, selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList), renderAssignedSelectedCircles);
+  renderAssignedSelectedCircles(selectedContacts.value, contacts, assignedListContainer);
+}
+
+function setupAssignedDropdown() {
+  const assignedListContainer = document.querySelector('.assigned-list');
+  if (!assignedListContainer || document.getElementById('assigned-dropdown')) return;
+
+  const { dropdown, list, toggle, placeholder, arrow } = createAssignedDropdownElements(assignedListContainer);
+  setupAssignedDropdownEvents(toggle, list);
+  const contacts = fetchAssignedContacts();
+  const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+  const selectedContacts = { value: getInitialAssignedContacts(taskKey) };
+
+  function onToggleContact(name) {
+    handleAssignedContactToggle(name, contacts, list, assignedListContainer, selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList);
   }
 
+  renderAssignedDropdownList(contacts, selectedContacts.value, list, onToggleContact, renderAssignedSelectedCircles);
+  renderAssignedSelectedCircles(selectedContacts.value, contacts, assignedListContainer);
+  window.getAssignedOverlaySelection = () => selectedContacts.value;
+}
+
+function setupSubtasksEdit() {
+  const subtaskList = document.querySelector('.subtask-list ul');
+  if (!subtaskList || document.getElementById('subtasks-edit-container')) return;
+  const { container, input, addBtn } = createSubtasksEditContainer();
+  const subtasks = getSubtasksOfCurrentTask();
+  function rerender() {
+    renderSubtasksList(subtasks, container, rerender);
+  }
+  addBtn.onclick = () => handleAddSubtask(subtasks, input, container, rerender);
+  rerender();
+  subtaskList.innerHTML = '';
+  subtaskList.appendChild(container);
+  window.getEditedSubtasks = () => subtasks;
+}
+
+function getSubtasksOfCurrentTask() {
+  const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+  const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  return Array.isArray(task.subtask) ? task.subtask : [];
+}
+
+function createSubtasksEditContainer() {
+  const container = document.createElement('div');
+  container.id = 'subtasks-edit-container';
+  container.className = 'subtasks-edit-container';
+  const inputWrapper = document.createElement('div');
+  inputWrapper.className = 'subtask-input-wrapper';
+  const input = createSubtaskInput();
+  const addBtn = createAddSubtaskButton();
+  inputWrapper.appendChild(input);
+  inputWrapper.appendChild(addBtn);
+  container.appendChild(inputWrapper);
+  return { container, input, addBtn };
+}
+
+function createSubtaskInput() {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'Add new subtask';
+  input.id = 'add-subtask-input';
+  input.className = 'add-subtask-input';
+  return input;
+}
+
+function createAddSubtaskButton() {
+  const addBtn = document.createElement('button');
+  addBtn.type = 'button';
+  addBtn.id = 'add-subtask-btn';
+  addBtn.textContent = '+';
+  addBtn.className = 'add-subtask-btn';
+  return addBtn;
+}
+
+function renderSubtasksList(subtaskArr, container, rerender) {
+  let listDiv = document.getElementById('subtask-list-edit');
+  if (!listDiv) {
+    listDiv = document.createElement('div');
+    listDiv.id = 'subtask-list-edit';
+    container.appendChild(listDiv);
+  }
+  listDiv.innerHTML = '';
+  subtaskArr.forEach((sub, idx) => {
+    const row = createSubtaskRow(sub, idx, subtaskArr, rerender, container);
+    listDiv.appendChild(row);
+  });
+}
+
+function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
+  const row = document.createElement('div');
+  row.className = 'subtask-list-row';
+  const input = createSubtaskRowInput(sub, idx, subtaskArr);
+  const editBtn = createSubtaskRowEditButton(input);
+  const removeBtn = createSubtaskRowRemoveButton(idx, subtaskArr, rerender);
+  const dot = createSubtaskRowDot();
+  row.appendChild(dot);
+  row.appendChild(input);
+  row.appendChild(editBtn);
+  row.appendChild(removeBtn);
+  return row;
+}
+
+function createSubtaskRowInput(sub, idx, subtaskArr) {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = typeof sub === 'string' ? sub : sub.title;
+  input.className = 'subtask-list-editinput';
+  input.readOnly = true;
+  input.activateEdit = () => {
+    input.readOnly = false;
+    input.focus();
+    input.setSelectionRange(0, input.value.length);
+  };
+  input.onblur = () => {
+    if (input.value.trim() !== '') {
+      subtaskArr[idx].title = input.value.trim();
+    }
+    input.readOnly = true;
+  };
+  input.onkeydown = (e) => {
+    if (e.key === 'Enter') input.blur();
+  };
+  return input;
+}
+
+function createSubtaskRowEditButton(input) {
+  const editBtn = document.createElement('button');
+  editBtn.type = 'button';
+  editBtn.className = 'subtask-edit-btn';
+  editBtn.innerHTML = `<img src="assets/icons/board/board-edit-icon.svg">`;
+  editBtn.title = 'Bearbeiten';
+  editBtn.onclick = (e) => {
+    e.preventDefault();
+    input.activateEdit();
+  };
+  return editBtn;
+}
+
+function createSubtaskRowRemoveButton(idx, subtaskArr, rerender) {
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'subtask-remove-btn';
+  removeBtn.innerHTML = `<img src="assets/icons/board/board-delete-icon.svg">`;
+  removeBtn.onclick = (e) => {
+    e.preventDefault();
+    subtaskArr.splice(idx, 1);
+    rerender();
+  };
+  return removeBtn;
+}
+
+function createSubtaskRowDot() {
+  const dot = document.createElement('span');
+  dot.className = 'subtask-dot';
+  dot.textContent = '•';
+  return dot;
+}
+
+function handleAddSubtask(subtasks, input, container, rerender) {
+  const val = input.value.trim();
+  if (val) {
+    subtasks.push({ title: val, completed: false });
+    rerender();
+    input.value = '';
+  }
+}
+
+async function saveEditTask(taskKey) {
+  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  if (!task) return;
+  disableEditMode();
+  const updatedTask = getUpdatedTaskFromEdit(task, taskKey);
+  try {
+    await updateTaskInFirebase(taskKey, updatedTask);
+    updateTaskLocally(taskKey, updatedTask);
+    reloadUIAfterEdit(taskKey);
+  } catch (error) {
+    console.error("Fehler beim Bearbeiten des Tasks:", error);
+  }
+}
+
+function disableEditMode() {
   document.getElementById("overlay_card_title").contentEditable = "false";
   document.getElementById("overlay_card_description").contentEditable = "false";
   document.getElementById("due_date").contentEditable = "false";
-  // Remove labels if they exist
   let titleLabel = document.getElementById("overlay_card_title_label");
   if (titleLabel) titleLabel.remove();
   let descLabel = document.getElementById("overlay_card_description_label");
   if (descLabel) descLabel.remove();
+}
 
-  // Priority aus dem Edit-Block holen
-  let newPriority = task.priority;
-  const priorityWrapper = document.getElementById('priority-edit-buttons');
-  if (priorityWrapper && priorityWrapper.dataset.selectedPriority) {
-    newPriority = priorityWrapper.dataset.selectedPriority;
-  }
+function getUpdatedTaskFromEdit(task, taskKey) {
+  const newTitle = getEditedTitle();
+  const newDescription = getEditedDescription();
+  const newDueDate = getEditedDueDate();
+  const newPriority = getEditedPriority(task.priority);
+  const newAssignedTo = getEditedAssignedTo(task.assignedTo);
+  const newSubtasks = getEditedSubtasks(task.subtask);
 
-  const newTitle = document.getElementById("overlay_card_title").innerHTML;
-  const newDescription = document.getElementById("overlay_card_description").innerHTML;
-
-  let dueDateInput = document.getElementById("due_date_input");
-  let newDueDate = "";
-  if (dueDateInput) {
-    // YYYY-MM-DD zu DD/MM/YYYY konvertieren
-    let [y, m, d] = dueDateInput.value.split("-");
-    if (y && m && d) {
-      newDueDate = `${d}/${m}/${y}`;
-    }
-  } else {
-    // Fallback, falls kein Input vorhanden
-    const rawDueDate = document.getElementById("due_date").innerHTML;
-    const match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
-    newDueDate = match ? match[0] : ""; xw
-  }
-
-  // Assigned To aus Custom Dropdown holen
-  let newAssignedTo = task.assignedTo;
-  if (typeof window.getAssignedOverlaySelection === 'function') {
-    newAssignedTo = window.getAssignedOverlaySelection();
-  }
-
-  // Subtasks aus Input-Liste wie im Screenshot holen
-  let newSubtasks = [];
-  if (typeof window.getEditedSubtasks === 'function') {
-    newSubtasks = window.getEditedSubtasks();
-  } else if (task.subtask) {
-    newSubtasks = task.subtask;
-  }
-
-  const updatedTask = {
+  return {
     ...task,
     title: newTitle,
     description: newDescription,
@@ -909,24 +1019,66 @@ async function saveEditTask(taskKey) {
     assignedTo: newAssignedTo,
     subtask: newSubtasks
   };
+}
 
-  try {
-    await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(updatedTask)
-    });
+function getEditedTitle() {
+  return document.getElementById("overlay_card_title").innerHTML;
+}
 
-    // Lokales Array aktualisieren
-    arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
-    updateHTML();
-    // Overlay mit aktualisierten Daten neu laden (direkter Aufruf)
-    openBoardCard(taskKey);
-  } catch (error) {
-    console.error("Fehler beim Bearbeiten des Tasks:", error);
+function getEditedDescription() {
+  return document.getElementById("overlay_card_description").innerHTML;
+}
+
+function getEditedDueDate() {
+  return getNewDueDate();
+}
+
+function getEditedPriority(defaultPriority) {
+  const priorityWrapper = document.getElementById('priority-edit-buttons');
+  if (priorityWrapper && priorityWrapper.dataset.selectedPriority) {
+    return priorityWrapper.dataset.selectedPriority;
   }
+  return defaultPriority;
+}
+
+function getEditedAssignedTo(defaultAssignedTo) {
+  return typeof window.getAssignedOverlaySelection === 'function'
+    ? window.getAssignedOverlaySelection()
+    : defaultAssignedTo;
+}
+
+function getEditedSubtasks(defaultSubtasks) {
+  return typeof window.getEditedSubtasks === 'function'
+    ? window.getEditedSubtasks()
+    : defaultSubtasks;
+}
+
+function getNewDueDate() {
+  let dueDateInput = document.getElementById("due_date_input");
+  if (dueDateInput) {
+    let [y, m, d] = dueDateInput.value.split("-");
+    if (y && m && d) return `${d}/${m}/${y}`;
+  }
+  const rawDueDate = document.getElementById("due_date").innerHTML;
+  const match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
+  return match ? match[0] : "";
+}
+
+async function updateTaskInFirebase(taskKey, updatedTask) {
+  await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedTask)
+  });
+}
+
+function updateTaskLocally(taskKey, updatedTask) {
+  arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
+}
+
+function reloadUIAfterEdit(taskKey) {
+  updateHTML();
+  openBoardCard(taskKey);
 }
 
 /* ========== SEARCH TASKS FUNCTION ========== */
