@@ -1,57 +1,3 @@
-function getOpenBoardCardTemplate(categoryClass, task) {
-    const priorityIcon = getPriorityIcon(task.priority);
-    const assignedHTML = renderAssignedList(task.assignedTo);
-    const subtaskHTML = renderSubtasks(task);
-
-    return `
-    <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
-      <div class="board-overlay-card-header edit-mode">
-        <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
-        <img class="board-close-icon" src="./assets/icons/board/board-close.svg" onclick="closeBoardCard()">
-      </div>
-      <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
-      <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
-      <span class="due-date-headline" id="due_date"><span class="overlay-headline-color">Due date:</span><span>${task.dueDate}</span></span>
-      <span class="priority-headline"><span class="overlay-headline-color">Priority:</span>
-        <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span>
-      </span>
-      <div class="assigned-list">
-        <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
-        ${assignedHTML}
-      </div>
-      <div class="subtask-list">
-        <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
-        <ul>
-          ${subtaskHTML}
-        </ul>
-      </div>
-      <div id="overlay_card_footer" class="overlay-card-footer">
-        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><div class="delete-btn-icon"></div>Delete</div>
-        <img id="seperator" src="./assets/icons/board/board-separator-icon.svg" alt="">
-        <div id="edit_btn" class="edit-btn" onclick="editTask()"><div class="edit-btn-icon"></div>Edit</div>
-        <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok
-        <img src="./assets/icons/board/board-check.svg"></div>
-      </div>
-    </div>`;
-}
-
-function getPriorityButtonsHTML(currentPriority) {
-    const priorities = [
-        { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
-        { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
-        { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
-    ];
-    return priorities.map(p => `
-    <button 
-      type="button" 
-      class="priority-edit-btn${currentPriority === p.value ? ' selected' : ''}" 
-      data-priority="${p.value}" 
-      onclick="selectOverlayPriority('${p.value}', this)">
-      ${p.label} <img src="${p.icon}" alt="${p.label}" />
-    </button>
-  `).join('');
-}
-
 function getAddTaskOverlay() {
     return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
@@ -225,4 +171,102 @@ function getAddTaskOverlay() {
               </div>
             </form>
           </div>`;
+}
+
+function buildCardHTML(firebaseKey, category, categoryClass, priority, priorityIcon, assignedList, subtaskProgressHTML, title, description) {
+    return `
+    <div draggable="true" ondragstart="startDragging('${firebaseKey}')" ondragend="stopDragging('${firebaseKey}')">
+      <div class="card${firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${firebaseKey}">
+        <div class="card-header">
+          <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
+          <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${firebaseKey}', event)">
+            <img class="card-header-move-arrow" src="./assets/icons/board/board-move-arrow.svg" alt="Move Task" />
+          </button>
+        </div>
+        <span class="card-title">${title}</span>
+        <span class="card-description">${description}</span>
+        ${subtaskProgressHTML}
+        <div class="card-footer">
+          <div class="assigned-container">
+            ${generateAssignedCircles(assignedList)}
+          </div>
+          <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML) {
+    return `
+    <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
+      <div class="board-overlay-card-header edit-mode">
+        <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
+        <img class="board-close-icon" src="./assets/icons/board/board-close.svg" onclick="closeBoardCard()">
+      </div>
+      <span id="overlay_card_title" class="overlay-card-title">${task.title}</span>
+      <span id="overlay_card_description" class="overlay-card-description">${task.description}</span>
+      <span class="due-date-headline" id="due_date"><span class="overlay-headline-color">Due date:</span><span>${task.dueDate}</span></span>
+      <span class="priority-headline"><span class="overlay-headline-color">Priority:</span>
+        <span class="priority-container">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}<img src="${priorityIcon}" alt="${task.priority}"/></span>
+      </span>
+      <div class="assigned-list">
+        <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
+        ${assignedHTML}
+      </div>
+      <div class="subtask-list">
+        <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
+        <ul>
+          ${subtaskHTML}
+        </ul>
+      </div>
+      <div id="overlay_card_footer" class="overlay-card-footer">
+        <div id="delete_btn" class="delete-btn" onclick="deleteTask('${task.firebaseKey}')"><div class="delete-btn-icon"></div>Delete</div>
+        <img id="seperator" src="./assets/icons/board/board-separator-icon.svg" alt="">
+        <div id="edit_btn" class="edit-btn" onclick="editTask()"><div class="edit-btn-icon"></div>Edit</div>
+        <div id="ok_btn" class="ok-btn d-none" onclick="saveEditTask('${task.firebaseKey}')">Ok
+        <img src="./assets/icons/board/board-check.svg"></div>
+      </div>
+    </div>`;
+}
+
+function getPriorityButtonHTML(priorityObj, currentPriority) {
+    return `
+    <button 
+      type="button" 
+      class="priority-edit-btn${currentPriority === priorityObj.value ? ' selected' : ''}" 
+      data-priority="${priorityObj.value}" 
+      onclick="selectOverlayPriority('${priorityObj.value}', this)">
+      ${priorityObj.label} <img src="${priorityObj.icon}" alt="${priorityObj.label}" />
+    </button>
+  `;
+}
+
+function getAssignedEntryHTML(name, color) {
+    return `
+    <div class="assigned-entry">
+      <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
+      <span class="assigned-name">${name}</span>
+    </div>`;
+}
+
+function getSubtaskItemHTML(title, checked, id, firebaseKey, idx) {
+    return `
+    <div class="subtask-item">
+      <input type="checkbox" id="${id}" ${checked} onchange="toggleSubtask('${firebaseKey}', ${idx})" />
+      <label for="${id}">${title}</label>
+    </div>`;
+}
+
+function getAssignedCircleHTML(name, color) {
+  return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
+}
+
+function getSubtaskProgressHTML(completed, total, percent) {
+  return `
+    <div class="card-subtask-progress">
+      <div class="subtask-progress-bar-bg">
+        <div class="subtask-progress-bar-fill" style="width: ${percent}%;"></div>
+      </div>
+      <span class="subtask-progress-text">${completed}/${total} Subtasks</span>
+    </div>`;
 }

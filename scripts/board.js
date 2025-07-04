@@ -123,7 +123,7 @@ function generateAssignedCircles(assignedList) {
     const contact = getContactByName(name);
     if (!contact) return '';
     const color = contact.color || "#ccc";
-    return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
+    return getAssignedCircleHTML(name, color);
   }).join("");
 }
 
@@ -132,54 +132,55 @@ function generateSubtaskProgress(subtasksArr) {
   const completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
   const percent = total > 0 ? (completed / total) * 100 : 0;
   if (total === 0) return "";
-  return `
-    <div class="card-subtask-progress">
-      <div class="subtask-progress-bar-bg">
-        <div class="subtask-progress-bar-fill" style="width: ${percent}%;"></div>
-      </div>
-      <span class="subtask-progress-text">${completed}/${total} Subtasks</span>
-    </div>`;
+  return getSubtaskProgressHTML(completed, total, percent);
 }
 
 function generateTodoHTML(element) {
-  const category = typeof element.category === 'string' ? element.category : '';
+  const category = getCardCategory(element);
   const categoryClass = getCategoryClass(category);
-  const priority = typeof element.priority === 'string' ? element.priority : 'low';
+  const priority = getCardPriority(element);
   const priorityIcon = getPriorityIcon(priority);
-
-  let assignedList = [];
-  if (Array.isArray(element.assignedTo)) {
-    assignedList = element.assignedTo.filter(name => !!name && typeof name === 'string');
-  } else if (typeof element.assignedTo === "string") {
-    assignedList = element.assignedTo.split(",").map(name => name.trim()).filter(Boolean);
-  }
-
-  let subtasksArr = Array.isArray(element.subtask) ? element.subtask : [];
+  const assignedList = getAssignedList(element);
+  const subtasksArr = getSubtasksArray(element);
   const subtaskProgressHTML = generateSubtaskProgress(subtasksArr);
+  const title = getCardTitle(element);
+  const description = getCardDescription(element);
 
-  const title = typeof element.title === 'string' ? element.title : '';
-  const description = typeof element.description === 'string' ? element.description : '';
+  return buildCardHTML(
+    element.firebaseKey,
+    category,
+    categoryClass,
+    priority,
+    priorityIcon,
+    assignedList,
+    subtaskProgressHTML,
+    title,
+    description
+  );
+}
 
-  return `
-    <div draggable="true" ondragstart="startDragging('${element.firebaseKey}')" ondragend="stopDragging('${element.firebaseKey}')">
-      <div class="card${element.firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${element.firebaseKey}">
-        <div class="card-header">
-          <span class="card-category ${categoryClass}" ${category ? `title="${category}"` : ''}>${category}</span>
-          <button class="card-header-move-arrow-btn" title="Move Task" type="button" onclick="openMoveTaskMenu('${element.firebaseKey}', event)">
-            <img class="card-header-move-arrow" src="./assets/icons/board/board-move-arrow.svg" alt="Move Task" />
-          </button>
-        </div>
-        <span class="card-title">${title}</span>
-        <span class="card-description">${description}</span>
-        ${subtaskProgressHTML}
-        <div class="card-footer">
-          <div class="assigned-container">
-            ${generateAssignedCircles(assignedList)}
-          </div>
-          <div class="priority-container"><img src="${priorityIcon}" alt="${priority}"></div>
-        </div>
-      </div>
-    </div>`;
+function getCardCategory(element) {
+  return typeof element.category === 'string' ? element.category : '';
+}
+function getCardPriority(element) {
+  return typeof element.priority === 'string' ? element.priority : 'low';
+}
+function getAssignedList(element) {
+  if (Array.isArray(element.assignedTo)) {
+    return element.assignedTo.filter(name => !!name && typeof name === 'string');
+  } else if (typeof element.assignedTo === "string") {
+    return element.assignedTo.split(",").map(name => name.trim()).filter(Boolean);
+  }
+  return [];
+}
+function getSubtasksArray(element) {
+  return Array.isArray(element.subtask) ? element.subtask : [];
+}
+function getCardTitle(element) {
+  return typeof element.title === 'string' ? element.title : '';
+}
+function getCardDescription(element) {
+  return typeof element.description === 'string' ? element.description : '';
 }
 
 function startDragging(firebaseKey) {
@@ -284,11 +285,7 @@ function renderAssignedList(assignedTo) {
     const contact = getContactByName(name);
     if (!contact) return '';
     const color = contact.color || "#ccc";
-    return `
-      <div class="assigned-entry">
-        <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
-        <span class="assigned-name">${name}</span>
-      </div>`;
+    return getAssignedEntryHTML(name, color);
   }).join("");
 }
 
@@ -298,11 +295,7 @@ function renderSubtasks(task) {
     const title = typeof sub === 'string' ? sub : sub.title;
     const checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
     const id = `subtask-${task.firebaseKey}-${idx}`;
-    return `
-      <div class="subtask-item">
-        <input type="checkbox" id="${id}" ${checked} onchange="toggleSubtask('${task.firebaseKey}', ${idx})" />
-        <label for="${id}">${title}</label>
-      </div>`;
+    return getSubtaskItemHTML(title, checked, id, task.firebaseKey, idx);
   }).join("");
 }
 
@@ -1785,6 +1778,22 @@ function closeMoveTaskMenu() {
     window._moveTaskDropdownCleanup();
     window._moveTaskDropdownCleanup = null;
   }
+}
+
+function getOpenBoardCardTemplate(categoryClass, task) {
+  const priorityIcon = getPriorityIcon(task.priority);
+  const assignedHTML = renderAssignedList(task.assignedTo);
+  const subtaskHTML = renderSubtasks(task);
+  return getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML);
+}
+
+function getPriorityButtonsHTML(currentPriority) {
+  const priorities = [
+    { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
+    { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
+    { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
+  ];
+  return priorities.map(p => getPriorityButtonHTML(p, currentPriority)).join('');
 }
 
 window.addEventListener('resize', closeMoveTaskMenu);
