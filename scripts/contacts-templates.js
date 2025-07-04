@@ -1,3 +1,9 @@
+/**
+ * Returns the HTML string for the overlay to add a new contact.
+ * Used when creating a new contact form popup.
+ * 
+ * @returns {string} HTML template for the add contact overlay.
+ */
 function overlayTemplate() {
   return /*html*/ `
     <div class="add-new-contact-template-section" >
@@ -77,6 +83,16 @@ function overlayTemplate() {
 }
 
 
+/**
+ * Returns the HTML string for the overlay to edit an existing contact.
+ * Pre-fills the form with the contact's current data.
+ * 
+ * @param {string} name - The contact's name.
+ * @param {string} email - The contact's email.
+ * @param {string} phone - The contact's phone number.
+ * @param {string} firebaseKey - The contact's unique ID from Firebase.
+ * @returns {string} HTML template for editing a contact.
+ */
 function overlayEditTemplate(name, email, phone, firebaseKey) {
   return /*html*/ `
     <div class="add-new-contact-template-section" >
@@ -152,6 +168,14 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
 }
 
 
+/**
+ * Returns the HTML string to show full contact details in the desktop view.
+ * Includes name, email, phone, and buttons to edit or delete the contact.
+ * 
+ * @param {Object} contact - The contact object with all its data.
+ * @param {string} initials - The generated initials for the profile icon.
+ * @returns {string} HTML template to display the contact's detailed info.
+ */
 function getOpenContactTemplate(contact, initials) {
   return /*html*/ `
     <div class="my-contact-information-section">
@@ -197,6 +221,14 @@ function getOpenContactTemplate(contact, initials) {
 }
 
 
+/**
+ * Returns the HTML string for the mobile contact details view.
+ * Shows full info in a mobile layout, including buttons to edit/delete.
+ * 
+ * @param {Object} contact - The contact object with all its data.
+ * @param {string} initials - The contact's initials for the icon.
+ * @returns {string} HTML template for contact info on mobile view.
+ */
 function getOpenContactMobileTemplate(contact, initials) {
   return /*html*/ `
     <div class="my-contact-information-section-mobile" id="user_contact_information_section_mobile" onclick="dialogPrevention(event)">
@@ -251,6 +283,13 @@ function getOpenContactMobileTemplate(contact, initials) {
 }
 
 
+/**
+ * Returns the HTML string for the edit/delete popup menu (on mobile).
+ * Appears when clicking the 3-dot button on a mobile contact.
+ * 
+ * @param {Object} contact - The contact object to edit or delete.
+ * @returns {string} HTML template for the mobile edit/delete menu.
+ */
 function getEditDeleteMenuTemplate(contact) {
   return /*html*/ `
   <div id="edit_delete_menu" class="edit-delete-menu">
@@ -270,6 +309,12 @@ function getEditDeleteMenuTemplate(contact) {
 }
 
 
+/**
+ * Returns the HTML string for the success message after creating a contact.
+ * Message is shown briefly after successfully adding a new contact.
+ * 
+ * @returns {string} HTML for the success notification.
+ */
 function getCreatedContactSuccessfullyMessage(){
   return /*html*/ `
   <div id="created_contact_message" class="created-contact-message-div d_none">
@@ -279,6 +324,13 @@ function getCreatedContactSuccessfullyMessage(){
 }
 
 
+/**
+ * Returns the HTML string for an alphabet divider between contact groups.
+ * Used when listing contacts grouped by first letter of their name.
+ * 
+ * @param {string} currentInitial - The first letter of the group.
+ * @returns {string} HTML for the letter divider.
+ */
 function getFirstInitialAndDevider(currentInitial){
   return /*html*/ `
         <div class="alphabet">
@@ -289,6 +341,15 @@ function getFirstInitialAndDevider(currentInitial){
 }
 
 
+/**
+ * Returns the HTML for a contact card in the list view.
+ * Shows initials, name, and email in a basic style.
+ * 
+ * @param {Object} contact - The contact object.
+ * @param {string} initials - The initials of the contact.
+ * @param {string} highlight - An optional class to highlight the contact.
+ * @returns {string} HTML for a single contact in the list.
+ */
 function getContactBasicTemplate(contact, initials, highlight) {
   return /*html*/ `
     <div onclick="styleContactOnclick(this, '${initials}')" class="contact ${highlight}">
