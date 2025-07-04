@@ -1,9 +1,9 @@
 function getOpenBoardCardTemplate(categoryClass, task) {
-  const priorityIcon = getPriorityIcon(task.priority);
-  const assignedHTML = renderAssignedList(task.assignedTo);
-  const subtaskHTML = renderSubtasks(task);
+    const priorityIcon = getPriorityIcon(task.priority);
+    const assignedHTML = renderAssignedList(task.assignedTo);
+    const subtaskHTML = renderSubtasks(task);
 
-  return `
+    return `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
       <div class="board-overlay-card-header edit-mode">
         <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
@@ -36,12 +36,12 @@ function getOpenBoardCardTemplate(categoryClass, task) {
 }
 
 function getPriorityButtonsHTML(currentPriority) {
-  const priorities = [
-    { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
-    { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
-    { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
-  ];
-  return priorities.map(p => `
+    const priorities = [
+        { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
+        { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
+        { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
+    ];
+    return priorities.map(p => `
     <button 
       type="button" 
       class="priority-edit-btn${currentPriority === p.value ? ' selected' : ''}" 
@@ -53,7 +53,7 @@ function getPriorityButtonsHTML(currentPriority) {
 }
 
 function getAddTaskOverlay() {
-  return `          <div class="board-add-task-modal">
+    return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
             <h1 class="h1-add-task">Add Task</h1>
             <img class="board-close-icon" src="./assets/icons/board/board-close.svg" onclick="closeAddTaskOverlay()">

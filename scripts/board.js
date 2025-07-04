@@ -116,14 +116,6 @@ function getCategoryClass(category) {
   return "";
 }
 
-function getPriorityIcon(priority) {
-  switch ((priority || '').toLowerCase()) {
-    case "low": return "./assets/icons/board/board-priority-low.svg";
-    case "medium": return "./assets/icons/board/board-priority-medium.svg";
-    case "urgent": return "./assets/icons/board/board-priority-urgent.svg";
-    default: return "./assets/icons/board/board-priority-low.svg";
-  }
-}
 
 function generateAssignedCircles(assignedList) {
   if (!Array.isArray(assignedList)) return "";
@@ -371,23 +363,13 @@ function blurCheckbox(taskKey, index) {
 async function toggleSubtask(taskKey, index) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
-
-  // Schritt 1: Konvertieren
   task.subtask = convertSubtasksToObjects(task.subtask);
-
-  // Schritt 2: Toggle
   toggleSubtaskCompleted(task.subtask, index);
-
-  // Schritt 3: Speichern
   try {
     await saveSubtasksToFirebase(taskKey, task.subtask);
-
-    // Schritt 4: UI-Update
     updateHTML();
     renderBoardOverlay(task);
-    // Schritt 5: Fokus entfernen
     blurCheckbox(taskKey, index);
-
   } catch (error) {
     console.error("Fehler beim Aktualisieren des Subtasks:", error);
   }
