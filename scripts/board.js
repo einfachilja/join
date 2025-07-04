@@ -5,6 +5,11 @@ let addTaskDefaultStatus = "todo";
 let firebaseKey = localStorage.getItem("firebaseKey");
 let lastCreatedTaskKey = null;
 let currentDraggedElement;
+let selectedPriority = "medium";
+const subtasks = [];
+let contacts = [];
+let selectedContacts = [];
+let selectedCategory = "";
 
 async function loadTasks() {
   const responseJson = await fetchTasksFromFirebase(firebaseKey);
@@ -1081,92 +1086,115 @@ function reloadUIAfterEdit(taskKey) {
   openBoardCard(taskKey);
 }
 
-/* ========== SEARCH TASKS FUNCTION ========== */
 function searchTask() {
-  let inputFindTaskRef = document.getElementById("input_find_task");
-  let inputValue = inputFindTaskRef.value.trim().toLowerCase();
+  const inputValue = getSearchInputValue();
+  const foundTasks = filterTasksBySearch(arrayTasks, inputValue);
 
-  let foundTasks = arrayTasks.filter(task => {
-    let titleMatch = task.title && task.title.toLowerCase().includes(inputValue);
-    let descriptionMatch = task.description && task.description.toLowerCase().includes(inputValue);
-    return titleMatch || descriptionMatch;
-  });
+  clearBoardSections();
 
   if (foundTasks.length > 0) {
+    renderTasksToBoard(foundTasks);
     console.log("Gefundene Tasks:", foundTasks);
-    const sections = ["todo", "progress", "feedback", "done"];
-    sections.forEach(section => {
-      document.getElementById(section).innerHTML = "";
-    });
-
-    for (let task of foundTasks) {
-      if (sections.includes(task.status)) {
-        document.getElementById(task.status).innerHTML += generateTodoHTML(task);
-      }
-    }
   } else {
-    const sections = ["todo", "progress", "feedback", "done"];
-    sections.forEach(section => {
-      document.getElementById(section).innerHTML = "";
-    });
     console.log("Keine Tasks gefunden mit dem Suchbegriff:", inputValue);
   }
 }
 
-/* ========== OPEN ADD TASK OVERLAY FOR STATUS ========== */
+function getSearchInputValue() {
+  const inputRef = document.getElementById("input_find_task");
+  return inputRef.value.trim().toLowerCase();
+}
+
+function filterTasksBySearch(tasks, searchValue) {
+  return tasks.filter(task => {
+    const titleMatch = task.title && task.title.toLowerCase().includes(searchValue);
+    const descriptionMatch = task.description && task.description.toLowerCase().includes(searchValue);
+    return titleMatch || descriptionMatch;
+  });
+}
+
+function clearBoardSections() {
+  ["todo", "progress", "feedback", "done"].forEach(section => {
+    document.getElementById(section).innerHTML = "";
+  });
+}
+
+function renderTasksToBoard(tasks) {
+  tasks.forEach(task => {
+    if (["todo", "progress", "feedback", "done"].includes(task.status)) {
+      document.getElementById(task.status).innerHTML += generateTodoHTML(task);
+    }
+  });
+}
+
 function openAddTaskForStatus(status) {
   addTaskDefaultStatus = status;
   openAddTaskOverlay();
 }
 
-/* ========== OPEN ADD TASK OVERLAY ========== */
 function openAddTaskOverlay() {
-  let addTaskOverlayRef = document.getElementById("add_task_overlay");
-  document.getElementById("add_task_overlay").classList.remove("d-none");
-  // Add modal open animation after rendering
+  showAddTaskOverlay();
+  renderAddTaskModal();
+  addAddTaskOverlayEventListeners();
+  initAddTaskOverlayLogic();
+}
+
+function showAddTaskOverlay() {
+  const overlay = document.getElementById("add_task_overlay");
+  overlay.classList.remove("d-none");
+  document.getElementById("html").style.overflow = "hidden";
+}
+
+function renderAddTaskModal() {
+  const overlay = document.getElementById("add_task_overlay");
+  overlay.innerHTML = getAddTaskOverlay();
+  updateHTML();
   setTimeout(() => {
     const modal = document.querySelector('.board-add-task-modal');
     if (modal) modal.classList.add('open');
   }, 10);
-  document.getElementById("html").style.overflow = "hidden";
+}
 
-  addTaskOverlayRef.innerHTML = getAddTaskOverlay();
-  updateHTML();
-
-  // Add click outside listener after overlay is open
+function addAddTaskOverlayEventListeners() {
   setTimeout(() => {
     document.addEventListener('mousedown', handleAddTaskOverlayClickOutside);
   }, 0);
-
-  initAddTaskOverlayLogic();
 }
 
-/* ========== CLOSE ADD TASK OVERLAY ========== */
 function closeAddTaskOverlay() {
   const modal = document.querySelector('.board-add-task-modal');
   if (modal) {
-    modal.classList.remove('open');
-    setTimeout(() => {
-      let overlay = document.getElementById("add_task_overlay");
-      if (overlay) {
-        overlay.classList.add("d-none");
-        document.getElementById("html").style.overflow = "";
-        overlay.innerHTML = "";
-      }
-    }, 400); // exakt so lang wie die CSS-Transition!
+    closeAddTaskModalWithAnimation();
   } else {
-    let overlay = document.getElementById("add_task_overlay");
-    if (overlay) {
-      overlay.classList.add("d-none");
-      document.getElementById("html").style.overflow = "";
-      overlay.innerHTML = "";
-    }
+    hideAndResetAddTaskOverlay();
   }
+  resetAddTaskDefaultStatus();
+  removeAddTaskOverlayEventListener();
+}
+
+function closeAddTaskModalWithAnimation() {
+  const modal = document.querySelector('.board-add-task-modal');
+  modal.classList.remove('open');
+  setTimeout(hideAndResetAddTaskOverlay, 400); // passend zur CSS-Transition
+}
+
+function hideAndResetAddTaskOverlay() {
+  const overlay = document.getElementById("add_task_overlay");
+  if (overlay) {
+    overlay.classList.add("d-none");
+    document.getElementById("html").style.overflow = "";
+    overlay.innerHTML = "";
+  }
+}
+
+function resetAddTaskDefaultStatus() {
   addTaskDefaultStatus = "todo";
+}
+
+function removeAddTaskOverlayEventListener() {
   document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);
 }
 
-/* ========== HANDLE CLICK OUTSIDE ADD TASK OVERLAY ========== */
 function handleAddTaskOverlayClickOutside(event) {
   const modal = document.querySelector('.board-add-task-modal');
   if (!modal) return;
@@ -1175,7 +1203,7 @@ function handleAddTaskOverlayClickOutside(event) {
   }
 }
 
-/* ========== GENERATE ADD TASK OVERLAY HTML ========== */
+// auslagern
 function getAddTaskOverlay() {
   return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
@@ -1350,42 +1378,35 @@ function getAddTaskOverlay() {
             </form>
           </div>`;
 }
-// ==== STATE & HELPERS (Add-Task-Funktionalität) ====
-// Diese Blöcke stammen aus add-task.js und sind für das Add-Task-Modal im Board nötig.
-/* ========== ADD TASK STATE ========== */
-let selectedPriority = "medium";
-const subtasks = [];
-let contacts = [];
-let selectedContacts = [];
-let selectedCategory = "";
 
-// Globaler EventListener zum Schließen des Dropdowns bei Klick außerhalb
-/* ========== CLOSE DROPDOWNS ON OUTSIDE CLICK (ADD TASK) ========== */
 document.addEventListener("mousedown", function (event) {
-  const dropdown = document.getElementById("dropdown-content");
-  const toggle = document.getElementById("dropdown-toggle");
-
-  if (dropdown && toggle) {
-    const isClickInside = dropdown.contains(event.target) || toggle.contains(event.target);
-    if (!isClickInside) {
-      dropdown.classList.remove("visible");
-      toggle.classList.remove("open");
-    }
-  }
-
-  // Category-Dropdown: Schließen wenn außerhalb geklickt wird
-  const catDropdown = document.getElementById("category-content");
-  const catToggle = document.getElementById("category-toggle");
-  if (catDropdown && catToggle) {
-    const isCatClickInside = catDropdown.contains(event.target) || catToggle.contains(event.target);
-    if (!isCatClickInside) {
-      catDropdown.classList.remove("visible");
-      catToggle.classList.remove("open");
-    }
-  }
+  closeDropdownIfClickedOutside(
+    "dropdown-content",
+    "dropdown-toggle",
+    "visible",
+    "open",
+    event
+  );
+  closeDropdownIfClickedOutside(
+    "category-content",
+    "category-toggle",
+    "visible",
+    "open",
+    event
+  );
 });
 
-/* ========== SELECT PRIORITY (ADD TASK) ========== */
+function closeDropdownIfClickedOutside(contentId, toggleId, visibleClass, openClass, event) {
+  const content = document.getElementById(contentId);
+  const toggle = document.getElementById(toggleId);
+  if (content && toggle && content.classList.contains(visibleClass)) {
+    if (!content.contains(event.target) && !toggle.contains(event.target)) {
+      content.classList.remove(visibleClass);
+      toggle.classList.remove(openClass);
+    }
+  }
+}
+
 function selectPriority(prio) {
   selectedPriority = prio;
   document.querySelectorAll("#buttons-prio button").forEach((b) => {
@@ -1394,15 +1415,16 @@ function selectPriority(prio) {
   updateSubmitState();
 }
 
-/* ========== ASSIGNED TO DROPDOWN HANDLERS (ADD TASK) ========== */
 function handleAssignedToClick(e) {
   e.stopPropagation();
   toggleAssignDropdown(e);
 }
+
 function handleAssignedToInput(e) {
   const value = e.target.value.trim().toLowerCase();
   renderAssignOptions(value);
 }
+
 function toggleAssignDropdown(event) {
   event.stopPropagation();
   const tog = document.getElementById("dropdown-toggle");
@@ -1412,6 +1434,7 @@ function toggleAssignDropdown(event) {
   dd.classList.toggle("visible");
   if (dd.innerHTML === "") renderAssignOptions();
 }
+
 function renderAssignOptions(filter = "") {
   const dd = document.getElementById("dropdown-content");
   clearAssignDropdownContent(dd);
@@ -1423,29 +1446,51 @@ function renderAssignOptions(filter = "") {
     dd.appendChild(item);
   });
 }
+
 function clearAssignDropdownContent(dd) {
   const nodes = Array.from(dd.childNodes).filter((n) => n.tagName !== "INPUT");
   nodes.forEach((n) => n.remove());
 }
+
 function createContactDropdownItem(contact, filter) {
   const item = document.createElement("div");
   item.className = "contact-item";
-  // Hintergrund setzen, wenn ausgewählt
-  if (selectedContacts.some((s) => s.name === contact.name)) {
-    item.classList.add('contact-selected');
+  if (isContactSelected(contact)) {
+    item.classList.add("contact-selected");
   }
-  item.innerHTML = `
-    <span class="profile-icon" style="background:${contact.color}">
-      ${getContactInitials(contact.name)}
-    </span>
-    <span>${contact.name}</span>
-    <input type="checkbox" ${selectedContacts.some((s) => s.name === contact.name) ? "checked" : ""
-    }/>
-  `;
+  item.appendChild(createProfileIcon(contact));
+  item.appendChild(createContactName(contact));
+  item.appendChild(createContactCheckbox(contact));
   setupContactCheckbox(item, contact, filter);
   setupContactItemClick(item);
   return item;
 }
+
+function isContactSelected(contact) {
+  return selectedContacts.some((s) => s.name === contact.name);
+}
+
+function createProfileIcon(contact) {
+  const span = document.createElement("span");
+  span.className = "profile-icon";
+  span.style.background = contact.color;
+  span.textContent = getContactInitials(contact.name);
+  return span;
+}
+
+function createContactName(contact) {
+  const span = document.createElement("span");
+  span.textContent = contact.name;
+  return span;
+}
+
+function createContactCheckbox(contact) {
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = isContactSelected(contact);
+  return checkbox;
+}
+
 function getContactInitials(name) {
   return name
     .split(" ")
@@ -1453,6 +1498,7 @@ function getContactInitials(name) {
     .join("")
     .toUpperCase();
 }
+
 function setupContactCheckbox(item, contact, filter) {
   const checkbox = item.querySelector("input[type='checkbox']");
   checkbox.addEventListener("click", (event) => {
@@ -1469,6 +1515,7 @@ function setupContactCheckbox(item, contact, filter) {
     updateSubmitState();
   });
 }
+
 function setupContactItemClick(item) {
   const checkbox = item.querySelector("input[type='checkbox']");
   item.addEventListener("click", (event) => {
@@ -1479,6 +1526,7 @@ function setupContactItemClick(item) {
     checkbox.dispatchEvent(clickEvent);
   });
 }
+
 function updateSelectedContactsUI() {
   const box = document.getElementById("selected-contacts");
   if (!box) return;
@@ -1491,12 +1539,12 @@ function updateSelectedContactsUI() {
     box.appendChild(el);
   });
 }
+
 function closeDropdown() {
   document.getElementById("dropdown-content")?.classList.remove("visible");
   document.getElementById("dropdown-toggle")?.classList.remove("open");
 }
 
-/* ========== CATEGORY DROPDOWN HANDLERS (ADD TASK) ========== */
 function toggleCategoryDropdown(event) {
   event.stopPropagation();
   const toggle = document.getElementById("category-toggle");
@@ -1505,30 +1553,49 @@ function toggleCategoryDropdown(event) {
   content.classList.toggle("visible");
   if (content.innerHTML.trim() === "") renderCategoryOptions();
 }
+
 function renderCategoryOptions() {
   const content = document.getElementById("category-content");
-  content.innerHTML = "";
-  const categories = ["Technical Task", "User Story"];
-  categories.forEach((category) => {
-    const item = document.createElement("div");
-    item.className = "dropdown-item category-item";
-    item.innerHTML = `<span class="category-name">${category}</span>`;
-    item.onclick = () => {
-      selectCategory(category);
-      content.classList.remove("visible");
-      document.getElementById("category-toggle").classList.remove("open");
-      updateSubmitState();
-    };
+  clearCategoryContent(content);
+  const categories = getCategoryList();
+  categories.forEach(category => {
+    const item = createCategoryDropdownItem(category, content);
     content.appendChild(item);
   });
 }
+
+function clearCategoryContent(content) {
+  content.innerHTML = "";
+}
+
+function getCategoryList() {
+  return ["Technical Task", "User Story"];
+}
+
+function createCategoryDropdownItem(category, content) {
+  const item = document.createElement("div");
+  item.className = "dropdown-item category-item";
+  item.innerHTML = `<span class="category-name">${category}</span>`;
+  item.onclick = () => {
+    handleCategoryClick(category, content);
+  };
+  return item;
+}
+
+function handleCategoryClick(category, content) {
+  selectCategory(category);
+  content.classList.remove("visible");
+  document.getElementById("category-toggle").classList.remove("open");
+  updateSubmitState();
+}
+
 function selectCategory(category) {
   selectedCategory = category;
   const placeholder = document.querySelector("#category-toggle span");
   if (placeholder) placeholder.textContent = category;
 }
 
-/* ========== SUBTASKS HANDLERS (ADD TASK) ========== */
+
 function addSubtask() {
   const input = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
@@ -1539,6 +1606,7 @@ function addSubtask() {
   document.getElementById("subtask-list").appendChild(li);
   finalizeSubtaskInput(input, subtaskIcons);
 }
+
 function validateSubtaskInput(text, subtaskIcons, input) {
   if (!text || subtaskIcons.classList.contains("hidden")) {
     input.classList.add("error-border");
@@ -1547,6 +1615,7 @@ function validateSubtaskInput(text, subtaskIcons, input) {
   input.classList.remove("error-border");
   return true;
 }
+
 function createSubtaskListItem(text) {
   const li = document.createElement("li");
   li.className = "subtask-list-item";
@@ -1559,6 +1628,7 @@ function createSubtaskListItem(text) {
   li.appendChild(iconWrapper);
   return li;
 }
+
 function finalizeSubtaskInput(input, subtaskIcons) {
   updateSubmitState();
   input.value = "";
@@ -1566,6 +1636,7 @@ function finalizeSubtaskInput(input, subtaskIcons) {
   const subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
+
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
     e.preventDefault();
@@ -1575,6 +1646,7 @@ function handleSubtaskEnter(e) {
     }
   }
 }
+
 function toggleSubtaskIcons() {
   const input = document.getElementById("subtask-input");
   const confirmIcon = document.getElementById("subtask-confirm");
@@ -1585,6 +1657,7 @@ function toggleSubtaskIcons() {
   cancelIcon?.classList.toggle("hidden", !isActive);
   defaultIcon?.classList.toggle("hidden", isActive);
 }
+
 function clearSubtaskInput() {
   const subtaskInput = document.getElementById("subtask-input");
   const subtaskIcons = document.getElementById("subtask-icons");
@@ -1594,97 +1667,191 @@ function clearSubtaskInput() {
   subtaskPlus.classList.remove("hidden");
 }
 
-// Kategorie-UI für Chip (optional)
-/* ========== UPDATE CATEGORY UI CHIP (OPTIONAL) ========== */
 function updateCategoryUI() {
   const box = document.getElementById("selected-category");
   if (!box) return;
-  box.innerHTML = "";
+  clearCategoryBox(box);
   if (selectedCategory) {
-    const el = document.createElement("div");
-    el.className = "profile-icon";
-    el.style.background = "#2a3647";
-    el.textContent = selectedCategory
-      .split(" ")
-      .map((w) => w[0])
-      .join("")
-      .toUpperCase();
-    box.appendChild(el);
+    const icon = createCategoryIcon(selectedCategory);
+    box.appendChild(icon);
   }
 }
 
-/* ========== FORM VALIDATION & RESET (ADD TASK) ========== */
+function clearCategoryBox(box) {
+  box.innerHTML = "";
+}
+
+function createCategoryIcon(category) {
+  const div = document.createElement("div");
+  div.className = "profile-icon";
+  div.style.background = "#2a3647";
+  div.textContent = getCategoryInitials(category);
+  return div;
+}
+
+function getCategoryInitials(category) {
+  return category
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+}
+
 function validateForm() {
   const titleEl = document.getElementById("title");
   const dueDateEl = document.getElementById("dueDate");
   const categoryToggle = document.getElementById("category-toggle");
-  const titleError = document.getElementById("error-title");
-  const dueDateError = document.getElementById("error-dueDate");
-  const categoryError = document.getElementById("error-category");
-  const title = titleEl.value.trim();
-  const dueDate = dueDateEl.value.trim();
-  const category = selectedCategory;
-  const titleValid = title !== "";
-  const dueDateValid = dueDate !== "";
-  const categoryValid = category !== "";
-  titleEl.classList.toggle("error", !titleValid);
-  if (titleError) titleError.classList.toggle("visible", !titleValid);
-  dueDateEl.classList.toggle("error-border", !dueDateValid);
-  if (dueDateError) dueDateError.classList.toggle("visible", !dueDateValid);
-  categoryToggle.classList.toggle("error-border", !categoryValid);
-  if (categoryError) categoryError.classList.toggle("visible", !categoryValid);
+
+  const titleValid = isInputFilled(titleEl);
+  const dueDateValid = isInputFilled(dueDateEl);
+  const categoryValid = isCategorySelected();
+
+  showTitleError(titleEl, titleValid);
+  showDueDateError(dueDateEl, dueDateValid);
+  showCategoryError(categoryToggle, categoryValid);
+
   return titleValid && dueDateValid && categoryValid;
 }
+
+function isInputFilled(inputEl) {
+  return inputEl.value.trim() !== "";
+}
+
+function isCategorySelected() {
+  return selectedCategory && selectedCategory.trim() !== "";
+}
+
+function showTitleError(titleEl, isValid) {
+  const titleError = document.getElementById("error-title");
+  titleEl.classList.toggle("error", !isValid);
+  if (titleError) titleError.classList.toggle("visible", !isValid);
+}
+
+function showDueDateError(dueDateEl, isValid) {
+  const dueDateError = document.getElementById("error-dueDate");
+  dueDateEl.classList.toggle("error-border", !isValid);
+  if (dueDateError) dueDateError.classList.toggle("visible", !isValid);
+}
+
+function showCategoryError(categoryToggle, isValid) {
+  const categoryError = document.getElementById("error-category");
+  categoryToggle.classList.toggle("error-border", !isValid);
+  if (categoryError) categoryError.classList.toggle("visible", !isValid);
+}
+
 function updateSubmitState() {
   const button = document.getElementById("submit-task-btn");
   if (button) button.disabled = false;
 }
+
 function resetForm() {
-  document.getElementById("title").value = "";
-  document.getElementById("description").value = "";
-  document.getElementById("dueDate").value = "";
+  resetTitle();
+  resetDescription();
+  resetDueDate();
+  resetPriority();
+  resetContacts();
+  resetCategory();
+  resetSubtasks();
+}
+
+function resetTitle() {
+  const title = document.getElementById("title");
+  if (title) title.value = "";
+}
+
+function resetDescription() {
+  const description = document.getElementById("description");
+  if (description) description.value = "";
+}
+
+function resetDueDate() {
+  const dueDate = document.getElementById("dueDate");
+  if (dueDate) dueDate.value = "";
+}
+
+function resetPriority() {
   selectedPriority = "medium";
   selectPriority("medium");
+}
+
+function resetContacts() {
   selectedContacts = [];
   updateSelectedContactsUI();
+}
+
+function resetCategory() {
   selectedCategory = "";
   const categoryPlaceholder = document.querySelector("#category-toggle span");
   if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
+}
+
+function resetSubtasks() {
+  clearSubtasksArray();
+  clearSubtasksList();
+  clearSubtaskInput();
+  hideSubtaskIcons();
+  showSubtaskPlus();
+}
+
+function clearSubtasksArray() {
   subtasks.length = 0;
+}
+
+function clearSubtasksList() {
   const subtaskList = document.getElementById("subtask-list");
   if (subtaskList) subtaskList.innerHTML = "";
+}
+
+function clearSubtaskInput() {
   const subtaskInput = document.getElementById("subtask-input");
   if (subtaskInput) subtaskInput.value = "";
+}
+
+function hideSubtaskIcons() {
   const subtaskIcons = document.getElementById("subtask-icons");
   if (subtaskIcons) subtaskIcons.classList.add("hidden");
+}
+
+function showSubtaskPlus() {
   const subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
-/* ========== DATE VALIDATION (ADD TASK) ========== */
 function setupDateValidation() {
   setTimeout(() => {
     const dateInput = document.getElementById("dueDate");
     const errorText = document.getElementById("error-dueDate");
     if (!dateInput || !errorText) return;
-    const today = new Date().toISOString().split("T")[0];
-    dateInput.min = today;
-    dateInput.addEventListener("input", () => {
-      dateInput.classList.remove("error-border");
-      errorText.classList.remove("visible");
-    });
+    setMinDateToday(dateInput);
+    addDateInputListener(dateInput, errorText);
   }, 100);
 }
 
-/* ========== CREATE TASK IN FIREBASE ========== */
+function setMinDateToday(dateInput) {
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.min = today;
+}
+
+function addDateInputListener(dateInput, errorText) {
+  dateInput.addEventListener("input", () => {
+    dateInput.classList.remove("error-border");
+    errorText.classList.remove("visible");
+  });
+}
+
 async function createTask() {
   if (!validateForm()) return;
-  const dueDateValue = document.getElementById("dueDate").value;
-  const formattedDate = dueDateValue;
-  const task = {
-    title: document.getElementById("title").value.trim(),
-    description: document.getElementById("description").value.trim(),
-    dueDate: formattedDate,
+  const task = buildTaskObject();
+  await saveTaskToFirebase(task);
+  closeAddTaskOverlay();
+  await reloadAndHighlightNewTask();
+}
+
+function buildTaskObject() {
+  return {
+    title: getInputValue("title"),
+    description: getInputValue("description"),
+    dueDate: getInputValue("dueDate"),
     priority: selectedPriority,
     assignedTo: selectedContacts.map((c) => c.name),
     category: selectedCategory,
@@ -1692,66 +1859,94 @@ async function createTask() {
     createdAt: new Date().toISOString(),
     status: addTaskDefaultStatus,
   };
+}
+
+function getInputValue(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : "";
+}
+
+async function saveTaskToFirebase(task) {
   await fetch(
-    `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${firebaseKey}/tasks.json`,
+    `${BASE_URL}${firebaseKey}/tasks.json`,
     {
       method: "POST",
       body: JSON.stringify(task),
     }
   );
-  closeAddTaskOverlay();
+}
+
+async function reloadAndHighlightNewTask() {
   await loadTasks();
   setTimeout(() => {
-    const lastTask = arrayTasks[arrayTasks.length - 1];
-    if (lastTask && lastTask.firebaseKey) {
-      lastCreatedTaskKey = lastTask.firebaseKey;
-      updateHTML();
-      setTimeout(() => {
-        const newTaskEl = document.getElementById(lastCreatedTaskKey);
-        if (newTaskEl) {
-          newTaskEl.classList.remove("task-blink");
-        }
-        lastCreatedTaskKey = null;
-      }, 2000);
-    }
+    highlightLastCreatedTask();
   }, 100);
 }
 
-/* ========== INIT EVENT LISTENERS FOR ADD TASK OVERLAY ========== */
-function setupEventListeners() {
-  document
-    .getElementById("dropdown-toggle")
-    .addEventListener("click", toggleAssignDropdown);
-  document
-    .getElementById("category-toggle")
-    .addEventListener("click", toggleCategoryDropdown);
-  document
-    .getElementById("dropdown-content")
-    ?.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-  const subtaskInput = document.getElementById("subtask-input");
-  if (subtaskInput) {
-    subtaskInput.addEventListener("input", () => {
-      const value = subtaskInput.value.trim();
-      const iconWrapper = document.getElementById("subtask-icons");
-      if (value.length > 0) {
-        iconWrapper.classList.remove("hidden");
-      } else {
-        iconWrapper.classList.add("hidden");
+function highlightLastCreatedTask() {
+  const lastTask = arrayTasks[arrayTasks.length - 1];
+  if (lastTask && lastTask.firebaseKey) {
+    lastCreatedTaskKey = lastTask.firebaseKey;
+    updateHTML();
+    setTimeout(() => {
+      const newTaskEl = document.getElementById(lastCreatedTaskKey);
+      if (newTaskEl) {
+        newTaskEl.classList.remove("task-blink");
       }
-    });
-    subtaskInput.addEventListener("keydown", handleSubtaskEnter);
+      lastCreatedTaskKey = null;
+    }, 2000);
   }
 }
 
-/* ========== INIT ADD TASK OVERLAY LOGIC ========== */
+function setupEventListeners() {
+  setupDropdownListeners();
+  setupCategoryListeners();
+  setupSubtaskInputListeners();
+}
+
+function setupDropdownListeners() {
+  const dropdownToggle = document.getElementById("dropdown-toggle");
+  if (dropdownToggle) {
+    dropdownToggle.addEventListener("click", toggleAssignDropdown);
+  }
+  const dropdownContent = document.getElementById("dropdown-content");
+  if (dropdownContent) {
+    dropdownContent.addEventListener("click", e => e.stopPropagation());
+  }
+}
+
+function setupCategoryListeners() {
+  const categoryToggle = document.getElementById("category-toggle");
+  if (categoryToggle) {
+    categoryToggle.addEventListener("click", toggleCategoryDropdown);
+  }
+}
+
+function setupSubtaskInputListeners() {
+  const subtaskInput = document.getElementById("subtask-input");
+  if (!subtaskInput) return;
+  subtaskInput.addEventListener("input", showOrHideSubtaskIcons);
+  subtaskInput.addEventListener("keydown", handleSubtaskEnter);
+}
+
+function showOrHideSubtaskIcons() {
+  const input = document.getElementById("subtask-input");
+  const iconWrapper = document.getElementById("subtask-icons");
+  if (!input || !iconWrapper) return;
+  if (input.value.trim().length > 0) {
+    iconWrapper.classList.remove("hidden");
+  } else {
+    iconWrapper.classList.add("hidden");
+  }
+}
+
 function initAddTaskOverlayLogic() {
   fetchContacts();
   setupEventListeners();
   setupDateValidation();
   resetForm();
 }
+
 /* ========== OPEN MOVE TASK MENU DROPDOWN ========== */
 function openMoveTaskMenu(taskKey, event) {
   event.stopPropagation();
