@@ -15,7 +15,7 @@ function overlayTemplate() {
                   alt="X"
                 />
                 <div class="logo-section">
-                  <img src="./assets/img/logo.svg" alt="logo" />
+                  <img src="./assets/icons/logo.svg" alt="logo" />
                 </div>
                 <div class="add-new-contact-template-left-text">
                   <h2>Add contact</h2>
@@ -104,7 +104,7 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
             alt="X"
           />
           <div class="logo-section">
-            <img src="./assets/img/logo.svg" alt="logo" />
+            <img src="./assets/icons/logo.svg" alt="logo" />
           </div>
           <div class="add-new-contact-template-left-text">
             <h2>Edit contact</h2>
