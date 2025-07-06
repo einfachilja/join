@@ -16,7 +16,7 @@
     />
   </head>
 
-  <body onload="setUserInitials(); initAddTaskPage()" onclick="closeDropdown()">
+  <body onclick="closeSubMenuIfOpen(event)" onload="setUserInitials(); initAddTaskPage()" onclick="closeDropdown()">
     <div class="body">
       <div class="desktop-menu">
         <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
@@ -67,7 +67,7 @@
             alt="logo"
           />
           <div class="header-right">
-            <div onclick="openSubMenu()" class="user-profile">
+            <div onclick="openSubMenu(event)" class="user-profile">
               <b id="user-initials"></b>
             </div>
             <a class="help-img" href="./help.html">

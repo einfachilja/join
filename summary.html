@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="./styles/media-summary.css" />
   </head>
 
-  <body onload="loadTasks(); showWelcomeMessage(); setUserInitials();">
+  <body onclick="closeSubMenuIfOpen(event)" onload="loadTasks(); showWelcomeMessage(); setUserInitials();">
     <div class="body">
       <div class="desktop-menu">
         <div>
@@ -75,7 +75,7 @@
             alt="logo"
           />
           <div class="header-right">
-            <div onclick="openSubMenu()" class="user-profile">
+            <div onclick="openSubMenu(event)" class="user-profile">
               <b id="user-initials"></b>
             </div>
             <a class="help-img" href="./help.html">
