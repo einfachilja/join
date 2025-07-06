@@ -3,8 +3,6 @@
 @media(max-width: 1232px) {}
 
 @media(max-width: 1040px) {
-    /* HELP PAGE */
-
     .help-frame {
         margin-top: 150px;
         margin-left: 96px;
@@ -33,8 +31,6 @@
 }
 
 @media(max-width: 800px) {
-
-    /* HELP PAGE */
     .help-frame {
         margin-top: 100px;
         margin-left: 20px;
@@ -65,8 +61,6 @@
 }
 
 @media(max-width: 500px) {
-
-    /* HELP PAGE */
     h1 {
         font-size: 35px;
     }

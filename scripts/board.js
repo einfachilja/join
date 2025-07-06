@@ -332,7 +332,7 @@ function renderBoardOverlay(task) {
         ? "category-technical"
         : "";
     boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-    // Ensure card re-renders and animation matches openBoardCard
+
     const cardRef = document.querySelector('.board-overlay-card');
     if (cardRef) {
       setTimeout(() => {
@@ -1094,7 +1094,7 @@ function closeAddTaskOverlay() {
 function closeAddTaskModalWithAnimation() {
   const modal = document.querySelector('.board-add-task-modal');
   modal.classList.remove('open');
-  setTimeout(hideAndResetAddTaskOverlay, 400); // passend zur CSS-Transition
+  setTimeout(hideAndResetAddTaskOverlay, 400); 
 }
 
 function hideAndResetAddTaskOverlay() {

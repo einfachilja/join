@@ -16,7 +16,6 @@
 }
 
 .add-task-modal {
-  /* Modal Layout */
   max-width: 1040px;
   margin-left: 275px;
   margin-right: 48px;
@@ -30,12 +29,10 @@
 }
 
 .main {
-  /* Main Content Padding */
   padding-right: 8px;
 }
 
 .form-cols {
-  /* Form Columns Layout */
   display: flex;
   align-items: stretch;
   gap: 24px;
@@ -45,7 +42,6 @@
 
 .form-section-left,
 .form-section-right {
-  /* Left and Right Form Sections */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -54,7 +50,6 @@
 }
 
 .form-divider {
-  /* Vertical Divider */
   width: 1px;
   background-color: #d1d1d1;
   height: auto;
@@ -67,7 +62,6 @@
 }
 
 .priority-buttons {
-  /* Priority Button Group */
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -138,7 +132,6 @@
 }
 
 .form-actions {
-  /* Form Action Buttons */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -177,7 +170,6 @@
 }
 
 .task-toast {
-  /* Toast Notification */
   position: fixed;
   top: 50%;
   left: 50%;
@@ -196,7 +188,6 @@
 
 input,
 textarea {
-  /* Input and Textarea Fields */
   border: 1px solid #d1d1d1;
   border-radius: 10px;
   padding: 0 16px;
@@ -223,7 +214,6 @@ select:focus,
 }
 
 #dateInput {
-  /* Date Input Field */
   padding: 12px 16px;
   border: 1px solid #d1d1d1;
   border-radius: 10px;
@@ -271,7 +261,6 @@ select:focus {
 }
 
 #dropdown-wrapper {
-  /* Dropdown Menu: Assign To */
   position: relative;
 }
 
@@ -317,7 +306,6 @@ select:focus {
 }
 
 .dropdown-arrow {
-  /* Dropdown Arrow Icon */
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
@@ -332,7 +320,6 @@ select:focus {
 }
 
 .dropdown-content {
-  /* Dropdown Content List */
   position: absolute;
   top: 100%;
   left: 0;
@@ -366,11 +353,7 @@ select:focus {
   background-color: #f0f0f0;
 }
 
-/* === Selected Contact Item Styles for Dropdown === */
-/* .dropdown-content .contact-item.selected and .contact-item.selected merged below for consistency */
-
 .selected-contacts {
-  /* Selected Contacts Avatars */
   margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
@@ -390,7 +373,6 @@ select:focus {
 }
 
 .profile-icon {
-  /* Contact Profile Icon */
   border-radius: 45px;
   height: 42px;
   width: 42px;
@@ -404,7 +386,6 @@ select:focus {
   margin-right: 8px;
 }
 
-/* Einheitlicher Fehlerrahmen für alle Pflichtfelder */
 input.error-border,
 textarea.error-border,
 select.error-border,
@@ -417,7 +398,6 @@ select.error-border,
   transition: border 0.1s linear, box-shadow 0.1s linear;
 }
 
-/* Spezifisch für Toggle-Elemente: keine doppelte Umrahmung/Animation */
 #dropdown-toggle.error-border,
 #category-toggle.error-border {
   border: 1px solid #e74c3c !important;
@@ -444,7 +424,6 @@ select::placeholder {
 }
 
 .custom-select-wrapper {
-  /* Custom Select Dropdown */
   position: relative;
   width: 100%;
   margin-bottom: 4px;
@@ -485,7 +464,6 @@ select::placeholder {
 }
 
 #category-wrapper {
-  /* Category Dropdown Menu */
   position: relative;
 }
 
@@ -596,14 +574,12 @@ select::placeholder {
 }
 
 .subtask-wrapper {
-  /* Subtask List Wrapper */
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 .subtask-edit {
-  /* Subtask Edit Row */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -631,14 +607,12 @@ select::placeholder {
 }
 
 .subtask-list {
-  /* Subtask List */
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .subtask-list-item {
-  /* Subtask List Item */
   list-style-type: disc;
   margin-left: 20px;
   background: none;
@@ -653,7 +627,6 @@ select::placeholder {
 }
 
 .subtask-input-wrapper {
-  /* Subtask Input with Icons */
   position: relative;
   width: 100%;
 }
@@ -667,12 +640,10 @@ select::placeholder {
   width: 100%;
   padding: 0 16px;
   padding-right: 96px;
-  /* Space for two icons right */
   box-sizing: border-box;
 }
 
 .subtask-icons {
-  /* Subtask Icons Row */
   position: absolute;
   top: 50%;
   right: 12px;
@@ -694,7 +665,6 @@ select::placeholder {
 }
 
 #subtask-plus {
-  /* Subtask Add Button */
   position: absolute;
   top: 50%;
   right: 12px;
@@ -723,7 +693,6 @@ select::placeholder {
 }
 
 .subtask-icon {
-  /* Subtask Icon Button */
   width: 24px;
   height: 24px;
   padding: 6px;
@@ -737,12 +706,7 @@ select::placeholder {
 }
 
 .hidden {
-  /* Utility: Hide Element */
   display: none !important;
-}
-
-.responsive-breakpoints {
-  /* Responsive Breakpoints (just for comment structure) */
 }
 
 .subtask-list-item.subtask-edit-mode {
@@ -779,7 +743,6 @@ select::placeholder {
 }
 
 .subtask-input-edit-wrapper {
-  /* Subtask Edit Input Wrapper */
   flex: 1;
   margin-right: 12px;
   display: flex;
@@ -827,19 +790,16 @@ select::placeholder {
 }
 
 .subtask-edit-icons {
-  /* Subtask Edit Icons Group */
   display: flex;
   gap: 8px;
   margin-left: auto;
 }
 
 .red_star {
-  /* Required Field Star */
   color: red;
 }
 
 .legend-required {
-  /* Required Field Legend */
   padding-left: 0;
   font-size: 14px;
   color: #6e6e6e;
@@ -850,7 +810,6 @@ select::placeholder {
 }
 
 .error-message {
-  /* Error Message */
   color: red;
   font-size: 12px;
   margin-top: 6px;
@@ -863,7 +822,6 @@ select::placeholder {
 }
 
 .field-wrapper {
-  /* Field Wrapper */
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -871,7 +829,6 @@ select::placeholder {
 
 .contact-item.selected,
 .dropdown-content .contact-item.selected {
-  /* Selected Contact Item */
   background-color: #091931 !important;
   color: #ffffff;
   border-radius: 10px;
@@ -909,7 +866,6 @@ select::placeholder {
 }
 
 .category-item img {
-  /* Category Dropdown Icon */
   width: 20px;
   height: 20px;
   padding: 4px;
@@ -923,7 +879,6 @@ select::placeholder {
 }
 
 #subtask-input:focus {
-  /* Subtask Input Focus */
   border: 1px solid #29abe2 !important;
   outline: none !important;
   background-color: #ffffff;
@@ -931,23 +886,19 @@ select::placeholder {
   transition: box-shadow 0.1s ease-in-out;
 }
 
-/* Basis-Stil */
 #submit-task-btn {
   background-color: #2a3647;
   color: white;
   border: none;
   pointer-events: auto;
-  /* wichtig! */
   opacity: 1;
 }
 
-/* Hover-Stil, wenn Button noch disabled (Pflichtfelder fehlen) */
 #submit-task-btn:disabled:hover {
   background-color: #2a3647;
   cursor: not-allowed;
 }
 
-/* Hover-Stil, wenn Button aktiviert (alle Pflichtfelder erfüllt) */
 #submit-task-btn:not(:disabled):hover {
   background-color: #29abe2;
   cursor: pointer;

@@ -12,14 +12,12 @@ function formatDateToDDMMYYYY(dateString) {
 }
 let firebaseKey = localStorage.getItem("firebaseKey");
 
-// ==== STATE ====
 let selectedPriority = "medium";
 const subtask = [];
 let contacts = [];
 let selectedContacts = [];
 let selectedCategory = "";
 
-// ==== HELPERS ====
 /**
  * Stops the propagation of the given event.
  * @param {Event} [e=window.event] - The event to stop propagation for.
@@ -46,7 +44,6 @@ function selectPriority(prio) {
   updateSubmitState();
 }
 
-// ==== INIT ====
 /**
  * Initializes the Add Task page by setting up DOM defaults, classic DOM event bindings, and fetching contacts.
  */
@@ -184,7 +181,6 @@ function hideDateError(input, error) {
   error.classList.remove("visible");
 }
 
-// ==== FETCH CONTACTS ====
 /**
  * Fetches contacts from Firebase and populates the contacts array.
  * @returns {Promise<void>}
@@ -204,7 +200,6 @@ async function fetchContacts() {
   } catch (err) {}
 }
 
-// ==== INTERACTIONS ====
 /**
  * Sets up all interactive behavior for dropdowns, subtasks, and outside clicks.
  */
@@ -213,7 +208,6 @@ function setupInteractions() {
   setupSubtaskEvents();
   setupOutsideClickEvents();
 
-  // Enable submit button only if all required fields are filled
   const titleInput = document.getElementById("title");
   const dueDateInput = document.getElementById("dueDate");
   const categoryToggle = document.getElementById("category-toggle");
@@ -278,7 +272,7 @@ function setupOutsideClickEvents() {
     }
   };
 }
-// ==== SUBTASK ICONS TOGGLE ====
+
 /**
  * Toggles the visibility of subtask icons depending on input focus.
  */
@@ -293,7 +287,6 @@ function toggleSubtaskIcons() {
   defaultIcon?.classList.toggle("hidden", isActive);
 }
 
-// ==== ASSIGN-DROPDOWN ====
 /**
  * Toggles the assignment dropdown open/closed and renders options if needed.
  * @param {Event} event - The click event.
@@ -416,7 +409,6 @@ function updateSelectedContactsUI() {
   });
 }
 
-// ==== SUBTASKS ====
 /**
  * Adds a subtask to the subtasks list and updates the UI.
  */
@@ -617,7 +609,6 @@ function createSubtaskButtonGroup(cancelBtn, confirmBtn) {
   return buttonContainer;
 }
 
-// ==== VALIDATION ====
 /**
  * Validates the task title input and shows/hides error messages.
  * @returns {boolean} True if valid, false otherwise.
@@ -635,9 +626,6 @@ function validateTitle() {
     return true;
   }
 }
-
-// ==== DATE VALIDATION ====
-// validateDate is not used anywhere except inside validateForm
 
 /**
  * Updates the submit button state (always enables it here).
@@ -770,7 +758,6 @@ function resetForm() {
   clearEditTimeouts();
 }
 
-// ==== CREATE TASK ====
 /**
  * Creates a new task, saves it to Firebase, and updates the UI.
  * @returns {Promise<void>}
@@ -833,7 +820,6 @@ async function saveTaskToFirebaseBoard(task) {
   } catch (error) {}
 }
 
-// ==== CATEGORY ====
 /**
  * Toggles the category dropdown open/closed and renders options if needed.
  * @param {Event} event - The click event.
@@ -917,7 +903,6 @@ function clearSubtaskInput() {
   subtaskPlus.classList.remove("hidden");
 }
 
-// --- Custom Date Picker Helper ---
 /**
  * Shows the native date picker for the input and formats the result.
  * @param {HTMLInputElement} input - The input element to attach the picker to.
@@ -925,7 +910,7 @@ function clearSubtaskInput() {
 function showDatePicker(input) {
   input.type = "date";
   input.focus();
-  // Bind date formatting on input change
+
   input.onchange = function () {
     const [year, month, day] = input.value?.split("-") ?? [];
     if (
@@ -950,7 +935,7 @@ function showDatePicker(input) {
       input.value = formatted;
     }, 0);
   };
-  // Restore placeholder if input is empty on blur
+
   input.onblur = function () {
     if (!input.value) {
       input.type = "text";
@@ -959,7 +944,6 @@ function showDatePicker(input) {
   };
 }
 
-// ==== SAVE UPDATED SUBTASKS ====
 /**
  * Saves updated subtasks for a given task to Firebase.
  * @param {string} taskKey - The Firebase key of the task to update.

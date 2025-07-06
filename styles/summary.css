@@ -239,7 +239,6 @@
   background-color: hsl(94, 76%, 52%); 
 }
 
-/* Verstecke leere Bilder (z. B. bei keiner Priorität) */
 .priority-img:not([src]) {
   display: none;
 }
