@@ -146,7 +146,7 @@ export const AddTaskCore = {
    * @function
    */
   setupOutsideClickEvents() {
-    document.addEventListener("click", (e) => {
+    document.onclick = (e) => {
       const catWrap = document.getElementById("category-wrapper");
       const assWrap = document.getElementById("dropdown-wrapper");
 
@@ -163,7 +163,7 @@ export const AddTaskCore = {
           .getElementById("dropdown-content")
           ?.classList.remove("visible");
       }
-    });
+    };
   },
 
   /**
