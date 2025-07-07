@@ -1,164 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join | Contacts</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./styles/contacts.css" />
+    <link rel="stylesheet" href="./styles/fonts.css" />
+    <link rel="stylesheet" href="./styles/media-contact.css" />
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/favicon.svg"
+      type="image/x-icon"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Join | Contacts</title>
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="./styles/contacts.css" />
-  <link rel="stylesheet" href="./styles/fonts.css">
-  <link rel="stylesheet" href="./styles/media-contact.css">
-  <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
-</head>
+  <body onclick="closeSubMenuIfOpen(event)" onload="init()">
+    <div onclick="toggleOff()" id="overlay" class="d_none"></div>
+    <div onclick="toggleOffMobile()" id="overlay_mobile" class="d_none"></div>
 
-<body onclick="closeSubMenuIfOpen(event)" onload="init()">
-  <div onclick="toggleOff()" id="overlay" class="d_none"></div>
-  <div onclick="toggleOffMobile()" id="overlay_mobile" class="d_none"></div>
-
-  <div class="body main-body">
-    <div class="desktop-menu">
-      <div>
-        <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
-      </div>
-      <div class="menu">
-        <a class="link" href="./summary.html">
-          <button>
-            <img src="./assets/icons/summary.svg" alt="" />
-            <p>Summary</p>
-          </button>
-        </a>
-
-        <a class="link" href="./add-task.html">
-          <button>
-            <img src="./assets/icons/add-task.svg" alt="" />
-            <p>Add Task</p>
-          </button>
-        </a>
-
-        <a class="link" href="./board.html">
-          <button>
-            <img src="./assets/icons/board.svg" alt="" />
-            <p>Board</p>
-          </button>
-        </a>
-
-        <a class="link" href="./contacts.html">
-          <button class="active">
-            <img src="./assets/icons/contacts.svg" alt="" />
-            <p>Contacts</p>
-          </button>
-        </a>
-      </div>
-      <div class="desktop-footer">
-        <div class="desktop-footer-content">
-          <a href="./privacy-policy.html">
+    <div class="body main-body">
+      <div class="desktop-menu">
+        <div>
+          <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
+        </div>
+        <div class="menu">
+          <a class="link" href="./summary.html">
             <button>
-              <p>Privacy Policy</p>
-            </button>
-          </a>
-
-          <a href="./legal-notice.html">
-            <button>
-              <p>Legal notice</p>
-            </button>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="body-right">
-      <div class="header">
-        <span class="header-title">Kanban Project Management Tool</span>
-        <img class="logo-mobile" src="./assets/icons/favicon.svg" alt="logo" />
-
-        <div class="header-right">
-          <div onclick="openSubMenu(event)" class="user-profile"><b id="user-initials"></b></div>
-          <a class="help-img" href="./help.html">
-            <img src="./assets/icons/help.svg" alt="" />
-          </a>
-        </div>
-      </div>
-      <div id="sub_menu" class="d_none sub_menu">
-        <a href="./legal-notice.html">
-          <p class="sub-menu-content">Legal Notice</p>
-        </a>
-        <a href="./privacy-policy.html">
-          <p class="sub-menu-content">Privacy Policy</p>
-        </a>
-        <a href="./index.html">
-          <p class="sub-menu-content">Log out</p>
-        </a>
-      </div>
-
-      <main class="main">
-        <div class="contacts-list">
-
-          <div class="contacts-list-header">
-            <button onclick="toggleOverlay()">
-              Add new contact
-              <img src="./assets/icons/contacts/person_add.svg" alt="" />
-            </button>
-          </div>
-
-          <div class="add-new-contact-button">
-            <button onclick="toggleOverlay()">
-              <img src="./assets/icons/contacts/person_add.svg" alt="add new contact" />
-            </button>
-          </div>
-
-          <div id="all_contacts" class="all-contacts">
-          </div>
-        </div>
-
-        <div class="my-contact-info">
-          <div class="header-div">
-            <span class="Contacts-span">Contacts</span>
-            <img class="blue-line" src="./assets/icons/contacts/contact-info-blue-line.svg" alt="" />
-            <span class="better-with-a-team-span">Better with a team</span>
-          </div>
-          <div id="open_contact_Template"></div>
-        </div>
-      </main>
-
-      <footer>
-        <div class="mobile-menu">
-          <button>
-            <a href="./summary.html">
               <img src="./assets/icons/summary.svg" alt="" />
               <p>Summary</p>
-            </a>
-          </button>
+            </button>
+          </a>
 
-          <button>
-            <a href="./add-task.html">
+          <a class="link" href="./add-task.html">
+            <button>
               <img src="./assets/icons/add-task.svg" alt="" />
               <p>Add Task</p>
-            </a>
-          </button>
+            </button>
+          </a>
 
-          <button>
-            <a href="./board.html">
+          <a class="link" href="./board.html">
+            <button>
               <img src="./assets/icons/board.svg" alt="" />
               <p>Board</p>
-            </a>
-          </button>
+            </button>
+          </a>
 
-          <button>
-            <a href="./contacts.html" class="active">
+          <a class="link" href="./contacts.html">
+            <button class="active">
               <img src="./assets/icons/contacts.svg" alt="" />
               <p>Contacts</p>
-            </a>
-          </button>
+            </button>
+          </a>
         </div>
-      </footer>
+        <div class="desktop-footer">
+          <div class="desktop-footer-content">
+            <a href="./privacy-policy.html">
+              <button>
+                <p>Privacy Policy</p>
+              </button>
+            </a>
+
+            <a href="./legal-notice.html">
+              <button>
+                <p>Legal notice</p>
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="body-right">
+        <div class="header">
+          <span class="header-title">Kanban Project Management Tool</span>
+          <img
+            class="logo-mobile"
+            src="./assets/icons/favicon.svg"
+            alt="logo"
+          />
+
+          <div class="header-right">
+            <div onclick="openSubMenu(event)" class="user-profile">
+              <b id="user-initials"></b>
+            </div>
+            <a class="help-img" href="./help.html">
+              <img src="./assets/icons/help.svg" alt="" />
+            </a>
+          </div>
+        </div>
+        <div id="sub_menu" class="d_none sub_menu">
+          <a href="./legal-notice.html">
+            <p class="sub-menu-content">Legal Notice</p>
+          </a>
+          <a href="./privacy-policy.html">
+            <p class="sub-menu-content">Privacy Policy</p>
+          </a>
+          <a href="./index.html">
+            <p class="sub-menu-content">Log out</p>
+          </a>
+        </div>
+
+        <main class="main">
+          <div class="contacts-list">
+            <div class="contacts-list-header">
+              <button onclick="toggleOverlay()">
+                Add new contact
+                <img src="./assets/icons/contacts/person_add.svg" alt="" />
+              </button>
+            </div>
+
+            <div class="add-new-contact-button">
+              <button onclick="toggleOverlay()">
+                <img
+                  src="./assets/icons/contacts/person_add.svg"
+                  alt="add new contact"
+                />
+              </button>
+            </div>
+
+            <div id="all_contacts" class="all-contacts"></div>
+          </div>
+
+          <div class="my-contact-info">
+            <div class="header-div">
+              <span class="Contacts-span">Contacts</span>
+              <img
+                class="blue-line"
+                src="./assets/icons/contacts/contact-info-blue-line.svg"
+                alt=""
+              />
+              <span class="better-with-a-team-span">Better with a team</span>
+            </div>
+            <div id="open_contact_Template"></div>
+          </div>
+        </main>
+
+        <footer>
+          <div class="mobile-menu">
+            <button>
+              <a href="./summary.html">
+                <img src="./assets/icons/summary.svg" alt="" />
+                <p>Summary</p>
+              </a>
+            </button>
+
+            <button>
+              <a href="./add-task.html">
+                <img src="./assets/icons/add-task.svg" alt="" />
+                <p>Add Task</p>
+              </a>
+            </button>
+
+            <button>
+              <a href="./board.html">
+                <img src="./assets/icons/board.svg" alt="" />
+                <p>Board</p>
+              </a>
+            </button>
+
+            <button>
+              <a href="./contacts.html" class="active">
+                <img src="./assets/icons/contacts.svg" alt="" />
+                <p>Contacts</p>
+              </a>
+            </button>
+          </div>
+        </footer>
+      </div>
     </div>
-  </div>
 
-  <script src="./scripts/desktop-template.js"></script>
-  <script src="./scripts/help.js"></script>
-  <script src="./scripts/contacts.js"></script>
-  <script src="./scripts/contacts-templates.js"></script>
-</body>
+    <div class="landscape-mode">
+      <h2>Please hold your device upright</h2>
+      <p>This view is optimized for portrait orientation only.</p>
+    </div>
 
+    <script src="./scripts/desktop-template.js"></script>
+    <script src="./scripts/help.js"></script>
+    <script src="./scripts/contacts.js"></script>
+    <script src="./scripts/contacts-templates.js"></script>
+  </body>
 </html>

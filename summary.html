@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="./styles/media-summary.css" />
   </head>
 
-  <body onclick="closeSubMenuIfOpen(event)" onload="loadTasks(); showWelcomeMessage(); setUserInitials();">
+  <body
+    onclick="closeSubMenuIfOpen(event)"
+    onload="loadTasks(); showWelcomeMessage(); setUserInitials();"
+  >
     <div class="body">
       <div class="desktop-menu">
         <div>
@@ -158,16 +161,19 @@
                     <a href="./board.html" class="card-center">
                       <div class="card-center-left">
                         <div id="priority-wrapper" class="priority-background">
-                          <img id="priority-icon" class="priority-img"  alt="" />
+                          <img id="priority-icon" class="priority-img" alt="" />
                         </div>
                         <div class="card-center-text">
                           <div
                             id="summary_card_number_priority_high"
                             class="summary-card-number"
-                          >0</div>
-                          <div id="priority-label" class="summary-card-text">
-                            
+                          >
+                            0
                           </div>
+                          <div
+                            id="priority-label"
+                            class="summary-card-text"
+                          ></div>
                         </div>
                       </div>
                       <img
@@ -179,9 +185,7 @@
                         <span class="summary-date" id="upcoming-deadline-date"
                           >No upcoming deadline</span
                         >
-                        <span class="summary-date-subline"
-                          ></span
-                        >
+                        <span class="summary-date-subline"></span>
                       </div>
                     </a>
                   </div>
@@ -252,6 +256,11 @@
           </div>
         </footer>
       </div>
+    </div>
+
+    <div class="landscape-mode">
+      <h2>Please hold your device upright</h2>
+      <p>This view is optimized for portrait orientation only.</p>
     </div>
 
     <script src="./scripts/desktop-template.js"></script>
