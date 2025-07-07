@@ -856,6 +856,10 @@ function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
   row.appendChild(input);
   row.appendChild(editBtn);
   row.appendChild(removeBtn);
+  row.ondblclick = () => {
+    input.activateEdit();
+  };
+
   return row;
 }
 
