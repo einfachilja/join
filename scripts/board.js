@@ -299,6 +299,25 @@ function renderSubtasks(task) {
   }).join("");
 }
 
+// Neue Funktion: updateOverlaySubtasks
+function updateOverlaySubtasks(task) {
+  // Hole das Subtasks-Container-Element in der Overlay-Card
+  const subtaskList = document.querySelector('.subtask-list ul');
+  if (subtaskList) {
+    subtaskList.innerHTML = renderSubtasks(task);
+  }
+  // Optional: Subtask-Fortschrittsbalken aktualisieren, falls vorhanden
+  const progressBar = document.querySelector('.subtask-progress-bar');
+  if (progressBar) {
+    const subtasksArr = Array.isArray(task.subtask) ? task.subtask : [];
+    const total = subtasksArr.length;
+    const completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
+    const percent = total > 0 ? (completed / total) * 100 : 0;
+    progressBar.style.width = percent + "%";
+    progressBar.textContent = `${completed}/${total} Done`;
+  }
+}
+
 function selectOverlayPriority(priority, btn) {
   document.querySelectorAll('.priority-edit-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -361,7 +380,7 @@ async function toggleSubtask(taskKey, index) {
   try {
     await saveSubtasksToFirebase(taskKey, task.subtask);
     updateHTML();
-    renderBoardOverlay(task);
+    updateOverlaySubtasks(task);
     blurCheckbox(taskKey, index);
   } catch (error) {
     console.error("Fehler beim Aktualisieren des Subtasks:", error);
