@@ -509,6 +509,9 @@ function addDueDateInput(dueDateSpan, formattedDate) {
   input.id = "due_date_input";
   input.className = "overlay-card-date-input";
   input.value = formattedDate;
+  // Setze Mindestdatum auf heute:
+  let today = new Date().toISOString().split("T")[0];
+  input.min = today;
   dueDateSpan.innerHTML = "";
   dueDateSpan.appendChild(input);
 }
