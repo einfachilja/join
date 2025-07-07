@@ -1,5 +1,5 @@
 function getAddTaskOverlay() {
-    return `          <div class="board-add-task-modal">
+  return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
             <h1 class="h1-add-task">Add Task</h1>
             <img class="board-close-icon" src="./assets/icons/board/board-close.svg" onclick="closeAddTaskOverlay()">
@@ -135,7 +135,7 @@ function getAddTaskOverlay() {
                             <div class="divider"></div>
                             <img
                               id="subtask-confirm"
-                              src="./assets/icons/add-task/add-task-checked.svg"
+                              src="./assets/icons/add-task/add-task-check.svg"
                               alt="Confirm"
                               onclick="addSubtask()"
                             />
@@ -174,7 +174,7 @@ function getAddTaskOverlay() {
 }
 
 function buildCardHTML(firebaseKey, category, categoryClass, priority, priorityIcon, assignedList, subtaskProgressHTML, title, description) {
-    return `
+  return `
     <div draggable="true" ondragstart="startDragging('${firebaseKey}')" ondragend="stopDragging('${firebaseKey}')">
       <div class="card${firebaseKey === lastCreatedTaskKey ? ' task-blink' : ''}" id="${firebaseKey}">
         <div class="card-header">
@@ -197,7 +197,7 @@ function buildCardHTML(firebaseKey, category, categoryClass, priority, priorityI
 }
 
 function getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML) {
-    return `
+  return `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
       <div class="board-overlay-card-header edit-mode">
         <span id="overlay_card_category" class="overlay-card-category ${categoryClass}">${task.category}</span>
@@ -230,7 +230,7 @@ function getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, s
 }
 
 function getPriorityButtonHTML(priorityObj, currentPriority) {
-    return `
+  return `
     <button 
       type="button" 
       class="priority-edit-btn${currentPriority === priorityObj.value ? ' selected' : ''}" 
@@ -242,7 +242,7 @@ function getPriorityButtonHTML(priorityObj, currentPriority) {
 }
 
 function getAssignedEntryHTML(name, color) {
-    return `
+  return `
     <div class="assigned-entry">
       <span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>
       <span class="assigned-name">${name}</span>
@@ -250,7 +250,7 @@ function getAssignedEntryHTML(name, color) {
 }
 
 function getSubtaskItemHTML(title, checked, id, firebaseKey, idx) {
-    return `
+  return `
     <div class="subtask-item">
       <input type="checkbox" id="${id}" ${checked} onchange="toggleSubtask('${firebaseKey}', ${idx})" />
       <label for="${id}">${title}</label>
