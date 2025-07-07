@@ -262,15 +262,20 @@ function setupSubtaskEvents() {
  * Sets up interactive behavior to close dropdowns when clicking outside.
  */
 function setupOutsideClickEvents() {
-  document.onclick = function (e) {
-    if (!document.getElementById("category-wrapper").contains(e.target)) {
+  document.addEventListener("click", function (e) {
+    const categoryWrapper = document.getElementById("category-wrapper");
+    const dropdownWrapper = document.getElementById("dropdown-wrapper");
+
+    if (categoryWrapper && !categoryWrapper.contains(e.target)) {
       document.getElementById("category-toggle")?.classList.remove("open");
       document.getElementById("category-content")?.classList.remove("visible");
     }
-    if (!document.getElementById("dropdown-wrapper").contains(e.target)) {
-      closeDropdown();
+
+    if (dropdownWrapper && !dropdownWrapper.contains(e.target)) {
+      document.getElementById("dropdown-toggle")?.classList.remove("open");
+      document.getElementById("dropdown-content")?.classList.remove("visible");
     }
-  };
+  });
 }
 
 /**
