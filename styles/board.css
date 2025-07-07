@@ -165,6 +165,14 @@
     padding: 4px;
 }
 
+.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    height: 38px;
+}
+
 .card {
     display: flex;
     flex-direction: column;

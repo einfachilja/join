@@ -1034,9 +1034,14 @@ function searchTask() {
     renderTasksToBoard(foundTasks);
     console.log("Gefundene Tasks:", foundTasks);
   } else {
-    console.log("Keine Tasks gefunden mit dem Suchbegriff:", inputValue);
+    ["todo", "progress", "feedback", "done"].forEach(section => {
+      document.getElementById(section).innerHTML = `
+        <span class="empty-message no-results">No results found</span>
+      `;
+    });
   }
 }
+
 
 function getSearchInputValue() {
   const inputRef = document.getElementById("input_find_task");
