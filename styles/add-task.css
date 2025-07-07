@@ -351,8 +351,7 @@ select:focus {
 
 .dropdown-content .contact-item:hover {
   background-color: #2A3647;
-  color: #ffffff
-;
+  color: #ffffff;
 }
 
 .selected-contacts {
@@ -865,6 +864,14 @@ select::placeholder {
   width: 24px;
   height: 24px;
   cursor: pointer;
+}
+
+.contact-item:hover input[type="checkbox"] {
+  filter: invert(1);
+}
+
+.contact-item:hover input[type="checkbox"]:checked {
+  filter: invert(0);
 }
 
 .category-item img {
