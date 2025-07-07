@@ -253,7 +253,7 @@ function updateHTML() {
   addCardClickListeners();
 }
 
-function openBoardCard(firebaseKey) {
+function openBoardCard(firebaseKey, options = {}) {
   let overlayElement = document.getElementById("board_overlay");
   let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
   let categoryClass = "";
@@ -262,10 +262,17 @@ function openBoardCard(firebaseKey) {
   overlayElement.classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
   overlayElement.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-  setTimeout(() => {
-    let card = document.querySelector('.board-overlay-card');
-    if (card) card.classList.add('open');
-  }, 10);
+
+  let card = document.querySelector('.board-overlay-card');
+  if (card) {
+    if (options.noAnimation) {
+      card.classList.add('open'); // SOFORT, KEIN setTimeout
+    } else {
+      setTimeout(() => {
+        card.classList.add('open');
+      }, 10);
+    }
+  }
   updateHTML();
 }
 
@@ -936,7 +943,7 @@ async function saveEditTask(taskKey) {
   try {
     await updateTaskInFirebase(taskKey, updatedTask);
     updateTaskLocally(taskKey, updatedTask);
-    reloadUIAfterEdit(taskKey);
+    reloadUIAfterEdit(taskKey, { noAnimation: true }); // << HIER ÄNDERN
   } catch (error) {
     console.error("Fehler beim Bearbeiten des Tasks:", error);
   }
@@ -1026,9 +1033,9 @@ function updateTaskLocally(taskKey, updatedTask) {
   arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
 }
 
-function reloadUIAfterEdit(taskKey) {
+function reloadUIAfterEdit(taskKey, options = {}) {
   updateHTML();
-  openBoardCard(taskKey);
+  openBoardCard(taskKey, options);
 }
 
 function searchTask() {
