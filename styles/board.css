@@ -434,16 +434,6 @@
     color: #29abe2;
 }
 
-.subtask-ove-btn {
-    background: none;
-    border: none;
-    color: #b2b2b2;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
 .subtask-edit-btn {
     background: none;
     border: none;
@@ -466,6 +456,11 @@
 
 .subtask-remove-btn img {
     width: 24px;
+}
+
+.subtask-remove-btn {
+    border: none;
+    background: none;
 }
 
 .subtask-list-row {
@@ -647,7 +642,7 @@
     border-radius: 10px;
     font-size: 16px;
     font-weight: 400;
-    font-family: inherit;
+    font-family: "Inter-Normal";
 }
 
 .assigned-entry {

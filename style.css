@@ -13,10 +13,10 @@ main {
 }
 
 .content-container {
-  max-width: 1920px;
-  margin: 0 auto;
-  padding: 0 32px;
-  box-sizing: border-box;
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 0 32px;
+    box-sizing: border-box;
 }
 
 a {
@@ -330,7 +330,7 @@ button p {
         justify-content: center;
         align-items: center;
         flex-direction: column;
-  
+
     }
 
     .sub-menu {
