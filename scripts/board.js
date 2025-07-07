@@ -1620,7 +1620,7 @@ function showTaskAddedOverlay() {
     setTimeout(() => {
       overlay.style.display = "none";
     }, 200);
-  }, 1000);
+  }, 2500);
 }
 
 function buildTaskObject() {
