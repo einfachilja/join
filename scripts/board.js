@@ -6,13 +6,13 @@ let firebaseKey = localStorage.getItem("firebaseKey");
 let lastCreatedTaskKey = null;
 let currentDraggedElement;
 let selectedPriority = "medium";
-const subtasks = [];
+let subtasks = [];
 let contacts = [];
 let selectedContacts = [];
 let selectedCategory = "";
 
 async function loadTasks() {
-  const responseJson = await fetchTasksFromFirebase(firebaseKey);
+  let responseJson = await fetchTasksFromFirebase(firebaseKey);
   await fetchContactsAndStore(firebaseKey);
   arrayTasks = normalizeTasks(responseJson);
   await fetchContacts();
@@ -20,15 +20,15 @@ async function loadTasks() {
 }
 
 async function fetchTasksFromFirebase(userKey) {
-  const response = await fetch(`${BASE_URL}${userKey}/tasks.json`);
-  const data = await response.json();
+  let response = await fetch(`${BASE_URL}${userKey}/tasks.json`);
+  let data = await response.json();
   return data;
 }
 
 async function fetchContactsAndStore(userKey) {
   try {
-    const response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
-    const data = await response.json();
+    let response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
+    let data = await response.json();
 
     if (data) {
       let users = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
@@ -51,8 +51,8 @@ function normalizeTasks(responseJson) {
 
 async function fetchContacts() {
   try {
-    const response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
-    const data = await response.json();
+    let response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
+    let data = await response.json();
     contacts = Object.values(data || {})
       .filter(u => u && typeof u.name === "string" && u.name.trim())
       .map(u => ({
@@ -120,31 +120,31 @@ function getCategoryClass(category) {
 function generateAssignedCircles(assignedList) {
   if (!Array.isArray(assignedList)) return "";
   return assignedList.map(name => {
-    const contact = getContactByName(name);
+    let contact = getContactByName(name);
     if (!contact) return '';
-    const color = contact.color || "#ccc";
+    let color = contact.color || "#ccc";
     return getAssignedCircleHTML(name, color);
   }).join("");
 }
 
 function generateSubtaskProgress(subtasksArr) {
-  const total = subtasksArr.length;
-  const completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
-  const percent = total > 0 ? (completed / total) * 100 : 0;
+  let total = subtasksArr.length;
+  let completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
+  let percent = total > 0 ? (completed / total) * 100 : 0;
   if (total === 0) return "";
   return getSubtaskProgressHTML(completed, total, percent);
 }
 
 function generateTodoHTML(element) {
-  const category = getCardCategory(element);
-  const categoryClass = getCategoryClass(category);
-  const priority = getCardPriority(element);
-  const priorityIcon = getPriorityIcon(priority);
-  const assignedList = getAssignedList(element);
-  const subtasksArr = getSubtasksArray(element);
-  const subtaskProgressHTML = generateSubtaskProgress(subtasksArr);
-  const title = getCardTitle(element);
-  const description = getCardDescription(element);
+  let category = getCardCategory(element);
+  let categoryClass = getCategoryClass(category);
+  let priority = getCardPriority(element);
+  let priorityIcon = getPriorityIcon(priority);
+  let assignedList = getAssignedList(element);
+  let subtasksArr = getSubtasksArray(element);
+  let subtaskProgressHTML = generateSubtaskProgress(subtasksArr);
+  let title = getCardTitle(element);
+  let description = getCardDescription(element);
 
   return buildCardHTML(
     element.firebaseKey,
@@ -185,12 +185,12 @@ function getCardDescription(element) {
 
 function startDragging(firebaseKey) {
   currentDraggedElement = firebaseKey;
-  const taskElement = document.getElementById(firebaseKey);
+  let taskElement = document.getElementById(firebaseKey);
   taskElement.classList.add("dragging");
 }
 
 function stopDragging(firebaseKey) {
-  const taskElement = document.getElementById(firebaseKey);
+  let taskElement = document.getElementById(firebaseKey);
   if (taskElement) {
     taskElement.classList.remove("dragging");
   }
@@ -198,8 +198,8 @@ function stopDragging(firebaseKey) {
 
 function allowDrop(ev) {
   ev.preventDefault();
-  const target = ev.currentTarget;
-  const draggedEl = document.getElementById(currentDraggedElement);
+  let target = ev.currentTarget;
+  let draggedEl = document.getElementById(currentDraggedElement);
   if (draggedEl && !target.contains(draggedEl)) {
     target.appendChild(draggedEl);
   }
@@ -222,7 +222,7 @@ function getTasksByStatus(status) {
 }
 
 function renderSection(sectionId, tasks, emptyMessage) {
-  const section = document.getElementById(sectionId);
+  let section = document.getElementById(sectionId);
   section.innerHTML = "";
   if (tasks.length === 0) {
     section.innerHTML = `<span class="empty-message">${emptyMessage}</span>`;
@@ -235,11 +235,11 @@ function renderSection(sectionId, tasks, emptyMessage) {
 
 function addCardClickListeners() {
   ['todo', 'progress', 'feedback', 'done'].forEach(sectionId => {
-    const section = document.getElementById(sectionId);
+    let section = document.getElementById(sectionId);
     if (!section) return;
     section.onclick = null;
     section.addEventListener('click', function (event) {
-      const card = event.target.closest('.card');
+      let card = event.target.closest('.card');
       if (card && card.id) openBoardCard(card.id);
     });
   });
@@ -254,8 +254,8 @@ function updateHTML() {
 }
 
 function openBoardCard(firebaseKey) {
-  const overlayElement = document.getElementById("board_overlay");
-  const task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
+  let overlayElement = document.getElementById("board_overlay");
+  let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
   let categoryClass = "";
   if (task.category === "User Story") categoryClass = "category-user";
   else if (task.category === "Technical Task") categoryClass = "category-technical";
@@ -263,7 +263,7 @@ function openBoardCard(firebaseKey) {
   document.getElementById("html").style.overflow = "hidden";
   overlayElement.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
   setTimeout(() => {
-    const card = document.querySelector('.board-overlay-card');
+    let card = document.querySelector('.board-overlay-card');
     if (card) card.classList.add('open');
   }, 10);
   updateHTML();
@@ -282,9 +282,9 @@ function getPriorityIcon(priority) {
 function renderAssignedList(assignedTo) {
   if (!Array.isArray(assignedTo)) return "";
   return assignedTo.map(name => {
-    const contact = getContactByName(name);
+    let contact = getContactByName(name);
     if (!contact) return '';
-    const color = contact.color || "#ccc";
+    let color = contact.color || "#ccc";
     return getAssignedEntryHTML(name, color);
   }).join("");
 }
@@ -292,9 +292,9 @@ function renderAssignedList(assignedTo) {
 function renderSubtasks(task) {
   if (!Array.isArray(task.subtask)) return "";
   return task.subtask.map((sub, idx) => {
-    const title = typeof sub === 'string' ? sub : sub.title;
-    const checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
-    const id = `subtask-${task.firebaseKey}-${idx}`;
+    let title = typeof sub === 'string' ? sub : sub.title;
+    let checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
+    let id = `subtask-${task.firebaseKey}-${idx}`;
     return getSubtaskItemHTML(title, checked, id, task.firebaseKey, idx);
   }).join("");
 }
@@ -302,17 +302,17 @@ function renderSubtasks(task) {
 // Neue Funktion: updateOverlaySubtasks
 function updateOverlaySubtasks(task) {
   // Hole das Subtasks-Container-Element in der Overlay-Card
-  const subtaskList = document.querySelector('.subtask-list ul');
+  let subtaskList = document.querySelector('.subtask-list ul');
   if (subtaskList) {
     subtaskList.innerHTML = renderSubtasks(task);
   }
   // Optional: Subtask-Fortschrittsbalken aktualisieren, falls vorhanden
-  const progressBar = document.querySelector('.subtask-progress-bar');
+  let progressBar = document.querySelector('.subtask-progress-bar');
   if (progressBar) {
-    const subtasksArr = Array.isArray(task.subtask) ? task.subtask : [];
-    const total = subtasksArr.length;
-    const completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
-    const percent = total > 0 ? (completed / total) * 100 : 0;
+    let subtasksArr = Array.isArray(task.subtask) ? task.subtask : [];
+    let total = subtasksArr.length;
+    let completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
+    let percent = total > 0 ? (completed / total) * 100 : 0;
     progressBar.style.width = percent + "%";
     progressBar.textContent = `${completed}/${total} Done`;
   }
@@ -343,16 +343,16 @@ async function saveSubtasksToFirebase(taskKey, subtasks) {
 }
 
 function renderBoardOverlay(task) {
-  const boardOverlayRef = document.getElementById("board_overlay");
+  let boardOverlayRef = document.getElementById("board_overlay");
   if (boardOverlayRef && task) {
-    const categoryClass = task.category === "User Story"
+    let categoryClass = task.category === "User Story"
       ? "category-user"
       : task.category === "Technical Task"
         ? "category-technical"
         : "";
     boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
 
-    const cardRef = document.querySelector('.board-overlay-card');
+    let cardRef = document.querySelector('.board-overlay-card');
     if (cardRef) {
       setTimeout(() => {
         cardRef.classList.add('open');
@@ -366,8 +366,8 @@ function renderBoardOverlay(task) {
 
 function blurCheckbox(taskKey, index) {
   setTimeout(() => {
-    const checkboxId = `subtask-${taskKey}-${index}`;
-    const checkbox = document.getElementById(checkboxId);
+    let checkboxId = `subtask-${taskKey}-${index}`;
+    let checkbox = document.getElementById(checkboxId);
     if (checkbox) checkbox.blur();
   }, 0);
 }
@@ -424,7 +424,7 @@ function closeOverlayImmediately() {
 
 function closeBoardCard() {
   if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
-  const card = document.querySelector('.board-overlay-card');
+  let card = document.querySelector('.board-overlay-card');
   if (card) {
     removeOverlayAnimation(card);
     closeOverlayWithDelay(400);
@@ -524,14 +524,14 @@ function addDueDateLabelAndInput() {
 }
 
 function setupPriorityEdit() {
-  const priorityHeadline = document.querySelector('.priority-headline');
+  let priorityHeadline = document.querySelector('.priority-headline');
   if (priorityHeadline && !document.getElementById('priority-edit-buttons')) {
-    const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
-    const task = arrayTasks.find(t => t.firebaseKey === taskKey);
-    const wrapper = document.createElement('div');
+    let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+    let task = arrayTasks.find(t => t.firebaseKey === taskKey);
+    let wrapper = document.createElement('div');
     wrapper.id = 'priority-edit-buttons';
     wrapper.innerHTML = getPriorityButtonsHTML(task.priority.toLowerCase());
-    const labelP = document.createElement('span');
+    let labelP = document.createElement('span');
     labelP.textContent = 'Priority';
     labelP.id = 'overlay_card_priority_label';
     labelP.className = 'overlay-card-label';
@@ -542,21 +542,21 @@ function setupPriorityEdit() {
 }
 
 function createLabel() {
-  const label = document.createElement('span');
+  let label = document.createElement('span');
   label.textContent = 'Assigned to';
   label.className = 'overlay-card-label';
   return label;
 }
 
 function createDropdown() {
-  const dropdown = document.createElement('div');
+  let dropdown = document.createElement('div');
   dropdown.id = 'assigned-dropdown';
   dropdown.className = 'assigned-dropdown';
   return dropdown;
 }
 
 function createList() {
-  const list = document.createElement('div');
+  let list = document.createElement('div');
   list.id = 'assigned-dropdown-list';
   list.className = 'assigned-dropdown-list';
   list.classList.remove('open');
@@ -564,32 +564,32 @@ function createList() {
 }
 
 function createToggle() {
-  const toggle = document.createElement('div');
+  let toggle = document.createElement('div');
   toggle.className = 'assigned-dropdown-toggle';
   return toggle;
 }
 
 function createPlaceholder() {
-  const placeholder = document.createElement('span');
+  let placeholder = document.createElement('span');
   placeholder.id = 'assigned-placeholder';
   placeholder.textContent = 'Select contacts to assign';
   return placeholder;
 }
 
 function createArrow() {
-  const arrow = document.createElement('span');
+  let arrow = document.createElement('span');
   arrow.className = 'dropdown-arrow';
   return arrow;
 }
 
 function createAssignedDropdownElements(assignedListContainer) {
   assignedListContainer.innerHTML = '';
-  const label = createLabel();
-  const dropdown = createDropdown();
-  const list = createList();
-  const toggle = createToggle();
-  const placeholder = createPlaceholder();
-  const arrow = createArrow();
+  let label = createLabel();
+  let dropdown = createDropdown();
+  let list = createList();
+  let toggle = createToggle();
+  let placeholder = createPlaceholder();
+  let arrow = createArrow();
 
   toggle.appendChild(placeholder);
   toggle.appendChild(arrow);
@@ -605,7 +605,7 @@ function addToggleClickHandler(toggle, list) {
   if (!toggle._dropdownClickHandlerAdded) {
     toggle.addEventListener('click', function (event) {
       event.stopPropagation();
-      const isOpen = list.classList.contains('open');
+      let isOpen = list.classList.contains('open');
       closeAllAssignedDropdowns();
       if (!isOpen) {
         list.classList.add('open');
@@ -625,7 +625,7 @@ function addGlobalDropdownCloseHandler() {
   if (!window._assignedDropdownClickHandler) {
     document.addEventListener('click', function (event) {
       document.querySelectorAll('.assigned-dropdown').forEach(dropdown => {
-        const list = dropdown.querySelector('.assigned-dropdown-list');
+        let list = dropdown.querySelector('.assigned-dropdown-list');
         if (list && list.classList.contains('open') && !dropdown.contains(event.target)) {
           list.classList.remove('open');
         }
@@ -641,13 +641,13 @@ function setupAssignedDropdownEvents(toggle, list) {
 }
 
 function fetchAssignedContacts() {
-  const userKey = localStorage.getItem('firebaseKey');
-  const usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
+  let userKey = localStorage.getItem('firebaseKey');
+  let usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
   return Object.values(usersData[userKey]?.contacts || {});
 }
 
 function getInitialAssignedContacts(taskKey) {
-  const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   return [...(task?.assignedTo || [])];
 }
 
@@ -662,23 +662,23 @@ function toggleContactSelection(name, selectedContacts) {
 function renderAssignedDropdownList(contacts, selectedContacts, list, toggleContact, renderAssignedSelectedCircles) {
   list.innerHTML = '';
   contacts.forEach(contact => {
-    const item = createAssignedItem(contact, selectedContacts, toggleContact);
+    let item = createAssignedItem(contact, selectedContacts, toggleContact);
     list.appendChild(item);
   });
   renderAssignedSelectedCircles(selectedContacts, contacts, list.parentElement.parentElement);
 }
 
 function createAssignedItem(contact, selectedContacts, toggleContact) {
-  const initials = getInitials(contact.name);
-  const isChecked = selectedContacts.includes(contact.name);
-  const item = document.createElement('div');
+  let initials = getInitials(contact.name);
+  let isChecked = selectedContacts.includes(contact.name);
+  let item = document.createElement('div');
   item.className = 'assigned-item' + (isChecked ? ' selected' : '');
   item.onclick = () => toggleContact(contact.name);
-  const circle = createAssignedCircle(initials, contact.color);
-  const name = document.createElement('span');
+  let circle = createAssignedCircle(initials, contact.color);
+  let name = document.createElement('span');
   name.className = 'assigned-name';
   name.textContent = contact.name;
-  const checkbox = createAssignedCheckbox(isChecked, toggleContact, contact.name);
+  let checkbox = createAssignedCheckbox(isChecked, toggleContact, contact.name);
   item.appendChild(circle);
   item.appendChild(name);
   item.appendChild(checkbox);
@@ -686,7 +686,7 @@ function createAssignedItem(contact, selectedContacts, toggleContact) {
 }
 
 function createAssignedCircle(initials, color) {
-  const circle = document.createElement('span');
+  let circle = document.createElement('span');
   circle.className = 'assigned-circle';
   circle.style.backgroundColor = color || '#ccc';
   circle.textContent = initials;
@@ -694,7 +694,7 @@ function createAssignedCircle(initials, color) {
 }
 
 function createAssignedCheckbox(isChecked, toggleContact, name) {
-  const checkbox = document.createElement('input');
+  let checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.className = 'assigned-checkbox';
   checkbox.checked = isChecked;
@@ -706,7 +706,7 @@ function createAssignedCheckbox(isChecked, toggleContact, name) {
 }
 
 function renderAssignedSelectedCircles(selectedContacts, contacts, assignedListContainer) {
-  const wrapper = getOrCreateCirclesWrapper(assignedListContainer);
+  let wrapper = getOrCreateCirclesWrapper(assignedListContainer);
   positionCirclesWrapper(wrapper, assignedListContainer);
   updateCirclesVisibility(wrapper, selectedContacts);
   updateCirclesContent(wrapper, selectedContacts, contacts);
@@ -724,7 +724,7 @@ function getOrCreateCirclesWrapper(assignedListContainer) {
 }
 
 function positionCirclesWrapper(wrapper, assignedListContainer) {
-  const dropdown = document.getElementById('assigned-dropdown');
+  let dropdown = document.getElementById('assigned-dropdown');
   if (dropdown && wrapper.previousSibling !== dropdown) {
     assignedListContainer.insertBefore(wrapper, dropdown.nextSibling);
   }
@@ -737,11 +737,11 @@ function updateCirclesVisibility(wrapper, selectedContacts) {
 function updateCirclesContent(wrapper, selectedContacts, contacts) {
   wrapper.innerHTML = '';
   selectedContacts.forEach(name => {
-    const contact = contacts.find(c => c.name === name);
+    let contact = contacts.find(c => c.name === name);
     if (!contact) return;
-    const initials = getInitials(contact.name);
-    const color = contact.color || '#ccc';
-    const div = document.createElement('div');
+    let initials = getInitials(contact.name);
+    let color = contact.color || '#ccc';
+    let div = document.createElement('div');
     div.className = 'initial-circle';
     div.style.backgroundColor = color;
     div.textContent = initials;
@@ -757,14 +757,14 @@ function handleAssignedContactToggle(name, contacts, list, assignedListContainer
 }
 
 function setupAssignedDropdown() {
-  const assignedListContainer = document.querySelector('.assigned-list');
+  let assignedListContainer = document.querySelector('.assigned-list');
   if (!assignedListContainer || document.getElementById('assigned-dropdown')) return;
 
-  const { dropdown, list, toggle, placeholder, arrow } = createAssignedDropdownElements(assignedListContainer);
+  let { dropdown, list, toggle, placeholder, arrow } = createAssignedDropdownElements(assignedListContainer);
   setupAssignedDropdownEvents(toggle, list);
-  const contacts = fetchAssignedContacts();
-  const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
-  const selectedContacts = { value: getInitialAssignedContacts(taskKey) };
+  let contacts = fetchAssignedContacts();
+  let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+  let selectedContacts = { value: getInitialAssignedContacts(taskKey) };
 
   function onToggleContact(name) {
     handleAssignedContactToggle(name, contacts, list, assignedListContainer, selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList);
@@ -776,10 +776,10 @@ function setupAssignedDropdown() {
 }
 
 function setupSubtasksEdit() {
-  const subtaskList = document.querySelector('.subtask-list ul');
+  let subtaskList = document.querySelector('.subtask-list ul');
   if (!subtaskList || document.getElementById('subtasks-edit-container')) return;
-  const { container, input, addBtn } = createSubtasksEditContainer();
-  const subtasks = getSubtasksOfCurrentTask();
+  let { container, input, addBtn } = createSubtasksEditContainer();
+  let subtasks = getSubtasksOfCurrentTask();
   function rerender() {
     renderSubtasksList(subtasks, container, rerender);
   }
@@ -791,19 +791,19 @@ function setupSubtasksEdit() {
 }
 
 function getSubtasksOfCurrentTask() {
-  const taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
-  const task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   return Array.isArray(task.subtask) ? task.subtask : [];
 }
 
 function createSubtasksEditContainer() {
-  const container = document.createElement('div');
+  let container = document.createElement('div');
   container.id = 'subtasks-edit-container';
   container.className = 'subtasks-edit-container';
-  const inputWrapper = document.createElement('div');
+  let inputWrapper = document.createElement('div');
   inputWrapper.className = 'subtask-input-wrapper';
-  const input = createSubtaskInput();
-  const addBtn = createAddSubtaskButton();
+  let input = createSubtaskInput();
+  let addBtn = createAddSubtaskButton();
   inputWrapper.appendChild(input);
   inputWrapper.appendChild(addBtn);
   container.appendChild(inputWrapper);
@@ -811,7 +811,7 @@ function createSubtasksEditContainer() {
 }
 
 function createSubtaskInput() {
-  const input = document.createElement('input');
+  let input = document.createElement('input');
   input.type = 'text';
   input.placeholder = 'Add new subtask';
   input.id = 'add-subtask-input';
@@ -820,7 +820,7 @@ function createSubtaskInput() {
 }
 
 function createAddSubtaskButton() {
-  const addBtn = document.createElement('button');
+  let addBtn = document.createElement('button');
   addBtn.type = 'button';
   addBtn.id = 'add-subtask-btn';
   addBtn.textContent = '+';
@@ -837,18 +837,18 @@ function renderSubtasksList(subtaskArr, container, rerender) {
   }
   listDiv.innerHTML = '';
   subtaskArr.forEach((sub, idx) => {
-    const row = createSubtaskRow(sub, idx, subtaskArr, rerender, container);
+    let row = createSubtaskRow(sub, idx, subtaskArr, rerender, container);
     listDiv.appendChild(row);
   });
 }
 
 function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
-  const row = document.createElement('div');
+  let row = document.createElement('div');
   row.className = 'subtask-list-row';
-  const input = createSubtaskRowInput(sub, idx, subtaskArr);
-  const editBtn = createSubtaskRowEditButton(input);
-  const removeBtn = createSubtaskRowRemoveButton(idx, subtaskArr, rerender);
-  const dot = createSubtaskRowDot();
+  let input = createSubtaskRowInput(sub, idx, subtaskArr);
+  let editBtn = createSubtaskRowEditButton(input);
+  let removeBtn = createSubtaskRowRemoveButton(idx, subtaskArr, rerender);
+  let dot = createSubtaskRowDot();
   row.appendChild(dot);
   row.appendChild(input);
   row.appendChild(editBtn);
@@ -857,7 +857,7 @@ function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
 }
 
 function createSubtaskRowInput(sub, idx, subtaskArr) {
-  const input = document.createElement('input');
+  let input = document.createElement('input');
   input.type = 'text';
   input.value = typeof sub === 'string' ? sub : sub.title;
   input.className = 'subtask-list-editinput';
@@ -880,7 +880,7 @@ function createSubtaskRowInput(sub, idx, subtaskArr) {
 }
 
 function createSubtaskRowEditButton(input) {
-  const editBtn = document.createElement('button');
+  let editBtn = document.createElement('button');
   editBtn.type = 'button';
   editBtn.className = 'subtask-edit-btn';
   editBtn.innerHTML = `<img src="assets/icons/board/board-edit-icon.svg">`;
@@ -893,7 +893,7 @@ function createSubtaskRowEditButton(input) {
 }
 
 function createSubtaskRowRemoveButton(idx, subtaskArr, rerender) {
-  const removeBtn = document.createElement('button');
+  let removeBtn = document.createElement('button');
   removeBtn.type = 'button';
   removeBtn.className = 'subtask-remove-btn';
   removeBtn.innerHTML = `<img src="assets/icons/board/board-delete-icon.svg">`;
@@ -906,14 +906,14 @@ function createSubtaskRowRemoveButton(idx, subtaskArr, rerender) {
 }
 
 function createSubtaskRowDot() {
-  const dot = document.createElement('span');
+  let dot = document.createElement('span');
   dot.className = 'subtask-dot';
   dot.textContent = '•';
   return dot;
 }
 
 function handleAddSubtask(subtasks, input, container, rerender) {
-  const val = input.value.trim();
+  let val = input.value.trim();
   if (val) {
     subtasks.push({ title: val, completed: false });
     rerender();
@@ -925,7 +925,7 @@ async function saveEditTask(taskKey) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task) return;
   disableEditMode();
-  const updatedTask = getUpdatedTaskFromEdit(task, taskKey);
+  let updatedTask = getUpdatedTaskFromEdit(task, taskKey);
   try {
     await updateTaskInFirebase(taskKey, updatedTask);
     updateTaskLocally(taskKey, updatedTask);
@@ -946,12 +946,12 @@ function disableEditMode() {
 }
 
 function getUpdatedTaskFromEdit(task, taskKey) {
-  const newTitle = getEditedTitle();
-  const newDescription = getEditedDescription();
-  const newDueDate = getEditedDueDate();
-  const newPriority = getEditedPriority(task.priority);
-  const newAssignedTo = getEditedAssignedTo(task.assignedTo);
-  const newSubtasks = getEditedSubtasks(task.subtask);
+  let newTitle = getEditedTitle();
+  let newDescription = getEditedDescription();
+  let newDueDate = getEditedDueDate();
+  let newPriority = getEditedPriority(task.priority);
+  let newAssignedTo = getEditedAssignedTo(task.assignedTo);
+  let newSubtasks = getEditedSubtasks(task.subtask);
 
   return {
     ...task,
@@ -977,7 +977,7 @@ function getEditedDueDate() {
 }
 
 function getEditedPriority(defaultPriority) {
-  const priorityWrapper = document.getElementById('priority-edit-buttons');
+  let priorityWrapper = document.getElementById('priority-edit-buttons');
   if (priorityWrapper && priorityWrapper.dataset.selectedPriority) {
     return priorityWrapper.dataset.selectedPriority;
   }
@@ -1002,8 +1002,8 @@ function getNewDueDate() {
     let [y, m, d] = dueDateInput.value.split("-");
     if (y && m && d) return `${d}/${m}/${y}`;
   }
-  const rawDueDate = document.getElementById("due_date").innerHTML;
-  const match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
+  let rawDueDate = document.getElementById("due_date").innerHTML;
+  let match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
   return match ? match[0] : "";
 }
 
@@ -1025,8 +1025,8 @@ function reloadUIAfterEdit(taskKey) {
 }
 
 function searchTask() {
-  const inputValue = getSearchInputValue();
-  const foundTasks = filterTasksBySearch(arrayTasks, inputValue);
+  let inputValue = getSearchInputValue();
+  let foundTasks = filterTasksBySearch(arrayTasks, inputValue);
 
   clearBoardSections();
 
@@ -1044,14 +1044,14 @@ function searchTask() {
 
 
 function getSearchInputValue() {
-  const inputRef = document.getElementById("input_find_task");
+  let inputRef = document.getElementById("input_find_task");
   return inputRef.value.trim().toLowerCase();
 }
 
 function filterTasksBySearch(tasks, searchValue) {
   return tasks.filter(task => {
-    const titleMatch = task.title && task.title.toLowerCase().includes(searchValue);
-    const descriptionMatch = task.description && task.description.toLowerCase().includes(searchValue);
+    let titleMatch = task.title && task.title.toLowerCase().includes(searchValue);
+    let descriptionMatch = task.description && task.description.toLowerCase().includes(searchValue);
     return titleMatch || descriptionMatch;
   });
 }
@@ -1083,17 +1083,17 @@ function openAddTaskOverlay() {
 }
 
 function showAddTaskOverlay() {
-  const overlay = document.getElementById("add_task_overlay");
+  let overlay = document.getElementById("add_task_overlay");
   overlay.classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
 }
 
 function renderAddTaskModal() {
-  const overlay = document.getElementById("add_task_overlay");
+  let overlay = document.getElementById("add_task_overlay");
   overlay.innerHTML = getAddTaskOverlay();
   updateHTML();
   setTimeout(() => {
-    const modal = document.querySelector('.board-add-task-modal');
+    let modal = document.querySelector('.board-add-task-modal');
     if (modal) modal.classList.add('open');
   }, 10);
 }
@@ -1105,7 +1105,7 @@ function addAddTaskOverlayEventListeners() {
 }
 
 function closeAddTaskOverlay() {
-  const modal = document.querySelector('.board-add-task-modal');
+  let modal = document.querySelector('.board-add-task-modal');
   if (modal) {
     closeAddTaskModalWithAnimation();
   } else {
@@ -1116,13 +1116,13 @@ function closeAddTaskOverlay() {
 }
 
 function closeAddTaskModalWithAnimation() {
-  const modal = document.querySelector('.board-add-task-modal');
+  let modal = document.querySelector('.board-add-task-modal');
   modal.classList.remove('open');
   setTimeout(hideAndResetAddTaskOverlay, 400);
 }
 
 function hideAndResetAddTaskOverlay() {
-  const overlay = document.getElementById("add_task_overlay");
+  let overlay = document.getElementById("add_task_overlay");
   if (overlay) {
     overlay.classList.add("d-none");
     document.getElementById("html").style.overflow = "";
@@ -1139,7 +1139,7 @@ function removeAddTaskOverlayEventListener() {
 }
 
 function handleAddTaskOverlayClickOutside(event) {
-  const modal = document.querySelector('.board-add-task-modal');
+  let modal = document.querySelector('.board-add-task-modal');
   if (!modal) return;
   if (!modal.contains(event.target)) {
     closeAddTaskOverlay();
@@ -1164,8 +1164,8 @@ document.addEventListener("mousedown", function (event) {
 });
 
 function closeDropdownIfClickedOutside(contentId, toggleId, visibleClass, openClass, event) {
-  const content = document.getElementById(contentId);
-  const toggle = document.getElementById(toggleId);
+  let content = document.getElementById(contentId);
+  let toggle = document.getElementById(toggleId);
   if (content && toggle && content.classList.contains(visibleClass)) {
     if (!content.contains(event.target) && !toggle.contains(event.target)) {
       content.classList.remove(visibleClass);
@@ -1188,14 +1188,14 @@ function handleAssignedToClick(e) {
 }
 
 function handleAssignedToInput(e) {
-  const value = e.target.value.trim().toLowerCase();
+  let value = e.target.value.trim().toLowerCase();
   renderAssignOptions(value);
 }
 
 function toggleAssignDropdown(event) {
   event.stopPropagation();
-  const tog = document.getElementById("dropdown-toggle");
-  const dd = document.getElementById("dropdown-content");
+  let tog = document.getElementById("dropdown-toggle");
+  let dd = document.getElementById("dropdown-content");
   if (!tog || !dd) return;
   tog.classList.toggle("open");
   dd.classList.toggle("visible");
@@ -1203,24 +1203,24 @@ function toggleAssignDropdown(event) {
 }
 
 function renderAssignOptions(filter = "") {
-  const dd = document.getElementById("dropdown-content");
+  let dd = document.getElementById("dropdown-content");
   clearAssignDropdownContent(dd);
-  const filteredContacts = contacts.filter((c) =>
+  let filteredContacts = contacts.filter((c) =>
     c.name.toLowerCase().includes(filter)
   );
   filteredContacts.forEach((c) => {
-    const item = createContactDropdownItem(c, filter);
+    let item = createContactDropdownItem(c, filter);
     dd.appendChild(item);
   });
 }
 
 function clearAssignDropdownContent(dd) {
-  const nodes = Array.from(dd.childNodes).filter((n) => n.tagName !== "INPUT");
+  let nodes = Array.from(dd.childNodes).filter((n) => n.tagName !== "INPUT");
   nodes.forEach((n) => n.remove());
 }
 
 function createContactDropdownItem(contact, filter) {
-  const item = document.createElement("div");
+  let item = document.createElement("div");
   item.className = "contact-item";
   if (isContactSelected(contact)) {
     item.classList.add("contact-selected");
@@ -1238,7 +1238,7 @@ function isContactSelected(contact) {
 }
 
 function createProfileIcon(contact) {
-  const span = document.createElement("span");
+  let span = document.createElement("span");
   span.className = "profile-icon";
   span.style.background = contact.color;
   span.textContent = getContactInitials(contact.name);
@@ -1246,13 +1246,13 @@ function createProfileIcon(contact) {
 }
 
 function createContactName(contact) {
-  const span = document.createElement("span");
+  let span = document.createElement("span");
   span.textContent = contact.name;
   return span;
 }
 
 function createContactCheckbox(contact) {
-  const checkbox = document.createElement("input");
+  let checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.checked = isContactSelected(contact);
   return checkbox;
@@ -1267,10 +1267,10 @@ function getContactInitials(name) {
 }
 
 function setupContactCheckbox(item, contact, filter) {
-  const checkbox = item.querySelector("input[type='checkbox']");
+  let checkbox = item.querySelector("input[type='checkbox']");
   checkbox.addEventListener("click", (event) => {
     event.stopPropagation();
-    const idx = selectedContacts.findIndex((s) => s.name === contact.name);
+    let idx = selectedContacts.findIndex((s) => s.name === contact.name);
     if (checkbox.checked && idx === -1) {
       selectedContacts.push(contact);
     } else if (!checkbox.checked && idx >= 0) {
@@ -1284,22 +1284,22 @@ function setupContactCheckbox(item, contact, filter) {
 }
 
 function setupContactItemClick(item) {
-  const checkbox = item.querySelector("input[type='checkbox']");
+  let checkbox = item.querySelector("input[type='checkbox']");
   item.addEventListener("click", (event) => {
     if (event.target.tagName.toLowerCase() === "input") return;
     event.stopPropagation();
     checkbox.checked = !checkbox.checked;
-    const clickEvent = new Event("click", { bubbles: true });
+    let clickEvent = new Event("click", { bubbles: true });
     checkbox.dispatchEvent(clickEvent);
   });
 }
 
 function updateSelectedContactsUI() {
-  const box = document.getElementById("selected-contacts");
+  let box = document.getElementById("selected-contacts");
   if (!box) return;
   box.innerHTML = "";
   selectedContacts.forEach((c) => {
-    const el = document.createElement("div");
+    let el = document.createElement("div");
     el.className = "profile-icon";
     el.style.background = c.color;
     el.textContent = getContactInitials(c.name);
@@ -1314,19 +1314,19 @@ function closeDropdown() {
 
 function toggleCategoryDropdown(event) {
   event.stopPropagation();
-  const toggle = document.getElementById("category-toggle");
-  const content = document.getElementById("category-content");
+  let toggle = document.getElementById("category-toggle");
+  let content = document.getElementById("category-content");
   toggle.classList.toggle("open");
   content.classList.toggle("visible");
   if (content.innerHTML.trim() === "") renderCategoryOptions();
 }
 
 function renderCategoryOptions() {
-  const content = document.getElementById("category-content");
+  let content = document.getElementById("category-content");
   clearCategoryContent(content);
-  const categories = getCategoryList();
+  let categories = getCategoryList();
   categories.forEach(category => {
-    const item = createCategoryDropdownItem(category, content);
+    let item = createCategoryDropdownItem(category, content);
     content.appendChild(item);
   });
 }
@@ -1340,7 +1340,7 @@ function getCategoryList() {
 }
 
 function createCategoryDropdownItem(category, content) {
-  const item = document.createElement("div");
+  let item = document.createElement("div");
   item.className = "dropdown-item category-item";
   item.innerHTML = `<span class="category-name">${category}</span>`;
   item.onclick = () => {
@@ -1358,18 +1358,18 @@ function handleCategoryClick(category, content) {
 
 function selectCategory(category) {
   selectedCategory = category;
-  const placeholder = document.querySelector("#category-toggle span");
+  let placeholder = document.querySelector("#category-toggle span");
   if (placeholder) placeholder.textContent = category;
 }
 
 
 function addSubtask() {
-  const input = document.getElementById("subtask-input");
-  const subtaskIcons = document.getElementById("subtask-icons");
-  const text = input.value.trim();
+  let input = document.getElementById("subtask-input");
+  let subtaskIcons = document.getElementById("subtask-icons");
+  let text = input.value.trim();
   if (!validateSubtaskInput(text, subtaskIcons, input)) return;
   subtasks.push(text);
-  const li = createSubtaskListItem(text);
+  let li = createSubtaskListItem(text);
   document.getElementById("subtask-list").appendChild(li);
   finalizeSubtaskInput(input, subtaskIcons);
 }
@@ -1384,12 +1384,12 @@ function validateSubtaskInput(text, subtaskIcons, input) {
 }
 
 function createSubtaskListItem(text) {
-  const li = document.createElement("li");
+  let li = document.createElement("li");
   li.className = "subtask-list-item";
-  const label = document.createElement("span");
+  let label = document.createElement("span");
   label.textContent = text;
   label.className = "subtask-label";
-  const iconWrapper = document.createElement("div");
+  let iconWrapper = document.createElement("div");
   iconWrapper.className = "subtask-icons";
   li.appendChild(label);
   li.appendChild(iconWrapper);
@@ -1400,14 +1400,14 @@ function finalizeSubtaskInput(input, subtaskIcons) {
   updateSubmitState();
   input.value = "";
   subtaskIcons.classList.add("hidden");
-  const subtaskPlus = document.getElementById("subtask-plus");
+  let subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
     e.preventDefault();
-    const subtaskIcons = document.getElementById("subtask-icons");
+    let subtaskIcons = document.getElementById("subtask-icons");
     if (subtaskIcons && !subtaskIcons.classList.contains("hidden")) {
       addSubtask();
     }
@@ -1415,31 +1415,31 @@ function handleSubtaskEnter(e) {
 }
 
 function toggleSubtaskIcons() {
-  const input = document.getElementById("subtask-input");
-  const confirmIcon = document.getElementById("subtask-confirm");
-  const defaultIcon = document.getElementById("subtask-plus");
-  const cancelIcon = document.getElementById("subtask-cancel");
-  const isActive = document.activeElement === input;
+  let input = document.getElementById("subtask-input");
+  let confirmIcon = document.getElementById("subtask-confirm");
+  let defaultIcon = document.getElementById("subtask-plus");
+  let cancelIcon = document.getElementById("subtask-cancel");
+  let isActive = document.activeElement === input;
   confirmIcon?.classList.toggle("hidden", !isActive);
   cancelIcon?.classList.toggle("hidden", !isActive);
   defaultIcon?.classList.toggle("hidden", isActive);
 }
 
 function clearSubtaskInput() {
-  const subtaskInput = document.getElementById("subtask-input");
-  const subtaskIcons = document.getElementById("subtask-icons");
-  const subtaskPlus = document.getElementById("subtask-plus");
+  let subtaskInput = document.getElementById("subtask-input");
+  let subtaskIcons = document.getElementById("subtask-icons");
+  let subtaskPlus = document.getElementById("subtask-plus");
   subtaskInput.value = "";
   subtaskIcons.classList.add("hidden");
   subtaskPlus.classList.remove("hidden");
 }
 
 function updateCategoryUI() {
-  const box = document.getElementById("selected-category");
+  let box = document.getElementById("selected-category");
   if (!box) return;
   clearCategoryBox(box);
   if (selectedCategory) {
-    const icon = createCategoryIcon(selectedCategory);
+    let icon = createCategoryIcon(selectedCategory);
     box.appendChild(icon);
   }
 }
@@ -1449,7 +1449,7 @@ function clearCategoryBox(box) {
 }
 
 function createCategoryIcon(category) {
-  const div = document.createElement("div");
+  let div = document.createElement("div");
   div.className = "profile-icon";
   div.style.background = "#2a3647";
   div.textContent = getCategoryInitials(category);
@@ -1465,13 +1465,13 @@ function getCategoryInitials(category) {
 }
 
 function validateForm() {
-  const titleEl = document.getElementById("title");
-  const dueDateEl = document.getElementById("dueDate");
-  const categoryToggle = document.getElementById("category-toggle");
+  let titleEl = document.getElementById("title");
+  let dueDateEl = document.getElementById("dueDate");
+  let categoryToggle = document.getElementById("category-toggle");
 
-  const titleValid = isInputFilled(titleEl);
-  const dueDateValid = isInputFilled(dueDateEl);
-  const categoryValid = isCategorySelected();
+  let titleValid = isInputFilled(titleEl);
+  let dueDateValid = isInputFilled(dueDateEl);
+  let categoryValid = isCategorySelected();
 
   showTitleError(titleEl, titleValid);
   showDueDateError(dueDateEl, dueDateValid);
@@ -1489,25 +1489,25 @@ function isCategorySelected() {
 }
 
 function showTitleError(titleEl, isValid) {
-  const titleError = document.getElementById("error-title");
+  let titleError = document.getElementById("error-title");
   titleEl.classList.toggle("error", !isValid);
   if (titleError) titleError.classList.toggle("visible", !isValid);
 }
 
 function showDueDateError(dueDateEl, isValid) {
-  const dueDateError = document.getElementById("error-dueDate");
+  let dueDateError = document.getElementById("error-dueDate");
   dueDateEl.classList.toggle("error-border", !isValid);
   if (dueDateError) dueDateError.classList.toggle("visible", !isValid);
 }
 
 function showCategoryError(categoryToggle, isValid) {
-  const categoryError = document.getElementById("error-category");
+  let categoryError = document.getElementById("error-category");
   categoryToggle.classList.toggle("error-border", !isValid);
   if (categoryError) categoryError.classList.toggle("visible", !isValid);
 }
 
 function updateSubmitState() {
-  const button = document.getElementById("submit-task-btn");
+  let button = document.getElementById("submit-task-btn");
   if (button) button.disabled = false;
 }
 
@@ -1522,17 +1522,17 @@ function resetForm() {
 }
 
 function resetTitle() {
-  const title = document.getElementById("title");
+  let title = document.getElementById("title");
   if (title) title.value = "";
 }
 
 function resetDescription() {
-  const description = document.getElementById("description");
+  let description = document.getElementById("description");
   if (description) description.value = "";
 }
 
 function resetDueDate() {
-  const dueDate = document.getElementById("dueDate");
+  let dueDate = document.getElementById("dueDate");
   if (dueDate) dueDate.value = "";
 }
 
@@ -1548,7 +1548,7 @@ function resetContacts() {
 
 function resetCategory() {
   selectedCategory = "";
-  const categoryPlaceholder = document.querySelector("#category-toggle span");
+  let categoryPlaceholder = document.querySelector("#category-toggle span");
   if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
 }
 
@@ -1565,29 +1565,29 @@ function clearSubtasksArray() {
 }
 
 function clearSubtasksList() {
-  const subtaskList = document.getElementById("subtask-list");
+  let subtaskList = document.getElementById("subtask-list");
   if (subtaskList) subtaskList.innerHTML = "";
 }
 
 function clearSubtaskInput() {
-  const subtaskInput = document.getElementById("subtask-input");
+  let subtaskInput = document.getElementById("subtask-input");
   if (subtaskInput) subtaskInput.value = "";
 }
 
 function hideSubtaskIcons() {
-  const subtaskIcons = document.getElementById("subtask-icons");
+  let subtaskIcons = document.getElementById("subtask-icons");
   if (subtaskIcons) subtaskIcons.classList.add("hidden");
 }
 
 function showSubtaskPlus() {
-  const subtaskPlus = document.getElementById("subtask-plus");
+  let subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
 function setupDateValidation() {
   setTimeout(() => {
-    const dateInput = document.getElementById("dueDate");
-    const errorText = document.getElementById("error-dueDate");
+    let dateInput = document.getElementById("dueDate");
+    let errorText = document.getElementById("error-dueDate");
     if (!dateInput || !errorText) return;
     setMinDateToday(dateInput);
     addDateInputListener(dateInput, errorText);
@@ -1595,7 +1595,7 @@ function setupDateValidation() {
 }
 
 function setMinDateToday(dateInput) {
-  const today = new Date().toISOString().split("T")[0];
+  let today = new Date().toISOString().split("T")[0];
   dateInput.min = today;
 }
 
@@ -1608,7 +1608,7 @@ function addDateInputListener(dateInput, errorText) {
 
 async function createTask() {
   if (!validateForm()) return;
-  const task = buildTaskObject();
+  let task = buildTaskObject();
   await saveTaskToFirebase(task);
   closeAddTaskOverlay();
   showTaskAddedOverlay();
@@ -1643,7 +1643,7 @@ function buildTaskObject() {
 }
 
 function getInputValue(id) {
-  const el = document.getElementById(id);
+  let el = document.getElementById(id);
   return el ? el.value.trim() : "";
 }
 
@@ -1665,12 +1665,12 @@ async function reloadAndHighlightNewTask() {
 }
 
 function highlightLastCreatedTask() {
-  const lastTask = arrayTasks[arrayTasks.length - 1];
+  let lastTask = arrayTasks[arrayTasks.length - 1];
   if (lastTask && lastTask.firebaseKey) {
     lastCreatedTaskKey = lastTask.firebaseKey;
     updateHTML();
     setTimeout(() => {
-      const newTaskEl = document.getElementById(lastCreatedTaskKey);
+      let newTaskEl = document.getElementById(lastCreatedTaskKey);
       if (newTaskEl) {
         newTaskEl.classList.remove("task-blink");
       }
@@ -1686,33 +1686,33 @@ function setupEventListeners() {
 }
 
 function setupDropdownListeners() {
-  const dropdownToggle = document.getElementById("dropdown-toggle");
+  let dropdownToggle = document.getElementById("dropdown-toggle");
   if (dropdownToggle) {
     dropdownToggle.addEventListener("click", toggleAssignDropdown);
   }
-  const dropdownContent = document.getElementById("dropdown-content");
+  let dropdownContent = document.getElementById("dropdown-content");
   if (dropdownContent) {
     dropdownContent.addEventListener("click", e => e.stopPropagation());
   }
 }
 
 function setupCategoryListeners() {
-  const categoryToggle = document.getElementById("category-toggle");
+  let categoryToggle = document.getElementById("category-toggle");
   if (categoryToggle) {
     categoryToggle.addEventListener("click", toggleCategoryDropdown);
   }
 }
 
 function setupSubtaskInputListeners() {
-  const subtaskInput = document.getElementById("subtask-input");
+  let subtaskInput = document.getElementById("subtask-input");
   if (!subtaskInput) return;
   subtaskInput.addEventListener("input", showOrHideSubtaskIcons);
   subtaskInput.addEventListener("keydown", handleSubtaskEnter);
 }
 
 function showOrHideSubtaskIcons() {
-  const input = document.getElementById("subtask-input");
-  const iconWrapper = document.getElementById("subtask-icons");
+  let input = document.getElementById("subtask-input");
+  let iconWrapper = document.getElementById("subtask-icons");
   if (!input || !iconWrapper) return;
   if (input.value.trim().length > 0) {
     iconWrapper.classList.remove("hidden");
@@ -1732,11 +1732,11 @@ function openMoveTaskMenu(taskKey, event) {
   event.stopPropagation();
   closeMoveTaskMenu();
 
-  const btn = event.currentTarget;
-  const card = btn.closest('.card');
+  let btn = event.currentTarget;
+  let card = btn.closest('.card');
   if (!card) return;
 
-  const dropdown = createMoveTaskDropdownMenu(taskKey);
+  let dropdown = createMoveTaskDropdownMenu(taskKey);
   positionMoveTaskDropdown(dropdown, btn, card);
 
   document.body.appendChild(dropdown);
@@ -1746,20 +1746,20 @@ function openMoveTaskMenu(taskKey, event) {
 }
 
 function createMoveTaskDropdownMenu(taskKey) {
-  const dropdown = document.createElement('div');
+  let dropdown = document.createElement('div');
   dropdown.className = 'move-task-dropdown-menu';
-  const statuses = [
+  let statuses = [
     { key: 'todo', label: 'To do' },
     { key: 'progress', label: 'In progress' },
     { key: 'feedback', label: 'Await feedback' },
     { key: 'done', label: 'Done' }
   ];
-  const currentTask = arrayTasks.find(t => t.firebaseKey === taskKey);
-  const currentStatus = currentTask ? currentTask.status : null;
+  let currentTask = arrayTasks.find(t => t.firebaseKey === taskKey);
+  let currentStatus = currentTask ? currentTask.status : null;
 
   statuses.forEach(s => {
     if (s.key === currentStatus) return;
-    const option = document.createElement('div');
+    let option = document.createElement('div');
     option.className = 'move-task-dropdown-option';
     option.textContent = s.label;
     option.onclick = function (e) {
@@ -1773,7 +1773,7 @@ function createMoveTaskDropdownMenu(taskKey) {
 }
 
 function positionMoveTaskDropdown(dropdown, btn, card) {
-  const btnRect = btn.getBoundingClientRect();
+  let btnRect = btn.getBoundingClientRect();
   let left = btnRect.left + window.scrollX;
   let top = btnRect.bottom + window.scrollY + 4;
   if (left + 160 > window.innerWidth) left = window.innerWidth - 170;
@@ -1819,14 +1819,14 @@ function closeMoveTaskMenu() {
 }
 
 function getOpenBoardCardTemplate(categoryClass, task) {
-  const priorityIcon = getPriorityIcon(task.priority);
-  const assignedHTML = renderAssignedList(task.assignedTo);
-  const subtaskHTML = renderSubtasks(task);
+  let priorityIcon = getPriorityIcon(task.priority);
+  let assignedHTML = renderAssignedList(task.assignedTo);
+  let subtaskHTML = renderSubtasks(task);
   return getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML);
 }
 
 function getPriorityButtonsHTML(currentPriority) {
-  const priorities = [
+  let priorities = [
     { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
     { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
     { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
