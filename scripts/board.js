@@ -1113,7 +1113,7 @@ function closeAddTaskOverlay() {
 function closeAddTaskModalWithAnimation() {
   const modal = document.querySelector('.board-add-task-modal');
   modal.classList.remove('open');
-  setTimeout(hideAndResetAddTaskOverlay, 400); 
+  setTimeout(hideAndResetAddTaskOverlay, 400);
 }
 
 function hideAndResetAddTaskOverlay() {
@@ -1606,7 +1606,21 @@ async function createTask() {
   const task = buildTaskObject();
   await saveTaskToFirebase(task);
   closeAddTaskOverlay();
+  showTaskAddedOverlay();
   await reloadAndHighlightNewTask();
+}
+
+function showTaskAddedOverlay() {
+  let overlay = document.getElementById("task-added-overlay");
+  if (!overlay) return;
+  overlay.style.display = "flex";
+  overlay.classList.add("show");
+  setTimeout(() => {
+    overlay.classList.remove("show");
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 200);
+  }, 1000);
 }
 
 function buildTaskObject() {

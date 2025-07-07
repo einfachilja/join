@@ -341,8 +341,7 @@
 
 .assigned-item:hover {
     background-color: #2A3647;
-    color: #ffffff
-;
+    color: #ffffff;
 }
 
 .assigned-item.selected {
@@ -898,7 +897,7 @@
     z-index: 1000;
     min-width: 140px;
     color: #a8a8a8;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     border-radius: 0 20px 20px 20px;
     padding: 8px 0;
     font-size: 16px;
@@ -907,7 +906,7 @@
 
 .move-task-dropdown-option {
     padding: 8px 16px;
-    cursor:  pointer;
+    cursor: pointer;
 }
 
 .move-task-dropdown-option:hover {
@@ -951,4 +950,25 @@
 
 .contact-selected:hover {
     background-color: #091931;
+}
+
+#task-added-overlay,
+.task-added-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    /* background-color: rgba(22, 31, 44, 0.294); */
+    justify-content: center;
+    align-items: center;
+}
+
+#task-added-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+#task-added-overlay img,
+.task-added-overlay img {
+    width: 320px;
 }
