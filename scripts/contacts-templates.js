@@ -315,12 +315,12 @@ function getEditDeleteMenuTemplate(contact) {
  * 
  * @returns {string} HTML for the success notification.
  */
-function getCreatedContactSuccessfullyMessage(){
+function getCreatedContactSuccessfullyMessage() {
   return /*html*/ `
-  <div id="created_contact_message" class="created-contact-message-div d_none">
+  <div id="created_contact_message" class="created-contact-message-div">
     <span class="created-contact-message">Contact successfully created</span>
   </div>
-  `
+  `;
 }
 
 

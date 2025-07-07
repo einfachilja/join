@@ -818,3 +818,14 @@ input.invalid {
 .highlight .contact-name {
   color: white;
 }
+
+#created_contact_message {
+  opacity: 0;
+  transform: translateY(150px);
+  transition: all 0.5s ease;
+}
+
+#created_contact_message.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

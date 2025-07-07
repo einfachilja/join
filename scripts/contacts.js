@@ -115,15 +115,22 @@ function openContactOverlay(contact) {
  * Shows success message when contact is added
  */
 function showAddedContactMessage() {
-  let showAddedContactMessageRef = document.getElementById(
-    "user_contact_information_section_mobile"
-  );
-  showAddedContactMessageRef.innerHTML +=
-    getCreatedContactSuccessfullyMessage();
-  let message = document.getElementById("created_contact_message");
+  const container = document.getElementById("user_contact_information_section_mobile");
+  container.innerHTML += getCreatedContactSuccessfullyMessage();
 
-  setTimeout(() => message.remove("d_none"), 2500);
-  setTimeout(() => message.classList.add("d_none"), 1000);
+  const message = document.getElementById("created_contact_message");
+
+  setTimeout(() => {
+    message.classList.add("visible");
+  }, 10); 
+
+  setTimeout(() => {
+    message.classList.remove("visible");
+  }, 2500);
+
+  setTimeout(() => {
+    message.remove();
+  }, 3000);
 }
 
 function getTrimmedContactInput() {
@@ -274,9 +281,12 @@ async function loadContacts() {
     const data = await response.json();
 
     contacts = [];
-    for (let key in data) {
-      contacts.push({ ...data[key], firebaseKey: key });
+    if (data) {
+      for (let key in data) {
+        contacts.push({ ...data[key], firebaseKey: key });
+      }
     }
+
     renderContacts();
   } catch (error) {
     console.error("Failed to load contacts:", error);
@@ -403,12 +413,20 @@ async function deleteContact(contactKey) {
 function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
   const emailInput = document.getElementById(inputId);
   const error = document.getElementById(errorId);
+
+  if (!emailInput || !error) {
+    console.warn(`Element not found: ${!emailInput ? inputId : errorId}`);
+    return false;
+  }
+
   const email = emailInput.value.trim();
+
   if (email === "") {
     error.classList.remove("visible");
     emailInput.classList.remove("invalid");
     return false;
   }
+
   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   error.classList.toggle("visible", !valid);
   emailInput.classList.toggle("invalid", !valid);
@@ -434,9 +452,10 @@ function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = overlayTemplate();
-  document
-    .getElementById("new_contact_email")
-    .addEventListener("input", isEmailValid);
+
+  isEmailValid("new_contact_email", "email-error");
+  isPhoneValid("new_contact_phone", "phone-error");
+
   overlayRef.classList.remove("d_none");
   setTimeout(() => overlayRef.classList.add("active"), 0);
   setTimeout(() => {
@@ -458,6 +477,10 @@ function toggleEditOverlay(contact) {
     contact.phone,
     contact.firebaseKey
   );
+
+  isEmailValid("edit_contact_email", "edit-email-error");
+  isPhoneValid("edit_contact_phone", "edit-phone-error");
+
   overlayRef.classList.remove("d_none");
   setTimeout(() => overlayRef.classList.add("active"), 0);
   setTimeout(() => {
@@ -480,6 +503,10 @@ function toggleMobileEditOverlay(contact) {
     contact.phone,
     contact.firebaseKey
   );
+
+  isEmailValid("edit_contact_email", "edit-email-error");
+  isPhoneValid("edit_contact_phone", "edit-phone-error");
+
   overlayRef.classList.remove("d_none");
   setTimeout(() => overlayRef.classList.add("active"), 0);
   setTimeout(() => {
