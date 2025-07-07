@@ -15,10 +15,7 @@
     />
   </head>
 
-  <body
-    onclick="closeSubMenuIfOpen(event)"
-    onload="setUserInitials(); initAddTaskPage()"
-  >
+  <body onclick="closeSubMenuIfOpen(event)" onload="setUserInitials()">
     <div class="body">
       <div class="desktop-menu">
         <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
@@ -121,12 +118,7 @@
                   <label for="title"
                     >Title <span class="red_star">*</span></label
                   >
-                  <input
-                    id="title"
-                    type="text"
-                    placeholder="Enter a title"
-                    oninput="updateSubmitState()"
-                  />
+                  <input id="title" type="text" placeholder="Enter a title" />
                   <div class="error-message" id="error-title">
                     This field is required
                   </div>
@@ -184,34 +176,21 @@
                   -->
                   <label>Priority</label>
                   <div id="buttons-prio" class="priority-buttons">
-                    <button
-                      type="button"
-                      data-prio="urgent"
-                      onclick="selectPriority('urgent')"
-                    >
+                    <button type="button" data-prio="urgent">
                       Urgent
                       <img
                         src="./assets/icons/add-task/add-task-urgent.svg"
                         alt=""
                       />
                     </button>
-                    <button
-                      type="button"
-                      data-prio="medium"
-                      class="selected"
-                      onclick="selectPriority('medium')"
-                    >
+                    <button type="button" data-prio="medium" class="selected">
                       Medium
                       <img
                         src="./assets/icons/add-task/add-task-medium.svg"
                         alt=""
                       />
                     </button>
-                    <button
-                      type="button"
-                      data-prio="low"
-                      onclick="selectPriority('low')"
-                    >
+                    <button type="button" data-prio="low">
                       Low
                       <img
                         src="./assets/icons/add-task/add-task-low.svg"
@@ -234,7 +213,6 @@
                         id="assigned-to-input"
                         type="text"
                         placeholder="Select contacts"
-                        onclick="handleAssignedToClick(event)"
                         readonly
                       />
                       <div class="dropdown-arrow"></div>
@@ -286,9 +264,6 @@
                             id="subtask-input"
                             type="text"
                             placeholder="Add new subtask"
-                            onfocus="toggleSubtaskIcons()"
-                            oninput="toggleSubtaskIcons()"
-                            onkeydown="handleSubtaskEnter(event)"
                           />
                           <!-- 
                             @section Subtask Controls
@@ -299,7 +274,6 @@
                               id="subtask-cancel"
                               src="./assets/icons/closeXSymbol.svg"
                               alt="Cancel"
-                              onclick="clearSubtaskInput()"
                             />
                             <img
                               src="./assets/icons/add-task/add-task-divider.svg"
@@ -309,7 +283,6 @@
                               id="subtask-confirm"
                               src="./assets/icons/add-task/add-task-check.svg"
                               alt="Confirm"
-                              onclick="addSubtask()"
                             />
                           </div>
                           <img
@@ -317,7 +290,6 @@
                             class="subtask-plus"
                             src="./assets/icons/add-task/add-task-add+symbol.svg"
                             alt="Add"
-                            onclick="toggleSubtaskIcons()"
                           />
                         </div>
                       </div>
@@ -340,10 +312,8 @@
               <p class="legend-required">
                 <span class="red_star">*</span>This field is required
               </p>
-              <button id="cancel-task-btn" type="button" onclick="resetForm()">
-                Cancel
-              </button>
-              <button id="submit-task-btn" type="button" onclick="createTask()">
+              <button id="cancel-task-btn" type="button">Cancel</button>
+              <button id="submit-task-btn" type="button">
                 Create Task
                 <img
                   class="add-task-icon"
@@ -395,7 +365,12 @@
     </div>
 
     <script src="./scripts/desktop-template.js"></script>
-    <script src="./scripts/add-task.js"></script>
+    <script type="module" src="./scripts/add-task-utils.js"></script>
+    <script type="module" src="./scripts/add-task-dropdowns.js"></script>
+    <script type="module" src="./scripts/add-task-subtasks.js"></script>
+    <script type="module" src="./scripts/add-task-firebase.js"></script>
+    <script type="module" src="./scripts/add-task-core.js"></script>
+    <script type="module" src="./scripts/add-task-index.js"></script>
     <script src="./scripts/help.js"></script>
   </body>
 </html>
