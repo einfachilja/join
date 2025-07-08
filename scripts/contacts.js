@@ -151,10 +151,15 @@ function openContactOverlay(contact) {
  * Shows success message when contact is added
  */
 function showAddedContactMessage() {
-  const container = document.getElementById(
-    "user_contact_information_section_mobile"
-  );
-  container.innerHTML += getCreatedContactSuccessfullyMessage();
+  let container = document.getElementById("user_contact_information_section_mobile");
+
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "user_contact_information_section_mobile";
+    document.body.appendChild(container); 
+  }
+
+  container.innerHTML = getCreatedContactSuccessfullyMessage();
 
   const message = document.getElementById("created_contact_message");
 
