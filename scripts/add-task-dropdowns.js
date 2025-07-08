@@ -20,6 +20,12 @@ export const DropdownController = {
 
     if (assignToggle)
       assignToggle.onclick = this.toggleAssignDropdown.bind(this);
+    const assignInput = document.getElementById("assigned-to-input");
+    if (assignInput) {
+      assignInput.addEventListener("input", (e) => {
+        this.renderAssignOptions(e.target.value.toLowerCase());
+      });
+    }
     if (categoryToggle)
       categoryToggle.onclick = this.toggleCategoryDropdown.bind(this);
     if (dropdownContent) {

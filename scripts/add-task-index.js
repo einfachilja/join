@@ -4,6 +4,12 @@
  * @file
  */
 
+import { DropdownController } from "./add-task-dropdowns.js";
+
+// Initialize dropdown events on DOM ready
+document.addEventListener("DOMContentLoaded", () => {
+  DropdownController.setupDropdownEvents();
+});
 import { AddTaskCore } from "./add-task-core.js";
 
 /**
