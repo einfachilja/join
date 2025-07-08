@@ -4,30 +4,23 @@
 }
 
 .contacts-list {
+  position: fixed;
+  top: 100px;
+  bottom: 56px;
+  left: 232px;
+  width: 456px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  position: fixed;
-  left: 232px;
-  top: 100px;
-  background-color: hsla(0, 0%, 100%, 1);
-
-  height: calc(100vh - 140px);
-  width: 456px;
-  overflow: hidden;
-
   padding-top: 15px;
 }
 
 .all-contacts {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  flex-grow: 1;
-  padding-top: 20px;
-  padding-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contacts-list-header {

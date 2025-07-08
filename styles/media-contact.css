@@ -1,435 +1,458 @@
-@media(max-width: 1300px) {
-    .contacts-list {
-        width: 360px;
-    }
+@media (max-width: 800px) {
+  .contacts-list {
+    position: fixed !important;
+    top: 100px !important; /* height of header */
+    bottom: 56px !important; /* height of footer/nav */
+    left: 0 !important; /* align flush with viewport */
+    right: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
 
-    .header-div {
-        top: 170px;
-        left: 620px;
-    }
+  .all-contacts {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+  }
 
-    .my-contact-information-section {
-        top: 280px;
-        left: 620px
-    }
+  .my-contact-info {
+    display: none;
+  }
 
-    .Contacts-span {
-        font-size: 40px;
-    }
+  .contacts-list-header {
+    display: none;
+  }
 
-    .better-with-a-team-span {
-        font-size: 20px;
-    }
+  .contacts-list-header {
+    display: none;
+  }
 
-    .user-name {
-        font-size: 28px;
-    }
+  .add-new-contact-button {
+    display: flex;
+  }
 
-    .my-profile-icon {
-        font-size: 30px;
-        width: 80px;
-        height: 80px;
-    }
+  .add-new-contact-template {
+    height: 700px !important;
+    width: 450px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+  }
 
-    .contact-information-div {
-        font-size: 18px;
-    }
+  .add-new-contact-left-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 0px;
+    padding-left: 40px;
 
-    .email-and-phone-section {
-        font-size: 14px;
-    }
+    height: 40%;
+  }
 
+  .add-new-contact-right-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-right-radius: 0px;
 
-    .contacts-list-header button {
-        width: 300px;
-    }
+    height: 60%;
+  }
 
-    .alphabet {
-        width: 280px;
-    }
+  .add-new-contact-left-section *,
+  .add-new-contact-right-section * {
+    max-width: 100%;
+  }
 
-    .contact {
-        width: 275px;
-        font-size: 16px;
-    }
+  .add-new-contact-template-x {
+    display: none;
+  }
 
-    .alphabet-devider {
-        width: 300px;
-    }
+  .add-new-contact-right-section-main {
+    display: flex !important;
+    gap: 10px;
+    justify-content: center !important;
+    align-items: center;
+    flex-direction: column !important;
+  }
+
+  .new-contact-profile-icon {
+    height: 100px;
+    width: 100px;
+    margin-top: -350px;
+    margin-bottom: 20px;
+  }
+
+  .cancel-btn {
+    display: none;
+  }
+
+  .create-btn {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .input-group {
+    width: 350px;
+  }
+
+  .add-contact-form {
+    width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-buttons {
+    width: 50%;
+  }
+
+  .logo-section {
+    display: none;
+  }
+
+  .add-new-contact-template-x-mobile {
+    display: flex;
+  }
+
+  .add-new-contact-template-left-text h2 {
+    font-size: 47px !important;
+  }
+
+  .add-new-contact-template-left-text p {
+    font-size: 20px !important;
+  }
+
+  .my-contact-information-section-mobile {
+    display: flex;
+  }
+
+  .my-contact-information-section-mobile-content {
+    display: flex;
+  }
+
+  .profile-badge-and-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    width: auto;
+  }
+
+  .user-name {
+    height: 36px;
+    font-weight: 700;
+    width: auto;
+  }
+
+  .email-and-phone-section {
+    width: auto;
+  }
+
+  .header-div-mobile {
+    display: flex;
+  }
+
+  .user-contact-informtion {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    position: absolute;
+    top: 200px;
+    left: 20px;
+  }
+
+  .email-and-phone-span {
+    font-weight: 700;
+  }
+
+  .my-contact-info-mobile-header-content {
+    gap: 280px;
+  }
+
+  .save-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+  }
+
+  .form-buttons button img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .arrow-mobile {
+    display: flex;
+  }
 }
 
-@media(max-width: 1232px) {
-    .add-new-contact-right-section-main {
-        gap: 20px;
-    }
+@media (max-width: 480px) {
+  .all-contacts {
+    height: calc(100vh - 100px - 56px) !important;
+    overflow-y: auto !important;
+  }
+}
+@media (max-width: 1300px) {
+  .contacts-list {
+    width: 360px;
+  }
 
-    .add-contact-form {
-        width: 260px;
-    }
+  .header-div {
+    top: 170px;
+    left: 620px;
+  }
 
-    .add-new-contact-template {
-        height: 400px;
-        width: 700px;
-    }
+  .my-contact-information-section {
+    top: 280px;
+    left: 620px;
+  }
 
-    .add-new-contact-template-left-text h2 {
-        font-size: 30px !important;
-    }
+  .Contacts-span {
+    font-size: 40px;
+  }
 
-    .add-new-contact-template-left-text p {
-        font-size: 16px !important;
-    }
+  .better-with-a-team-span {
+    font-size: 20px;
+  }
 
-    .new-contact-profile-icon {
-        height: 100px;
-        width: 100px;
-        padding-top: 65px;
-    }
+  .user-name {
+    font-size: 28px;
+  }
 
-    .input-group {
-        width: 180px;
-        height: 15px;
-    }
+  .my-profile-icon {
+    font-size: 30px;
+    width: 80px;
+    height: 80px;
+  }
 
-    .input-group input {
-        font-size: 14px;
-    }
+  .contact-information-div {
+    font-size: 18px;
+  }
 
-    .create-btn {
-        width: 100px;
-        height: 50px;
-        font-size: 14px;
-        padding: 10px;
-    }
+  .email-and-phone-section {
+    font-size: 14px;
+  }
 
-    .cancel-btn {
-        width: 90px;
-        height: 50px;
-        font-size: 14px;
-        padding: 10px;
-    }
+  .contacts-list-header button {
+    width: 300px;
+  }
 
-    .save-btn {
-        width: 90px;
-        font-size: 16px;
-    }
+  .alphabet {
+    width: 280px;
+  }
 
-    .delete-btn {
-        width: 90px;
-        padding: 10px;
-        display: block;
-        font-size: 16px;
-    }
+  .contact {
+    width: 275px;
+    font-size: 16px;
+  }
 
-    .add-new-contact-template-x {
-        height: 30px;
-        margin-bottom: 40px;
-        margin-left: 320px;
-    }
-
-    .add-new-contact-right-section {
-        padding-bottom: 20px;
-    }
+  .alphabet-devider {
+    width: 300px;
+  }
 }
 
-@media(max-width: 1040px) {
-    .contacts-list {
-        left: 0;
-        top: 100px;
-    }
+@media (max-width: 1232px) {
+  .add-new-contact-right-section-main {
+    gap: 20px;
+  }
 
-    .header-div {
-        top: 110px;
-        left: 400px;
-    }
+  .add-contact-form {
+    width: 260px;
+  }
 
-    .my-contact-information-section {
-        top: 220px;
-        left: 400px;
-    }
+  .add-new-contact-template {
+    height: 400px;
+    width: 700px;
+  }
 
-    .better-with-a-team-span {
-        font-size: 18px;
-    }
+  .add-new-contact-template-left-text h2 {
+    font-size: 30px !important;
+  }
+
+  .add-new-contact-template-left-text p {
+    font-size: 16px !important;
+  }
+
+  .new-contact-profile-icon {
+    height: 100px;
+    width: 100px;
+    padding-top: 65px;
+  }
+
+  .input-group {
+    width: 180px;
+    height: 15px;
+  }
+
+  .input-group input {
+    font-size: 14px;
+  }
+
+  .create-btn {
+    width: 100px;
+    height: 50px;
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .cancel-btn {
+    width: 90px;
+    height: 50px;
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .save-btn {
+    width: 90px;
+    font-size: 16px;
+  }
+
+  .delete-btn {
+    width: 90px;
+    padding: 10px;
+    display: block;
+    font-size: 16px;
+  }
+
+  .add-new-contact-template-x {
+    height: 30px;
+    margin-bottom: 40px;
+    margin-left: 320px;
+  }
+
+  .add-new-contact-right-section {
+    padding-bottom: 20px;
+  }
 }
 
-@media(max-width: 800px) {
-    .my-contact-info {
-        display: none;
-    }
+@media (max-width: 1040px) {
+  .contacts-list {
+    left: 0;
+    top: 100px;
+  }
 
-    .contacts-list-header {
-        display: none;
-    }
+  .header-div {
+    top: 110px;
+    left: 400px;
+  }
 
-    .contacts-list {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+  .my-contact-information-section {
+    top: 220px;
+    left: 400px;
+  }
 
-        position: fixed;
-        height: calc(100vh - 160px);
-        width: 100%;
-    }
-
-    .all-contacts {
-        overflow-y: auto;
-        flex-grow: 1;
-        padding: 32px 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    .add-new-contact-button {
-        display: flex;
-    }
-
-    .add-new-contact-template {
-        height: 700px !important;
-        width: 450px !important;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        overflow: hidden;
-    }
-
-    .add-new-contact-left-section {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
-        border-bottom-left-radius: 0px;
-        padding-left: 40px;
-
-        height: 40%;
-    }
-
-    .add-new-contact-right-section {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-        border-bottom-left-radius: 30px;
-        border-bottom-right-radius: 30px;
-        border-top-right-radius: 0px;
-
-        height: 60%;
-    }
-
-    .add-new-contact-left-section *,
-    .add-new-contact-right-section * {
-        max-width: 100%;
-    }
-
-    .add-new-contact-template-x {
-        display: none;
-    }
-
-    .add-new-contact-right-section-main {
-        display: flex !important;
-        gap: 10px;
-        justify-content: center !important;
-        align-items: center;
-        flex-direction: column !important;
-    }
-
-    .new-contact-profile-icon {
-        height: 100px;
-        width: 100px;
-        margin-top: -350px;
-        margin-bottom: 20px;
-
-    }
-
-    .cancel-btn {
-        display: none;
-    }
-
-    .create-btn {
-        width: auto;
-        display: flex;
-        justify-content: center;
-        font-size: 16px;
-    }
-
-    .input-group {
-        width: 350px;
-    }
-
-    .add-contact-form {
-        width: 350px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .form-buttons {
-        width: 50%;
-    }
-
-    .logo-section {
-        display: none;
-    }
-
-    .add-new-contact-template-x-mobile {
-        display: flex;
-    }
-
-    .add-new-contact-template-left-text h2 {
-        font-size: 47px !important;
-    }
-
-    .add-new-contact-template-left-text p {
-        font-size: 20px !important;
-    }
-
-
-    .my-contact-information-section-mobile {
-        display: flex;
-    }
-
-    .my-contact-information-section-mobile-content {
-        display: flex;
-    }
-
-    .profile-badge-and-name {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        width: auto;
-    }
-
-    .user-name {
-        height: 36px;
-        font-weight: 700;
-        width: auto;
-    }
-
-    .email-and-phone-section {
-        width: auto;
-    }
-
-
-    .header-div-mobile {
-        display: flex;
-    }
-
-    .user-contact-informtion {
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        justify-content: center;
-        position: absolute;
-        top: 200px;
-        left: 20px;
-    }
-
-    .email-and-phone-span {
-        font-weight: 700;
-    }
-
-    .my-contact-info-mobile-header-content {
-        gap: 280px;
-    }
-
-    .save-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1px;
-    }
-
-    .form-buttons button img {
-        width: 22px;
-        height: 22px;
-    }
-
-    .arrow-mobile{
-        display: flex;
-    }
-
-
+  .better-with-a-team-span {
+    font-size: 18px;
+  }
 }
 
-@media(max-width: 500px) {
-    .create-btn {
-        font-size: 12px;
-    }
+@media (max-width: 500px) {
+  .create-btn {
+    font-size: 12px;
+  }
 
-    .add-new-contact-template {
-        width: 300px !important;
-        height: 650px !important;
-    }
+  .add-new-contact-template {
+    width: 300px !important;
+    height: 650px !important;
+  }
 
-    .add-new-contact-template-left-text h2 {
-        font-size: 35px !important;
-    }
+  .add-new-contact-template-left-text h2 {
+    font-size: 35px !important;
+  }
 
-    .add-new-contact-template-left-text p {
-        font-size: 14px !important;
-    }
+  .add-new-contact-template-left-text p {
+    font-size: 14px !important;
+  }
 
-    .input-group {
-        width: 200px;
-    }
+  .input-group {
+    width: 200px;
+  }
 
-    .contact {
-        padding: 10px 10px;
-        gap: 25px;
-        font-size: 16px;
-        width: 260px;
-        margin-left: 0px;
-    }
+  .contact {
+    padding: 10px 10px;
+    gap: 25px;
+    font-size: 16px;
+    width: 260px;
+    margin-left: 0px;
+  }
 
-    .alphabet {
-        font-size: 18px;
-    }
+  .alphabet {
+    font-size: 18px;
+  }
 
-    .alphabet-devider {
-        width: 280px;
-    }
+  .alphabet-devider {
+    width: 280px;
+  }
 
-    .user-name {
-        height: 30px;
-        font-size: 22px;
-    }
+  .user-name {
+    height: 30px;
+    font-size: 22px;
+  }
 
-    .user-contact-informtion {
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        justify-content: center;
-    }
+  .user-contact-informtion {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+  }
 
-    .email-and-phone-span {
-        font-weight: 700;
-    }
+  .email-and-phone-span {
+    font-weight: 700;
+  }
 
-    .my-contact-info-mobile-header-content {
-        gap: 100px;
-    }
+  .my-contact-info-mobile-header-content {
+    gap: 100px;
+  }
 
-    .my-profile-icon {
-        font-size: 30px;
-        width: 70px;
-        height: 70px;
-    }
+  .my-profile-icon {
+    font-size: 30px;
+    width: 70px;
+    height: 70px;
+  }
 
-    .Contacts-span {
-        font-size: 35px;
-    }
+  .Contacts-span {
+    font-size: 35px;
+  }
 
-    .better-with-a-team-span {
-        font-size: 16px;
-    }
+  .better-with-a-team-span {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 365px) {
+  .contacts-list {
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+  }
+  .contacts-list-header button {
+    width: 100% !important;
+    margin: 0 8px !important;
+  }
+  .contact {
+    width: calc(100% - 16px) !important;
+    margin: 8px 0 !important;
+    max-width: none !important;
+  }
+  .all-contacts {
+    margin: 0 8px !important;
+    width: calc(100% - 16px) !important;
+    overflow-y: auto !important;
+  }
 }
