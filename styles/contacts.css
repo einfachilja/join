@@ -27,7 +27,7 @@
 .contacts-list-header {
   position: sticky;
   top: 0;
-  background-color: hsla(0, 0%, 100%, 1);
+  background-color: hsl(210, 13%, 97%);
   height: 101px;
   display: flex;
   justify-content: center;
