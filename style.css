@@ -264,10 +264,6 @@ button p {
     color: hsl(0, 0%, 80%) !important;
 }
 
-.main-body {
-    padding-bottom: 100px;
-}
-
 .mobile-menu {
     display: none;
 }
