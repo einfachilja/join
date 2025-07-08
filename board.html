@@ -67,13 +67,21 @@
 
     <div class="body-right">
       <div class="header">
-        <span class="header-title">Kanban Project Management Tool</span>
-        <img class="logo-mobile" src="./assets/icons/favicon.svg" alt="logo" />
-        <div class="header-right">
-          <div onclick="openSubMenu(event)" class="user-profile"><b id="user-initials"></b></div>
-          <a class="help-img" href="./help.html">
-            <img src="./assets/icons/help.svg" alt="" />
-          </a>
+        <div class="header-nav max-width-1440">
+          <div class="header-left">
+            <span class="header-title">Kanban Project Management Tool</span>
+            <img class="logo-mobile" src="./assets/icons/favicon.svg" alt="logo" />
+          </div>
+
+          <div class="header-right">
+            <a class="help-img" href="./help.html">
+              <img src="./assets/icons/help.svg" alt="" />
+            </a>
+            <div onclick="openSubMenu(event)" class="user-profile">
+              <b id="user-initials"></b>
+            </div>
+
+          </div>
         </div>
       </div>
       <div id="sub_menu" class="d_none sub_menu">
@@ -197,9 +205,9 @@
   </div>
 
   <div class="landscape-mode">
-      <h2>Please hold your device upright</h2>
-      <p>This view is optimized for portrait orientation only.</p>
-    </div>
+    <h2>Please hold your device upright</h2>
+    <p>This view is optimized for portrait orientation only.</p>
+  </div>
 
   <script src="./scripts/desktop-template.js"></script>
   <script src="./scripts/help.js"></script>

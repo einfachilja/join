@@ -34,10 +34,14 @@ a {
     margin-right: 120px;
 }
 
+.header-left {
+    margin-left: 232px;
+}
+
 .header-right {
     display: flex;
     align-items: center;
-
+    gap: 8px;
 }
 
 h1 {
@@ -180,36 +184,30 @@ button p {
 }
 
 .header {
-    height: 96px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between !important;
-    align-items: center;
     background-color: white;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
     padding: 20px 40px;
-    padding-left: 348px;
-    z-index: 1000;
-    top: 0;
+}
+
+.header-nav {
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1440px;
 }
 
 .header-title {
-    font-weight: 400;
     font-size: 20px;
-    line-height: 120%;
-    color: black;
-    width: 319px;
-    height: 24px;
 }
 
-.logo-mobile {
-    display: none;
+.help-img {
+    width: 32px;
+    height: 32px;
+    transition: transform 0.2s ease-in-out;
 }
 
 .user-profile {
-    position: fixed;
-    right: 40px;
     width: 56px;
     height: 56px;
     gap: 16px;
@@ -222,19 +220,16 @@ button p {
     border-radius: 30px;
 }
 
+.logo-mobile {
+    display: none;
+}
+
 .user-profile:hover {
     background-color: hsl(213, 18%, 90%);
     cursor: pointer;
 }
 
-.help-img {
-    position: fixed;
-    right: 110px;
-    width: 32px;
-    height: 32px;
-    gap: 16px;
-    transition: transform 0.2s ease-in-out;
-}
+
 
 .help-img:hover {
     transform: scale(1.1);
