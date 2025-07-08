@@ -19,6 +19,7 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-bottom: 56px;
   width: 100%;
   box-sizing: border-box;
 }
