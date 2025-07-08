@@ -135,7 +135,7 @@
 @media(max-width: 1040px) {
     .contacts-list {
         left: 0;
-        top: 80px;
+        top: 100px;
     }
 
     .header-div {
@@ -150,12 +150,6 @@
 
     .better-with-a-team-span {
         font-size: 18px;
-    }
-
-    .sub-menu {
-        top: 80px;
-        right: 10px;
-        z-index: 3000;
     }
 }
 
@@ -175,7 +169,6 @@
         align-items: center;
 
         position: fixed;
-        top: 70px;
         height: calc(100vh - 160px);
         width: 100%;
     }

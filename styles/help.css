@@ -10,7 +10,7 @@ body {
 .help-frame {
     width: 138px;
     height: 73px;
-    margin-top: 206px;
+    margin-top: 60px;
     margin-left: 328px;
     gap: 30px;
 }
@@ -42,10 +42,8 @@ body {
     display: flex;
     flex-direction: column;
     width: auto;
-    height: 1024px;
-    margin-top: 32px;
     margin-left: 328px;
-    margin-right: 96px;
+
 }
 
 .how-to-use-it-section {

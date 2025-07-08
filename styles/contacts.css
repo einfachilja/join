@@ -65,9 +65,7 @@
 .add-new-contact-button {
   display: none;
   position: absolute;
-  width: 100%;
-  justify-content: flex-end;
-  bottom: 30px;
+  bottom: 60px;
   right: 30px;
 }
 
