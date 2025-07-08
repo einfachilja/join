@@ -4,12 +4,48 @@ function init() {
 }
 
 /**
+ * Validate Add/Edit Contact form
+ * @param {boolean} isEdit - true for edit form, false for new contact form
+ */
+function validateContactForm(isEdit) {
+  const prefix = isEdit ? "edit_contact_" : "new_contact_";
+  const fields = ["name", "email", "phone"];
+  let valid = true;
+  fields.forEach((field) => {
+    const input = document.getElementById(prefix + field);
+    const error = document.getElementById(
+      (isEdit ? "edit-" : "") + field + "-error"
+    );
+    const value = input.value.trim();
+    let msg = "";
+    if (!value) {
+      msg = field.charAt(0).toUpperCase() + field.slice(1) + " cannot be empty";
+    } else if (field === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      msg = "Invalid email address";
+    } else if (field === "phone" && !/^\+?[0-9\s-]{7,10}$/.test(value)) {
+      msg = "Invalid phone number";
+    }
+    if (msg) {
+      error.textContent = msg;
+      error.classList.add("visible");
+      input.classList.add("invalid");
+      valid = false;
+    } else {
+      error.textContent = "";
+      error.classList.remove("visible");
+      input.classList.remove("invalid");
+    }
+  });
+  return valid;
+}
+
+/**
  * Firebase base URL for contact data
  */
 const BASE_URL =
   "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
 
-let contacts = []; 
+let contacts = [];
 let recentlyAddedContact = null;
 let firebaseKey = localStorage.getItem("firebaseKey");
 
@@ -69,7 +105,7 @@ async function addNewContact(event) {
   const name = new_contact_name.value.trim();
   const email = new_contact_email.value.trim();
   const phone = new_contact_phone.value.trim();
-  if (!isValidContactInput(name, email, phone)) return;
+  if (!validateContactForm(false)) return;
 
   const contact = { name, email, phone, color: getRandomColor() };
   recentlyAddedContact = contact;
@@ -115,14 +151,16 @@ function openContactOverlay(contact) {
  * Shows success message when contact is added
  */
 function showAddedContactMessage() {
-  const container = document.getElementById("user_contact_information_section_mobile");
+  const container = document.getElementById(
+    "user_contact_information_section_mobile"
+  );
   container.innerHTML += getCreatedContactSuccessfullyMessage();
 
   const message = document.getElementById("created_contact_message");
 
   setTimeout(() => {
     message.classList.add("visible");
-  }, 10); 
+  }, 10);
 
   setTimeout(() => {
     message.classList.remove("visible");
@@ -243,7 +281,7 @@ async function saveEditContact(event, contactKey) {
 
   const { name, email, phone } = getEditFormData();
 
-  if (!isEditFormValid(name, email, phone)) return;
+  if (!validateContactForm(true)) return;
 
   const originalContact = contacts.find((c) => c.firebaseKey === contactKey);
   const updatedContact = buildUpdatedContact(
@@ -392,9 +430,11 @@ async function deleteContact(contactKey) {
     const contactInfoRef = document.getElementById("open_contact_Template");
     if (contactInfoRef) contactInfoRef.innerHTML = "";
 
-    const mobileOverlay = document.getElementById("user_contact_information_section_mobile");
+    const mobileOverlay = document.getElementById(
+      "user_contact_information_section_mobile"
+    );
     if (mobileOverlay) {
-      mobileOverlay.remove(); 
+      mobileOverlay.remove();
     }
 
     const mobileMenu = document.getElementById("edit_delete_menu");
@@ -404,7 +444,6 @@ async function deleteContact(contactKey) {
 
     toggleOff();
     await loadContacts();
-
   } catch (error) {
     console.error("Error deleting contact:", error);
   }
