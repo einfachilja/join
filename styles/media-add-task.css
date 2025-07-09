@@ -1,25 +1,41 @@
-@media (max-width: 420px) {
-  .priority-buttons {
-    gap: 8px;
+@media (max-width: 1040px) {
+  .add-task-modal {
+    margin: 0;
+    padding: 24px;
   }
-  .priority-buttons button {
-    font-size: 14px;
-    gap: 6px;
-    height: 40px;
-    min-width: 0;
-    padding: 6px 10px;
+
+  .form-actions {
+    padding-bottom: 80px;
   }
-  .priority-buttons button img {
-    height: 14px;
-    width: 14px;
+
+  .form-cols {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .form-divider {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .add-task-modal {
+    padding: 16px;
   }
 }
 
 @media (max-width: 500px) {
+
+  h1 {
+    font-size: 48px;
+    white-space: nowrap;
+  }
+
   .add-task-modal {
     margin-bottom: 48px;
     padding: 12px;
   }
+
   .form-actions {
     align-items: center;
     background: none;
@@ -34,12 +50,14 @@
     right: auto;
     z-index: auto;
   }
+
   .form-actions button {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   .legend-required {
     font-size: 12px;
     justify-content: center;
@@ -48,33 +66,22 @@
   }
 }
 
-@media (max-width: 800px) {
-  .add-task-modal {
-    padding: 16px;
+@media (max-width: 420px) {
+  .priority-buttons {
+    gap: 8px;
   }
-}
 
-@media (max-width: 1040px) {
-  .add-task-modal {
-    margin: 0;
-    padding: 24px;
+  .priority-buttons button {
+    font-size: 14px;
+    gap: 6px;
+    height: 40px;
+    min-width: 0;
+    padding: 6px 10px;
   }
-  .form-actions {
-    padding-bottom: 80px;
-  }
-  .form-cols {
-    flex-direction: column;
-    gap: 24px;
-  }
-  .form-divider {
-    display: none;
-  }
-}
 
-@media (max-width: 380px) {
-  h1 {
-    font-size: 36px;
-    white-space: nowrap;
+  .priority-buttons button img {
+    height: 14px;
+    width: 14px;
   }
 }
 
@@ -83,6 +90,7 @@
     font-size: 12px;
     padding: 4px 8px;
   }
+
   .priority-buttons button img {
     width: 12px;
     height: 12px;

@@ -127,6 +127,10 @@
         font-size: 40px;
     }
 
+    h1 {
+        font-size: 48px;
+    }
+
     .board-add-task-modal {
         margin: 8px;
     }
