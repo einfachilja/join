@@ -122,6 +122,7 @@ input {
   border: 1px solid;
   opacity: 0.5;
   box-sizing: border-box;
+  font-size: 18px;
 }
 
 .input-group {
@@ -137,7 +138,7 @@ input:focus-visible {
 
 .error-message {
   color: red;
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 4px;
   margin-left: 4px;
   height: 18px;
