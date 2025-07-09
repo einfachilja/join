@@ -12,7 +12,7 @@
   <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
 </head>
 
-<body>
+<body onload="setUserInitials()">
   <div class="body">
     <div class="desktop-menu">
       <div>
@@ -71,6 +71,26 @@
           <div class="header-left">
             <span class="header-title">Kanban Project Management Tool</span>
             <img class="logo-mobile" src="./assets/icons/favicon.svg" alt="logo" />
+          </div>
+
+          <div class="header-right">
+            <a class="help-img" href="./help.html">
+              <img src="./assets/icons/help.svg" alt="" />
+            </a>
+            <div onclick="openSubMenu(event)" class="user-profile">
+              <b id="user-initials"></b>
+            </div>
+            <div id="sub_menu" class="d_none sub_menu">
+              <a href="./legal-notice.html">
+                <p class="sub-menu-content">Legal Notice</p>
+              </a>
+              <a href="./privacy-policy.html">
+                <p class="sub-menu-content">Privacy Policy</p>
+              </a>
+              <a href="./index.html">
+                <p class="sub-menu-content">Log out</p>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -189,11 +209,16 @@
       </footer>
     </div>
   </div>
+
+  <div class="landscape-mode">
+    <h2>Please hold your device upright</h2>
+    <p>This view is optimized for portrait orientation only.</p>
+  </div>
+
+  <script src="./scripts/desktop-template.js"></script>
+
 </body>
 
-<div class="landscape-mode">
-  <h2>Please hold your device upright</h2>
-  <p>This view is optimized for portrait orientation only.</p>
-</div>
+
 
 </html>
