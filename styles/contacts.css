@@ -134,6 +134,15 @@
   align-items: flex-start;
 }
 
+.name-and-email a {
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
 .contact-name {
   color: hsla(0, 0%, 0%, 1);
 }

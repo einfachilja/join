@@ -134,6 +134,11 @@ p {
     border: none;
 }
 
+.menu button img {
+    height: 32px;
+    width: 32px;
+}
+
 .menu button:hover {
     background-color: hsl(216, 36%, 26%);
 }
