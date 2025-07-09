@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  overflow: auto;
   box-sizing: border-box;
 }
 
@@ -199,19 +198,18 @@ footer {
   width: 100%;
   gap: 16px;
   opacity: 0.5;
-
 }
 
 .footer-link {
-  text-decoration: none;
-  color: rgb(168, 168, 168);
+  color: #a8a8a8;
+  display: inline-block;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .footer-link:hover {
-  scale: 1.1;
-  font-weight: 500;
-  color: hsl(198, 76%, 52%) !important;
-}
+  transform: scale(1.1);
+  color: hsl(198, 76%, 52%) ;
+} 
 
 #message-box {
   position: fixed;

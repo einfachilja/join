@@ -27,7 +27,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(246,247,248);
+  background-color: rgb(246, 247, 248);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,7 +87,7 @@ a {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: rgb(246,247,248);
+  background: rgb(246, 247, 248);
 }
 
 .log-in-container {
@@ -146,7 +146,7 @@ input {
 
 input:focus-visible {
   outline: none;
-  border: 2px solid rgb(41,171,226);
+  border: 2px solid rgb(41, 171, 226);
   opacity: 1;
 }
 
@@ -162,7 +162,7 @@ input:focus-visible {
 .input-icon-password {
   width: 24px;
   height: 24px;
-  object-fit: contain; 
+  object-fit: contain;
 }
 
 .toggle-password {
@@ -205,12 +205,12 @@ input:focus-visible {
 }
 
 .log-in-button {
-  background: rgb(42,54,71);
+  background: rgb(42, 54, 71);
   color: white;
 }
 
 .log-in-button:hover {
-  background-color: rgb(41,171,226);
+  background-color: rgb(41, 171, 226);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -220,18 +220,18 @@ input:focus-visible {
 }
 
 .guest-log-in-button:hover {
-  border-color: rgb(41,171,226);
-  color: rgb(41,171,226);
+  border-color: rgb(41, 171, 226);
+  color: rgb(41, 171, 226);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 .register-button {
-  background: rgb(42,54,71);
+  background: rgb(42, 54, 71);
   color: white;
 }
 
 .register-button:hover {
-  background-color: rgb(41,171,226);
+  background-color: rgb(41, 171, 226);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -257,24 +257,22 @@ footer {
 }
 
 .footer-link {
-  text-decoration: none;
   color: #a8a8a8;
+  display: inline-block;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .footer-link:hover {
-  font-weight: 500;
-  scale: 1.1;
-  color: rgb(41,171,226);
-  opacity: none !important;
+  transform: scale(1.1);
+  color: hsl(198, 76%, 52%);
 }
 
-.register-container-mobile{
+.register-container-mobile {
   display: none;
   position: absolute;
   bottom: 120px;
   align-items: center;
   gap: 16px;
-
   justify-content: center;
   width: 100%;
 }
