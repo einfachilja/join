@@ -1,3 +1,8 @@
+label {
+  font-size: 20px;
+  margin-bottom: -16px;
+}
+
 .add-task-header {
   display: flex;
   align-items: center;
@@ -74,7 +79,7 @@
   padding: 10px 18px;
   height: 42px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 18px;
   border: none;
   border-radius: 10px;
   background: #fff;
@@ -191,7 +196,7 @@ textarea {
   border: 1px solid #d1d1d1;
   border-radius: 10px;
   padding: 0 16px;
-  font-size: 16px;
+  font-size: 18px;
   background: #ffffff;
   height: 48px;
   box-sizing: border-box;
@@ -207,7 +212,7 @@ select:focus,
 #dropdown-toggle:focus,
 #category-toggle:focus {
   border: 1px solid #29abe2;
-  outline: none ;
+  outline: none;
   background-color: #ffffff;
   border-radius: 10px;
   transition: box-shadow 0.1s ease-in-out, border 0.1s ease-in-out;
@@ -280,8 +285,8 @@ select:focus {
 }
 
 #dropdown-toggle:focus-within {
-  border: 1px solid #29abe2 ;
-  outline: none ;
+  border: 1px solid #29abe2;
+  outline: none;
   border-radius: 10px;
   background-color: #ffffff;
   transition: box-shadow 0.1s ease-in-out;
@@ -291,7 +296,7 @@ select:focus {
   border: 0;
   background: transparent;
   outline: none;
-  font-size: 16px;
+  font-size: 18px;
   width: 100%;
   color: #000;
   font-family: inherit;
@@ -300,9 +305,9 @@ select:focus {
 }
 
 #dropdown-toggle input:focus {
-  border: none ;
-  outline: none ;
-  box-shadow: none ;
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .dropdown-arrow {
@@ -392,7 +397,7 @@ textarea.error-border,
 select.error-border,
 #dropdown-toggle.error-border,
 #category-toggle.error-border {
-  border: 1px solid #e74c3c ;
+  border: 1px solid #e74c3c;
   border-radius: 10px;
   background: #ffffff;
   box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
@@ -401,7 +406,7 @@ select.error-border,
 
 #dropdown-toggle.error-border,
 #category-toggle.error-border {
-  border: 1px solid #e74c3c ;
+  border: 1px solid #e74c3c;
   border-radius: 10px;
   background: #ffffff;
   box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
@@ -410,11 +415,11 @@ select.error-border,
 
 #dueDate.error-border,
 #title.error-border {
-  border: 1px solid #e74c3c ;
+  border: 1px solid #e74c3c;
 }
 
 .error {
-  border: 1px solid #e74c3c ;
+  border: 1px solid #e74c3c;
 }
 
 input::placeholder,
@@ -477,7 +482,7 @@ select::placeholder {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
   height: 48px;
   box-sizing: border-box;
   margin-bottom: 4px;
@@ -489,8 +494,8 @@ select::placeholder {
 
 #category-toggle:focus,
 #category-toggle:focus-within {
-  outline: none ;
-  border: 1px solid #29abe2 ;
+  outline: none;
+  border: 1px solid #29abe2;
   border-radius: 10px;
   background-color: #ffffff;
   transition: box-shadow 0.1s ease-in-out;
@@ -565,7 +570,6 @@ select::placeholder {
 
 #description {
   padding: 12px 16px;
-  font-size: 16px;
   height: 100px;
   line-height: normal;
 }
@@ -637,7 +641,6 @@ select::placeholder {
   background-color: #ffffff;
   border: 1px solid #d1d1d1;
   border-radius: 10px;
-  font-size: 16px;
   width: 100%;
   padding: 0 16px;
   padding-right: 96px;
@@ -707,7 +710,7 @@ select::placeholder {
 }
 
 .hidden {
-  display: none ;
+  display: none;
 }
 
 .subtask-list-item.subtask-edit-mode {
@@ -778,7 +781,7 @@ select::placeholder {
 }
 
 .subtask-edit-container img:hover {
-  background-color: transparent ;
+  background-color: transparent;
 }
 
 .subtask-edit-confirm {
@@ -812,8 +815,8 @@ select::placeholder {
 
 .error-message {
   color: red;
-  font-size: 12px;
-  margin-top: 6px;
+  font-size: 14px;
+  margin-top: -24px;
   margin-left: 4px;
   display: none;
 }
@@ -830,7 +833,7 @@ select::placeholder {
 
 .contact-item.selected,
 .dropdown-content .contact-item.selected {
-  background-color: #091931 ;
+  background-color: #091931;
   color: #ffffff;
   border-radius: 10px;
 }
@@ -888,8 +891,8 @@ select::placeholder {
 }
 
 #subtask-input:focus {
-  border: 1px solid #29abe2 ;
-  outline: none ;
+  border: 1px solid #29abe2;
+  outline: none;
   background-color: #ffffff;
   border-radius: 10px;
   transition: box-shadow 0.1s ease-in-out;
