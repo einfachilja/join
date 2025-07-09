@@ -10,10 +10,10 @@ a {
 }
 
 .logo-section {
-  position: absolute !important;
-  top: 36px !important;
-  left: 32px !important;
-  z-index: 999 !important;
+  position: absolute;
+  top: 36px;
+  left: 32px;
+  z-index: 999;
 }
 
 .logo-section .logo-image {
@@ -209,8 +209,8 @@ footer {
 
 .footer-link:hover {
   transform: scale(1.1);
-  color: hsl(198, 76%, 52%) ;
-} 
+  color: hsl(198, 76%, 52%);
+}
 
 #message-box {
   position: fixed;

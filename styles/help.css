@@ -16,15 +16,15 @@ body {
 }
 
 .legal-notice-frame {
-    width: 371px !important;
+    width: 371px ;
 }
 
 .privacy-policy-frame {
-    width: 419px !important;
+    width: 419px ;
 }
 
 .p-legal-notice {
-    padding-top: 16px !important;
+    padding-top: 16px ;
 }
 
 .comment-section-input {

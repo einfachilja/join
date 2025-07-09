@@ -117,7 +117,7 @@ button p{
     height: 96px;
     width: 100%;
     display: flex;
-    justify-content: space-between !important;
+    justify-content: space-between ;
     align-items: center;
     background-color: hsla(0, 0%, 100%, 1);
     box-shadow: 0 4px 4px hsla(0, 0%, 0%, 0.1);
@@ -200,5 +200,5 @@ button p{
 }
 
 .sub-menu-content{
-    color: hsl(0, 0%, 80%) !important;
+    color: hsl(0, 0%, 80%) ;
 }

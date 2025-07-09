@@ -207,7 +207,7 @@ select:focus,
 #dropdown-toggle:focus,
 #category-toggle:focus {
   border: 1px solid #29abe2;
-  outline: none !important;
+  outline: none ;
   background-color: #ffffff;
   border-radius: 10px;
   transition: box-shadow 0.1s ease-in-out, border 0.1s ease-in-out;
@@ -280,8 +280,8 @@ select:focus {
 }
 
 #dropdown-toggle:focus-within {
-  border: 1px solid #29abe2 !important;
-  outline: none !important;
+  border: 1px solid #29abe2 ;
+  outline: none ;
   border-radius: 10px;
   background-color: #ffffff;
   transition: box-shadow 0.1s ease-in-out;
@@ -300,9 +300,9 @@ select:focus {
 }
 
 #dropdown-toggle input:focus {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
+  border: none ;
+  outline: none ;
+  box-shadow: none ;
 }
 
 .dropdown-arrow {
@@ -392,7 +392,7 @@ textarea.error-border,
 select.error-border,
 #dropdown-toggle.error-border,
 #category-toggle.error-border {
-  border: 1px solid #e74c3c !important;
+  border: 1px solid #e74c3c ;
   border-radius: 10px;
   background: #ffffff;
   box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
@@ -401,7 +401,7 @@ select.error-border,
 
 #dropdown-toggle.error-border,
 #category-toggle.error-border {
-  border: 1px solid #e74c3c !important;
+  border: 1px solid #e74c3c ;
   border-radius: 10px;
   background: #ffffff;
   box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
@@ -410,11 +410,11 @@ select.error-border,
 
 #dueDate.error-border,
 #title.error-border {
-  border: 1px solid #e74c3c !important;
+  border: 1px solid #e74c3c ;
 }
 
 .error {
-  border: 1px solid #e74c3c !important;
+  border: 1px solid #e74c3c ;
 }
 
 input::placeholder,
@@ -489,8 +489,8 @@ select::placeholder {
 
 #category-toggle:focus,
 #category-toggle:focus-within {
-  outline: none !important;
-  border: 1px solid #29abe2 !important;
+  outline: none ;
+  border: 1px solid #29abe2 ;
   border-radius: 10px;
   background-color: #ffffff;
   transition: box-shadow 0.1s ease-in-out;
@@ -707,7 +707,7 @@ select::placeholder {
 }
 
 .hidden {
-  display: none !important;
+  display: none ;
 }
 
 .subtask-list-item.subtask-edit-mode {
@@ -778,7 +778,7 @@ select::placeholder {
 }
 
 .subtask-edit-container img:hover {
-  background-color: transparent !important;
+  background-color: transparent ;
 }
 
 .subtask-edit-confirm {
@@ -830,7 +830,7 @@ select::placeholder {
 
 .contact-item.selected,
 .dropdown-content .contact-item.selected {
-  background-color: #091931 !important;
+  background-color: #091931 ;
   color: #ffffff;
   border-radius: 10px;
 }
@@ -888,8 +888,8 @@ select::placeholder {
 }
 
 #subtask-input:focus {
-  border: 1px solid #29abe2 !important;
-  outline: none !important;
+  border: 1px solid #29abe2 ;
+  outline: none ;
   background-color: #ffffff;
   border-radius: 10px;
   transition: box-shadow 0.1s ease-in-out;

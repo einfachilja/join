@@ -87,8 +87,8 @@
   background-color: transparent;
   border: none;
   font-size: 18px;
-  font-weight: 400 !important;
-  text-align: left !important;
+  font-weight: 400;
+  text-align: left;
   line-height: 120%;
   margin-left: 23px;
 }
@@ -99,17 +99,17 @@
 }
 
 .contact.open-contact:hover {
-  background: hsl(216, 25%, 22%) !important;
-  color: hsla(0, 0%, 100%, 1) !important;
+  background: hsl(216, 25%, 22%);
+  color: hsla(0, 0%, 100%, 1);
   cursor: default;
 }
 
 .open-contact {
   background-color: hsl(216, 25%, 22%);
-  color: hsla(0, 0%, 100%, 1) !important;
+  color: hsla(0, 0%, 100%, 1);
 
   .contact-name {
-    color: hsla(0, 0%, 100%, 1) !important;
+    color: hsla(0, 0%, 100%, 1);
   }
 }
 
@@ -192,7 +192,7 @@
   left: 750px;
   display: flex;
   flex-direction: column;
-  gap: 50px !important;
+  gap: 50px;
 }
 
 .profile-badge-and-name {
@@ -296,6 +296,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  font-size: 18px;
 }
 
 .alphabet {
@@ -402,7 +403,7 @@
   border-bottom-left-radius: 30px;
   align-items: start;
   background-color: hsl(216, 24%, 22%);
-  width: 40% !important;
+  width: 40%;
   color: white;
   gap: 16px;
 }
@@ -419,13 +420,13 @@
 
 .add-new-contact-template-left-text h2 {
   color: white;
-  font-size: 61px !important;
+  font-size: 61px;
   margin: 0;
 }
 
 .add-new-contact-template-left-text p {
   color: white;
-  font-size: 27px !important;
+  font-size: 27px;
   margin: 0;
 }
 
@@ -445,7 +446,7 @@
   align-items: center;
   justify-content: center;
   background-color: hsl(0, 0%, 100%);
-  width: 60% !important;
+  width: 60%;
   padding-bottom: 90px;
 }
 
@@ -456,15 +457,15 @@
 }
 
 .add-new-contact-right-section-main {
-  display: flex !important;
-  flex-direction: row !important;
+  display: flex;
+  flex-direction: row;
   gap: 70px;
-  justify-content: center !important;
+  justify-content: center;
 }
 
 .add-new-contact-template-x {
   display: flex;
-  align-items: end !important;
+  align-items: end;
   cursor: pointer;
   margin-left: 565px;
   margin-bottom: 70px;
@@ -599,6 +600,7 @@
   font-weight: 700;
   line-height: 120%;
   letter-spacing: 0%;
+  border: none;
 }
 
 .save-btn:hover {
@@ -735,7 +737,7 @@
 }
 
 .sub-menu-content {
-  color: hsl(0, 0%, 80%) !important;
+  color: hsl(0, 0%, 80%);
 }
 
 .edit-delete-section {

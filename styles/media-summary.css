@@ -21,7 +21,7 @@
     }
 
     .card-container {
-        gap: 30px !important;
+        gap: 30px ;
     }
 
     .card-top {
@@ -76,7 +76,7 @@
     }
 
     .d_none {
-        display: none !important;
+        display: none;
     }
 
     .card-container-right {
