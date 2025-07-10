@@ -1864,3 +1864,33 @@ function getPriorityButtonsHTML(currentPriority) {
 }
 
 window.addEventListener('resize', closeMoveTaskMenu);
+
+// Drag & Drop Highlight Event Listener
+function addDragHighlightListeners() {
+  ['todo', 'progress', 'feedback', 'done'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('dragover', function (ev) {
+        ev.preventDefault();
+        el.classList.add('highlight');
+      });
+      el.addEventListener('dragleave', function () {
+        el.classList.remove('highlight');
+      });
+      el.addEventListener('drop', function (ev) {
+        ev.preventDefault();
+        const draggedEl = document.getElementById(currentDraggedElement);
+        if (draggedEl && !el.contains(draggedEl)) {
+          el.appendChild(draggedEl);
+        }
+        ['todo', 'progress', 'feedback', 'done'].forEach(id => {
+          const dropEl = document.getElementById(id);
+          if (dropEl) dropEl.classList.remove('highlight');
+        });
+      });
+    }
+  });
+}
+
+// Initialisierung am Ende:
+window.addEventListener('DOMContentLoaded', addDragHighlightListeners);

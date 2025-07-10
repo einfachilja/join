@@ -153,6 +153,11 @@
     transition: transform 0.2s ease;
 }
 
+.drag-area.highlight {
+    background-color: rgba(231, 231, 231, 1.0);
+    border-radius: 24px;
+}
+
 .empty-message {
     display: flex;
     justify-content: center;
@@ -489,12 +494,12 @@
 }
 
 .subtask-list-editinput:focus {
- border-top: none;
- border-left: none;
- border-right: none;
- background: none;
- border-radius: 0;
- border-bottom: 1px solid #29ABE2;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background: none;
+    border-radius: 0;
+    border-bottom: 1px solid #29ABE2;
 }
 
 .subtask-dot {
@@ -992,13 +997,13 @@
 
 .subtask-list-row .subtask-edit-btn,
 .subtask-list-row .subtask-remove-btn {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
 }
 
 .subtask-list-row:hover .subtask-edit-btn,
 .subtask-list-row:hover .subtask-remove-btn {
-  opacity: 1;
-  pointer-events: auto;
+    opacity: 1;
+    pointer-events: auto;
 }
