@@ -150,7 +150,7 @@ function getAddTaskOverlay() {
                         </div>
                       </div>
 
-                      <ul id="subtask-list" class="subtask-list"></ul>
+                      <ul id="subtask-list" class="subtask-list-add"></ul>
                     </div>
                   </div>
                 </div>

@@ -611,7 +611,7 @@ select::placeholder {
   transition: background-color 0.2s ease;
 }
 
-.subtask-list {
+.subtask-list-add {
   display: flex;
   flex-direction: column;
   gap: 8px;
