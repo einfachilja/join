@@ -601,7 +601,7 @@
     margin-left: 12px;
     margin-right: 12px;
     max-width: 500px;
-    max-height: calc(90vh - 40px);
+    /*     max-height: calc(90vh - 40px); */
     flex: 1;
     background-color: #ffffff;
     border-radius: 30px;
@@ -627,9 +627,10 @@
     color: #42526e;
 }
 
-#subtask-list-edit, .subtask-list-not-edit {
+#subtask-list-edit,
+.subtask-list-not-edit {
     overflow-y: auto;
-    height: 90px;
+    height: 110px;
 }
 
 
@@ -659,6 +660,11 @@
 .overlay-card-date-input {
     width: 100%;
     padding: 8px;
+}
+
+.assigned-list-area {
+    overflow-y: auto;
+    height: 115px;
 }
 
 .assigned-entry {

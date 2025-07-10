@@ -211,7 +211,9 @@ function getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, s
       </span>
       <div class="assigned-list">
         <span class="assigned-to-headline overlay-headline-color">Assigned To:</span>
+        <div class="assigned-list-area">
         ${assignedHTML}
+        </div>
       </div>
       <div class="subtask-list">
         <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
