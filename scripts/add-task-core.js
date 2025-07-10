@@ -200,7 +200,7 @@ export const AddTaskCore = {
       if (this.validateForm()) {
         FirebaseService.submitTaskToFirebase().then(() => {
           FirebaseService.showTaskAddedPopup();
-          setTimeout(() => location.reload(), 2000);
+          setTimeout(() => (window.location.href = "./board.html"), 2000);
         });
       }
     };
