@@ -120,11 +120,10 @@ export const DropdownController = {
    * @function
    */
   getInitials(name) {
-    return name
-      .split(" ")
-      .map((w) => w[0])
-      .join("")
-      .toUpperCase();
+    const words = name.trim().split(" ").filter(Boolean);
+    const initials = words[0]?.[0] || "";
+    const second = words[1]?.[0] || "";
+    return (initials + second).toUpperCase();
   },
 
   /**

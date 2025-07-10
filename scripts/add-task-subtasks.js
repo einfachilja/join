@@ -101,7 +101,7 @@ export const SubtaskManager = {
       if (li.classList.contains("editing")) return;
       li.editTimeout = setTimeout(() => {
         if (!li.classList.contains("editing")) this.enterEditMode(li);
-      }, 600);
+      }, 100);
     };
     li.onmouseleave = () => {
       if (li.editTimeout) {
