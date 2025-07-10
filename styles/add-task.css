@@ -355,7 +355,7 @@ select:focus {
 }
 
 .dropdown-content .contact-item:hover {
-  background-color: #2A3647;
+  background-color: #2a3647;
   color: #ffffff;
 }
 
@@ -710,7 +710,7 @@ select::placeholder {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .subtask-list-item.subtask-edit-mode {
