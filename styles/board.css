@@ -748,7 +748,6 @@
     flex: 1;
     max-width: 800px;
     max-height: 680px;
-    overflow: scroll;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -777,6 +776,14 @@
 .board-add-task-modal .col-left>*:last-child,
 .board-add-task-modal .col-right>*:last-child {
     margin-bottom: 0;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: -12px !important;
+    margin-left: 4px;
+    display: none;
 }
 
 .board-overlay-card [contenteditable="true"] {
