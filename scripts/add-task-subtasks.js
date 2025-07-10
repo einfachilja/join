@@ -4,6 +4,8 @@
 
 import { Utils } from "./add-task-utils.js";
 
+let isEditingSubtask = false;
+
 export const SubtaskManager = {
   subtasks: [],
 
@@ -87,8 +89,21 @@ export const SubtaskManager = {
     iconWrapper.className = "subtask-icons";
     li.appendChild(label);
     li.appendChild(iconWrapper);
-    this.setupHover(li);
+    this.setupClickToEdit(li);
     return li;
+  },
+
+  /**
+   * Add click listener on label to enter edit mode.
+   * @param {HTMLLIElement} li - Subtask item
+   * @function
+   */
+  setupClickToEdit(li) {
+    const label = li.querySelector(".subtask-label");
+    if (!label) return;
+    label.onclick = () => {
+      this.enterEditMode(li);
+    };
   },
 
   /**
@@ -97,18 +112,7 @@ export const SubtaskManager = {
    * @function
    */
   setupHover(li) {
-    li.onmouseenter = () => {
-      if (li.classList.contains("editing")) return;
-      li.editTimeout = setTimeout(() => {
-        if (!li.classList.contains("editing")) this.enterEditMode(li);
-      }, 100);
-    };
-    li.onmouseleave = () => {
-      if (li.editTimeout) {
-        clearTimeout(li.editTimeout);
-        delete li.editTimeout;
-      }
-    };
+    this.setupClickToEdit(li);
   },
 
   /**
@@ -128,6 +132,7 @@ export const SubtaskManager = {
     const confirmBtn = this.createConfirmBtn(currentText, li, input);
 
     this.assembleEditUI(li, input, cancelBtn, confirmBtn);
+    this.setupClickToEdit(li);
     input.focus();
   },
 
@@ -153,6 +158,23 @@ export const SubtaskManager = {
     input.value = currentText;
     input.className = "subtask-edit-input";
     input.setAttribute("autocomplete", "off");
+    input.onkeydown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        // Confirm is handled via button, so simulate click
+        const confirmBtn = input
+          .closest("li")
+          ?.querySelector(".subtask-edit-confirm");
+        confirmBtn?.click();
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        const li = input.closest("li");
+        if (li) {
+          SubtaskManager.updateLabel(li, currentText);
+        }
+      }
+    };
     return input;
   },
 
@@ -169,14 +191,14 @@ export const SubtaskManager = {
     btn.src = "./assets/icons/add-task/add-task-check.svg";
     btn.alt = "Confirm";
     btn.className = "subtask-edit-confirm";
-    btn.onclick = () => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const newVal = input.value.trim();
-      if (newVal) {
-        const idx = this.subtasks.findIndex((s) => s.title === oldText);
-        if (idx > -1) this.subtasks[idx].title = newVal;
-        this.updateLabel(li, newVal);
-      }
-      li.classList.remove("editing");
+      if (!newVal) return;
+      const idx = this.subtasks.findIndex((s) => s.title === oldText);
+      if (idx > -1) this.subtasks[idx].title = newVal;
+      this.updateLabel(li, newVal);
     };
     return btn;
   },
@@ -190,11 +212,21 @@ export const SubtaskManager = {
    */
   createCancelBtn(oldText, li) {
     const btn = document.createElement("img");
-    btn.src = "./assets/icons/closeXSymbol.svg";
+    btn.src = "./assets/icons/board/board-delete-icon.svg";
     btn.alt = "Delete";
     btn.className = "subtask-edit-cancel";
-    btn.onclick = () => {
-      const idx = this.subtasks.findIndex((s) => s.title === oldText);
+    btn.setAttribute("data-old-title", oldText);
+    btn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      isEditingSubtask = true;
+      const input = li.querySelector(".subtask-edit-input");
+      const currentTitle = input?.value?.trim();
+      const idx = this.subtasks.findIndex(
+        (s) =>
+          s.title === currentTitle ||
+          s.title === btn.getAttribute("data-old-title")
+      );
       if (idx > -1) this.subtasks.splice(idx, 1);
       li.remove();
       li.classList.remove("editing");
@@ -216,7 +248,7 @@ export const SubtaskManager = {
     label.className = "subtask-label";
     li.appendChild(label);
 
-    this.setupHover(li);
+    this.setupClickToEdit(li);
   },
 
   /**
@@ -237,8 +269,29 @@ export const SubtaskManager = {
 
     const btns = document.createElement("div");
     btns.className = "subtask-edit-buttons";
+    // New order and explicit event binding
     btns.appendChild(cancel);
+    const divider = document.createElement("img");
+    divider.src = "./assets/icons/add-task/add-task-divider.svg";
+    divider.alt = "";
+    btns.appendChild(divider);
     btns.appendChild(confirm);
+
+    cancel.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const input = li.querySelector(".subtask-edit-input");
+      const currentTitle =
+        input?.value?.trim() || cancel.getAttribute("data-old-title");
+      const idx = this.subtasks.findIndex(
+        (s) =>
+          s.title === currentTitle ||
+          s.title === cancel.getAttribute("data-old-title")
+      );
+      if (idx > -1) this.subtasks.splice(idx, 1);
+      li.remove();
+      li.classList.remove("editing");
+    };
 
     wrapper.appendChild(inputWrap);
     wrapper.appendChild(btns);
