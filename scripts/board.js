@@ -281,7 +281,7 @@ function openBoardCard(firebaseKey, options = {}) {
   let card = document.querySelector('.board-overlay-card');
   if (card) {
     if (options.noAnimation) {
-      card.classList.add('open'); // SOFORT, KEIN setTimeout
+      card.classList.add('open');
     } else {
       setTimeout(() => {
         card.classList.add('open');
@@ -321,14 +321,11 @@ function renderSubtasks(task) {
   }).join("");
 }
 
-// Neue Funktion: updateOverlaySubtasks
 function updateOverlaySubtasks(task) {
-  // Hole das Subtasks-Container-Element in der Overlay-Card
   let subtaskList = document.querySelector('.subtask-list ul');
   if (subtaskList) {
     subtaskList.innerHTML = renderSubtasks(task);
   }
-  // Optional: Subtask-Fortschrittsbalken aktualisieren, falls vorhanden
   let progressBar = document.querySelector('.subtask-progress-bar');
   if (progressBar) {
     let subtasksArr = Array.isArray(task.subtask) ? task.subtask : [];
@@ -531,7 +528,6 @@ function addDueDateInput(dueDateSpan, formattedDate) {
   input.id = "due_date_input";
   input.className = "overlay-card-date-input";
   input.value = formattedDate;
-  // Setze Mindestdatum auf heute:
   let today = new Date().toISOString().split("T")[0];
   input.min = today;
   dueDateSpan.innerHTML = "";
@@ -1865,7 +1861,6 @@ function getPriorityButtonsHTML(currentPriority) {
 
 window.addEventListener('resize', closeMoveTaskMenu);
 
-// Drag & Drop Highlight Event Listener
 function addDragHighlightListeners() {
   ['todo', 'progress', 'feedback', 'done'].forEach(id => {
     const el = document.getElementById(id);
@@ -1892,5 +1887,4 @@ function addDragHighlightListeners() {
   });
 }
 
-// Initialisierung am Ende:
 window.addEventListener('DOMContentLoaded', addDragHighlightListeners);
