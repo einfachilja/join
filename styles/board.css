@@ -255,7 +255,7 @@
 .assigned-container {
     display: flex;
     align-items: center;
-    padding-top: 5px;
+    gap: 1px;
 }
 
 .assigned-circle {
@@ -269,7 +269,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 14px;
     border: 1px solid white;
     margin-left: -8px;
     transition: z-index 0.2s;

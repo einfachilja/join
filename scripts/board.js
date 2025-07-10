@@ -119,7 +119,12 @@ function getCategoryClass(category) {
 
 function generateAssignedCircles(assignedList) {
   if (!Array.isArray(assignedList)) return "";
-  let maxVisible = 5;
+  assignedList = assignedList.filter(name => {
+    if (!name || typeof name !== 'string') return false;
+    let contact = getContactByName(name);
+    return !!contact;
+  });
+  let maxVisible = 4;
   let visibleContacts = assignedList.slice(0, maxVisible);
   let hiddenCount = assignedList.length - visibleContacts.length;
 
@@ -953,7 +958,7 @@ async function saveEditTask(taskKey) {
   try {
     await updateTaskInFirebase(taskKey, updatedTask);
     updateTaskLocally(taskKey, updatedTask);
-    reloadUIAfterEdit(taskKey, { noAnimation: true }); // << HIER ÄNDERN
+    reloadUIAfterEdit(taskKey, { noAnimation: true });
   } catch (error) {
     console.error("Fehler beim Bearbeiten des Tasks:", error);
   }
