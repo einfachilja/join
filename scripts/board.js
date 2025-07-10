@@ -119,12 +119,22 @@ function getCategoryClass(category) {
 
 function generateAssignedCircles(assignedList) {
   if (!Array.isArray(assignedList)) return "";
-  return assignedList.map(name => {
+  let maxVisible = 5;
+  let visibleContacts = assignedList.slice(0, maxVisible);
+  let hiddenCount = assignedList.length - visibleContacts.length;
+
+  let circlesHTML = visibleContacts.map(name => {
     let contact = getContactByName(name);
     if (!contact) return '';
     let color = contact.color || "#ccc";
     return getAssignedCircleHTML(name, color);
   }).join("");
+
+  if (hiddenCount > 0) {
+    circlesHTML += `<div class="assigned-circle">+${hiddenCount}</div>`;
+  }
+
+  return circlesHTML;
 }
 
 function generateSubtaskProgress(subtasksArr) {
