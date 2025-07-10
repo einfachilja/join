@@ -120,10 +120,16 @@ export const DropdownController = {
    * @function
    */
   getInitials(name) {
-    const words = name.trim().split(" ").filter(Boolean);
-    const initials = words[0]?.[0] || "";
-    const second = words[1]?.[0] || "";
-    return (initials + second).toUpperCase();
+    if (!name) return "";
+    const nameParts = name.trim().split(" ");
+    if (nameParts.length === 1) {
+      return nameParts[0][0].toUpperCase();
+    } else {
+      return (
+        nameParts[0][0].toUpperCase() +
+        nameParts[nameParts.length - 1][0].toUpperCase()
+      );
+    }
   },
 
   /**

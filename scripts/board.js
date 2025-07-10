@@ -106,8 +106,16 @@ function getContactByName(name) {
 }
 
 function getInitials(name) {
-  if (!name || typeof name !== 'string') return '';
-  return name.split(" ").map(n => n[0]).join("").toUpperCase();
+  if (!name) return "";
+  const nameParts = name.trim().split(" ");
+  if (nameParts.length === 1) {
+    return nameParts[0][0].toUpperCase();
+  } else {
+    return (
+      nameParts[0][0].toUpperCase() +
+      nameParts[nameParts.length - 1][0].toUpperCase()
+    );
+  }
 }
 
 function getCategoryClass(category) {
