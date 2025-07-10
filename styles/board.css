@@ -122,9 +122,8 @@
 .board-main-box {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 16px 16px 16px 0;
-    width: 350px;
+    gap: 16px;
+    padding: 16px 16px 16px 16px;
 }
 
 .board-main-box-title {
