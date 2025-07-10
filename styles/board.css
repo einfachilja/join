@@ -627,6 +627,12 @@
     color: #42526e;
 }
 
+#subtask-list-edit, .subtask-list-not-edit {
+    overflow-y: auto;
+    height: 90px;
+}
+
+
 .overlay-card-category {
     display: flex;
     justify-content: center;

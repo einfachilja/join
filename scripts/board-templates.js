@@ -215,8 +215,11 @@ function getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, s
       </div>
       <div class="subtask-list">
         <span class="overlay-headline-color overlay-subtasks-label">Subtasks</span>
+        <div>
         <ul>
+        <div class="subtask-list-not-edit">
           ${subtaskHTML}
+          <div>
         </ul>
       </div>
       <div id="overlay_card_footer" class="overlay-card-footer">
