@@ -85,33 +85,54 @@ export const AddTaskCore = {
   setupDatePicker() {
     const input = document.getElementById("dueDate");
     if (!input) return;
+
     input.placeholder = "dd/mm/yyyy";
     input.type = "text";
 
-    input.onfocus = () => {
-      input.type = "date";
-      input.focus();
-      input.onchange = () => {
-        const [y, m, d] = input.value?.split("-") ?? [];
-        if (!d || !m || !y) {
-          input.type = "text";
-          input.placeholder = "dd/mm/yyyy";
-          input.value = "";
-          return;
-        }
-        const formatted = `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
-        setTimeout(() => {
-          input.type = "text";
-          input.value = formatted;
-        }, 0);
-      };
-      input.onblur = () => {
-        if (!input.value) {
-          input.type = "text";
-          input.placeholder = "dd/mm/yyyy";
-        }
-      };
-    };
+    input.onfocus = () => this.handleDateFocus(input);
+    input.onblur = () => this.resetDatePlaceholder(input);
+  },
+
+  handleDateFocus(input) {
+    input.type = "date";
+    input.focus();
+    input.onchange = () => this.handleDateChange(input);
+  },
+
+  handleDateChange(input) {
+    const selectedDate = new Date(input.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      return this.rejectPastDate(input);
+    }
+
+    const [y, m, d] = input.value?.split("-") ?? [];
+    if (!d || !m || !y) {
+      return this.rejectPastDate(input);
+    }
+
+    const formatted = `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+    setTimeout(() => {
+      input.type = "text";
+      input.value = formatted;
+    }, 0);
+  },
+
+  rejectPastDate(input) {
+    input.type = "text";
+    input.placeholder = "dd/mm/yyyy";
+    input.value = "";
+    input.classList.add("error-border");
+    document.getElementById("error-dueDate")?.classList.add("visible");
+  },
+
+  resetDatePlaceholder(input) {
+    if (!input.value) {
+      input.type = "text";
+      input.placeholder = "dd/mm/yyyy";
+    }
   },
 
   /**
@@ -179,7 +200,7 @@ export const AddTaskCore = {
       if (this.validateForm()) {
         FirebaseService.submitTaskToFirebase().then(() => {
           FirebaseService.showTaskAddedPopup();
-          setTimeout(() => location.reload(), 2000);
+          setTimeout(() => (window.location.href = "./board.html"), 2000);
         });
       }
     };
