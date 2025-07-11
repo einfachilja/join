@@ -6,14 +6,19 @@
 
 import { DropdownController } from "./add-task-dropdowns.js";
 
-// Initialize dropdown events on DOM ready
+/**
+ * Initialize dropdown events when DOM is ready.
+ * @listens document:DOMContentLoaded
+ */
 document.addEventListener("DOMContentLoaded", () => {
   DropdownController.setupDropdownEvents();
 });
+
 import { AddTaskCore } from "./add-task-core.js";
 
 /**
  * On window load, set user initials and initialize Add Task logic.
+ * @listens window:onload
  */
 window.onload = () => {
   if (typeof setUserInitials === "function") {

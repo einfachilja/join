@@ -1,11 +1,16 @@
 /**
  * Handles all Firebase-related operations for Add Task.
+ * @namespace FirebaseService
  */
 
 import { DropdownController } from "./add-task-dropdowns.js";
 import { SubtaskManager } from "./add-task-subtasks.js";
 
 export const FirebaseService = {
+  /**
+   * Firebase authentication key fetched from local storage.
+   * @type {string}
+   */
   firebaseKey: localStorage.getItem("firebaseKey"),
 
   /**

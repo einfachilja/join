@@ -1,6 +1,6 @@
 /**
  * Initialize Add Task page: event bindings, dropdowns, date input, etc.
- * @function
+ * @namespace AddTaskCore
  */
 
 import { DropdownController } from "./add-task-dropdowns.js";
@@ -8,6 +8,11 @@ import { SubtaskManager } from "./add-task-subtasks.js";
 import { FirebaseService } from "./add-task-firebase.js";
 
 export const AddTaskCore = {
+  /**
+   * Initialize the Add Task page.
+   * Sets up event listeners, dropdowns, date picker, and form submission.
+   * @function
+   */
   init() {
     this.setupDOMDefaults();
     this.setupDatePicker();
@@ -59,7 +64,6 @@ export const AddTaskCore = {
       subtaskCancelBtn.onclick = () => SubtaskManager.clearInput();
     }
 
-    // Connect Cancel button to resetForm
     const cancelBtn = document.getElementById("cancel-task-btn");
     if (cancelBtn) {
       cancelBtn.onclick = () => this.resetForm();
@@ -67,7 +71,7 @@ export const AddTaskCore = {
   },
 
   /**
-   * Set default placeholder and empty state for due date.
+   * Set default placeholder and empty state for due date input.
    * @function
    */
   setupDOMDefaults() {
@@ -79,7 +83,8 @@ export const AddTaskCore = {
   },
 
   /**
-   * Set up date picker logic for switching between input and display formats.
+   * Set up date picker input behavior.
+   * Changes type from text to date on focus, restricts past dates.
    * @function
    */
   setupDatePicker() {
@@ -93,6 +98,11 @@ export const AddTaskCore = {
     input.onblur = () => this.resetDatePlaceholder(input);
   },
 
+  /**
+   * Handle focus event on due date input.
+   * @param {HTMLInputElement} input The due date input element.
+   * @function
+   */
   handleDateFocus(input) {
     input.type = "date";
     input.min = new Date().toISOString().split("T")[0];
@@ -100,12 +110,18 @@ export const AddTaskCore = {
     input.onchange = () => this.handleDateChange(input);
   },
 
+  /**
+   * Validate and format date after change.
+   * Prevents past dates.
+   * @param {HTMLInputElement} input The due date input element.
+   * @function
+   */
   handleDateChange(input) {
     const selectedDate = new Date(input.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (selectedDate.setHours(0,0,0,0) < today.getTime()) {
+    if (selectedDate.setHours(0, 0, 0, 0) < today.getTime()) {
       return this.rejectPastDate(input);
     }
 
@@ -121,6 +137,11 @@ export const AddTaskCore = {
     }, 0);
   },
 
+  /**
+   * Reset date input on invalid past date.
+   * @param {HTMLInputElement} input The due date input element.
+   * @function
+   */
   rejectPastDate(input) {
     input.type = "text";
     input.placeholder = "dd/mm/yyyy";
@@ -129,6 +150,11 @@ export const AddTaskCore = {
     document.getElementById("error-dueDate")?.classList.add("visible");
   },
 
+  /**
+   * Reset placeholder if date input is empty.
+   * @param {HTMLInputElement} input The due date input element.
+   * @function
+   */
   resetDatePlaceholder(input) {
     if (!input.value) {
       input.type = "text";
@@ -137,7 +163,7 @@ export const AddTaskCore = {
   },
 
   /**
-   * Preselect "medium" priority by default.
+   * Set the default priority button selection to medium.
    * @function
    */
   setDefaultPriority() {
