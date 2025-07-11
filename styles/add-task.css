@@ -686,7 +686,7 @@ select::placeholder {
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
-  height: 80px;
+  max-height: 80px;
 }
 
 .subtask-list-item {

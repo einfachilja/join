@@ -95,6 +95,7 @@ export const AddTaskCore = {
 
   handleDateFocus(input) {
     input.type = "date";
+    input.min = new Date().toISOString().split("T")[0];
     input.focus();
     input.onchange = () => this.handleDateChange(input);
   },
@@ -104,7 +105,7 @@ export const AddTaskCore = {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (selectedDate < today) {
+    if (selectedDate.setHours(0,0,0,0) < today.getTime()) {
       return this.rejectPastDate(input);
     }
 
