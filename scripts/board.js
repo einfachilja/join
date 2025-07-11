@@ -279,10 +279,10 @@ function addCardClickListeners() {
 }
 
 function updateHTML() {
-  renderSection("todo", getTasksByStatus("todo"), "No Tasks in To do");
-  renderSection("progress", getTasksByStatus("progress"), "No Tasks In progress");
-  renderSection("feedback", getTasksByStatus("feedback"), "No Tasks in Await feedback");
-  renderSection("done", getTasksByStatus("done"), "No Tasks in Done");
+  renderSection("todo", getTasksByStatus("todo"), "No Tasks");
+  renderSection("progress", getTasksByStatus("progress"), "No Tasks");
+  renderSection("feedback", getTasksByStatus("feedback"), "No Tasks");
+  renderSection("done", getTasksByStatus("done"), "No Tasks");
   addCardClickListeners();
 }
 
