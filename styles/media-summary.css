@@ -1,7 +1,6 @@
 @media(max-width: 1232px) {
     .summary-container {
         margin-left: 280px;
-        margin-top: 150px;
     }
 
     h1 {
@@ -21,7 +20,7 @@
     }
 
     .card-container {
-        gap: 30px ;
+        gap: 30px;
     }
 
     .card-top {
@@ -101,7 +100,6 @@
 @media(max-width: 800px) {
     .summary-container {
         margin-left: 0px;
-        margin-top: 80px;
     }
 
     h1 {
@@ -156,7 +154,6 @@
 @media(max-width: 500px) {
     .summary-container {
         margin-left: 0px;
-        margin-top: 20px;
     }
 
     h1 {
@@ -256,4 +253,3 @@
         gap: 8px;
     }
 }
-

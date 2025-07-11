@@ -600,11 +600,10 @@
     margin-left: 12px;
     margin-right: 12px;
     max-width: 500px;
-    /*     max-height: calc(90vh - 40px); */
     flex: 1;
     background-color: #ffffff;
-    border-radius: 30px;
-    padding: 40px;
+    border-radius: 24px;
+    padding: 24px;
     gap: 24px;
     box-shadow: 0px 0px 4px 0px #00000029;
     display: flex;
@@ -730,7 +729,7 @@
 .board-overlay-card.open {
     transform: translateX(0);
     opacity: 1;
-    max-height: calc(80vh - 40px);
+    max-height: 90vh;
 }
 
 .board-overlay-card.edit-mode {
@@ -1010,6 +1009,19 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s;
+}
+
+.subtask-list-item .subtask-edit-btn,
+.subtask-list-item .subtask-remove-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.subtask-list-item:hover .subtask-edit-btn,
+.subtask-list-item:hover .subtask-remove-btn {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .subtask-list-row:hover .subtask-edit-btn,

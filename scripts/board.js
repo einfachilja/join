@@ -1442,13 +1442,63 @@ function validateSubtaskInput(text, subtaskIcons, input) {
 function createSubtaskListItem(text) {
   let li = document.createElement("li");
   li.className = "subtask-list-item";
-  let label = document.createElement("span");
-  label.textContent = text;
-  label.className = "subtask-label";
-  let iconWrapper = document.createElement("div");
-  iconWrapper.className = "subtask-icons";
-  li.appendChild(label);
-  li.appendChild(iconWrapper);
+
+  let dot = document.createElement("span");
+  dot.className = "subtask-dot";
+  dot.textContent = "•";
+
+  let input = document.createElement("input");
+  input.type = "text";
+  input.value = text;
+  input.className = "subtask-list-editinput";
+  input.readOnly = true;
+
+  input.activateEdit = () => {
+    input.readOnly = false;
+    input.focus();
+    input.setSelectionRange(0, input.value.length);
+  };
+
+  input.onblur = () => {
+    if (input.value.trim() === "") {
+      li.remove();
+      return;
+    }
+    input.readOnly = true;
+  };
+
+  input.onkeydown = (e) => {
+    if (e.key === "Enter") input.blur();
+  };
+
+  let editBtn = document.createElement("button");
+  editBtn.type = "button";
+  editBtn.className = "subtask-edit-btn";
+  editBtn.innerHTML = `<img src="assets/icons/board/board-edit-icon.svg">`;
+  editBtn.title = "Bearbeiten";
+  editBtn.onclick = (e) => {
+    e.preventDefault();
+    input.activateEdit();
+  };
+
+  let removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.className = "subtask-remove-btn";
+  removeBtn.innerHTML = `<img src="assets/icons/board/board-delete-icon.svg">`;
+  removeBtn.onclick = (e) => {
+    e.preventDefault();
+    li.remove();
+  };
+
+  li.appendChild(dot);
+  li.appendChild(input);
+  li.appendChild(editBtn);
+  li.appendChild(removeBtn);
+
+  li.ondblclick = () => {
+    input.activateEdit();
+  };
+
   return li;
 }
 

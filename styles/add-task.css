@@ -24,7 +24,6 @@ label {
   max-width: 1040px;
   margin-left: 275px;
   margin-right: 48px;
-  margin-top: 60px;
   padding-bottom: 32px;
 }
 
@@ -697,6 +696,14 @@ select::placeholder {
   border: none;
   font-size: 16px;
   color: #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.subtask-list-item:hover {
+  background-color: #F0F0F0;
   cursor: pointer;
 }
 
