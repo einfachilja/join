@@ -145,6 +145,7 @@
     min-height: 350px;
     overflow-y: auto;
     height: 480px;
+    padding: 10px;
 }
 
 .dragging {
