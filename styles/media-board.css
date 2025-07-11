@@ -51,6 +51,7 @@
     .board-main-box {
         width: auto;
         padding: 12px;
+        margin-bottom: 12px;
     }
 
     .drag-area {

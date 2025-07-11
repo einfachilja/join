@@ -775,7 +775,12 @@ function updateCirclesVisibility(wrapper, selectedContacts) {
 
 function updateCirclesContent(wrapper, selectedContacts, contacts) {
   wrapper.innerHTML = '';
-  selectedContacts.forEach(name => {
+  let validContacts = selectedContacts.filter(name => contacts.find(c => c.name === name));
+  let maxVisible = 4;
+  let visibleContacts = validContacts.slice(0, maxVisible);
+  let hiddenCount = validContacts.length - visibleContacts.length;
+
+  visibleContacts.forEach(name => {
     let contact = contacts.find(c => c.name === name);
     if (!contact) return;
     let initials = getInitials(contact.name);
@@ -786,6 +791,14 @@ function updateCirclesContent(wrapper, selectedContacts, contacts) {
     div.textContent = initials;
     wrapper.appendChild(div);
   });
+
+  if (hiddenCount > 0) {
+    let moreDiv = document.createElement('div');
+    moreDiv.className = 'initial-circle';
+    moreDiv.style.backgroundColor = '#ccc';
+    moreDiv.textContent = `+${hiddenCount}`;
+    wrapper.appendChild(moreDiv);
+  }
 }
 
 function handleAssignedContactToggle(name, contacts, list, assignedListContainer, selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList) {
