@@ -342,6 +342,7 @@ function renderSubtasks(task) {
 function updateOverlaySubtasks(task) {
   let subtaskList = document.querySelector('.subtask-list ul');
   if (subtaskList) {
+    subtaskList.classList.add('subtask-list-not-edit');
     subtaskList.innerHTML = renderSubtasks(task);
   }
   let progressBar = document.querySelector('.subtask-progress-bar');

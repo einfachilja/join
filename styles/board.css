@@ -891,6 +891,7 @@
 .board-add-task-modal.open {
     transform: translateX(0);
     opacity: 1;
+    overflow-y: auto;
 }
 
 .overlay-meta-row {
