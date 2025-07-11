@@ -30,7 +30,7 @@ function generateAssignedCircles(assignedList) {
     .join("");
 
   if (hiddenCount > 0) {
-    circlesHTML += `<div class="assigned-circle overflow-indicator">+${hiddenCount}</div>`;
+    circlesHTML += `<div class="assigned-circle overflow-indicator profile-icon">+${hiddenCount}</div>`;
   }
 
   return circlesHTML;
