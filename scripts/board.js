@@ -1065,7 +1065,6 @@ function searchTask() {
 
   if (foundTasks.length > 0) {
     renderTasksToBoard(foundTasks);
-    console.log("Gefundene Tasks:", foundTasks);
   } else {
     ["todo", "progress", "feedback", "done"].forEach(section => {
       document.getElementById(section).innerHTML = `
