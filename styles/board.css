@@ -629,7 +629,7 @@
 #subtask-list-edit,
 .subtask-list-not-edit {
     overflow-y: auto;
-    height: 110px;
+    max-height: 110px;
 }
 
 
@@ -663,7 +663,7 @@
 
 .assigned-list-area {
     overflow-y: auto;
-    height: 115px;
+    max-height: 115px;
 }
 
 .assigned-entry {
