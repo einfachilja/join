@@ -115,8 +115,6 @@
 .board-main {
     display: flex;
     justify-content: space-between;
-    padding: 24px;
-    width: 100%;
 }
 
 .board-main-box {
