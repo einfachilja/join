@@ -145,19 +145,17 @@ label {
   width: 100%;
 }
 
-/* Unified .form-actions button styles */
 .form-actions button {
   border-radius: 10px;
   font-family: "Inter", sans-serif;
   cursor: pointer;
-  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
-/* Cancel button */
 #cancel-task-btn {
   background: #fff;
   color: #2a3647;
@@ -169,6 +167,7 @@ label {
   line-height: 24px;
   width: 110px;
 }
+
 #cancel-task-btn .icon-wrapper {
   width: 24px;
   height: 24px;
@@ -176,6 +175,7 @@ label {
   align-items: center;
   justify-content: center;
 }
+
 #cancel-task-btn span.clear-text {
   font-weight: 400;
   font-style: normal;
@@ -183,22 +183,24 @@ label {
   line-height: 120%;
   letter-spacing: 0;
 }
+
 #cancel-task-btn img {
   width: 10.486px;
   height: 10.486px;
   opacity: 1;
   border-width: 2px;
 }
+
 #cancel-task-btn:hover {
   color: #29abe2;
   border-color: #29abe2;
 }
+
 #cancel-task-btn:hover img {
   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(630%)
     hue-rotate(164deg) brightness(96%) contrast(95%);
 }
 
-/* Submit button */
 #submit-task-btn {
   background: #2a3647;
   color: #fff;
@@ -213,23 +215,28 @@ label {
   padding: 0 16px;
   gap: 8px;
 }
+
 #submit-task-btn img {
   width: 24px;
   height: 24px;
   transform: rotate(0deg);
   opacity: 1;
 }
+
 #submit-task-btn:hover {
   background-color: #29abe2;
 }
+
 #submit-task-btn:disabled:hover {
   background-color: #2a3647;
   cursor: not-allowed;
 }
+
 #submit-task-btn:not(:disabled):hover {
   background-color: #29abe2;
   cursor: pointer;
 }
+
 #submit-task-btn.disabled-warning {
   background-color: #a4a4a4;
   color: white;
@@ -237,6 +244,7 @@ label {
   pointer-events: auto;
   border: none;
 }
+
 #submit-task-btn.disabled-warning:hover {
   background-color: #2a3647;
 }
@@ -703,7 +711,7 @@ select::placeholder {
 }
 
 .subtask-list-item:hover {
-  background-color: #F0F0F0;
+  background-color: #f0f0f0;
   cursor: pointer;
 }
 
@@ -986,7 +994,6 @@ select::placeholder {
   margin: 0 6px;
 }
 
-/* Add styles for selected contacts scrollbar? */
 .selected-contacts {
   margin-top: 8px;
   display: flex;
@@ -995,11 +1002,11 @@ select::placeholder {
   max-height: 120px;
   overflow-y: auto;
   padding-right: 4px;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 .selected-contacts::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 
 .assigned-circle.overflow-indicator {
@@ -1009,8 +1016,8 @@ select::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 45px; /* rund machen */
-  width: 42px; /* gleiche Größe wie andere Kreise */
+  border-radius: 45px;
+  width: 42px;
   height: 42px;
   user-select: none;
 }
