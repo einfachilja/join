@@ -23,7 +23,12 @@ export const AddTaskCore = {
     this.setupAssignedFocus();
     this.setupOutsideClickEvents();
     this.setupSubmit();
+    this.setupInputListeners();
+    this.setupDropdownListeners();
+    this.setupCancelButton();
+  },
 
+  setupInputListeners() {
     const titleInput = document.getElementById("title");
     if (titleInput) {
       titleInput.oninput = () => {
@@ -31,7 +36,6 @@ export const AddTaskCore = {
         document.getElementById("error-title")?.classList.remove("visible");
       };
     }
-
     const dueDateInput = document.getElementById("dueDate");
     if (dueDateInput) {
       dueDateInput.oninput = () => {
@@ -39,31 +43,32 @@ export const AddTaskCore = {
         document.getElementById("error-dueDate")?.classList.remove("visible");
       };
     }
+  },
 
+  setupDropdownListeners() {
     const catToggle = document.getElementById("category-toggle");
     if (catToggle) {
-      catToggle.onclick = function (e) {
+      catToggle.onclick = (e) => {
         catToggle.classList.remove("error-border");
         document.getElementById("error-category")?.classList.remove("visible");
         DropdownController.toggleCategoryDropdown(e);
       };
     }
-
     const prioButtons = document.querySelectorAll("#buttons-prio button");
     prioButtons.forEach((btn) => {
       btn.onclick = () => this.selectPriority(btn.dataset.prio);
     });
-
     const subtaskConfirmBtn = document.getElementById("subtask-confirm");
     if (subtaskConfirmBtn) {
       subtaskConfirmBtn.onclick = () => SubtaskManager.addSubtask();
     }
-
     const subtaskCancelBtn = document.getElementById("subtask-cancel");
     if (subtaskCancelBtn) {
       subtaskCancelBtn.onclick = () => SubtaskManager.clearInput();
     }
+  },
 
+  setupCancelButton() {
     const cancelBtn = document.getElementById("cancel-task-btn");
     if (cancelBtn) {
       cancelBtn.onclick = () => this.resetForm();

@@ -46,22 +46,38 @@ export const DropdownController = {
    * @function
    */
   setupDropdownEvents() {
-    const assignToggle = document.getElementById("dropdown-toggle");
-    const categoryToggle = document.getElementById("category-toggle");
-    const dropdownContent = document.getElementById("dropdown-content");
+    this.setupAssignDropdownEvents();
+    this.setupCategoryDropdownEvents();
 
-    if (assignToggle)
-      assignToggle.onclick = this.toggleAssignDropdown.bind(this);
-    const assignInput = document.getElementById("assigned-to-input");
-    if (assignInput) {
-      assignInput.addEventListener("input", (e) => {
-        this.renderAssignOptions(e.target.value.toLowerCase());
-      });
-    }
-    if (categoryToggle)
-      categoryToggle.onclick = this.toggleCategoryDropdown.bind(this);
+    const dropdownContent = document.getElementById("dropdown-content");
     if (dropdownContent) {
       dropdownContent.onclick = Utils.stopPropagation;
+    }
+  },
+
+  /**
+   * Setup event listeners for the Assigned To dropdown.
+   */
+  setupAssignDropdownEvents() {
+    const assignToggle = document.getElementById("dropdown-toggle");
+    if (assignToggle) {
+      assignToggle.onclick = this.toggleAssignDropdown.bind(this);
+    }
+    const assignInput = document.getElementById("assigned-to-input");
+    if (assignInput) {
+      assignInput.oninput = (e) => {
+        this.renderAssignOptions(e.target.value.toLowerCase());
+      };
+    }
+  },
+
+  /**
+   * Setup event listeners for the Category dropdown.
+   */
+  setupCategoryDropdownEvents() {
+    const categoryToggle = document.getElementById("category-toggle");
+    if (categoryToggle) {
+      categoryToggle.onclick = this.toggleCategoryDropdown.bind(this);
     }
   },
 
@@ -98,7 +114,9 @@ export const DropdownController = {
   renderAssignOptions(filter = "") {
     const dd = document.getElementById("dropdown-content");
     if (!dd) return;
+
     this.clearOldAssignOptions(dd);
+
     this.contacts
       .filter((c) => c.name.toLowerCase().includes(filter))
       .forEach((c) =>
@@ -119,30 +137,83 @@ export const DropdownController = {
 
   /**
    * Create a contact item for the dropdown.
-   * @param {Object} contact
-   * @param {string} filter
-   * @returns {HTMLElement}
-   * @function
+   * @param {Object} contact Contact object with name and color.
+   * @param {string} filter Current filter string to re-render options.
+   * @returns {HTMLElement} The contact item element.
    */
   createContactDropdownItem(contact, filter) {
     const item = document.createElement("div");
     item.className = "contact-item";
-    item.innerHTML = `
-      <span class="profile-icon" style="background:${contact.color}">
-        ${this.getInitials(contact.name)}
-      </span>
-      <span>${contact.name}</span>
-      <input type="checkbox" ${
-        this.selectedContacts.some((s) => s.name === contact.name)
-          ? "checked"
-          : ""
-      }/>
-    `;
-    this.setupContactCheckbox(item, contact, filter);
-    this.setupContactItemClick(item);
+
+    const profileIcon = this.createProfileIcon(contact);
+    const nameSpan = this.createNameSpan(contact);
+    const checkbox = this.createContactCheckbox(contact, filter, item);
+
+    item.appendChild(profileIcon);
+    item.appendChild(nameSpan);
+    item.appendChild(checkbox);
+
     if (this.selectedContacts.some((s) => s.name === contact.name))
       item.classList.add("selected");
+
+    this.setupContactItemClick(item);
+
     return item;
+  },
+
+  /**
+   * Create profile icon span for a contact.
+   * @param {Object} contact Contact object.
+   * @returns {HTMLSpanElement} The profile icon span element.
+   */
+  createProfileIcon(contact) {
+    const span = document.createElement("span");
+    span.className = "profile-icon";
+    span.style.background = contact.color;
+    span.textContent = this.getInitials(contact.name);
+    return span;
+  },
+
+  /**
+   * Create name span element for a contact.
+   * @param {Object} contact Contact object.
+   * @returns {HTMLSpanElement} The name span element.
+   */
+  createNameSpan(contact) {
+    const span = document.createElement("span");
+    span.textContent = contact.name;
+    return span;
+  },
+
+  /**
+   * Create checkbox input for a contact item.
+   * @param {Object} contact Contact object.
+   * @param {string} filter Current filter for re-rendering.
+   * @param {HTMLElement} item The contact item element.
+   * @returns {HTMLInputElement} The checkbox input element.
+   */
+  createContactCheckbox(contact, filter, item) {
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    if (this.selectedContacts.some((s) => s.name === contact.name)) {
+      input.checked = true;
+    }
+
+    input.onclick = (e) => {
+      e.stopPropagation();
+      const idx = this.selectedContacts.findIndex(
+        (s) => s.name === contact.name
+      );
+      if (input.checked && idx === -1) this.selectedContacts.push(contact);
+      else if (!input.checked && idx >= 0) {
+        this.selectedContacts.splice(idx, 1);
+        if (this.selectedContacts.length === 0) this.closeDropdown();
+      }
+      this.updateSelectedContactsUI();
+      this.renderAssignOptions(filter);
+    };
+
+    return input;
   },
 
   /**
