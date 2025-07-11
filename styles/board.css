@@ -6,7 +6,6 @@
 
 .board-container {
     margin-left: 275px;
-    margin-top: 60px;
     max-width: 1440px;
 }
 
@@ -146,6 +145,8 @@
     flex-direction: column;
     gap: 16px;
     min-height: 350px;
+    overflow-y: auto;
+    height: 480px;
 }
 
 .dragging {
@@ -187,7 +188,7 @@
     background-color: #ffffff;
     border-radius: 24px;
     padding: 16px;
-    gap: 16px;
+    gap: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
