@@ -139,39 +139,107 @@ label {
 .form-actions {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   margin-top: 32px;
   padding-right: 32px;
   width: 100%;
 }
 
+/* Unified .form-actions button styles */
 .form-actions button {
-  padding: 16px;
   border-radius: 10px;
-  border: 1px solid #2a3647;
-  background: #fff;
-  color: #2a3647;
+  font-family: "Inter", sans-serif;
   cursor: pointer;
-  font-size: 16px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.form-actions button#submit-task-btn {
+/* Cancel button */
+#cancel-task-btn {
+  background: #fff;
+  color: #2a3647;
+  border: 1px solid #2a3647;
+  height: 56px;
+  padding: 0 16px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  width: 110px;
+}
+#cancel-task-btn .icon-wrapper {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#cancel-task-btn span.clear-text {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0;
+}
+#cancel-task-btn img {
+  width: 10.486px;
+  height: 10.486px;
+  opacity: 1;
+  border-width: 2px;
+}
+#cancel-task-btn:hover {
+  color: #29abe2;
+  border-color: #29abe2;
+}
+#cancel-task-btn:hover img {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(630%)
+    hue-rotate(164deg) brightness(96%) contrast(95%);
+}
+
+/* Submit button */
+#submit-task-btn {
   background: #2a3647;
   color: #fff;
   border: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 21px;
+  line-height: 120%;
+  letter-spacing: 0;
+  width: 183px;
+  height: 56px;
+  padding: 0 16px;
+  gap: 8px;
 }
-
-.form-actions button#submit-task-btn:hover {
+#submit-task-btn img {
+  width: 24px;
+  height: 24px;
+  transform: rotate(0deg);
+  opacity: 1;
+}
+#submit-task-btn:hover {
   background-color: #29abe2;
 }
-
-.form-actions button#cancel-task-btn:hover {
-  color: #29abe2;
-  border-color: #29abe2;
+#submit-task-btn:disabled:hover {
+  background-color: #2a3647;
+  cursor: not-allowed;
+}
+#submit-task-btn:not(:disabled):hover {
+  background-color: #29abe2;
+  cursor: pointer;
+}
+#submit-task-btn.disabled-warning {
+  background-color: #a4a4a4;
+  color: white;
+  cursor: default;
+  pointer-events: auto;
+  border: none;
+}
+#submit-task-btn.disabled-warning:hover {
+  background-color: #2a3647;
 }
 
 .task-toast {
@@ -569,9 +637,12 @@ select::placeholder {
 }
 
 #description {
-  padding: 12px 16px;
-  height: 100px;
-  line-height: normal;
+  resize: vertical;
+  min-height: 128px;
+  max-height: 328px;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 #description::placeholder {
@@ -897,36 +968,6 @@ select::placeholder {
   transition: box-shadow 0.1s ease-in-out;
 }
 
-#submit-task-btn {
-  background-color: #2a3647;
-  color: white;
-  border: none;
-  pointer-events: auto;
-  opacity: 1;
-}
-
-#submit-task-btn:disabled:hover {
-  background-color: #2a3647;
-  cursor: not-allowed;
-}
-
-#submit-task-btn:not(:disabled):hover {
-  background-color: #29abe2;
-  cursor: pointer;
-}
-
-#submit-task-btn.disabled-warning {
-  background-color: #a4a4a4;
-  color: white;
-  cursor: default;
-  pointer-events: auto;
-  border: none;
-}
-
-#submit-task-btn.disabled-warning:hover {
-  background-color: #2a3647;
-}
-
 #dropdown-toggle input::placeholder {
   color: #000000;
 }
@@ -936,4 +977,20 @@ select::placeholder {
 
 .subtask-edit-buttons img[src$="add-task-divider.svg"] {
   margin: 0 6px;
+}
+
+/* Add styles for selected contacts scrollbar? */
+.selected-contacts {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.selected-contacts::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
