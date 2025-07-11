@@ -115,14 +115,11 @@
 .board-main {
     display: flex;
     justify-content: space-between;
-    padding: 24px;
 }
 
 .board-main-box {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 16px 16px 16px 16px;
     width: 100%;
 }
 
@@ -133,6 +130,7 @@
     font-size: 20px;
     font-weight: 700;
     color: #2a3647;
+    padding: 10px;
 }
 
 .board-main-box-title img:hover {
@@ -145,7 +143,7 @@
     gap: 16px;
     min-height: 350px;
     overflow-y: auto;
-    height: 600px;
+    height: 550px;
     padding: 10px;
 }
 
@@ -187,7 +185,7 @@
     align-items: flex-start;
     background-color: #ffffff;
     border-radius: 24px;
-    padding: 16px;
+    padding: 12px;
     gap: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

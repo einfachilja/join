@@ -142,7 +142,7 @@ function generateAssignedCircles(assignedList) {
     let contact = getContactByName(name);
     return !!contact;
   });
-  let maxVisible = 4;
+  let maxVisible = 3;
   let visibleContacts = assignedList.slice(0, maxVisible);
   let hiddenCount = assignedList.length - visibleContacts.length;
 
