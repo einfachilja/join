@@ -115,6 +115,7 @@
 .board-main {
     display: flex;
     justify-content: space-between;
+    padding: 24px;
 }
 
 .board-main-box {
@@ -144,8 +145,7 @@
     gap: 16px;
     min-height: 350px;
     overflow-y: auto;
-    height: 480px;
-    padding: 10px;
+    height: 600px;
 }
 
 .dragging {

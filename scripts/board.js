@@ -82,22 +82,32 @@ async function deleteTask(taskKey) {
 }
 
 async function moveTo(status) {
-  let task = arrayTasks.find(t => t.firebaseKey === currentDraggedElement);
-  if (!task) {
+
+  const idx = arrayTasks.findIndex(t => t.firebaseKey === currentDraggedElement);
+  if (idx === -1) {
     alert("Aufgabe wurde nicht gefunden!");
     return;
   }
+
+  const [task] = arrayTasks.splice(idx, 1);
+
   task.status = status;
+  arrayTasks.push(task);
+
   try {
-    await fetch(`${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: status })
-    });
+    await fetch(
+      `${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: status })
+      }
+    );
   } catch (error) {
     alert("Fehler beim Speichern des Status!");
     console.error(error);
   }
+
   updateHTML();
 }
 

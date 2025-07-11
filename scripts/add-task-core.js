@@ -1,3 +1,8 @@
+/**
+ * Initialize Add Task page: event bindings, dropdowns, date input, etc.
+ * @function
+ */
+
 import { DropdownController } from "./add-task-dropdowns.js";
 import { SubtaskManager } from "./add-task-subtasks.js";
 import { FirebaseService } from "./add-task-firebase.js";
@@ -54,12 +59,17 @@ export const AddTaskCore = {
       subtaskCancelBtn.onclick = () => SubtaskManager.clearInput();
     }
 
+    // Connect Cancel button to resetForm
     const cancelBtn = document.getElementById("cancel-task-btn");
     if (cancelBtn) {
       cancelBtn.onclick = () => this.resetForm();
     }
   },
 
+  /**
+   * Set default placeholder and empty state for due date.
+   * @function
+   */
   setupDOMDefaults() {
     const dueDate = document.getElementById("due-date");
     if (dueDate) {
@@ -68,6 +78,10 @@ export const AddTaskCore = {
     }
   },
 
+  /**
+   * Set up date picker logic for switching between input and display formats.
+   * @function
+   */
   setupDatePicker() {
     const input = document.getElementById("dueDate");
     if (!input) return;
@@ -81,8 +95,6 @@ export const AddTaskCore = {
 
   handleDateFocus(input) {
     input.type = "date";
-    const today = new Date().toISOString().split("T")[0];
-    input.setAttribute("min", today);
     input.focus();
     input.onchange = () => this.handleDateChange(input);
   },
@@ -123,6 +135,10 @@ export const AddTaskCore = {
     }
   },
 
+  /**
+   * Preselect "medium" priority by default.
+   * @function
+   */
   setDefaultPriority() {
     const prioGroup = document.getElementById("buttons-prio");
     if (!prioGroup) return;
@@ -131,6 +147,10 @@ export const AddTaskCore = {
     });
   },
 
+  /**
+   * Add blue outline when assigned-to input is focused.
+   * @function
+   */
   setupAssignedFocus() {
     const input = document.getElementById("assigned-to-input");
     const toggle = document.getElementById("dropdown-toggle");
@@ -142,6 +162,10 @@ export const AddTaskCore = {
     }
   },
 
+  /**
+   * Close dropdowns when clicking outside their containers.
+   * @function
+   */
   setupOutsideClickEvents() {
     document.onclick = (e) => {
       const catWrap = document.getElementById("category-wrapper");
@@ -163,38 +187,30 @@ export const AddTaskCore = {
     };
   },
 
+  /**
+   * Handle Create Task button click and trigger form validation + Firebase submit.
+   * @function
+   */
   setupSubmit() {
-    const form = document.getElementById("task-form");
-    if (!form) return;
-
-    form.addEventListener("submit", (e) => {
+    const btn = document.getElementById("submit-task-btn");
+    if (!btn) return;
+    btn.disabled = false;
+    btn.onclick = (e) => {
       e.preventDefault();
-
-      const dueDateInput = document.getElementById("dueDate");
-      const value = dueDateInput?.value?.trim();
-
-      if (value && /^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
-        const [dd, mm, yyyy] = value.split("/");
-        const selected = new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (selected < today) {
-          dueDateInput.classList.add("error-border");
-          document.getElementById("error-dueDate")?.classList.add("visible");
-          return;
-        }
-      }
-
       if (this.validateForm()) {
         FirebaseService.submitTaskToFirebase().then(() => {
           FirebaseService.showTaskAddedPopup();
           setTimeout(() => (window.location.href = "./board.html"), 2000);
         });
       }
-    });
+    };
   },
 
+  /**
+   * Validate required fields before task submission.
+   * @returns {boolean} True if form is valid, else false.
+   * @function
+   */
   validateForm() {
     const title = document.getElementById("title");
     const dueDate = document.getElementById("dueDate");
@@ -220,6 +236,11 @@ export const AddTaskCore = {
     return validTitle && validDate && validCat;
   },
 
+  /**
+   * Highlight selected priority button.
+   * @param {string} prio - Priority level ('low', 'medium', 'urgent')
+   * @function
+   */
   selectPriority(prio) {
     const prioButtons = document.querySelectorAll("#buttons-prio button");
     prioButtons.forEach((btn) => {
@@ -227,7 +248,12 @@ export const AddTaskCore = {
     });
   },
 
+  /**
+   * Reset all form fields, dropdowns and subtasks to default state.
+   * @function
+   */
   resetForm() {
+    // Clear text inputs
     const title = document.getElementById("title");
     const description = document.getElementById("description");
     const dueDate = document.getElementById("dueDate");
@@ -236,6 +262,7 @@ export const AddTaskCore = {
     if (description) description.value = "";
     if (dueDate) dueDate.value = "";
 
+    // Remove error messages and classes
     document.getElementById("error-title")?.classList.remove("visible");
     document.getElementById("error-dueDate")?.classList.remove("visible");
     document.getElementById("error-category")?.classList.remove("visible");
@@ -246,15 +273,19 @@ export const AddTaskCore = {
       .getElementById("category-toggle")
       ?.classList.remove("error-border");
 
+    // Reset category dropdown
     DropdownController.selectedCategory = "";
     const catPlaceholder = document.querySelector("#category-toggle span");
     if (catPlaceholder) catPlaceholder.textContent = "Select category";
 
+    // Reset assigned contacts
     DropdownController.selectedContacts = [];
     DropdownController.updateSelectedContactsUI();
 
+    // Reset priority to medium
     this.selectPriority("medium");
 
+    // Reset subtasks and related UI
     SubtaskManager.subtasks = [];
 
     const subtaskList = document.getElementById("subtask-list");
