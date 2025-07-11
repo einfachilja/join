@@ -994,3 +994,16 @@ select::placeholder {
 .selected-contacts::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+.assigned-circle.overflow-indicator {
+  background-color: #d3d3d3 !important;
+  color: white !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 45px; /* rund machen */
+  width: 42px; /* gleiche Größe wie andere Kreise */
+  height: 42px;
+  user-select: none;
+}

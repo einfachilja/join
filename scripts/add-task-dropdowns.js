@@ -4,6 +4,38 @@
 
 import { Utils } from "./add-task-utils.js";
 
+/**
+ * Generate HTML for assigned contacts circles with max visible and "+X" indicator.
+ * @param {string[]} assignedList
+ * @returns {string}
+ */
+function generateAssignedCircles(assignedList) {
+  if (!Array.isArray(assignedList)) return "";
+  assignedList = assignedList.filter((name) => {
+    if (!name || typeof name !== "string") return false;
+    let contact = DropdownController.getContactByName(name);
+    return !!contact;
+  });
+  let maxVisible = 4;
+  let visibleContacts = assignedList.slice(0, maxVisible);
+  let hiddenCount = assignedList.length - visibleContacts.length;
+
+  let circlesHTML = visibleContacts
+    .map((name) => {
+      let contact = DropdownController.getContactByName(name);
+      if (!contact) return "";
+      let color = contact.color || "#ccc";
+      return DropdownController.getAssignedCircleHTML(name, color);
+    })
+    .join("");
+
+  if (hiddenCount > 0) {
+    circlesHTML += `<div class="assigned-circle overflow-indicator profile-icon">+${hiddenCount}</div>`;
+  }
+
+  return circlesHTML;
+}
+
 export const DropdownController = {
   contacts: [],
   selectedContacts: [],
@@ -187,14 +219,9 @@ export const DropdownController = {
   updateSelectedContactsUI() {
     const box = document.getElementById("selected-contacts");
     if (!box) return;
-    box.innerHTML = "";
-    this.selectedContacts.forEach((c) => {
-      const el = document.createElement("div");
-      el.className = "profile-icon";
-      el.style.background = c.color;
-      el.textContent = this.getInitials(c.name);
-      box.appendChild(el);
-    });
+
+    const assignedList = this.selectedContacts.map((c) => c.name);
+    box.innerHTML = generateAssignedCircles(assignedList);
   },
 
   /**
@@ -240,5 +267,24 @@ export const DropdownController = {
     this.selectedCategory = category;
     const placeholder = document.querySelector("#category-toggle span");
     if (placeholder) placeholder.textContent = category;
+  },
+  /**
+   * Get a contact by name.
+   * @param {string} name
+   * @returns {Object|undefined}
+   */
+  getContactByName(name) {
+    return this.contacts.find((c) => c.name === name);
+  },
+
+  /**
+   * Get assigned circle HTML for a contact.
+   * @param {string} name
+   * @param {string} color
+   * @returns {string}
+   */
+  getAssignedCircleHTML(name, color) {
+    const initials = this.getInitials(name);
+    return `<div class="assigned-circle profile-icon" style="background:${color}">${initials}</div>`;
   },
 };
