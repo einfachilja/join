@@ -2270,9 +2270,9 @@ function clearSubtaskInput() {
   let subtaskInput = document.getElementById("subtask-input");
   let subtaskIcons = document.getElementById("subtask-icons");
   let subtaskPlus = document.getElementById("subtask-plus");
-  subtaskInput.value = "";
-  subtaskIcons.classList.add("hidden");
-  subtaskPlus.classList.remove("hidden");
+  if (subtaskInput) subtaskInput.value = "";
+  if (subtaskIcons) subtaskIcons.classList.add("hidden");
+  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
 /**
@@ -2486,14 +2486,6 @@ function clearSubtasksArray() {
 function clearSubtasksList() {
   let subtaskList = document.getElementById("subtask-list");
   if (subtaskList) subtaskList.innerHTML = "";
-}
-
-/**
- * Clears the subtask input field.
- */
-function clearSubtaskInput() {
-  let subtaskInput = document.getElementById("subtask-input");
-  if (subtaskInput) subtaskInput.value = "";
 }
 
 /**
