@@ -46,7 +46,6 @@ async function fetchContactsAndStore(userKey) {
   try {
     let response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
     let data = await response.json();
-
     if (data) {
       let users = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
       users[userKey] = users[userKey] || {};
@@ -123,17 +122,14 @@ async function deleteTask(taskKey) {
  */
 async function moveTo(status) {
 
-  const idx = arrayTasks.findIndex(t => t.firebaseKey === currentDraggedElement);
+  let idx = arrayTasks.findIndex(t => t.firebaseKey === currentDraggedElement);
   if (idx === -1) {
     alert("Aufgabe wurde nicht gefunden!");
     return;
   }
-
-  const [task] = arrayTasks.splice(idx, 1);
-
+  let [task] = arrayTasks.splice(idx, 1);
   task.status = status;
   arrayTasks.push(task);
-
   try {
     await fetch(
       `${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`,
@@ -147,7 +143,6 @@ async function moveTo(status) {
     alert("Fehler beim Speichern des Status!");
     console.error(error);
   }
-
   updateHTML();
 }
 
@@ -169,7 +164,7 @@ function getContactByName(name) {
  */
 function getInitials(name) {
   if (!name) return "";
-  const nameParts = name.trim().split(" ");
+  let nameParts = name.trim().split(" ");
   if (nameParts.length === 1) {
     return nameParts[0][0].toUpperCase();
   } else {
@@ -220,7 +215,6 @@ function generateAssignedCircles(assignedList) {
   if (hiddenCount > 0) {
     circlesHTML += `<div class="assigned-circle">+${hiddenCount}</div>`;
   }
-
   return circlesHTML;
 }
 
@@ -254,7 +248,6 @@ function generateTodoHTML(element) {
   let subtaskProgressHTML = generateSubtaskProgress(subtasksArr);
   let title = getCardTitle(element);
   let description = getCardDescription(element);
-
   return buildCardHTML(
     element.firebaseKey,
     category,
@@ -462,7 +455,6 @@ function openBoardCard(firebaseKey, options = {}) {
   overlayElement.classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
   overlayElement.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-
   let card = document.querySelector('.board-overlay-card');
   if (card) {
     if (options.noAnimation) {
@@ -728,6 +720,10 @@ function closeBoardCard() {
   }
 }
 
+/**
+ * Prevents event propagation for click events.
+ * @param {Event} event - The click event to stop propagation for.
+ */
 function onclickProtection(event) {
   event.stopPropagation();
 }
@@ -787,11 +783,21 @@ function addDescriptionLabel() {
   }
 }
 
+/**
+ * Extracts the due date text from a span element.
+ * @param {HTMLElement} dueDateSpan - The span containing the due date.
+ * @returns {string} The extracted due date string.
+ */
 function extractDueDateText(dueDateSpan) {
   let match = dueDateSpan.innerText.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
   return match ? match[0] : "";
 }
 
+/**
+ * Formats a date string for use in a date input field.
+ * @param {string} dateStr - The date string to format.
+ * @returns {string} The formatted date string in yyyy-mm-dd.
+ */
 function formatDateForInput(dateStr) {
   if (dateStr.match(/\d{2}\/\d{2}\/\d{4}/)) {
     let [d, m, y] = dateStr.split("/");
@@ -800,6 +806,10 @@ function formatDateForInput(dateStr) {
   return dateStr;
 }
 
+/**
+ * Adds a label above the due date span if not already present.
+ * @param {HTMLElement} dueDateSpan - The due date span element.
+ */
 function addDueDateLabel(dueDateSpan) {
   if (!document.getElementById("overlay_card_due_date_label")) {
     let dueLabel = document.createElement("span");
@@ -810,6 +820,11 @@ function addDueDateLabel(dueDateSpan) {
   }
 }
 
+/**
+ * Adds a date input field to the due date span for editing.
+ * @param {HTMLElement} dueDateSpan - The due date span element.
+ * @param {string} formattedDate - The date value for the input field.
+ */
 function addDueDateInput(dueDateSpan, formattedDate) {
   let input = document.createElement("input");
   input.type = "date";
@@ -856,6 +871,10 @@ function setupPriorityEdit() {
   }
 }
 
+/**
+ * Creates and returns a label element for the assigned-to dropdown.
+ * @returns {HTMLElement} The label element.
+ */
 function createLabel() {
   let label = document.createElement('span');
   label.textContent = 'Assigned to';
@@ -863,6 +882,10 @@ function createLabel() {
   return label;
 }
 
+/**
+ * Creates and returns the assigned-to dropdown container element.
+ * @returns {HTMLElement} The dropdown element.
+ */
 function createDropdown() {
   let dropdown = document.createElement('div');
   dropdown.id = 'assigned-dropdown';
@@ -870,6 +893,10 @@ function createDropdown() {
   return dropdown;
 }
 
+/**
+ * Creates and returns the dropdown list element for assigned contacts.
+ * @returns {HTMLElement} The list element.
+ */
 function createList() {
   let list = document.createElement('div');
   list.id = 'assigned-dropdown-list';
@@ -878,12 +905,20 @@ function createList() {
   return list;
 }
 
+/**
+ * Creates and returns the toggle element for the assigned-to dropdown.
+ * @returns {HTMLElement} The toggle element.
+ */
 function createToggle() {
   let toggle = document.createElement('div');
   toggle.className = 'assigned-dropdown-toggle';
   return toggle;
 }
 
+/**
+ * Creates and returns the placeholder element for the assigned-to dropdown.
+ * @returns {HTMLElement} The placeholder element.
+ */
 function createPlaceholder() {
   let placeholder = document.createElement('span');
   placeholder.id = 'assigned-placeholder';
@@ -891,12 +926,21 @@ function createPlaceholder() {
   return placeholder;
 }
 
+/**
+ * Creates and returns the arrow element for the assigned-to dropdown.
+ * @returns {HTMLElement} The arrow element.
+ */
 function createArrow() {
   let arrow = document.createElement('span');
   arrow.className = 'dropdown-arrow';
   return arrow;
 }
 
+/**
+ * Creates and appends all necessary elements for the assigned-to dropdown.
+ * @param {HTMLElement} assignedListContainer - The container for the assigned-to list.
+ * @returns {Object} Elements of the dropdown: dropdown, list, toggle, placeholder, arrow.
+ */
 function createAssignedDropdownElements(assignedListContainer) {
   assignedListContainer.innerHTML = '';
   let label = createLabel();
@@ -905,7 +949,6 @@ function createAssignedDropdownElements(assignedListContainer) {
   let toggle = createToggle();
   let placeholder = createPlaceholder();
   let arrow = createArrow();
-
   toggle.appendChild(placeholder);
   toggle.appendChild(arrow);
   dropdown.appendChild(toggle);
@@ -916,6 +959,11 @@ function createAssignedDropdownElements(assignedListContainer) {
   return { dropdown, list, toggle, placeholder, arrow };
 }
 
+/**
+ * Adds a click handler to the toggle to open/close the dropdown list.
+ * @param {HTMLElement} toggle - The dropdown toggle element.
+ * @param {HTMLElement} list - The dropdown list element.
+ */
 function addToggleClickHandler(toggle, list) {
   if (!toggle._dropdownClickHandlerAdded) {
     toggle.addEventListener('click', function (event) {
@@ -930,12 +978,18 @@ function addToggleClickHandler(toggle, list) {
   }
 }
 
+/**
+ * Closes all open assigned-to dropdown lists.
+ */
 function closeAllAssignedDropdowns() {
   document.querySelectorAll('.assigned-dropdown-list.open').forEach(el => {
     el.classList.remove('open');
   });
 }
 
+/**
+ * Adds a global click handler to close dropdowns when clicking outside.
+ */
 function addGlobalDropdownCloseHandler() {
   if (!window._assignedDropdownClickHandler) {
     document.addEventListener('click', function (event) {
@@ -950,22 +1004,42 @@ function addGlobalDropdownCloseHandler() {
   }
 }
 
+/**
+ * Sets up event handlers for the assigned-to dropdown.
+ * @param {HTMLElement} toggle - The dropdown toggle element.
+ * @param {HTMLElement} list - The dropdown list element.
+ */
 function setupAssignedDropdownEvents(toggle, list) {
   addToggleClickHandler(toggle, list);
   addGlobalDropdownCloseHandler();
 }
 
+/**
+ * Fetches assigned contacts for the current user from localStorage.
+ * @returns {Array<Object>} The array of contact objects.
+ */
 function fetchAssignedContacts() {
   let userKey = localStorage.getItem('firebaseKey');
   let usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
   return Object.values(usersData[userKey]?.contacts || {});
 }
 
+/**
+ * Gets the initial assigned contacts for a given task key.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @returns {Array<string>} Array of assigned contact names.
+ */
 function getInitialAssignedContacts(taskKey) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   return [...(task?.assignedTo || [])];
 }
 
+/**
+ * Toggles the selection of a contact in the assigned-to list.
+ * @param {string} name - The name of the contact.
+ * @param {Array<string>} selectedContacts - The current selected contacts.
+ * @returns {Array<string>} The updated array of selected contacts.
+ */
 function toggleContactSelection(name, selectedContacts) {
   if (selectedContacts.includes(name)) {
     return selectedContacts.filter(n => n !== name);
@@ -974,6 +1048,14 @@ function toggleContactSelection(name, selectedContacts) {
   }
 }
 
+/**
+ * Renders the assigned dropdown list with contacts and selection state.
+ * @param {Array<Object>} contacts - All contact objects.
+ * @param {Array<string>} selectedContacts - Currently selected contact names.
+ * @param {HTMLElement} list - The dropdown list element.
+ * @param {Function} toggleContact - Function to toggle contact selection.
+ * @param {Function} renderAssignedSelectedCircles - Function to render selected circles.
+ */
 function renderAssignedDropdownList(contacts, selectedContacts, list, toggleContact, renderAssignedSelectedCircles) {
   list.innerHTML = '';
   contacts.forEach(contact => {
@@ -983,6 +1065,13 @@ function renderAssignedDropdownList(contacts, selectedContacts, list, toggleCont
   renderAssignedSelectedCircles(selectedContacts, contacts, list.parentElement.parentElement);
 }
 
+/**
+ * Creates a dropdown item for an assigned contact.
+ * @param {Object} contact - The contact object.
+ * @param {Array<string>} selectedContacts - Currently selected contact names.
+ * @param {Function} toggleContact - Function to toggle contact selection.
+ * @returns {HTMLElement} The dropdown item element.
+ */
 function createAssignedItem(contact, selectedContacts, toggleContact) {
   let initials = getInitials(contact.name);
   let isChecked = selectedContacts.includes(contact.name);
@@ -1000,6 +1089,12 @@ function createAssignedItem(contact, selectedContacts, toggleContact) {
   return item;
 }
 
+/**
+ * Creates a colored circle for an assigned contact.
+ * @param {string} initials - The initials of the contact.
+ * @param {string} color - The color for the circle.
+ * @returns {HTMLElement} The circle element.
+ */
 function createAssignedCircle(initials, color) {
   let circle = document.createElement('span');
   circle.className = 'assigned-circle';
@@ -1008,6 +1103,13 @@ function createAssignedCircle(initials, color) {
   return circle;
 }
 
+/**
+ * Creates a checkbox for an assigned contact.
+ * @param {boolean} isChecked - Whether the checkbox is checked.
+ * @param {Function} toggleContact - Function to toggle contact selection.
+ * @param {string} name - The contact name.
+ * @returns {HTMLElement} The checkbox input element.
+ */
 function createAssignedCheckbox(isChecked, toggleContact, name) {
   let checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
@@ -1020,6 +1122,12 @@ function createAssignedCheckbox(isChecked, toggleContact, name) {
   return checkbox;
 }
 
+/**
+ * Renders the selected assigned contact circles below the dropdown.
+ * @param {Array<string>} selectedContacts - Array of selected contact names.
+ * @param {Array<Object>} contacts - All contact objects.
+ * @param {HTMLElement} assignedListContainer - The container for the assigned circles.
+ */
 function renderAssignedSelectedCircles(selectedContacts, contacts, assignedListContainer) {
   let wrapper = getOrCreateCirclesWrapper(assignedListContainer);
   positionCirclesWrapper(wrapper, assignedListContainer);
@@ -1027,6 +1135,11 @@ function renderAssignedSelectedCircles(selectedContacts, contacts, assignedListC
   updateCirclesContent(wrapper, selectedContacts, contacts);
 }
 
+/**
+ * Gets or creates the wrapper element for assigned circles.
+ * @param {HTMLElement} assignedListContainer
+ * @returns {HTMLElement} The wrapper element.
+ */
 function getOrCreateCirclesWrapper(assignedListContainer) {
   let wrapper = document.getElementById('assigned-selected-circles');
   if (!wrapper) {
@@ -1038,6 +1151,11 @@ function getOrCreateCirclesWrapper(assignedListContainer) {
   return wrapper;
 }
 
+/**
+ * Positions the assigned circles wrapper after the dropdown.
+ * @param {HTMLElement} wrapper
+ * @param {HTMLElement} assignedListContainer
+ */
 function positionCirclesWrapper(wrapper, assignedListContainer) {
   let dropdown = document.getElementById('assigned-dropdown');
   if (dropdown && wrapper.previousSibling !== dropdown) {
@@ -1045,10 +1163,21 @@ function positionCirclesWrapper(wrapper, assignedListContainer) {
   }
 }
 
+/**
+ * Updates the visibility of the assigned circles wrapper.
+ * @param {HTMLElement} wrapper
+ * @param {Array<string>} selectedContacts
+ */
 function updateCirclesVisibility(wrapper, selectedContacts) {
   wrapper.style.display = selectedContacts.length === 0 ? "none" : "flex";
 }
 
+/**
+ * Updates the content of the assigned circles wrapper with selected contacts.
+ * @param {HTMLElement} wrapper
+ * @param {Array<string>} selectedContacts
+ * @param {Array<Object>} contacts
+ */
 function updateCirclesContent(wrapper, selectedContacts, contacts) {
   wrapper.innerHTML = '';
   let validContacts = selectedContacts.filter(name => contacts.find(c => c.name === name));
@@ -1067,7 +1196,6 @@ function updateCirclesContent(wrapper, selectedContacts, contacts) {
     div.textContent = initials;
     wrapper.appendChild(div);
   });
-
   if (hiddenCount > 0) {
     let moreDiv = document.createElement('div');
     moreDiv.className = 'initial-circle';
@@ -1077,6 +1205,16 @@ function updateCirclesContent(wrapper, selectedContacts, contacts) {
   }
 }
 
+/**
+ * Handles toggling a contact in the assigned-to dropdown and rerendering.
+ * @param {string} name - The contact name.
+ * @param {Array<Object>} contacts - All contact objects.
+ * @param {HTMLElement} list - The dropdown list element.
+ * @param {HTMLElement} assignedListContainer - The container for assigned list.
+ * @param {Object} selectedContacts - Object with a value property for selected contacts.
+ * @param {Function} renderAssignedSelectedCircles - Function to render selected circles.
+ * @param {Function} renderAssignedDropdownList - Function to render dropdown list.
+ */
 function handleAssignedContactToggle(name, contacts, list, assignedListContainer, selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList) {
   selectedContacts.value = toggleContactSelection(name, selectedContacts.value);
   renderAssignedDropdownList(contacts, selectedContacts.value, list, (n) =>
@@ -1124,12 +1262,20 @@ function setupSubtasksEdit() {
   window.getEditedSubtasks = () => subtasks;
 }
 
+/**
+ * Gets the subtasks array for the currently open task in the overlay.
+ * @returns {Array<Object>} The array of subtask objects.
+ */
 function getSubtasksOfCurrentTask() {
   let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   return Array.isArray(task.subtask) ? task.subtask : [];
 }
 
+/**
+ * Creates the container and input/button elements for editing subtasks.
+ * @returns {Object} The created elements: container, input, addBtn.
+ */
 function createSubtasksEditContainer() {
   let container = document.createElement('div');
   container.id = 'subtasks-edit-container';
@@ -1144,6 +1290,10 @@ function createSubtasksEditContainer() {
   return { container, input, addBtn };
 }
 
+/**
+ * Creates the text input for adding a new subtask.
+ * @returns {HTMLInputElement} The input element.
+ */
 function createSubtaskInput() {
   let input = document.createElement('input');
   input.type = 'text';
@@ -1153,6 +1303,10 @@ function createSubtaskInput() {
   return input;
 }
 
+/**
+ * Creates the button element for adding a subtask.
+ * @returns {HTMLButtonElement} The add button element.
+ */
 function createAddSubtaskButton() {
   let addBtn = document.createElement('button');
   addBtn.type = 'button';
@@ -1162,6 +1316,12 @@ function createAddSubtaskButton() {
   return addBtn;
 }
 
+/**
+ * Renders the editable list of subtasks inside the edit container.
+ * @param {Array<Object>} subtaskArr - The array of subtasks.
+ * @param {HTMLElement} container - The container element to render into.
+ * @param {Function} rerender - The function to rerender the list.
+ */
 function renderSubtasksList(subtaskArr, container, rerender) {
   let listDiv = document.getElementById('subtask-list-edit');
   if (!listDiv) {
@@ -1176,6 +1336,15 @@ function renderSubtasksList(subtaskArr, container, rerender) {
   });
 }
 
+/**
+ * Creates a row element for an editable subtask.
+ * @param {Object|string} sub - The subtask object or string.
+ * @param {number} idx - The index of the subtask.
+ * @param {Array<Object>} subtaskArr - The array of subtasks.
+ * @param {Function} rerender - The rerender callback.
+ * @param {HTMLElement} container - The parent container.
+ * @returns {HTMLElement} The subtask row element.
+ */
 function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
   let row = document.createElement('div');
   row.className = 'subtask-list-row';
@@ -1190,10 +1359,16 @@ function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
   row.ondblclick = () => {
     input.activateEdit();
   };
-
   return row;
 }
 
+/**
+ * Creates the input element for editing a subtask row.
+ * @param {Object|string} sub - The subtask object or string.
+ * @param {number} idx - The index of the subtask in the array.
+ * @param {Array<Object>} subtaskArr - The array of subtasks.
+ * @returns {HTMLInputElement} The input element.
+ */
 function createSubtaskRowInput(sub, idx, subtaskArr) {
   let input = document.createElement('input');
   input.type = 'text';
@@ -1217,6 +1392,11 @@ function createSubtaskRowInput(sub, idx, subtaskArr) {
   return input;
 }
 
+/**
+ * Creates the edit button for a subtask row.
+ * @param {HTMLInputElement} input - The input element to activate edit on.
+ * @returns {HTMLButtonElement} The edit button element.
+ */
 function createSubtaskRowEditButton(input) {
   let editBtn = document.createElement('button');
   editBtn.type = 'button';
@@ -1230,6 +1410,13 @@ function createSubtaskRowEditButton(input) {
   return editBtn;
 }
 
+/**
+ * Creates the remove button for a subtask row.
+ * @param {number} idx - The index of the subtask.
+ * @param {Array<Object>} subtaskArr - The array of subtasks.
+ * @param {Function} rerender - The rerender callback.
+ * @returns {HTMLButtonElement} The remove button element.
+ */
 function createSubtaskRowRemoveButton(idx, subtaskArr, rerender) {
   let removeBtn = document.createElement('button');
   removeBtn.type = 'button';
@@ -1243,6 +1430,10 @@ function createSubtaskRowRemoveButton(idx, subtaskArr, rerender) {
   return removeBtn;
 }
 
+/**
+ * Creates the dot element for a subtask row.
+ * @returns {HTMLElement} The dot span element.
+ */
 function createSubtaskRowDot() {
   let dot = document.createElement('span');
   dot.className = 'subtask-dot';
@@ -1250,6 +1441,13 @@ function createSubtaskRowDot() {
   return dot;
 }
 
+/**
+ * Handles adding a new subtask to the subtasks array and rerenders the list.
+ * @param {Array<Object>} subtasks - The subtasks array.
+ * @param {HTMLInputElement} input - The input element for new subtask.
+ * @param {HTMLElement} container - The container element.
+ * @param {Function} rerender - The rerender callback.
+ */
 function handleAddSubtask(subtasks, input, container, rerender) {
   let val = input.value.trim();
   if (val) {
@@ -1278,6 +1476,9 @@ async function saveEditTask(taskKey) {
   }
 }
 
+/**
+ * Disables editing mode on the overlay card and restores the default view.
+ */
 function disableEditMode() {
   document.getElementById("overlay_card_title").contentEditable = "false";
   document.getElementById("overlay_card_description").contentEditable = "false";
@@ -1288,6 +1489,12 @@ function disableEditMode() {
   if (descLabel) descLabel.remove();
 }
 
+/**
+ * Collects all updated values from the edit form and returns a new task object.
+ * @param {Object} task - The original task object.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @returns {Object} The updated task object.
+ */
 function getUpdatedTaskFromEdit(task, taskKey) {
   let newTitle = getEditedTitle();
   let newDescription = getEditedDescription();
@@ -1295,7 +1502,6 @@ function getUpdatedTaskFromEdit(task, taskKey) {
   let newPriority = getEditedPriority(task.priority);
   let newAssignedTo = getEditedAssignedTo(task.assignedTo);
   let newSubtasks = getEditedSubtasks(task.subtask);
-
   return {
     ...task,
     title: newTitle,
@@ -1307,18 +1513,35 @@ function getUpdatedTaskFromEdit(task, taskKey) {
   };
 }
 
+/**
+ * Gets the edited title from the overlay input.
+ * @returns {string} The new title.
+ */
 function getEditedTitle() {
   return document.getElementById("overlay_card_title").innerHTML;
 }
 
+/**
+ * Gets the edited description from the overlay input.
+ * @returns {string} The new description.
+ */
 function getEditedDescription() {
   return document.getElementById("overlay_card_description").innerHTML;
 }
 
+/**
+ * Gets the edited due date from the overlay input.
+ * @returns {string} The new due date.
+ */
 function getEditedDueDate() {
   return getNewDueDate();
 }
 
+/**
+ * Gets the edited priority from the overlay selection.
+ * @param {string} defaultPriority - The fallback priority if not changed.
+ * @returns {string} The selected or default priority.
+ */
 function getEditedPriority(defaultPriority) {
   let priorityWrapper = document.getElementById('priority-edit-buttons');
   if (priorityWrapper && priorityWrapper.dataset.selectedPriority) {
@@ -1327,18 +1550,32 @@ function getEditedPriority(defaultPriority) {
   return defaultPriority;
 }
 
+/**
+ * Gets the edited assigned contacts from the overlay dropdown.
+ * @param {Array<string>} defaultAssignedTo - The fallback assigned contacts.
+ * @returns {Array<string>} The selected or default assigned contacts.
+ */
 function getEditedAssignedTo(defaultAssignedTo) {
   return typeof window.getAssignedOverlaySelection === 'function'
     ? window.getAssignedOverlaySelection()
     : defaultAssignedTo;
 }
 
+/**
+ * Gets the edited subtasks from the overlay editor.
+ * @param {Array<Object>} defaultSubtasks - The fallback subtasks.
+ * @returns {Array<Object>} The edited or default subtasks.
+ */
 function getEditedSubtasks(defaultSubtasks) {
   return typeof window.getEditedSubtasks === 'function'
     ? window.getEditedSubtasks()
     : defaultSubtasks;
 }
 
+/**
+ * Gets the new due date string from the date input or fallback from overlay.
+ * @returns {string} The new due date string.
+ */
 function getNewDueDate() {
   let dueDateInput = document.getElementById("due_date_input");
   if (dueDateInput) {
@@ -1350,6 +1587,12 @@ function getNewDueDate() {
   return match ? match[0] : "";
 }
 
+/**
+ * Updates a task in Firebase with new values.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {Object} updatedTask - The updated task data.
+ * @returns {Promise<void>}
+ */
 async function updateTaskInFirebase(taskKey, updatedTask) {
   await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
     method: "PATCH",
@@ -1358,10 +1601,20 @@ async function updateTaskInFirebase(taskKey, updatedTask) {
   });
 }
 
+/**
+ * Updates the local arrayTasks with the edited task.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {Object} updatedTask - The updated task data.
+ */
 function updateTaskLocally(taskKey, updatedTask) {
   arrayTasks = arrayTasks.map(t => t.firebaseKey === taskKey ? updatedTask : t);
 }
 
+/**
+ * Refreshes the board UI after editing a task and reopens the overlay card.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {Object} [options={}] - Options for reopening the card.
+ */
 function reloadUIAfterEdit(taskKey, options = {}) {
   updateHTML();
   openBoardCard(taskKey, options);
@@ -1387,12 +1640,21 @@ function searchTask() {
   }
 }
 
-
+/**
+ * Gets the normalized, lowercase value from the search input field.
+ * @returns {string} The trimmed, lowercase search value.
+ */
 function getSearchInputValue() {
   let inputRef = document.getElementById("input_find_task");
   return inputRef.value.trim().toLowerCase();
 }
 
+/**
+ * Filters tasks by search value, checking title and description.
+ * @param {Array<Object>} tasks - The list of tasks to filter.
+ * @param {string} searchValue - The lowercase search string.
+ * @returns {Array<Object>} The filtered tasks.
+ */
 function filterTasksBySearch(tasks, searchValue) {
   return tasks.filter(task => {
     let titleMatch = task.title && task.title.toLowerCase().includes(searchValue);
@@ -1401,12 +1663,19 @@ function filterTasksBySearch(tasks, searchValue) {
   });
 }
 
+/**
+ * Clears all board sections (todo, progress, feedback, done).
+ */
 function clearBoardSections() {
   ["todo", "progress", "feedback", "done"].forEach(section => {
     document.getElementById(section).innerHTML = "";
   });
 }
 
+/**
+ * Renders tasks into their corresponding board sections based on status.
+ * @param {Array<Object>} tasks - The tasks to render.
+ */
 function renderTasksToBoard(tasks) {
   tasks.forEach(task => {
     if (["todo", "progress", "feedback", "done"].includes(task.status)) {
@@ -1415,11 +1684,18 @@ function renderTasksToBoard(tasks) {
   });
 }
 
+/**
+ * Opens the add task overlay and sets a default status.
+ * @param {string} status - The status to assign the new task.
+ */
 function openAddTaskForStatus(status) {
   addTaskDefaultStatus = status;
   openAddTaskOverlay();
 }
 
+/**
+ * Opens and initializes the add task overlay modal.
+ */
 function openAddTaskOverlay() {
   showAddTaskOverlay();
   renderAddTaskModal();
@@ -1427,12 +1703,18 @@ function openAddTaskOverlay() {
   initAddTaskOverlayLogic();
 }
 
+/**
+ * Shows the add task overlay and disables background scrolling.
+ */
 function showAddTaskOverlay() {
   let overlay = document.getElementById("add_task_overlay");
   overlay.classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
 }
 
+/**
+ * Renders the content of the add task modal and initializes the animation.
+ */
 function renderAddTaskModal() {
   let overlay = document.getElementById("add_task_overlay");
   overlay.innerHTML = getAddTaskOverlay();
@@ -1443,12 +1725,18 @@ function renderAddTaskModal() {
   }, 10);
 }
 
+/**
+ * Adds event listeners to handle clicks outside the add task overlay/modal.
+ */
 function addAddTaskOverlayEventListeners() {
   setTimeout(() => {
     document.addEventListener('mousedown', handleAddTaskOverlayClickOutside);
   }, 0);
 }
 
+/**
+ * Closes the add task overlay. Handles animation if modal is open.
+ */
 function closeAddTaskOverlay() {
   let modal = document.querySelector('.board-add-task-modal');
   if (modal) {
@@ -1460,12 +1748,18 @@ function closeAddTaskOverlay() {
   removeAddTaskOverlayEventListener();
 }
 
+/**
+ * Closes the add task modal with animation and then hides and resets overlay.
+ */
 function closeAddTaskModalWithAnimation() {
   let modal = document.querySelector('.board-add-task-modal');
   modal.classList.remove('open');
   setTimeout(hideAndResetAddTaskOverlay, 400);
 }
 
+/**
+ * Hides and resets the add task overlay content and restores scroll.
+ */
 function hideAndResetAddTaskOverlay() {
   let overlay = document.getElementById("add_task_overlay");
   if (overlay) {
@@ -1475,14 +1769,24 @@ function hideAndResetAddTaskOverlay() {
   }
 }
 
+/**
+ * Resets the default status for new tasks to 'todo'.
+ */
 function resetAddTaskDefaultStatus() {
   addTaskDefaultStatus = "todo";
 }
 
+/**
+ * Removes the add task overlay's outside click event listener.
+ */
 function removeAddTaskOverlayEventListener() {
   document.removeEventListener('mousedown', handleAddTaskOverlayClickOutside);
 }
 
+/**
+ * Handles click outside of the add task modal and closes the overlay.
+ * @param {Event} event - The mousedown event.
+ */
 function handleAddTaskOverlayClickOutside(event) {
   let modal = document.querySelector('.board-add-task-modal');
   if (!modal) return;
@@ -1491,6 +1795,10 @@ function handleAddTaskOverlayClickOutside(event) {
   }
 }
 
+/**
+ * Handles outside clicks to close dropdowns for contacts and category.
+ * @param {Event} event - The mousedown event.
+ */
 document.addEventListener("mousedown", function (event) {
   closeDropdownIfClickedOutside(
     "dropdown-content",
@@ -1508,6 +1816,14 @@ document.addEventListener("mousedown", function (event) {
   );
 });
 
+/**
+ * Closes a dropdown if a click was outside its content or toggle element.
+ * @param {string} contentId - The content DOM id.
+ * @param {string} toggleId - The toggle DOM id.
+ * @param {string} visibleClass - The CSS class indicating visibility.
+ * @param {string} openClass - The CSS class for an open toggle.
+ * @param {Event} event - The mousedown event.
+ */
 function closeDropdownIfClickedOutside(contentId, toggleId, visibleClass, openClass, event) {
   let content = document.getElementById(contentId);
   let toggle = document.getElementById(toggleId);
@@ -1519,6 +1835,10 @@ function closeDropdownIfClickedOutside(contentId, toggleId, visibleClass, openCl
   }
 }
 
+/**
+ * Selects the given priority, updates UI, and submit button state.
+ * @param {string} prio - The selected priority.
+ */
 function selectPriority(prio) {
   selectedPriority = prio;
   document.querySelectorAll("#buttons-prio button").forEach((b) => {
@@ -1527,16 +1847,28 @@ function selectPriority(prio) {
   updateSubmitState();
 }
 
+/**
+ * Handles click on the assigned-to input, toggling the dropdown.
+ * @param {Event} e - The click event.
+ */
 function handleAssignedToClick(e) {
   e.stopPropagation();
   toggleAssignDropdown(e);
 }
 
+/**
+ * Handles input in the assigned-to search box and renders filtered options.
+ * @param {Event} e - The input event.
+ */
 function handleAssignedToInput(e) {
   let value = e.target.value.trim().toLowerCase();
   renderAssignOptions(value);
 }
 
+/**
+ * Toggles visibility of the assigned contacts dropdown.
+ * @param {Event} event - The click event.
+ */
 function toggleAssignDropdown(event) {
   event.stopPropagation();
   let tog = document.getElementById("dropdown-toggle");
@@ -1547,6 +1879,10 @@ function toggleAssignDropdown(event) {
   if (dd.innerHTML === "") renderAssignOptions();
 }
 
+/**
+ * Renders contact dropdown options, filtered by the provided string.
+ * @param {string} [filter=""] - The filter string for searching contacts.
+ */
 function renderAssignOptions(filter = "") {
   let dd = document.getElementById("dropdown-content");
   clearAssignDropdownContent(dd);
@@ -1559,11 +1895,21 @@ function renderAssignOptions(filter = "") {
   });
 }
 
+/**
+ * Clears all items from the assign dropdown except the input box.
+ * @param {HTMLElement} dd - The dropdown element.
+ */
 function clearAssignDropdownContent(dd) {
   let nodes = Array.from(dd.childNodes).filter((n) => n.tagName !== "INPUT");
   nodes.forEach((n) => n.remove());
 }
 
+/**
+ * Creates a dropdown item for a contact, including icon, name, and checkbox.
+ * @param {Object} contact - The contact object.
+ * @param {string} filter - The current filter string.
+ * @returns {HTMLElement}
+ */
 function createContactDropdownItem(contact, filter) {
   let item = document.createElement("div");
   item.className = "contact-item";
@@ -1578,10 +1924,20 @@ function createContactDropdownItem(contact, filter) {
   return item;
 }
 
+/**
+ * Returns true if the contact is currently selected for assignment.
+ * @param {Object} contact - The contact object.
+ * @returns {boolean}
+ */
 function isContactSelected(contact) {
   return selectedContacts.some((s) => s.name === contact.name);
 }
 
+/**
+ * Creates a colored profile icon span for the contact.
+ * @param {Object} contact - The contact object.
+ * @returns {HTMLElement}
+ */
 function createProfileIcon(contact) {
   let span = document.createElement("span");
   span.className = "profile-icon";
@@ -1590,12 +1946,22 @@ function createProfileIcon(contact) {
   return span;
 }
 
+/**
+ * Creates a span element for the contact’s name.
+ * @param {Object} contact - The contact object.
+ * @returns {HTMLElement}
+ */
 function createContactName(contact) {
   let span = document.createElement("span");
   span.textContent = contact.name;
   return span;
 }
 
+/**
+ * Creates a checkbox input for a contact.
+ * @param {Object} contact - The contact object.
+ * @returns {HTMLInputElement}
+ */
 function createContactCheckbox(contact) {
   let checkbox = document.createElement("input");
   checkbox.type = "checkbox";
@@ -1603,6 +1969,11 @@ function createContactCheckbox(contact) {
   return checkbox;
 }
 
+/**
+ * Returns the initials for a contact’s name.
+ * @param {string} name - The contact’s full name.
+ * @returns {string}
+ */
 function getContactInitials(name) {
   return name
     .split(" ")
@@ -1611,6 +1982,12 @@ function getContactInitials(name) {
     .toUpperCase();
 }
 
+/**
+ * Sets up the checkbox event for a contact dropdown item.
+ * @param {HTMLElement} item - The item element.
+ * @param {Object} contact - The contact object.
+ * @param {string} filter - The current filter string.
+ */
 function setupContactCheckbox(item, contact, filter) {
   let checkbox = item.querySelector("input[type='checkbox']");
   checkbox.addEventListener("click", (event) => {
@@ -1628,6 +2005,10 @@ function setupContactCheckbox(item, contact, filter) {
   });
 }
 
+/**
+ * Adds click behavior for selecting/deselecting a contact item.
+ * @param {HTMLElement} item - The dropdown item.
+ */
 function setupContactItemClick(item) {
   let checkbox = item.querySelector("input[type='checkbox']");
   item.addEventListener("click", (event) => {
@@ -1639,6 +2020,9 @@ function setupContactItemClick(item) {
   });
 }
 
+/**
+ * Updates the UI display of selected contacts (profile icons).
+ */
 function updateSelectedContactsUI() {
   let box = document.getElementById("selected-contacts");
   if (!box) return;
@@ -1652,11 +2036,18 @@ function updateSelectedContactsUI() {
   });
 }
 
+/**
+ * Closes the assigned contacts dropdown.
+ */
 function closeDropdown() {
   document.getElementById("dropdown-content")?.classList.remove("visible");
   document.getElementById("dropdown-toggle")?.classList.remove("open");
 }
 
+/**
+ * Toggles visibility of the category dropdown.
+ * @param {Event} event - The click event.
+ */
 function toggleCategoryDropdown(event) {
   event.stopPropagation();
   let toggle = document.getElementById("category-toggle");
@@ -1666,6 +2057,9 @@ function toggleCategoryDropdown(event) {
   if (content.innerHTML.trim() === "") renderCategoryOptions();
 }
 
+/**
+ * Renders all available category options in the category dropdown.
+ */
 function renderCategoryOptions() {
   let content = document.getElementById("category-content");
   clearCategoryContent(content);
@@ -1676,14 +2070,28 @@ function renderCategoryOptions() {
   });
 }
 
+/**
+ * Clears all content from the category dropdown.
+ * @param {HTMLElement} content - The dropdown content element.
+ */
 function clearCategoryContent(content) {
   content.innerHTML = "";
 }
 
+/**
+ * Returns a list of all available categories.
+ * @returns {Array<string>}
+ */
 function getCategoryList() {
   return ["Technical Task", "User Story"];
 }
 
+/**
+ * Creates a dropdown item for a category and click handler.
+ * @param {string} category - The category name.
+ * @param {HTMLElement} content - The dropdown content element.
+ * @returns {HTMLElement}
+ */
 function createCategoryDropdownItem(category, content) {
   let item = document.createElement("div");
   item.className = "dropdown-item category-item";
@@ -1694,6 +2102,11 @@ function createCategoryDropdownItem(category, content) {
   return item;
 }
 
+/**
+ * Handles click on a category dropdown item.
+ * @param {string} category - The category name.
+ * @param {HTMLElement} content - The dropdown content element.
+ */
 function handleCategoryClick(category, content) {
   selectCategory(category);
   content.classList.remove("visible");
@@ -1701,13 +2114,19 @@ function handleCategoryClick(category, content) {
   updateSubmitState();
 }
 
+/**
+ * Marks a category as selected and updates the UI.
+ * @param {string} category - The selected category.
+ */
 function selectCategory(category) {
   selectedCategory = category;
   let placeholder = document.querySelector("#category-toggle span");
   if (placeholder) placeholder.textContent = category;
 }
 
-
+/**
+ * Adds a new subtask from the input field, validates, appends to the list, and resets UI.
+ */
 function addSubtask() {
   let input = document.getElementById("subtask-input");
   let subtaskIcons = document.getElementById("subtask-icons");
@@ -1719,6 +2138,13 @@ function addSubtask() {
   finalizeSubtaskInput(input, subtaskIcons);
 }
 
+/**
+ * Validates the subtask input field and icons, sets error border if invalid.
+ * @param {string} text - The subtask text to validate.
+ * @param {HTMLElement} subtaskIcons - The icons wrapper element.
+ * @param {HTMLInputElement} input - The subtask input element.
+ * @returns {boolean} True if valid, false otherwise.
+ */
 function validateSubtaskInput(text, subtaskIcons, input) {
   if (!text || subtaskIcons.classList.contains("hidden")) {
     input.classList.add("error-border");
@@ -1728,6 +2154,11 @@ function validateSubtaskInput(text, subtaskIcons, input) {
   return true;
 }
 
+/**
+ * Creates a list item DOM element for a subtask, including edit/remove actions.
+ * @param {string} text - The subtask text.
+ * @returns {HTMLLIElement} The subtask list item element.
+ */
 function createSubtaskListItem(text) {
   let li = document.createElement("li");
   li.className = "subtask-list-item";
@@ -1791,6 +2222,11 @@ function createSubtaskListItem(text) {
   return li;
 }
 
+/**
+ * Finalizes the subtask input field: resets, hides icons, updates submit state.
+ * @param {HTMLInputElement} input - The subtask input element.
+ * @param {HTMLElement} subtaskIcons - The icons wrapper element.
+ */
 function finalizeSubtaskInput(input, subtaskIcons) {
   updateSubmitState();
   input.value = "";
@@ -1799,6 +2235,10 @@ function finalizeSubtaskInput(input, subtaskIcons) {
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
+/**
+ * Handles pressing Enter in the subtask input, triggers addSubtask if icons visible.
+ * @param {KeyboardEvent} e - The keydown event.
+ */
 function handleSubtaskEnter(e) {
   if (e.key === "Enter") {
     e.preventDefault();
@@ -1809,6 +2249,9 @@ function handleSubtaskEnter(e) {
   }
 }
 
+/**
+ * Shows or hides the subtask action icons depending on input focus and value.
+ */
 function toggleSubtaskIcons() {
   let input = document.getElementById("subtask-input");
   let confirmIcon = document.getElementById("subtask-confirm");
@@ -1820,6 +2263,9 @@ function toggleSubtaskIcons() {
   defaultIcon?.classList.toggle("hidden", isActive);
 }
 
+/**
+ * Clears the subtask input, hides icons, shows the add ("plus") icon.
+ */
 function clearSubtaskInput() {
   let subtaskInput = document.getElementById("subtask-input");
   let subtaskIcons = document.getElementById("subtask-icons");
@@ -1829,6 +2275,9 @@ function clearSubtaskInput() {
   subtaskPlus.classList.remove("hidden");
 }
 
+/**
+ * Updates the category UI to display the selected category icon.
+ */
 function updateCategoryUI() {
   let box = document.getElementById("selected-category");
   if (!box) return;
@@ -1839,10 +2288,19 @@ function updateCategoryUI() {
   }
 }
 
+/**
+ * Clears the category display box.
+ * @param {HTMLElement} box - The container for the category icon.
+ */
 function clearCategoryBox(box) {
   box.innerHTML = "";
 }
 
+/**
+ * Creates a category icon DOM element with the given category initials.
+ * @param {string} category - The category name.
+ * @returns {HTMLDivElement} The icon element.
+ */
 function createCategoryIcon(category) {
   let div = document.createElement("div");
   div.className = "profile-icon";
@@ -1851,6 +2309,11 @@ function createCategoryIcon(category) {
   return div;
 }
 
+/**
+ * Returns the initials for the given category string.
+ * @param {string} category - The category name.
+ * @returns {string} The initials in uppercase.
+ */
 function getCategoryInitials(category) {
   return category
     .split(" ")
@@ -1859,6 +2322,10 @@ function getCategoryInitials(category) {
     .toUpperCase();
 }
 
+/**
+ * Validates all main form fields: title, due date, and category.
+ * @returns {boolean} True if valid, false otherwise.
+ */
 function validateForm() {
   let titleEl = document.getElementById("title");
   let dueDateEl = document.getElementById("dueDate");
@@ -1875,37 +2342,67 @@ function validateForm() {
   return titleValid && dueDateValid && categoryValid;
 }
 
+/**
+ * Checks if a text input is filled.
+ * @param {HTMLInputElement} inputEl - The input element.
+ * @returns {boolean}
+ */
 function isInputFilled(inputEl) {
   return inputEl.value.trim() !== "";
 }
 
+/**
+ * Checks if a category is currently selected.
+ * @returns {boolean}
+ */
 function isCategorySelected() {
   return selectedCategory && selectedCategory.trim() !== "";
 }
 
+/**
+ * Shows or hides the title error state and error message.
+ * @param {HTMLElement} titleEl - The title input element.
+ * @param {boolean} isValid - Whether the title is valid.
+ */
 function showTitleError(titleEl, isValid) {
   let titleError = document.getElementById("error-title");
   titleEl.classList.toggle("error", !isValid);
   if (titleError) titleError.classList.toggle("visible", !isValid);
 }
 
+/**
+ * Shows or hides the due date error state and error message.
+ * @param {HTMLElement} dueDateEl - The due date input element.
+ * @param {boolean} isValid - Whether the due date is valid.
+ */
 function showDueDateError(dueDateEl, isValid) {
   let dueDateError = document.getElementById("error-dueDate");
   dueDateEl.classList.toggle("error-border", !isValid);
   if (dueDateError) dueDateError.classList.toggle("visible", !isValid);
 }
 
+/**
+ * Shows or hides the category error state and error message.
+ * @param {HTMLElement} categoryToggle - The category toggle element.
+ * @param {boolean} isValid - Whether the category is valid.
+ */
 function showCategoryError(categoryToggle, isValid) {
   let categoryError = document.getElementById("error-category");
   categoryToggle.classList.toggle("error-border", !isValid);
   if (categoryError) categoryError.classList.toggle("visible", !isValid);
 }
 
+/**
+ * Enables or disables the submit button based on form state.
+ */
 function updateSubmitState() {
   let button = document.getElementById("submit-task-btn");
   if (button) button.disabled = false;
 }
 
+/**
+ * Resets all main form fields and UI state.
+ */
 function resetForm() {
   resetTitle();
   resetDescription();
@@ -1916,37 +2413,58 @@ function resetForm() {
   resetSubtasks();
 }
 
+/**
+ * Resets the title input field.
+ */
 function resetTitle() {
   let title = document.getElementById("title");
   if (title) title.value = "";
 }
 
+/**
+ * Resets the description input field.
+ */
 function resetDescription() {
   let description = document.getElementById("description");
   if (description) description.value = "";
 }
 
+/**
+ * Resets the due date input field.
+ */
 function resetDueDate() {
   let dueDate = document.getElementById("dueDate");
   if (dueDate) dueDate.value = "";
 }
 
+/**
+ * Resets the priority selection to the default value.
+ */
 function resetPriority() {
   selectedPriority = "medium";
   selectPriority("medium");
 }
 
+/**
+ * Clears all selected contacts and updates the UI.
+ */
 function resetContacts() {
   selectedContacts = [];
   updateSelectedContactsUI();
 }
 
+/**
+ * Clears the selected category and resets UI.
+ */
 function resetCategory() {
   selectedCategory = "";
   let categoryPlaceholder = document.querySelector("#category-toggle span");
   if (categoryPlaceholder) categoryPlaceholder.textContent = "Select category";
 }
 
+/**
+ * Clears all subtasks and resets the subtask input and list.
+ */
 function resetSubtasks() {
   clearSubtasksArray();
   clearSubtasksList();
@@ -1955,30 +2473,48 @@ function resetSubtasks() {
   showSubtaskPlus();
 }
 
+/**
+ * Empties the subtasks array.
+ */
 function clearSubtasksArray() {
   subtasks.length = 0;
 }
 
+/**
+ * Clears the subtask list display.
+ */
 function clearSubtasksList() {
   let subtaskList = document.getElementById("subtask-list");
   if (subtaskList) subtaskList.innerHTML = "";
 }
 
+/**
+ * Clears the subtask input field.
+ */
 function clearSubtaskInput() {
   let subtaskInput = document.getElementById("subtask-input");
   if (subtaskInput) subtaskInput.value = "";
 }
 
+/**
+ * Hides the subtask action icons.
+ */
 function hideSubtaskIcons() {
   let subtaskIcons = document.getElementById("subtask-icons");
   if (subtaskIcons) subtaskIcons.classList.add("hidden");
 }
 
+/**
+ * Shows the subtask "plus" (add) icon.
+ */
 function showSubtaskPlus() {
   let subtaskPlus = document.getElementById("subtask-plus");
   if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
+/**
+ * Sets up date input validation, ensures only today or future dates are selectable.
+ */
 function setupDateValidation() {
   setTimeout(() => {
     let dateInput = document.getElementById("dueDate");
@@ -1989,11 +2525,20 @@ function setupDateValidation() {
   }, 100);
 }
 
+/**
+ * Sets the minimum date of the date input to today.
+ * @param {HTMLInputElement} dateInput - The date input element.
+ */
 function setMinDateToday(dateInput) {
   let today = new Date().toISOString().split("T")[0];
   dateInput.min = today;
 }
 
+/**
+ * Adds an input event listener to the date input to clear errors when user changes date.
+ * @param {HTMLInputElement} dateInput - The date input element.
+ * @param {HTMLElement} errorText - The error message element.
+ */
 function addDateInputListener(dateInput, errorText) {
   dateInput.addEventListener("input", () => {
     dateInput.classList.remove("error-border");
@@ -2013,6 +2558,9 @@ async function createTask() {
   await reloadAndHighlightNewTask();
 }
 
+/**
+ * Shows the "task added" overlay for a short duration.
+ */
 function showTaskAddedOverlay() {
   let overlay = document.getElementById("task-added-overlay");
   if (!overlay) return;
@@ -2026,6 +2574,10 @@ function showTaskAddedOverlay() {
   }, 2500);
 }
 
+/**
+ * Builds and returns a task object from current form input values.
+ * @returns {Object} The task object.
+ */
 function buildTaskObject() {
   return {
     title: getInputValue("title"),
@@ -2040,11 +2592,21 @@ function buildTaskObject() {
   };
 }
 
+/**
+ * Gets the trimmed value from an input field by id.
+ * @param {string} id - The DOM element id.
+ * @returns {string} The input value or empty string.
+ */
 function getInputValue(id) {
   let el = document.getElementById(id);
   return el ? el.value.trim() : "";
 }
 
+/**
+ * Saves a new task to Firebase.
+ * @param {Object} task - The task object to save.
+ * @returns {Promise<void>}
+ */
 async function saveTaskToFirebase(task) {
   await fetch(
     `${BASE_URL}${firebaseKey}/tasks.json`,
@@ -2055,6 +2617,10 @@ async function saveTaskToFirebase(task) {
   );
 }
 
+/**
+ * Reloads the tasks from Firebase and highlights the most recently created task.
+ * @returns {Promise<void>}
+ */
 async function reloadAndHighlightNewTask() {
   await loadTasks();
   setTimeout(() => {
@@ -2062,6 +2628,9 @@ async function reloadAndHighlightNewTask() {
   }, 100);
 }
 
+/**
+ * Highlights the most recently created task on the board for a short duration.
+ */
 function highlightLastCreatedTask() {
   let lastTask = arrayTasks[arrayTasks.length - 1];
   if (lastTask && lastTask.firebaseKey) {
@@ -2077,12 +2646,18 @@ function highlightLastCreatedTask() {
   }
 }
 
+/**
+ * Sets up all event listeners for the add task form, including dropdowns, category, and subtask input.
+ */
 function setupEventListeners() {
   setupDropdownListeners();
   setupCategoryListeners();
   setupSubtaskInputListeners();
 }
 
+/**
+ * Sets up event listeners for the assigned-to dropdown (open/close and stop propagation).
+ */
 function setupDropdownListeners() {
   let dropdownToggle = document.getElementById("dropdown-toggle");
   if (dropdownToggle) {
@@ -2094,6 +2669,9 @@ function setupDropdownListeners() {
   }
 }
 
+/**
+ * Sets up event listeners for the category dropdown.
+ */
 function setupCategoryListeners() {
   let categoryToggle = document.getElementById("category-toggle");
   if (categoryToggle) {
@@ -2101,6 +2679,9 @@ function setupCategoryListeners() {
   }
 }
 
+/**
+ * Sets up event listeners for the subtask input field (show/hide icons, handle Enter key).
+ */
 function setupSubtaskInputListeners() {
   let subtaskInput = document.getElementById("subtask-input");
   if (!subtaskInput) return;
@@ -2108,6 +2689,9 @@ function setupSubtaskInputListeners() {
   subtaskInput.addEventListener("keydown", handleSubtaskEnter);
 }
 
+/**
+ * Shows or hides the subtask action icons depending on input value.
+ */
 function showOrHideSubtaskIcons() {
   let input = document.getElementById("subtask-input");
   let iconWrapper = document.getElementById("subtask-icons");
@@ -2119,6 +2703,9 @@ function showOrHideSubtaskIcons() {
   }
 }
 
+/**
+ * Initializes the logic for the add task overlay: loads contacts, sets up listeners, validates date, and resets form.
+ */
 function initAddTaskOverlayLogic() {
   fetchContacts();
   setupEventListeners();
@@ -2126,6 +2713,11 @@ function initAddTaskOverlayLogic() {
   resetForm();
 }
 
+/**
+ * Opens the move task dropdown menu for a board card, allowing status change.
+ * @param {string} taskKey - The Firebase key of the task to move.
+ * @param {Event} event - The event that triggered the menu.
+ */
 function openMoveTaskMenu(taskKey, event) {
   event.stopPropagation();
   closeMoveTaskMenu();
@@ -2143,6 +2735,11 @@ function openMoveTaskMenu(taskKey, event) {
   addMoveTaskDropdownCleanup(dropdown);
 }
 
+/**
+ * Creates the move task dropdown menu element with available status options.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @returns {HTMLElement} The dropdown menu element.
+ */
 function createMoveTaskDropdownMenu(taskKey) {
   let dropdown = document.createElement('div');
   dropdown.className = 'move-task-dropdown-menu';
@@ -2170,6 +2767,12 @@ function createMoveTaskDropdownMenu(taskKey) {
   return dropdown;
 }
 
+/**
+ * Positions the move task dropdown menu relative to the button and card.
+ * @param {HTMLElement} dropdown - The dropdown menu element.
+ * @param {HTMLElement} btn - The button triggering the menu.
+ * @param {HTMLElement} card - The card element.
+ */
 function positionMoveTaskDropdown(dropdown, btn, card) {
   let btnRect = btn.getBoundingClientRect();
   let left = btnRect.left + window.scrollX;
@@ -2181,12 +2784,21 @@ function positionMoveTaskDropdown(dropdown, btn, card) {
   dropdown.style.top = top + 'px';
 }
 
+/**
+ * Handles the click on a move task menu option: moves task and closes menu.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {string} statusKey - The new status to move to.
+ */
 function handleMoveTaskOptionClick(taskKey, statusKey) {
   currentDraggedElement = taskKey;
   moveTo(statusKey);
   closeMoveTaskMenu();
 }
 
+/**
+ * Adds cleanup handlers for the move task dropdown (outside click, scroll).
+ * @param {HTMLElement} dropdown - The dropdown menu element.
+ */
 function addMoveTaskDropdownCleanup(dropdown) {
   function handleOutside(e) {
     if (dropdown.contains(e.target)) return;
@@ -2205,6 +2817,9 @@ function addMoveTaskDropdownCleanup(dropdown) {
   };
 }
 
+/**
+ * Closes and removes the move task dropdown menu and its event listeners.
+ */
 function closeMoveTaskMenu() {
   if (window._moveTaskDropdown) {
     window._moveTaskDropdown.remove();
@@ -2234,9 +2849,12 @@ function getPriorityButtonsHTML(currentPriority) {
 
 window.addEventListener('resize', closeMoveTaskMenu);
 
+/**
+ * Adds drag & drop highlight listeners to all board columns for visual feedback.
+ */
 function addDragHighlightListeners() {
   ['todo', 'progress', 'feedback', 'done'].forEach(id => {
-    const el = document.getElementById(id);
+    let el = document.getElementById(id);
     if (el) {
       el.addEventListener('dragover', function (ev) {
         ev.preventDefault();
@@ -2247,12 +2865,12 @@ function addDragHighlightListeners() {
       });
       el.addEventListener('drop', function (ev) {
         ev.preventDefault();
-        const draggedEl = document.getElementById(currentDraggedElement);
+        let draggedEl = document.getElementById(currentDraggedElement);
         if (draggedEl && !el.contains(draggedEl)) {
           el.appendChild(draggedEl);
         }
         ['todo', 'progress', 'feedback', 'done'].forEach(id => {
-          const dropEl = document.getElementById(id);
+          let dropEl = document.getElementById(id);
           if (dropEl) dropEl.classList.remove('highlight');
         });
       });
@@ -2260,4 +2878,8 @@ function addDragHighlightListeners() {
   });
 }
 
+/**
+ * Adds drag & drop highlight listeners to all board columns for visual feedback after DOM load.
+ * Runs automatically when the DOM is ready.
+ */
 window.addEventListener('DOMContentLoaded', addDragHighlightListeners);
