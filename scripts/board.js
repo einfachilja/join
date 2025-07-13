@@ -43,17 +43,13 @@ async function fetchTasksFromFirebase(userKey) {
  * @returns {Promise<void>}
  */
 async function fetchContactsAndStore(userKey) {
-  try {
-    let response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
-    let data = await response.json();
-    if (data) {
-      let users = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
-      users[userKey] = users[userKey] || {};
-      users[userKey]['contacts'] = data;
-      localStorage.setItem('firebaseUsers', JSON.stringify(users));
-    }
-  } catch (error) {
-    console.error("Fehler beim Abrufen der Kontakte:", error);
+  let response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
+  let data = await response.json();
+  if (data) {
+    let users = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
+    users[userKey] = users[userKey] || {};
+    users[userKey]['contacts'] = data;
+    localStorage.setItem('firebaseUsers', JSON.stringify(users));
   }
 }
 
@@ -77,19 +73,15 @@ function normalizeTasks(responseJson) {
  * @returns {Promise<void>} A promise that resolves when contacts are successfully fetched and stored.
  */
 async function fetchContacts() {
-  try {
-    let response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
-    let data = await response.json();
-    contacts = Object.values(data || {})
-      .filter(u => u && typeof u.name === "string" && u.name.trim())
-      .map(u => ({
-        name: u.name.trim(),
-        color: u.color || "#888"
-      }));
-    updateHTML();
-  } catch (err) {
-    console.error("Contacts fetch error:", err);
-  }
+  let response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
+  let data = await response.json();
+  contacts = Object.values(data || {})
+    .filter(u => u && typeof u.name === "string" && u.name.trim())
+    .map(u => ({
+      name: u.name.trim(),
+      color: u.color || "#888"
+    }));
+  updateHTML();
 }
 
 /**
@@ -114,6 +106,7 @@ async function deleteTask(taskKey) {
   }
 }
 
+
 /**
  * Moves the currently dragged task to the specified status and updates it in Firebase.
  *
@@ -121,29 +114,31 @@ async function deleteTask(taskKey) {
  * @returns {Promise<void>} A promise that resolves after the task status has been updated.
  */
 async function moveTo(status) {
-
   let idx = arrayTasks.findIndex(t => t.firebaseKey === currentDraggedElement);
-  if (idx === -1) {
-    alert("Aufgabe wurde nicht gefunden!");
-    return;
-  }
+  if (idx === -1) return alert("Aufgabe wurde nicht gefunden!");
   let [task] = arrayTasks.splice(idx, 1);
   task.status = status;
   arrayTasks.push(task);
-  try {
-    await fetch(
-      `${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: status })
-      }
-    );
-  } catch (error) {
-    alert("Fehler beim Speichern des Status!");
-    console.error(error);
-  }
+  await updateTaskStatusInFirebase(task, status);
   updateHTML();
+}
+
+/**
+ * Updates the status of a task in Firebase.
+ *
+ * @param {Object} task - The task object to update.
+ * @param {string} status - The new status to assign.
+ * @returns {Promise<void>}
+ */
+async function updateTaskStatusInFirebase(task, status) {
+  await fetch(
+    `${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status })
+    }
+  );
 }
 
 /**
@@ -187,35 +182,54 @@ function getCategoryClass(category) {
   return "";
 }
 
-
 /**
  * Generates HTML for assigned user circles (up to 3 visible).
- *
  * @param {Array<string>} assignedList - List of assigned user names.
  * @returns {string} HTML string for the assigned circles.
  */
 function generateAssignedCircles(assignedList) {
   if (!Array.isArray(assignedList)) return "";
-  assignedList = assignedList.filter(name => {
-    if (!name || typeof name !== 'string') return false;
-    let contact = getContactByName(name);
-    return !!contact;
-  });
-  let maxVisible = 3;
-  let visibleContacts = assignedList.slice(0, maxVisible);
-  let hiddenCount = assignedList.length - visibleContacts.length;
-
-  let circlesHTML = visibleContacts.map(name => {
-    let contact = getContactByName(name);
-    if (!contact) return '';
-    let color = contact.color || "#ccc";
-    return getAssignedCircleHTML(name, color);
-  }).join("");
-
-  if (hiddenCount > 0) {
-    circlesHTML += `<div class="assigned-circle">+${hiddenCount}</div>`;
-  }
+  let validList = filterValidContacts(assignedList);
+  let visibleContacts = validList.slice(0, 3);
+  let circlesHTML = visibleContacts.map(name => assignedCircleHTML(name)).join("");
+  circlesHTML += getHiddenCountHTML(validList, visibleContacts);
   return circlesHTML;
+}
+
+/**
+ * Filters out invalid or non-existent contact names.
+ * @param {Array<string>} list
+ * @returns {Array<string>}
+ */
+function filterValidContacts(list) {
+  return list.filter(name =>
+    !!name && typeof name === 'string' && getContactByName(name)
+  );
+}
+
+/**
+ * Returns HTML for a single assigned contact circle.
+ * @param {string} name
+ * @returns {string}
+ */
+function assignedCircleHTML(name) {
+  let contact = getContactByName(name);
+  let color = contact?.color || "#ccc";
+  return getAssignedCircleHTML(name, color);
+}
+
+/**
+ * Returns HTML for the "+X" hidden assigned indicator.
+ * @param {Array<string>} all
+ * @param {Array<string>} visible
+ * @returns {string}
+ */
+function getHiddenCountHTML(all, visible) {
+  let hiddenCount = all.length - visible.length;
+  if (hiddenCount > 0) {
+    return `<div class="assigned-circle">+${hiddenCount}</div>`;
+  }
+  return "";
 }
 
 /**
@@ -234,11 +248,21 @@ function generateSubtaskProgress(subtasksArr) {
 
 /**
  * Generates the full HTML for a task card in the board.
- *
  * @param {Object} element - The task object.
  * @returns {string} HTML string of the task card.
  */
 function generateTodoHTML(element) {
+  let props = extractCardProps(element);
+  return buildCardHTML(
+    props.firebaseKey, props.category, props.categoryClass, props.priority, props.priorityIcon, props.assignedList, props.subtaskProgressHTML, props.title, props.description);
+}
+
+/**
+ * Extracts all display properties needed for the task card from the task object.
+ * @param {Object} element - The task object.
+ * @returns {Object} Card properties for rendering.
+ */
+function extractCardProps(element) {
   let category = getCardCategory(element);
   let categoryClass = getCategoryClass(category);
   let priority = getCardPriority(element);
@@ -248,17 +272,7 @@ function generateTodoHTML(element) {
   let subtaskProgressHTML = generateSubtaskProgress(subtasksArr);
   let title = getCardTitle(element);
   let description = getCardDescription(element);
-  return buildCardHTML(
-    element.firebaseKey,
-    category,
-    categoryClass,
-    priority,
-    priorityIcon,
-    assignedList,
-    subtaskProgressHTML,
-    title,
-    description
-  );
+  return { firebaseKey: element.firebaseKey, category, categoryClass, priority, priorityIcon, assignedList, subtaskProgressHTML, title, description };
 }
 
 /**
@@ -446,26 +460,69 @@ function updateHTML() {
  * @param {string} firebaseKey - The Firebase key of the task.
  * @param {Object} [options={}] - Additional options for rendering the card.
  */
+/**
+ * Opens a task card in an overlay based on its Firebase key.
+ *
+ * @param {string} firebaseKey - The Firebase key of the task.
+ * @param {Object} [options={}] - Additional options for rendering the card.
+ */
 function openBoardCard(firebaseKey, options = {}) {
-  let overlayElement = document.getElementById("board_overlay");
-  let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
-  let categoryClass = "";
-  if (task.category === "User Story") categoryClass = "category-user";
-  else if (task.category === "Technical Task") categoryClass = "category-technical";
+  const overlayElement = document.getElementById("board_overlay");
+  const task = findTaskByKey(firebaseKey);
+  const categoryClass = getOverlayCategoryClass(task);
+  showOverlay(overlayElement, categoryClass, task);
+  handleOverlayAnimation(options);
+  updateHTML();
+}
+
+/**
+ * Finds a task in arrayTasks by its firebaseKey.
+ * @param {string} firebaseKey
+ * @returns {Object} The task object or null.
+ */
+function findTaskByKey(firebaseKey) {
+  return arrayTasks.find(t => t.firebaseKey === firebaseKey) || null;
+}
+
+/**
+ * Returns the CSS class for overlay based on task category.
+ * @param {Object} task
+ * @returns {string}
+ */
+function getOverlayCategoryClass(task) {
+  if (!task) return "";
+  if (task.category === "User Story") return "category-user";
+  if (task.category === "Technical Task") return "category-technical";
+  return "";
+}
+
+/**
+ * Shows the overlay element with the card template.
+ * @param {HTMLElement} overlayElement
+ * @param {string} categoryClass
+ * @param {Object} task
+ */
+function showOverlay(overlayElement, categoryClass, task) {
+  if (!overlayElement || !task) return;
   overlayElement.classList.remove("d-none");
   document.getElementById("html").style.overflow = "hidden";
   overlayElement.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
-  let card = document.querySelector('.board-overlay-card');
-  if (card) {
-    if (options.noAnimation) {
+}
+
+/**
+ * Handles the opening animation for the overlay card.
+ * @param {Object} options
+ */
+function handleOverlayAnimation(options = {}) {
+  const card = document.querySelector('.board-overlay-card');
+  if (!card) return;
+  if (options.noAnimation) {
+    card.classList.add('open');
+  } else {
+    setTimeout(() => {
       card.classList.add('open');
-    } else {
-      setTimeout(() => {
-        card.classList.add('open');
-      }, 10);
-    }
+    }, 10);
   }
-  updateHTML();
 }
 
 /**
@@ -592,26 +649,54 @@ async function saveSubtasksToFirebase(taskKey, subtasks) {
  *
  * @param {Object} task - The task object to render.
  */
+/**
+ * Renders the board overlay with the given task.
+ * @param {Object} task - The task object to render.
+ */
 function renderBoardOverlay(task) {
   let boardOverlayRef = document.getElementById("board_overlay");
-  if (boardOverlayRef && task) {
-    let categoryClass = task.category === "User Story"
-      ? "category-user"
-      : task.category === "Technical Task"
-        ? "category-technical"
-        : "";
-    boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
+  if (!boardOverlayRef || !task) return;
+  let categoryClass = getOverlayCategoryClass(task);
+  boardOverlayRef.innerHTML = getOpenBoardCardTemplate(categoryClass, task);
+  animateOverlayCard();
+  lockHtmlScroll();
+  showBoardOverlay(boardOverlayRef);
+}
 
-    let cardRef = document.querySelector('.board-overlay-card');
-    if (cardRef) {
-      setTimeout(() => {
-        cardRef.classList.add('open');
-      }, 10);
-    }
-    document.getElementById("html").style.overflow = "hidden";
-    boardOverlayRef.classList.remove("d-none");
-    boardOverlayRef.scrollTop = 0;
-  }
+/**
+ * Adds the 'open' animation class to the overlay card after a short delay.
+ */
+function animateOverlayCard() {
+  let cardRef = document.querySelector('.board-overlay-card');
+  if (cardRef) setTimeout(() => cardRef.classList.add('open'), 10);
+}
+
+/**
+ * Locks HTML scrolling (overflow hidden).
+ */
+function lockHtmlScroll() {
+  document.getElementById("html").style.overflow = "hidden";
+}
+
+/**
+ * Shows the board overlay and resets its scroll position.
+ * @param {HTMLElement} overlay - The overlay element.
+ */
+function showBoardOverlay(overlay) {
+  overlay.classList.remove("d-none");
+  overlay.scrollTop = 0;
+}
+
+/**
+ * Gets the CSS class for overlay based on the task category.
+ * @param {Object} task - The task object.
+ * @returns {string} The category CSS class.
+ */
+function getOverlayCategoryClass(task) {
+  if (!task) return "";
+  if (task.category === "User Story") return "category-user";
+  if (task.category === "Technical Task") return "category-technical";
+  return "";
 }
 
 /**
@@ -955,7 +1040,6 @@ function createAssignedDropdownElements(assignedListContainer) {
   dropdown.appendChild(list);
   assignedListContainer.appendChild(label);
   assignedListContainer.appendChild(dropdown);
-
   return { dropdown, list, toggle, placeholder, arrow };
 }
 
@@ -1178,24 +1262,64 @@ function updateCirclesVisibility(wrapper, selectedContacts) {
  * @param {Array<string>} selectedContacts
  * @param {Array<Object>} contacts
  */
+/**
+ * Updates the content of the assigned circles wrapper with selected contacts.
+ * Renders up to four visible contact circles, and a "+N" circle if more are hidden.
+ * @param {HTMLElement} wrapper - The wrapper element to update.
+ * @param {Array<string>} selectedContacts - Array of selected contact names.
+ * @param {Array<Object>} contacts - All available contact objects.
+ */
 function updateCirclesContent(wrapper, selectedContacts, contacts) {
   wrapper.innerHTML = '';
-  let validContacts = selectedContacts.filter(name => contacts.find(c => c.name === name));
-  let maxVisible = 4;
-  let visibleContacts = validContacts.slice(0, maxVisible);
+  let validContacts = getValidContacts(selectedContacts, contacts);
+  let visibleContacts = validContacts.slice(0, 4);
   let hiddenCount = validContacts.length - visibleContacts.length;
+  renderVisibleContacts(wrapper, visibleContacts);
+  renderHiddenCount(wrapper, hiddenCount);
+}
 
+/**
+ * Returns only valid contact names that exist in the contacts array.
+ * @param {Array<string>} selectedContacts - Array of selected contact names.
+ * @param {Array<Object>} contacts - All available contact objects.
+ * @returns {Array<string>} Array of valid contact names.
+ */
+function getValidContacts(selectedContacts, contacts) {
+  return selectedContacts.filter(name => contacts.find(c => c.name === name));
+}
+
+/**
+ * Renders up to four visible contact circles into the wrapper.
+ * @param {HTMLElement} wrapper - The wrapper element to append circles to.
+ * @param {Array<string>} visibleContacts - Array of up to four contact names.
+ */
+function renderVisibleContacts(wrapper, visibleContacts) {
   visibleContacts.forEach(name => {
-    let contact = contacts.find(c => c.name === name);
+    let contact = getContactByName(name);
     if (!contact) return;
-    let initials = getInitials(contact.name);
-    let color = contact.color || '#ccc';
-    let div = document.createElement('div');
-    div.className = 'initial-circle';
-    div.style.backgroundColor = color;
-    div.textContent = initials;
-    wrapper.appendChild(div);
+    wrapper.appendChild(createInitialCircle(contact));
   });
+}
+
+/**
+ * Creates a colored initial circle for a given contact.
+ * @param {Object} contact - The contact object.
+ * @returns {HTMLDivElement} The circle element.
+ */
+function createInitialCircle(contact) {
+  let div = document.createElement('div');
+  div.className = 'initial-circle';
+  div.style.backgroundColor = contact.color || '#ccc';
+  div.textContent = getInitials(contact.name);
+  return div;
+}
+
+/**
+ * Renders a "+N" circle if contacts are hidden.
+ * @param {HTMLElement} wrapper - The wrapper element to append the indicator to.
+ * @param {number} hiddenCount - The number of hidden contacts.
+ */
+function renderHiddenCount(wrapper, hiddenCount) {
   if (hiddenCount > 0) {
     let moreDiv = document.createElement('div');
     moreDiv.className = 'initial-circle';
@@ -1228,18 +1352,40 @@ function handleAssignedContactToggle(name, contacts, list, assignedListContainer
 function setupAssignedDropdown() {
   let assignedListContainer = document.querySelector('.assigned-list');
   if (!assignedListContainer || document.getElementById('assigned-dropdown')) return;
-
   let { dropdown, list, toggle, placeholder, arrow } = createAssignedDropdownElements(assignedListContainer);
   setupAssignedDropdownEvents(toggle, list);
+  const { contacts, selectedContacts } = initAssignedDropdownState();
+  renderAndSetupAssignedDropdown(contacts, selectedContacts, list, assignedListContainer);
+}
+
+/**
+ * Initializes the state for the overlay assigned-to dropdown.
+ * @returns {{contacts: Array, selectedContacts: Object}}
+ */
+function initAssignedDropdownState() {
   let contacts = fetchAssignedContacts();
   let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
   let selectedContacts = { value: getInitialAssignedContacts(taskKey) };
+  return { contacts, selectedContacts };
+}
 
+/**
+ * Sets up events and renders the assigned dropdown list and circles.
+ * @param {Array} contacts
+ * @param {Object} selectedContacts
+ * @param {HTMLElement} list
+ * @param {HTMLElement} assignedListContainer
+ */
+function renderAndSetupAssignedDropdown(contacts, selectedContacts, list, assignedListContainer) {
   function onToggleContact(name) {
-    handleAssignedContactToggle(name, contacts, list, assignedListContainer, selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList);
+    handleAssignedContactToggle(
+      name, contacts, list, assignedListContainer,
+      selectedContacts, renderAssignedSelectedCircles, renderAssignedDropdownList
+    );
   }
-
-  renderAssignedDropdownList(contacts, selectedContacts.value, list, onToggleContact, renderAssignedSelectedCircles);
+  renderAssignedDropdownList(
+    contacts, selectedContacts.value, list, onToggleContact, renderAssignedSelectedCircles
+  );
   renderAssignedSelectedCircles(selectedContacts.value, contacts, assignedListContainer);
   window.getAssignedOverlaySelection = () => selectedContacts.value;
 }
@@ -1375,20 +1521,9 @@ function createSubtaskRowInput(sub, idx, subtaskArr) {
   input.value = typeof sub === 'string' ? sub : sub.title;
   input.className = 'subtask-list-editinput';
   input.readOnly = true;
-  input.activateEdit = () => {
-    input.readOnly = false;
-    input.focus();
-    input.setSelectionRange(0, input.value.length);
-  };
-  input.onblur = () => {
-    if (input.value.trim() !== '') {
-      subtaskArr[idx].title = input.value.trim();
-    }
-    input.readOnly = true;
-  };
-  input.onkeydown = (e) => {
-    if (e.key === 'Enter') input.blur();
-  };
+  input.activateEdit = () => { input.readOnly = false; input.focus(); input.setSelectionRange(0, input.value.length); };
+  input.onblur = () => { if (input.value.trim() !== '') subtaskArr[idx].title = input.value.trim(); input.readOnly = true; };
+  input.onkeydown = (e) => { if (e.key === 'Enter') input.blur(); };
   return input;
 }
 
@@ -1502,15 +1637,7 @@ function getUpdatedTaskFromEdit(task, taskKey) {
   let newPriority = getEditedPriority(task.priority);
   let newAssignedTo = getEditedAssignedTo(task.assignedTo);
   let newSubtasks = getEditedSubtasks(task.subtask);
-  return {
-    ...task,
-    title: newTitle,
-    description: newDescription,
-    dueDate: newDueDate,
-    priority: newPriority,
-    assignedTo: newAssignedTo,
-    subtask: newSubtasks
-  };
+  return { ...task, title: newTitle, description: newDescription, dueDate: newDueDate, priority: newPriority, assignedTo: newAssignedTo, subtask: newSubtasks };
 }
 
 /**
@@ -1626,9 +1753,7 @@ function reloadUIAfterEdit(taskKey, options = {}) {
 function searchTask() {
   let inputValue = getSearchInputValue();
   let foundTasks = filterTasksBySearch(arrayTasks, inputValue);
-
   clearBoardSections();
-
   if (foundTasks.length > 0) {
     renderTasksToBoard(foundTasks);
   } else {
@@ -2162,23 +2287,53 @@ function validateSubtaskInput(text, subtaskIcons, input) {
 function createSubtaskListItem(text) {
   let li = document.createElement("li");
   li.className = "subtask-list-item";
+  li.appendChild(createSubtaskDot());
+  let input = createSubtaskInputElem(text, li);
+  li.appendChild(input);
+  li.appendChild(createEditBtn(input));
+  li.appendChild(createRemoveBtn(li));
+  li.ondblclick = () => input.activateEdit();
+  return li;
+}
 
+/**
+ * Creates the dot element for a subtask.
+ * @returns {HTMLSpanElement} The dot element.
+ */
+function createSubtaskDot() {
   let dot = document.createElement("span");
   dot.className = "subtask-dot";
   dot.textContent = "•";
+  return dot;
+}
 
+/**
+ * Creates an input element for a subtask and attaches all logic.
+ * @param {string} text - The subtask text.
+ * @param {HTMLLIElement} li - The parent list item element.
+ * @returns {HTMLInputElement} The configured input element.
+ */
+function createSubtaskInputElem(text, li) {
   let input = document.createElement("input");
   input.type = "text";
   input.value = text;
   input.className = "subtask-list-editinput";
   input.readOnly = true;
+  addSubtaskInputElemEvents(input, li);
+  return input;
+}
 
+/**
+ * Attaches editing, blur, and keydown logic to a subtask input element.
+ * @param {HTMLInputElement} input - The input element.
+ * @param {HTMLLIElement} li - The parent list item element.
+ */
+function addSubtaskInputElemEvents(input, li) {
   input.activateEdit = () => {
     input.readOnly = false;
     input.focus();
     input.setSelectionRange(0, input.value.length);
   };
-
   input.onblur = () => {
     if (input.value.trim() === "") {
       li.remove();
@@ -2186,11 +2341,17 @@ function createSubtaskListItem(text) {
     }
     input.readOnly = true;
   };
-
   input.onkeydown = (e) => {
     if (e.key === "Enter") input.blur();
   };
+}
 
+/**
+ * Creates the edit button for a subtask.
+ * @param {HTMLInputElement} input - The input to activate editing.
+ * @returns {HTMLButtonElement} The edit button.
+ */
+function createEditBtn(input) {
   let editBtn = document.createElement("button");
   editBtn.type = "button";
   editBtn.className = "subtask-edit-btn";
@@ -2200,7 +2361,15 @@ function createSubtaskListItem(text) {
     e.preventDefault();
     input.activateEdit();
   };
+  return editBtn;
+}
 
+/**
+ * Creates the remove button for a subtask.
+ * @param {HTMLLIElement} li - The list item to remove.
+ * @returns {HTMLButtonElement} The remove button.
+ */
+function createRemoveBtn(li) {
   let removeBtn = document.createElement("button");
   removeBtn.type = "button";
   removeBtn.className = "subtask-remove-btn";
@@ -2209,17 +2378,7 @@ function createSubtaskListItem(text) {
     e.preventDefault();
     li.remove();
   };
-
-  li.appendChild(dot);
-  li.appendChild(input);
-  li.appendChild(editBtn);
-  li.appendChild(removeBtn);
-
-  li.ondblclick = () => {
-    input.activateEdit();
-  };
-
-  return li;
+  return removeBtn;
 }
 
 /**
@@ -2823,6 +2982,13 @@ function closeMoveTaskMenu() {
   }
 }
 
+
+/**
+ * Returns the complete HTML string for the open board card overlay.
+ * @param {string} categoryClass - The CSS class for the category.
+ * @param {Object} task - The task object.
+ * @returns {string} HTML string for the board card overlay.
+ */
 function getOpenBoardCardTemplate(categoryClass, task) {
   let priorityIcon = getPriorityIcon(task.priority);
   let assignedHTML = renderAssignedList(task.assignedTo);
@@ -2830,6 +2996,11 @@ function getOpenBoardCardTemplate(categoryClass, task) {
   return getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML);
 }
 
+/**
+ * Returns the HTML string for the priority selection buttons.
+ * @param {string} currentPriority - The currently selected priority ("urgent", "medium", "low").
+ * @returns {string} HTML string for the priority buttons.
+ */
 function getPriorityButtonsHTML(currentPriority) {
   let priorities = [
     { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
@@ -2839,35 +3010,77 @@ function getPriorityButtonsHTML(currentPriority) {
   return priorities.map(p => getPriorityButtonHTML(p, currentPriority)).join('');
 }
 
+/**
+ * Closes the move task dropdown menu when the window is resized.
+ */
 window.addEventListener('resize', closeMoveTaskMenu);
 
 /**
  * Adds drag & drop highlight listeners to all board columns for visual feedback.
  */
 function addDragHighlightListeners() {
-  ['todo', 'progress', 'feedback', 'done'].forEach(id => {
-    let el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('dragover', function (ev) {
-        ev.preventDefault();
-        el.classList.add('highlight');
-      });
-      el.addEventListener('dragleave', function () {
-        el.classList.remove('highlight');
-      });
-      el.addEventListener('drop', function (ev) {
-        ev.preventDefault();
-        let draggedEl = document.getElementById(currentDraggedElement);
-        if (draggedEl && !el.contains(draggedEl)) {
-          el.appendChild(draggedEl);
-        }
-        ['todo', 'progress', 'feedback', 'done'].forEach(id => {
-          let dropEl = document.getElementById(id);
-          if (dropEl) dropEl.classList.remove('highlight');
-        });
-      });
-    }
+  getBoardColumns().forEach(el => {
+    setupDragEventsForColumn(el);
   });
+}
+
+/**
+ * Returns an array of all board column elements.
+ * @returns {Array<HTMLElement>}
+ */
+function getBoardColumns() {
+  return ['todo', 'progress', 'feedback', 'done']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+}
+
+/**
+ * Sets up all drag event listeners for a given board column.
+ * @param {HTMLElement} el - The board column element.
+ */
+function setupDragEventsForColumn(el) {
+  el.addEventListener('dragover', ev => handleDragOver(ev, el));
+  el.addEventListener('dragleave', () => handleDragLeave(el));
+  el.addEventListener('drop', ev => handleDrop(ev, el));
+}
+
+/**
+ * Handles the dragover event for a board column.
+ * @param {DragEvent} ev
+ * @param {HTMLElement} el
+ */
+function handleDragOver(ev, el) {
+  ev.preventDefault();
+  el.classList.add('highlight');
+}
+
+/**
+ * Handles the dragleave event for a board column.
+ * @param {HTMLElement} el
+ */
+function handleDragLeave(el) {
+  el.classList.remove('highlight');
+}
+
+/**
+ * Handles the drop event for a board column.
+ * @param {DragEvent} ev
+ * @param {HTMLElement} el
+ */
+function handleDrop(ev, el) {
+  ev.preventDefault();
+  let draggedEl = document.getElementById(currentDraggedElement);
+  if (draggedEl && !el.contains(draggedEl)) {
+    el.appendChild(draggedEl);
+  }
+  removeAllHighlights();
+}
+
+/**
+ * Removes the highlight class from all board columns.
+ */
+function removeAllHighlights() {
+  getBoardColumns().forEach(el => el.classList.remove('highlight'));
 }
 
 /**
