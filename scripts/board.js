@@ -11,6 +11,11 @@ let contacts = [];
 let selectedContacts = [];
 let selectedCategory = "";
 
+/**
+ * Loads all tasks and contacts for the current user and updates the board UI.
+ *
+ * @returns {Promise<void>}
+ */
 async function loadTasks() {
   let responseJson = await fetchTasksFromFirebase(firebaseKey);
   await fetchContactsAndStore(firebaseKey);
@@ -19,12 +24,24 @@ async function loadTasks() {
   updateHTML(arrayTasks);
 }
 
+/**
+ * Fetches tasks from Firebase for a specific user.
+ *
+ * @param {string} userKey - The Firebase user key.
+ * @returns {Promise<Object>} A promise resolving to the task data.
+ */
 async function fetchTasksFromFirebase(userKey) {
   let response = await fetch(`${BASE_URL}${userKey}/tasks.json`);
   let data = await response.json();
   return data;
 }
 
+/**
+ * Fetches contacts for a user and stores them in localStorage under `firebaseUsers`.
+ *
+ * @param {string} userKey - The Firebase user key.
+ * @returns {Promise<void>}
+ */
 async function fetchContactsAndStore(userKey) {
   try {
     let response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
@@ -41,6 +58,12 @@ async function fetchContactsAndStore(userKey) {
   }
 }
 
+/**
+ * Converts raw Firebase task data into a normalized task array.
+ *
+ * @param {Object} responseJson - The raw task data from Firebase.
+ * @returns {Array<Object>} An array of normalized task objects.
+ */
 function normalizeTasks(responseJson) {
   if (!responseJson) return [];
   return Object.entries(responseJson).map(([firebaseKey, task]) => ({
@@ -49,6 +72,11 @@ function normalizeTasks(responseJson) {
   }));
 }
 
+/**
+ * Fetches all contacts for the current user from Firebase and stores them in the `contacts` array.
+ *
+ * @returns {Promise<void>} A promise that resolves when contacts are successfully fetched and stored.
+ */
 async function fetchContacts() {
   try {
     let response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
@@ -65,6 +93,12 @@ async function fetchContacts() {
   }
 }
 
+/**
+ * Deletes a task from Firebase and updates the local task array and UI.
+ *
+ * @param {string} taskKey - The Firebase key of the task to delete.
+ * @returns {Promise<void>}
+ */
 async function deleteTask(taskKey) {
   try {
     let response = await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
@@ -81,6 +115,12 @@ async function deleteTask(taskKey) {
   }
 }
 
+/**
+ * Moves the currently dragged task to the specified status and updates it in Firebase.
+ *
+ * @param {string} status - The new status to assign to the dragged task (e.g., "todo", "progress").
+ * @returns {Promise<void>} A promise that resolves after the task status has been updated.
+ */
 async function moveTo(status) {
 
   const idx = arrayTasks.findIndex(t => t.firebaseKey === currentDraggedElement);
@@ -111,10 +151,22 @@ async function moveTo(status) {
   updateHTML();
 }
 
+/**
+ * Finds a contact by name from the local contacts array.
+ *
+ * @param {string} name - The name of the contact.
+ * @returns {Object|null} The contact object or null if not found.
+ */
 function getContactByName(name) {
   return contacts.find(c => c.name === name) || null;
 }
 
+/**
+ * Returns the initials of a given name string.
+ *
+ * @param {string} name - The full name of a contact.
+ * @returns {string} The uppercase initials extracted from the name.
+ */
 function getInitials(name) {
   if (!name) return "";
   const nameParts = name.trim().split(" ");
@@ -128,6 +180,12 @@ function getInitials(name) {
   }
 }
 
+/**
+ * Returns the CSS class name for a given category.
+ *
+ * @param {string} category - The task category.
+ * @returns {string} The corresponding CSS class.
+ */
 function getCategoryClass(category) {
   if (category === "User Story") return "category-user";
   if (category === "Technical Task") return "category-technical";
@@ -135,6 +193,12 @@ function getCategoryClass(category) {
 }
 
 
+/**
+ * Generates HTML for assigned user circles (up to 3 visible).
+ *
+ * @param {Array<string>} assignedList - List of assigned user names.
+ * @returns {string} HTML string for the assigned circles.
+ */
 function generateAssignedCircles(assignedList) {
   if (!Array.isArray(assignedList)) return "";
   assignedList = assignedList.filter(name => {
@@ -160,6 +224,12 @@ function generateAssignedCircles(assignedList) {
   return circlesHTML;
 }
 
+/**
+ * Generates HTML for a subtask progress bar.
+ *
+ * @param {Array<Object>} subtasksArr - Array of subtasks with completion status.
+ * @returns {string} HTML string for the progress bar.
+ */
 function generateSubtaskProgress(subtasksArr) {
   let total = subtasksArr.length;
   let completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
@@ -168,6 +238,12 @@ function generateSubtaskProgress(subtasksArr) {
   return getSubtaskProgressHTML(completed, total, percent);
 }
 
+/**
+ * Generates the full HTML for a task card in the board.
+ *
+ * @param {Object} element - The task object.
+ * @returns {string} HTML string of the task card.
+ */
 function generateTodoHTML(element) {
   let category = getCardCategory(element);
   let categoryClass = getCategoryClass(category);
@@ -192,12 +268,32 @@ function generateTodoHTML(element) {
   );
 }
 
+/**
+ * Extracts the category from a task object.
+ *
+ * @param {Object} element - The task object.
+ * @returns {string} The task category or an empty string.
+ */
 function getCardCategory(element) {
   return typeof element.category === 'string' ? element.category : '';
 }
+
+/**
+ * Extracts the priority from a task object.
+ *
+ * @param {Object} element - The task object.
+ * @returns {string} The task priority or 'low' as default.
+ */
 function getCardPriority(element) {
   return typeof element.priority === 'string' ? element.priority : 'low';
 }
+
+/**
+ * Extracts and formats the assigned user list from a task object.
+ *
+ * @param {Object} element - The task object.
+ * @returns {Array<string>} An array of assigned user names.
+ */
 function getAssignedList(element) {
   if (Array.isArray(element.assignedTo)) {
     return element.assignedTo.filter(name => !!name && typeof name === 'string');
@@ -206,22 +302,53 @@ function getAssignedList(element) {
   }
   return [];
 }
+
+/**
+ * Extracts the subtasks array from a task object.
+ *
+ * @param {Object} element - The task object.
+ * @returns {Array<Object>} An array of subtask objects.
+ */
 function getSubtasksArray(element) {
   return Array.isArray(element.subtask) ? element.subtask : [];
 }
+
+/**
+ * Extracts the title from a task object.
+ *
+ * @param {Object} element - The task object.
+ * @returns {string} The task title or an empty string.
+ */
 function getCardTitle(element) {
   return typeof element.title === 'string' ? element.title : '';
 }
+
+/**
+ * Extracts the description from a task object.
+ *
+ * @param {Object} element - The task object.
+ * @returns {string} The task description or an empty string.
+ */
 function getCardDescription(element) {
   return typeof element.description === 'string' ? element.description : '';
 }
 
+/**
+ * Marks a task element as currently being dragged.
+ *
+ * @param {string} firebaseKey - The key of the dragged task.
+ */
 function startDragging(firebaseKey) {
   currentDraggedElement = firebaseKey;
   let taskElement = document.getElementById(firebaseKey);
   taskElement.classList.add("dragging");
 }
 
+/**
+ * Removes the dragging CSS class from a task element.
+ *
+ * @param {string} firebaseKey - The key of the task.
+ */
 function stopDragging(firebaseKey) {
   let taskElement = document.getElementById(firebaseKey);
   if (taskElement) {
@@ -229,6 +356,11 @@ function stopDragging(firebaseKey) {
   }
 }
 
+/**
+ * Handles the drop target behavior and appends the dragged element if valid.
+ *
+ * @param {DragEvent} ev - The drop event.
+ */
 function allowDrop(ev) {
   ev.preventDefault();
   let target = ev.currentTarget;
@@ -238,14 +370,30 @@ function allowDrop(ev) {
   }
 }
 
+/**
+ * Adds a highlight class to a task column.
+ *
+ * @param {string} status - The status column ID.
+ */
 function highlight(status) {
   document.getElementById(status).classList.add("drag-area-highlight");
 }
 
+/**
+ * Removes the highlight class from a task column.
+ *
+ * @param {string} status - The status column ID.
+ */
 function removeHighlight(status) {
   document.getElementById(status).classList.remove("drag-area-highlight");
 }
 
+/**
+ * Filters and returns tasks by their status.
+ *
+ * @param {string} status - The status to filter tasks by.
+ * @returns {Array<Object>} An array of tasks with the given status.
+ */
 function getTasksByStatus(status) {
   return arrayTasks.filter(t =>
     t && typeof t.status === 'string'
@@ -254,6 +402,13 @@ function getTasksByStatus(status) {
   );
 }
 
+/**
+ * Renders a section of the board with tasks or an empty message.
+ *
+ * @param {string} sectionId - The DOM ID of the section.
+ * @param {Array<Object>} tasks - The list of tasks to render.
+ * @param {string} emptyMessage - The message to show when no tasks are present.
+ */
 function renderSection(sectionId, tasks, emptyMessage) {
   let section = document.getElementById(sectionId);
   section.innerHTML = "";
@@ -266,6 +421,9 @@ function renderSection(sectionId, tasks, emptyMessage) {
   }
 }
 
+/**
+ * Adds click event listeners to all task sections for opening task cards.
+ */
 function addCardClickListeners() {
   ['todo', 'progress', 'feedback', 'done'].forEach(sectionId => {
     let section = document.getElementById(sectionId);
@@ -278,6 +436,9 @@ function addCardClickListeners() {
   });
 }
 
+/**
+ * Updates the entire board UI with the current tasks.
+ */
 function updateHTML() {
   renderSection("todo", getTasksByStatus("todo"), "No Tasks");
   renderSection("progress", getTasksByStatus("progress"), "No Tasks");
@@ -286,6 +447,12 @@ function updateHTML() {
   addCardClickListeners();
 }
 
+/**
+ * Opens a task card in an overlay based on its Firebase key.
+ *
+ * @param {string} firebaseKey - The Firebase key of the task.
+ * @param {Object} [options={}] - Additional options for rendering the card.
+ */
 function openBoardCard(firebaseKey, options = {}) {
   let overlayElement = document.getElementById("board_overlay");
   let task = arrayTasks.find(t => t.firebaseKey === firebaseKey);
@@ -309,6 +476,12 @@ function openBoardCard(firebaseKey, options = {}) {
   updateHTML();
 }
 
+/**
+ * Returns the path to the icon associated with the given priority.
+ *
+ * @param {string} priority - The task priority ("low", "medium", "urgent").
+ * @returns {string} The icon path.
+ */
 function getPriorityIcon(priority) {
   if (!priority) return "";
   switch (priority.toLowerCase()) {
@@ -319,6 +492,12 @@ function getPriorityIcon(priority) {
   }
 }
 
+/**
+ * Renders the assigned contacts as HTML elements.
+ *
+ * @param {Array<string>} assignedTo - The names of assigned contacts.
+ * @returns {string} HTML string for the assigned contact list.
+ */
 function renderAssignedList(assignedTo) {
   if (!Array.isArray(assignedTo)) return "";
   return assignedTo.map(name => {
@@ -329,6 +508,12 @@ function renderAssignedList(assignedTo) {
   }).join("");
 }
 
+/**
+ * Renders the subtasks of a task as HTML list items.
+ *
+ * @param {Object} task - The task object containing subtasks.
+ * @returns {string} HTML string of rendered subtasks.
+ */
 function renderSubtasks(task) {
   if (!Array.isArray(task.subtask)) return "";
   return task.subtask.map((sub, idx) => {
@@ -339,6 +524,11 @@ function renderSubtasks(task) {
   }).join("");
 }
 
+/**
+ * Updates the subtask list and progress bar in the overlay for a given task.
+ *
+ * @param {Object} task - The task object to update the overlay for.
+ */
 function updateOverlaySubtasks(task) {
   let subtaskList = document.querySelector('.subtask-list ul');
   if (subtaskList) {
@@ -356,22 +546,47 @@ function updateOverlaySubtasks(task) {
   }
 }
 
+/**
+ * Updates the selected priority in the overlay and highlights the corresponding button.
+ *
+ * @param {string} priority - The selected priority level.
+ * @param {HTMLElement} btn - The button element representing the selected priority.
+ */
 function selectOverlayPriority(priority, btn) {
   document.querySelectorAll('.priority-edit-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('priority-edit-buttons').dataset.selectedPriority = priority;
 }
 
+/**
+ * Converts an array of strings or objects into valid subtask objects.
+ *
+ * @param {Array<string|Object>} subtasks - An array of subtasks.
+ * @returns {Array<Object>} An array of subtask objects with title and completed status.
+ */
 function convertSubtasksToObjects(subtasks) {
   return subtasks.map(sub => typeof sub === 'string' ? { title: sub, completed: false } : sub);
 }
 
+/**
+ * Toggles the completion status of a subtask at a given index.
+ *
+ * @param {Array<Object>} subtasks - The array of subtasks.
+ * @param {number} index - The index of the subtask to toggle.
+ */
 function toggleSubtaskCompleted(subtasks, index) {
   if (Array.isArray(subtasks) && subtasks[index]) {
     subtasks[index].completed = !subtasks[index].completed;
   }
 }
 
+/**
+ * Saves the updated subtask array to Firebase for a specific task.
+ *
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {Array<Object>} subtasks - The array of updated subtask objects.
+ * @returns {Promise<void>}
+ */
 async function saveSubtasksToFirebase(taskKey, subtasks) {
   await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}/subtask.json`, {
     method: "PUT",
@@ -380,6 +595,11 @@ async function saveSubtasksToFirebase(taskKey, subtasks) {
   });
 }
 
+/**
+ * Renders the task details in an overlay card based on the given task object.
+ *
+ * @param {Object} task - The task object to render.
+ */
 function renderBoardOverlay(task) {
   let boardOverlayRef = document.getElementById("board_overlay");
   if (boardOverlayRef && task) {
@@ -402,6 +622,12 @@ function renderBoardOverlay(task) {
   }
 }
 
+/**
+ * Blurs the checkbox input element of a subtask after toggling.
+ *
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {number} index - The index of the subtask.
+ */
 function blurCheckbox(taskKey, index) {
   setTimeout(() => {
     let checkboxId = `subtask-${taskKey}-${index}`;
@@ -410,6 +636,12 @@ function blurCheckbox(taskKey, index) {
   }, 0);
 }
 
+/**
+ * Toggles a subtask's completion state and updates Firebase and UI accordingly.
+ *
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {number} index - The index of the subtask.
+ */
 async function toggleSubtask(taskKey, index) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task || !Array.isArray(task.subtask)) return;
@@ -425,18 +657,32 @@ async function toggleSubtask(taskKey, index) {
   }
 }
 
+/**
+ * Removes the opening animation class from the overlay card.
+ *
+ * @param {HTMLElement} card - The overlay card element.
+ */
 function removeOverlayAnimation(card) {
   card.classList.remove('open');
 }
 
+/**
+ * Hides the board overlay from view.
+ */
 function hideBoardOverlay() {
   document.getElementById("board_overlay").classList.add("d-none");
 }
 
+/**
+ * Resets the document overflow style to default.
+ */
 function resetHtmlOverflow() {
   document.getElementById("html").style.overflow = "";
 }
 
+/**
+ * Removes title and description labels from the overlay card.
+ */
 function removeOverlayLabels() {
   let titleLabel = document.getElementById("overlay_card_title_label");
   if (titleLabel) titleLabel.remove();
@@ -444,6 +690,11 @@ function removeOverlayLabels() {
   if (descLabel) descLabel.remove();
 }
 
+/**
+ * Closes the overlay after a delay and updates the board UI.
+ *
+ * @param {number} ms - The delay in milliseconds before closing.
+ */
 function closeOverlayWithDelay(ms) {
   setTimeout(() => {
     hideBoardOverlay();
@@ -453,6 +704,9 @@ function closeOverlayWithDelay(ms) {
   }, ms);
 }
 
+/**
+ * Immediately closes the overlay without delay and updates the board UI.
+ */
 function closeOverlayImmediately() {
   hideBoardOverlay();
   resetHtmlOverflow();
@@ -460,6 +714,9 @@ function closeOverlayImmediately() {
   updateHTML();
 }
 
+/**
+ * Closes the currently open board card, either with or without animation.
+ */
 function closeBoardCard() {
   if (window._assignedDropdownCleanup) window._assignedDropdownCleanup();
   let card = document.querySelector('.board-overlay-card');
@@ -475,6 +732,9 @@ function onclickProtection(event) {
   event.stopPropagation();
 }
 
+/**
+ * Switches the overlay card into edit mode by setting up editable fields and inputs.
+ */
 function editTask() {
   editTaskUI();
   addTitleLabel();
@@ -485,6 +745,9 @@ function editTask() {
   setupSubtasksEdit();
 }
 
+/**
+ * Configures the UI for editing a task (hiding buttons, enabling contentEditable).
+ */
 function editTaskUI() {
   document.getElementById("ok_btn").classList.remove("d-none");
   document.getElementById("delete_btn").classList.add("d-none");
@@ -496,6 +759,9 @@ function editTaskUI() {
   document.getElementById("overlay_card_description").contentEditable = "true";
 }
 
+/**
+ * Adds a label above the title input in the overlay card if not already present.
+ */
 function addTitleLabel() {
   let titleElement = document.getElementById("overlay_card_title");
   if (!document.getElementById("overlay_card_title_label")) {
@@ -507,6 +773,9 @@ function addTitleLabel() {
   }
 }
 
+/**
+ * Adds a label above the description input in the overlay card if not already present.
+ */
 function addDescriptionLabel() {
   let descElement = document.getElementById("overlay_card_description");
   if (!document.getElementById("overlay_card_description_label")) {
@@ -553,6 +822,9 @@ function addDueDateInput(dueDateSpan, formattedDate) {
   dueDateSpan.appendChild(input);
 }
 
+/**
+ * Adds a due date label and input field to the overlay card for editing the due date.
+ */
 function addDueDateLabelAndInput() {
   let dueDateSpan = document.getElementById("due_date");
   if (dueDateSpan && !document.getElementById("due_date_input")) {
@@ -563,6 +835,9 @@ function addDueDateLabelAndInput() {
   }
 }
 
+/**
+ * Replaces the static priority display with editable buttons for setting task priority.
+ */
 function setupPriorityEdit() {
   let priorityHeadline = document.querySelector('.priority-headline');
   if (priorityHeadline && !document.getElementById('priority-edit-buttons')) {
@@ -809,6 +1084,9 @@ function handleAssignedContactToggle(name, contacts, list, assignedListContainer
   renderAssignedSelectedCircles(selectedContacts.value, contacts, assignedListContainer);
 }
 
+/**
+ * Sets up the editable assigned-to dropdown in the overlay card.
+ */
 function setupAssignedDropdown() {
   let assignedListContainer = document.querySelector('.assigned-list');
   if (!assignedListContainer || document.getElementById('assigned-dropdown')) return;
@@ -828,6 +1106,9 @@ function setupAssignedDropdown() {
   window.getAssignedOverlaySelection = () => selectedContacts.value;
 }
 
+/**
+ * Initializes the editable subtask list inside the overlay card.
+ */
 function setupSubtasksEdit() {
   let subtaskList = document.querySelector('.subtask-list ul');
   if (!subtaskList || document.getElementById('subtasks-edit-container')) return;
@@ -978,6 +1259,11 @@ function handleAddSubtask(subtasks, input, container, rerender) {
   }
 }
 
+/**
+ * Saves the edited task data back to Firebase and refreshes the UI.
+ *
+ * @param {string} taskKey - The Firebase key of the task being edited.
+ */
 async function saveEditTask(taskKey) {
   let task = arrayTasks.find(t => t.firebaseKey === taskKey);
   if (!task) return;
@@ -1081,6 +1367,9 @@ function reloadUIAfterEdit(taskKey, options = {}) {
   openBoardCard(taskKey, options);
 }
 
+/**
+ * Executes a search over all tasks based on title and description input.
+ */
 function searchTask() {
   let inputValue = getSearchInputValue();
   let foundTasks = filterTasksBySearch(arrayTasks, inputValue);
@@ -1712,6 +2001,9 @@ function addDateInputListener(dateInput, errorText) {
   });
 }
 
+/**
+ * Creates a new task based on form input and stores it in Firebase.
+ */
 async function createTask() {
   if (!validateForm()) return;
   let task = buildTaskObject();
