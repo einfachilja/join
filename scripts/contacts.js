@@ -1,7 +1,24 @@
+/**
+ * Firebase base URL for contact data
+ */
+const BASE_URL =
+  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
+
+let contacts = [];
+let recentlyAddedContact = null;
+let firebaseKey = localStorage.getItem("firebaseKey");
+
+
+/**
+ * @file contacts.js
+ * This script handles the contacts functionality including adding, editing, deleting,
+ * and displaying contacts. It interacts with Firebase for data storage.
+ */
 function init() {
   setUserInitials();
   loadContacts();
 }
+
 
 /**
  * Validate Add/Edit Contact form
@@ -39,15 +56,6 @@ function validateContactForm(isEdit) {
   return valid;
 }
 
-/**
- * Firebase base URL for contact data
- */
-const BASE_URL =
-  "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/";
-
-let contacts = [];
-let recentlyAddedContact = null;
-let firebaseKey = localStorage.getItem("firebaseKey");
 
 /**
  * Returns a random HSL color
@@ -65,6 +73,7 @@ function getRandomColor() {
   ];
   return colors[Math.floor(Math.random() * colors.length)];
 }
+
 
 /**
  * Gets initials from name
@@ -84,6 +93,7 @@ function getInitials(name) {
   }
 }
 
+
 /**
  * Sends contact to Firebase and reloads
  * @param {Object} contact
@@ -95,6 +105,7 @@ async function getFirebaseKeyAndLoadContacts(contact) {
   });
   await loadContacts();
 }
+
 
 /**
  * Adds new contact and opens details
@@ -130,6 +141,7 @@ async function addNewContact(event) {
   }
 }
 
+
 /**
  * Opens contact details for mobile or desktop
  * @param {Object} contact
@@ -146,6 +158,7 @@ function openContactOverlay(contact) {
       getOpenContactTemplate(contact, initials);
   }
 }
+
 
 /**
  * Shows success message when contact is added
@@ -176,6 +189,11 @@ function showAddedContactMessage() {
   }, 3000);
 }
 
+
+/**
+ * Gets trimmed input values from contact form
+ * @returns {{name: string, email: string, phone: string}}
+ */
 function getTrimmedContactInput() {
   return {
     name: document.getElementById("edit_contact_name").value.trim(),
@@ -183,6 +201,7 @@ function getTrimmedContactInput() {
     phone: document.getElementById("edit_contact_phone").value.trim(),
   };
 }
+
 
 /**
  * Validates contact inputs
@@ -205,10 +224,20 @@ function isValidContactInput(
   );
 }
 
+
+/**
+ * Builds updated contact object
+ * @param {string} name
+ * @param {string} email
+ * @param {string} phone
+ * @param {Object} originalContact
+ * @returns {{name: string, email: string, phone: string, color: string}}
+ */
 function buildUpdatedContact(name, email, phone, originalContact) {
   const color = originalContact?.color || getRandomColor();
   return { name, email, phone, color };
 }
+
 
 /**
  * Saves updated contact to Firebase
@@ -221,10 +250,17 @@ async function updateContactInFirebase(contactKey, updatedContact) {
   });
 }
 
+
+/**
+ * Updates local contact object with new data
+ * @param {Object} original - Original contact object
+ * @param {Object} updated - Updated contact data
+ */
 function updateLocalContact(original, updated) {
   if (!original) return;
   Object.assign(original, updated);
 }
+
 
 /**
  * Gets trimmed input values from edit form
@@ -233,6 +269,7 @@ function updateLocalContact(original, updated) {
 function getEditFormData() {
   return getTrimmedContactInput();
 }
+
 
 /**
  * Checks if the edit form inputs are valid
@@ -253,6 +290,7 @@ function isEditFormValid(name, email, phone) {
   );
 }
 
+
 /**
  * Updates contact data in Firebase and reloads contacts list
  * @param {string} key
@@ -262,6 +300,7 @@ async function updateContactAndReload(key, updatedContact) {
   await updateContactInFirebase(key, updatedContact);
   await loadContacts();
 }
+
 
 /**
  * Refreshes the contact details on desktop and mobile views
@@ -275,6 +314,7 @@ function refreshContactDetails(contact) {
     toggleContactInfoOverlay(contact, initials);
   }
 }
+
 
 /**
  * Saves edited contact after validation
@@ -313,6 +353,7 @@ async function saveEditContact(event, contactKey) {
   }
 }
 
+
 /**
  * Loads all contacts from Firebase
  */
@@ -336,16 +377,32 @@ async function loadContacts() {
   }
 }
 
+
+/**
+ * Sorts contacts alphabetically by name
+ * @param {Array} list - Array of contact objects
+ * @returns {Array} - Sorted array of contacts
+ */
 function sortContacts(list) {
   return list
     .slice()
     .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 }
 
+
+/** * Gets the first letter of a name
+ * @param {string} name
+ * @returns {string} - First letter in uppercase
+ */
 function getFirstLetter(name) {
   return name.trim()[0].toUpperCase();
 }
 
+
+/** * Checks if the contact is the one recently added
+ * @param {Object} contact - Contact object to check
+ * @returns {boolean} - True if the contact matches the recently added one
+ */
 function isRecentlyAdded(contact) {
   return (
     recentlyAddedContact &&
@@ -355,6 +412,9 @@ function isRecentlyAdded(contact) {
   );
 }
 
+
+/** * Clears the highlight from the recently added contact after a delay
+ */ 
 function clearHighlightAfterDelay() {
   setTimeout(() => {
     let highlighted = document.querySelector(".contact.highlight");
@@ -362,6 +422,7 @@ function clearHighlightAfterDelay() {
     recentlyAddedContact = null;
   }, 3000);
 }
+
 
 /**
  * Renders all contacts and highlights the new one
@@ -391,6 +452,12 @@ function renderContacts() {
   clearHighlightAfterDelay();
 }
 
+
+/**
+ * Styles the contact element on click
+ * @param {HTMLElement} element - The contact element clicked
+ * @param {string} initials - Initials of the contact
+ */
 function styleContactOnclick(element, initials) {
   document
     .querySelectorAll(".contact.open-contact")
@@ -408,16 +475,28 @@ function styleContactOnclick(element, initials) {
   }
 }
 
+
+/** * Toggles the contact info overlay for mobile view
+ * @param {Object} contact - Contact  object to display
+ * @param {string} initials - Initials of the contact
+ */
 function toggleContactInfoOverlay(contact, initials) {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = getOpenContactMobileTemplate(contact, initials);
   overlayRef.classList.remove("d_none");
 }
 
+
+/**
+ * Displays contact information in the desktop view
+ * @param {Object} contact - Contact object to display
+ * @param {string} initials - Initials of the contact
+ */
 function showContactInfo(contact, initials) {
   let contactInfoRef = document.getElementById("open_contact_Template");
   contactInfoRef.innerHTML = getOpenContactTemplate(contact, initials);
 }
+
 
 /**
  * Deletes contact from Firebase and reloads
@@ -454,6 +533,12 @@ async function deleteContact(contactKey) {
   }
 }
 
+
+/** * Validates email input
+ * @param {string} inputId - ID of the email input
+ * @param {string} errorId - ID of the error message element
+ * @returns {boolean} - True if valid, false otherwise
+ */
 function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
   const emailInput = document.getElementById(inputId);
   const error = document.getElementById(errorId);
@@ -477,6 +562,12 @@ function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
   return valid;
 }
 
+
+/** * Validates phone input
+ * @param {string} inputId - ID of the phone input
+ * @param {string} errorId - ID of the error message element
+ * @returns {boolean} - True if valid, false otherwise
+ */
 function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
   const phoneInput = document.getElementById(inputId);
   const error = document.getElementById(errorId);
@@ -493,6 +584,9 @@ function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
   return valid;
 }
 
+
+/** * Toggles the overlay for adding a new contact
+ */
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = overlayTemplate();
@@ -508,11 +602,21 @@ function toggleOverlay() {
   }, 0);
 }
 
+
+/**
+ * Opens the edit/delete menu for a contact
+ * @param {Object} contact - Contact object to edit or delete
+ */
 function openEditDeleteMenu(contact) {
   document.getElementById("edit_delete_menu").innerHTML =
     getEditDeleteMenuTemplate(contact);
 }
 
+
+/**
+ * Toggles the edit overlay for a contact
+ * @param {Object} contact - Contact object to edit
+ */
 function toggleEditOverlay(contact) {
   const overlayRef = document.getElementById("overlay");
   overlayRef.innerHTML = overlayEditTemplate(
@@ -533,11 +637,20 @@ function toggleEditOverlay(contact) {
   }, 0);
 }
 
+
+/**
+ * Closes the edit/delete menu
+ */
 function closeEditDeleteMenu() {
   const menuRef = document.getElementById("edit_delete_menu");
   if (menuRef) menuRef.innerHTML = "";
 }
 
+
+/**
+ * Toggles the mobile edit overlay for a contact
+ * @param {Object} contact - Contact object to edit
+ */
 function toggleMobileEditOverlay(contact) {
   closeEditDeleteMenu();
   const overlayRef = document.getElementById("overlay_mobile");
@@ -559,10 +672,18 @@ function toggleMobileEditOverlay(contact) {
   }, 0);
 }
 
+
+/**
+ * Prevents dialog propagation to avoid closing the overlay
+ * @param {Event} event - The event object
+ */
 function dialogPrevention(event) {
   event.stopPropagation();
 }
 
+
+/** * Closes the overlay and removes the modal
+ */
 function toggleOff() {
   const overlayRef = document.getElementById("overlay");
   const modal = document.querySelector(".add-new-contact-template");
@@ -574,6 +695,9 @@ function toggleOff() {
   }, 300);
 }
 
+
+/** * Closes the mobile overlay and removes the modal
+ */
 function toggleOffMobile() {
   const overlayRef = document.getElementById("overlay_mobile");
   const modal = document.querySelector(".add-new-contact-template");
@@ -585,6 +709,11 @@ function toggleOffMobile() {
   }, 300);
 }
 
+
+/**
+ * Opens the contact templates for displaying contact details
+ * @param {Object} contact - Contact object to display
+ */
 function OpenContactTemplates(contact) {
   const initials = getInitials(contact.name);
   document.getElementById("open_contact_Template").innerHTML =
