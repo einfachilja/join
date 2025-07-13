@@ -688,18 +688,6 @@ function showBoardOverlay(overlay) {
 }
 
 /**
- * Gets the CSS class for overlay based on the task category.
- * @param {Object} task - The task object.
- * @returns {string} The category CSS class.
- */
-function getOverlayCategoryClass(task) {
-  if (!task) return "";
-  if (task.category === "User Story") return "category-user";
-  if (task.category === "Technical Task") return "category-technical";
-  return "";
-}
-
-/**
  * Blurs the checkbox input element of a subtask after toggling.
  *
  * @param {string} taskKey - The Firebase key of the task.
