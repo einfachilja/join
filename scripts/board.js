@@ -1,5 +1,3 @@
-const BASE_URL = "https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/";
-
 let arrayTasks = [];
 let addTaskDefaultStatus = "todo";
 let firebaseKey = localStorage.getItem("firebaseKey");
@@ -22,123 +20,6 @@ async function loadTasks() {
   arrayTasks = normalizeTasks(responseJson);
   await fetchContacts();
   updateHTML(arrayTasks);
-}
-
-/**
- * Fetches tasks from Firebase for a specific user.
- *
- * @param {string} userKey - The Firebase user key.
- * @returns {Promise<Object>} A promise resolving to the task data.
- */
-async function fetchTasksFromFirebase(userKey) {
-  let response = await fetch(`${BASE_URL}${userKey}/tasks.json`);
-  let data = await response.json();
-  return data;
-}
-
-/**
- * Fetches contacts for a user and stores them in localStorage under `firebaseUsers`.
- *
- * @param {string} userKey - The Firebase user key.
- * @returns {Promise<void>}
- */
-async function fetchContactsAndStore(userKey) {
-  let response = await fetch(`${BASE_URL}${userKey}/contacts.json`);
-  let data = await response.json();
-  if (data) {
-    let users = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
-    users[userKey] = users[userKey] || {};
-    users[userKey]['contacts'] = data;
-    localStorage.setItem('firebaseUsers', JSON.stringify(users));
-  }
-}
-
-/**
- * Converts raw Firebase task data into a normalized task array.
- *
- * @param {Object} responseJson - The raw task data from Firebase.
- * @returns {Array<Object>} An array of normalized task objects.
- */
-function normalizeTasks(responseJson) {
-  if (!responseJson) return [];
-  return Object.entries(responseJson).map(([firebaseKey, task]) => ({
-    firebaseKey,
-    ...task
-  }));
-}
-
-/**
- * Fetches all contacts for the current user from Firebase and stores them in the `contacts` array.
- *
- * @returns {Promise<void>} A promise that resolves when contacts are successfully fetched and stored.
- */
-async function fetchContacts() {
-  let response = await fetch(`${BASE_URL}${firebaseKey}/contacts.json`);
-  let data = await response.json();
-  contacts = Object.values(data || {})
-    .filter(u => u && typeof u.name === "string" && u.name.trim())
-    .map(u => ({
-      name: u.name.trim(),
-      color: u.color || "#888"
-    }));
-  updateHTML();
-}
-
-/**
- * Deletes a task from Firebase and updates the local task array and UI.
- *
- * @param {string} taskKey - The Firebase key of the task to delete.
- * @returns {Promise<void>}
- */
-async function deleteTask(taskKey) {
-  try {
-    let response = await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error("Löschen fehlgeschlagen");
-    }
-    arrayTasks = arrayTasks.filter((task) => task.firebaseKey !== taskKey);
-    closeBoardCard();
-    updateHTML();
-  } catch (error) {
-    console.error("Fehler beim Löschen des Tasks:", error);
-  }
-}
-
-
-/**
- * Moves the currently dragged task to the specified status and updates it in Firebase.
- *
- * @param {string} status - The new status to assign to the dragged task (e.g., "todo", "progress").
- * @returns {Promise<void>} A promise that resolves after the task status has been updated.
- */
-async function moveTo(status) {
-  let idx = arrayTasks.findIndex(t => t.firebaseKey === currentDraggedElement);
-  if (idx === -1) return alert("Aufgabe wurde nicht gefunden!");
-  let [task] = arrayTasks.splice(idx, 1);
-  task.status = status;
-  arrayTasks.push(task);
-  await updateTaskStatusInFirebase(task, status);
-  updateHTML();
-}
-
-/**
- * Updates the status of a task in Firebase.
- *
- * @param {Object} task - The task object to update.
- * @param {string} status - The new status to assign.
- * @returns {Promise<void>}
- */
-async function updateTaskStatusInFirebase(task, status) {
-  await fetch(
-    `${BASE_URL}${firebaseKey}/tasks/${task.firebaseKey}.json`,
-    {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status })
-    }
-  );
 }
 
 /**
@@ -341,120 +222,6 @@ function getCardDescription(element) {
 }
 
 /**
- * Marks a task element as currently being dragged.
- *
- * @param {string} firebaseKey - The key of the dragged task.
- */
-function startDragging(firebaseKey) {
-  currentDraggedElement = firebaseKey;
-  let taskElement = document.getElementById(firebaseKey);
-  taskElement.classList.add("dragging");
-}
-
-/**
- * Removes the dragging CSS class from a task element.
- *
- * @param {string} firebaseKey - The key of the task.
- */
-function stopDragging(firebaseKey) {
-  let taskElement = document.getElementById(firebaseKey);
-  if (taskElement) {
-    taskElement.classList.remove("dragging");
-  }
-}
-
-/**
- * Handles the drop target behavior and appends the dragged element if valid.
- *
- * @param {DragEvent} ev - The drop event.
- */
-function allowDrop(ev) {
-  ev.preventDefault();
-  let target = ev.currentTarget;
-  let draggedEl = document.getElementById(currentDraggedElement);
-  if (draggedEl && !target.contains(draggedEl)) {
-    target.appendChild(draggedEl);
-  }
-}
-
-/**
- * Adds a highlight class to a task column.
- *
- * @param {string} status - The status column ID.
- */
-function highlight(status) {
-  document.getElementById(status).classList.add("drag-area-highlight");
-}
-
-/**
- * Removes the highlight class from a task column.
- *
- * @param {string} status - The status column ID.
- */
-function removeHighlight(status) {
-  document.getElementById(status).classList.remove("drag-area-highlight");
-}
-
-/**
- * Filters and returns tasks by their status.
- *
- * @param {string} status - The status to filter tasks by.
- * @returns {Array<Object>} An array of tasks with the given status.
- */
-function getTasksByStatus(status) {
-  return arrayTasks.filter(t =>
-    t && typeof t.status === 'string'
-      ? t.status === status
-      : status === 'todo'
-  );
-}
-
-/**
- * Renders a section of the board with tasks or an empty message.
- *
- * @param {string} sectionId - The DOM ID of the section.
- * @param {Array<Object>} tasks - The list of tasks to render.
- * @param {string} emptyMessage - The message to show when no tasks are present.
- */
-function renderSection(sectionId, tasks, emptyMessage) {
-  let section = document.getElementById(sectionId);
-  section.innerHTML = "";
-  if (tasks.length === 0) {
-    section.innerHTML = `<span class="empty-message">${emptyMessage}</span>`;
-  } else {
-    for (let task of tasks) {
-      section.innerHTML += generateTodoHTML(task);
-    }
-  }
-}
-
-/**
- * Adds click event listeners to all task sections for opening task cards.
- */
-function addCardClickListeners() {
-  ['todo', 'progress', 'feedback', 'done'].forEach(sectionId => {
-    let section = document.getElementById(sectionId);
-    if (!section) return;
-    section.onclick = null;
-    section.addEventListener('click', function (event) {
-      let card = event.target.closest('.card');
-      if (card && card.id) openBoardCard(card.id);
-    });
-  });
-}
-
-/**
- * Updates the entire board UI with the current tasks.
- */
-function updateHTML() {
-  renderSection("todo", getTasksByStatus("todo"), "No Tasks");
-  renderSection("progress", getTasksByStatus("progress"), "No Tasks");
-  renderSection("feedback", getTasksByStatus("feedback"), "No Tasks");
-  renderSection("done", getTasksByStatus("done"), "No Tasks");
-  addCardClickListeners();
-}
-
-/**
  * Opens a task card in an overlay based on its Firebase key.
  *
  * @param {string} firebaseKey - The Firebase key of the task.
@@ -627,21 +394,6 @@ function toggleSubtaskCompleted(subtasks, index) {
   if (Array.isArray(subtasks) && subtasks[index]) {
     subtasks[index].completed = !subtasks[index].completed;
   }
-}
-
-/**
- * Saves the updated subtask array to Firebase for a specific task.
- *
- * @param {string} taskKey - The Firebase key of the task.
- * @param {Array<Object>} subtasks - The array of updated subtask objects.
- * @returns {Promise<void>}
- */
-async function saveSubtasksToFirebase(taskKey, subtasks) {
-  await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}/subtask.json`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(subtasks)
-  });
 }
 
 /**
@@ -1703,20 +1455,6 @@ function getNewDueDate() {
 }
 
 /**
- * Updates a task in Firebase with new values.
- * @param {string} taskKey - The Firebase key of the task.
- * @param {Object} updatedTask - The updated task data.
- * @returns {Promise<void>}
- */
-async function updateTaskInFirebase(taskKey, updatedTask) {
-  await fetch(`${BASE_URL}${firebaseKey}/tasks/${taskKey}.json`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedTask)
-  });
-}
-
-/**
  * Updates the local arrayTasks with the edited task.
  * @param {string} taskKey - The Firebase key of the task.
  * @param {Object} updatedTask - The updated task data.
@@ -1733,68 +1471,6 @@ function updateTaskLocally(taskKey, updatedTask) {
 function reloadUIAfterEdit(taskKey, options = {}) {
   updateHTML();
   openBoardCard(taskKey, options);
-}
-
-/**
- * Executes a search over all tasks based on title and description input.
- */
-function searchTask() {
-  let inputValue = getSearchInputValue();
-  let foundTasks = filterTasksBySearch(arrayTasks, inputValue);
-  clearBoardSections();
-  if (foundTasks.length > 0) {
-    renderTasksToBoard(foundTasks);
-  } else {
-    ["todo", "progress", "feedback", "done"].forEach(section => {
-      document.getElementById(section).innerHTML = `
-        <span class="empty-message no-results">No results found</span>
-      `;
-    });
-  }
-}
-
-/**
- * Gets the normalized, lowercase value from the search input field.
- * @returns {string} The trimmed, lowercase search value.
- */
-function getSearchInputValue() {
-  let inputRef = document.getElementById("input_find_task");
-  return inputRef.value.trim().toLowerCase();
-}
-
-/**
- * Filters tasks by search value, checking title and description.
- * @param {Array<Object>} tasks - The list of tasks to filter.
- * @param {string} searchValue - The lowercase search string.
- * @returns {Array<Object>} The filtered tasks.
- */
-function filterTasksBySearch(tasks, searchValue) {
-  return tasks.filter(task => {
-    let titleMatch = task.title && task.title.toLowerCase().includes(searchValue);
-    let descriptionMatch = task.description && task.description.toLowerCase().includes(searchValue);
-    return titleMatch || descriptionMatch;
-  });
-}
-
-/**
- * Clears all board sections (todo, progress, feedback, done).
- */
-function clearBoardSections() {
-  ["todo", "progress", "feedback", "done"].forEach(section => {
-    document.getElementById(section).innerHTML = "";
-  });
-}
-
-/**
- * Renders tasks into their corresponding board sections based on status.
- * @param {Array<Object>} tasks - The tasks to render.
- */
-function renderTasksToBoard(tasks) {
-  tasks.forEach(task => {
-    if (["todo", "progress", "feedback", "done"].includes(task.status)) {
-      document.getElementById(task.status).innerHTML += generateTodoHTML(task);
-    }
-  });
 }
 
 /**
