@@ -23,17 +23,6 @@ async function loadTasks() {
 }
 
 /**
- * Generates the full HTML for a task card in the board.
- * @param {Object} element - The task object.
- * @returns {string} HTML string of the task card.
- */
-function generateTodoHTML(element) {
-  let props = extractCardProps(element);
-  return buildCardHTML(
-    props.firebaseKey, props.category, props.categoryClass, props.priority, props.priorityIcon, props.assignedList, props.subtaskProgressHTML, props.title, props.description);
-}
-
-/**
  * Creates and returns a label element for the assigned-to dropdown.
  * @returns {HTMLElement} The label element.
  */
@@ -810,33 +799,6 @@ function handleMoveTaskOptionClick(taskKey, statusKey) {
   currentDraggedElement = taskKey;
   moveTo(statusKey);
   closeMoveTaskMenu();
-}
-
-/**
- * Returns the complete HTML string for the open board card overlay.
- * @param {string} categoryClass - The CSS class for the category.
- * @param {Object} task - The task object.
- * @returns {string} HTML string for the board card overlay.
- */
-function getOpenBoardCardTemplate(categoryClass, task) {
-  let priorityIcon = getPriorityIcon(task.priority);
-  let assignedHTML = renderAssignedList(task.assignedTo);
-  let subtaskHTML = renderSubtasks(task);
-  return getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML);
-}
-
-/**
- * Returns the HTML string for the priority selection buttons.
- * @param {string} currentPriority - The currently selected priority ("urgent", "medium", "low").
- * @returns {string} HTML string for the priority buttons.
- */
-function getPriorityButtonsHTML(currentPriority) {
-  let priorities = [
-    { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
-    { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
-    { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
-  ];
-  return priorities.map(p => getPriorityButtonHTML(p, currentPriority)).join('');
 }
 
 /**
