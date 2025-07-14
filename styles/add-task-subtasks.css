@@ -1,0 +1,248 @@
+#description {
+  resize: vertical;
+  min-height: 128px;
+  max-height: 328px;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+#description::placeholder {
+  width: 100%;
+}
+
+.subtask-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.subtask-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+}
+
+.subtask-edit input {
+  flex: 1;
+  height: 48px;
+  background-color: #ffffff;
+  border: 2px solid #2a3647;
+  border-radius: 10px;
+  padding: 0 16px;
+  font-size: 16px;
+}
+
+.subtask-edit img {
+  width: 24px;
+  height: 24px;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.subtask-list-add {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: 80px;
+}
+
+.subtask-list-item {
+  list-style-type: disc;
+  margin-left: 20px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.subtask-list-item:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.subtask-list-item span {
+  flex: 1;
+}
+
+.subtask-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+#subtask-input {
+  height: 48px;
+  background-color: #ffffff;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  width: 100%;
+  padding: 0 16px;
+  padding-right: 96px;
+  box-sizing: border-box;
+}
+
+.subtask-icons {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+}
+
+.subtask-icons img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: transparent;
+  filter: brightness(0);
+}
+
+.subtask-icons img.icon-black {
+  filter: brightness(0);
+}
+
+#subtask-plus {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: auto;
+  height: 24px;
+  display: flex;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+#subtask-plus img {
+  width: 24px;
+  height: 24px;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+#subtask-plus:hover img {
+  background-color: #e0e0e0;
+}
+
+.subtask-icon {
+  width: 24px;
+  height: 24px;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.subtask-icon:hover {
+  background-color: #e0e0e0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.subtask-list-item.subtask-edit-mode {
+  background-color: #ffffff;
+  border: 1px solid #29abe2;
+  border-radius: 10px;
+  padding: 0 12px;
+  list-style-type: none;
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  line-height: 1;
+  height: 48px;
+}
+
+.subtask-list-item.subtask-edit-mode span {
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.subtask-edit-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #29abe2;
+  box-sizing: border-box;
+  background-color: #ffffff;
+}
+
+.subtask-input-edit-wrapper {
+  flex: 1;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.subtask-input-edit-wrapper input {
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background: transparent;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.subtask-edit-container img {
+  width: 20px;
+  height: 20px;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: transparent;
+  filter: brightness(0);
+  transition: background-color 0.2s ease;
+}
+
+.subtask-edit-container img:hover {
+  background-color: transparent;
+}
+
+.subtask-edit-confirm {
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.subtask-edit-confirm:hover {
+  background-color: #e0e0e0;
+}
+
+.subtask-edit-icons {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.subtask-edit-input {
+  background-color: #ffffff !important;
+}
+
+.subtask-edit-buttons img[src$="add-task-divider.svg"] {
+  margin: 0 6px;
+}
