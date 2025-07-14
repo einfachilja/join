@@ -187,3 +187,77 @@ function filterTasksBySearch(tasks, searchValue) {
         return titleMatch || descriptionMatch;
     });
 }
+
+/**
+ * Adds drag & drop highlight listeners to all board columns for visual feedback.
+ */
+function addDragHighlightListeners() {
+    getBoardColumns().forEach(el => {
+        setupDragEventsForColumn(el);
+    });
+}
+
+/**
+ * Returns an array of all board column elements.
+ * @returns {Array<HTMLElement>}
+ */
+function getBoardColumns() {
+    return ['todo', 'progress', 'feedback', 'done']
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+}
+
+/**
+ * Sets up all drag event listeners for a given board column.
+ * @param {HTMLElement} el - The board column element.
+ */
+function setupDragEventsForColumn(el) {
+    el.addEventListener('dragover', ev => handleDragOver(ev, el));
+    el.addEventListener('dragleave', () => handleDragLeave(el));
+    el.addEventListener('drop', ev => handleDrop(ev, el));
+}
+
+/**
+ * Handles the dragover event for a board column.
+ * @param {DragEvent} ev
+ * @param {HTMLElement} el
+ */
+function handleDragOver(ev, el) {
+    ev.preventDefault();
+    el.classList.add('highlight');
+}
+
+/**
+ * Handles the dragleave event for a board column.
+ * @param {HTMLElement} el
+ */
+function handleDragLeave(el) {
+    el.classList.remove('highlight');
+}
+
+/**
+ * Handles the drop event for a board column.
+ * @param {DragEvent} ev
+ * @param {HTMLElement} el
+ */
+function handleDrop(ev, el) {
+    ev.preventDefault();
+    let draggedEl = document.getElementById(currentDraggedElement);
+    if (draggedEl && !el.contains(draggedEl)) {
+        el.appendChild(draggedEl);
+    }
+    removeAllHighlights();
+}
+
+/**
+ * Removes the highlight class from all board columns.
+ */
+function removeAllHighlights() {
+    getBoardColumns().forEach(el => el.classList.remove('highlight'));
+}
+
+/**
+ * Adds drag & drop highlight listeners to all board columns for visual feedback after DOM load.
+ * Runs automatically when the DOM is ready.
+ */
+window.addEventListener('DOMContentLoaded', addDragHighlightListeners);
