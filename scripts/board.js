@@ -10,19 +10,6 @@ let selectedContacts = [];
 let selectedCategory = "";
 
 /**
- * Loads all tasks and contacts for the current user and updates the board UI.
- *
- * @returns {Promise<void>}
- */
-async function loadTasks() {
-  let responseJson = await fetchTasksFromFirebase(firebaseKey);
-  await fetchContactsAndStore(firebaseKey);
-  arrayTasks = normalizeTasks(responseJson);
-  await fetchContacts();
-  updateHTML(arrayTasks);
-}
-
-/**
  * Creates and returns a label element for the assigned-to dropdown.
  * @returns {HTMLElement} The label element.
  */
@@ -550,21 +537,6 @@ function buildTaskObject() {
     createdAt: new Date().toISOString(),
     status: addTaskDefaultStatus,
   };
-}
-
-/**
- * Saves a new task to Firebase.
- * @param {Object} task - The task object to save.
- * @returns {Promise<void>}
- */
-async function saveTaskToFirebase(task) {
-  await fetch(
-    `${BASE_URL}${firebaseKey}/tasks.json`,
-    {
-      method: "POST",
-      body: JSON.stringify(task),
-    }
-  );
 }
 
 /**
