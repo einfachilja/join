@@ -439,18 +439,14 @@ select:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: none; /* Firefox */
 }
 
-.selected-contacts .initials-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #2a3647;
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.selected-contacts::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 .profile-icon {
@@ -471,30 +467,15 @@ input.error-border,
 textarea.error-border,
 select.error-border,
 #dropdown-toggle.error-border,
-#category-toggle.error-border {
-  border: 1px solid #e74c3c;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
-  transition: border 0.1s linear, box-shadow 0.1s linear;
-}
-
-#dropdown-toggle.error-border,
-#category-toggle.error-border {
-  border: 1px solid #e74c3c;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
-  transition: border 0.1s linear, box-shadow 0.1s linear;
-}
-
+#category-toggle.error-border,
 #dueDate.error-border,
-#title.error-border {
-  border: 1px solid #e74c3c;
-}
-
+#title.error-border,
 .error {
   border: 1px solid #e74c3c;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
+  transition: border 0.1s linear, box-shadow 0.1s linear;
 }
 
 input::placeholder,
@@ -992,21 +973,6 @@ select::placeholder {
 
 .subtask-edit-buttons img[src$="add-task-divider.svg"] {
   margin: 0 6px;
-}
-
-.selected-contacts {
-  margin-top: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  max-height: 120px;
-  overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-width: none;
-}
-
-.selected-contacts::-webkit-scrollbar {
-  display: none;
 }
 
 .assigned-circle.overflow-indicator {
