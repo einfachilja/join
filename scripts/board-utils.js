@@ -197,3 +197,229 @@ function generateSubtaskProgress(subtasksArr) {
     if (total === 0) return "";
     return getSubtaskProgressHTML(completed, total, percent);
 }
+
+/**
+ * Generates HTML for assigned user circles (up to 3 visible).
+ * @param {Array<string>} assignedList - List of assigned user names.
+ * @returns {string} HTML string for the assigned circles.
+ */
+function generateAssignedCircles(assignedList) {
+    if (!Array.isArray(assignedList)) return "";
+    let validList = filterValidContacts(assignedList);
+    let visibleContacts = validList.slice(0, 3);
+    let circlesHTML = visibleContacts.map(name => assignedCircleHTML(name)).join("");
+    circlesHTML += getHiddenCountHTML(validList, visibleContacts);
+    return circlesHTML;
+}
+
+/**
+ * Returns HTML for a single assigned contact circle.
+ * @param {string} name
+ * @returns {string}
+ */
+function assignedCircleHTML(name) {
+    let contact = getContactByName(name);
+    let color = contact?.color || "#ccc";
+    return getAssignedCircleHTML(name, color);
+}
+
+/**
+ * Renders the assigned contacts as HTML elements.
+ *
+ * @param {Array<string>} assignedTo - The names of assigned contacts.
+ * @returns {string} HTML string for the assigned contact list.
+ */
+function renderAssignedList(assignedTo) {
+    if (!Array.isArray(assignedTo)) return "";
+    return assignedTo.map(name => {
+        let contact = getContactByName(name);
+        if (!contact) return '';
+        let color = contact.color || "#ccc";
+        return getAssignedEntryHTML(name, color);
+    }).join("");
+}
+
+/**
+ * Toggles the completion status of a subtask at a given index.
+ *
+ * @param {Array<Object>} subtasks - The array of subtasks.
+ * @param {number} index - The index of the subtask to toggle.
+ */
+function toggleSubtaskCompleted(subtasks, index) {
+    if (Array.isArray(subtasks) && subtasks[index]) {
+        subtasks[index].completed = !subtasks[index].completed;
+    }
+}
+
+/**
+ * Returns the initials for a contact’s name.
+ * @param {string} name - The contact’s full name.
+ * @returns {string}
+ */
+function getContactInitials(name) {
+    return name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase();
+}
+
+/**
+ * Validates the subtask input field and icons, sets error border if invalid.
+ * @param {string} text - The subtask text to validate.
+ * @param {HTMLElement} subtaskIcons - The icons wrapper element.
+ * @param {HTMLInputElement} input - The subtask input element.
+ * @returns {boolean} True if valid, false otherwise.
+ */
+function validateSubtaskInput(text, subtaskIcons, input) {
+    if (!text || subtaskIcons.classList.contains("hidden")) {
+        input.classList.add("error-border");
+        return false;
+    }
+    input.classList.remove("error-border");
+    return true;
+}
+
+/**
+ * Returns the initials for the given category string.
+ * @param {string} category - The category name.
+ * @returns {string} The initials in uppercase.
+ */
+function getCategoryInitials(category) {
+    return category
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+        .toUpperCase();
+}
+
+/**
+ * Checks if a text input is filled.
+ * @param {HTMLInputElement} inputEl - The input element.
+ * @returns {boolean}
+ */
+function isInputFilled(inputEl) {
+    return inputEl.value.trim() !== "";
+}
+
+/**
+ * Checks if a category is currently selected.
+ * @returns {boolean}
+ */
+function isCategorySelected() {
+    return selectedCategory && selectedCategory.trim() !== "";
+}
+
+/**
+ * Clears all content from the category dropdown.
+ * @param {HTMLElement} content - The dropdown content element.
+ */
+function clearCategoryContent(content) {
+    content.innerHTML = "";
+}
+
+/**
+ * Returns a list of all available categories.
+ * @returns {Array<string>}
+ */
+function getCategoryList() {
+    return ["Technical Task", "User Story"];
+}
+
+/**
+ * Clears the category display box.
+ * @param {HTMLElement} box - The container for the category icon.
+ */
+function clearCategoryBox(box) {
+    box.innerHTML = "";
+}
+
+/**
+ * Creates a category icon DOM element with the given category initials.
+ * @param {string} category - The category name.
+ * @returns {HTMLDivElement} The icon element.
+ */
+function createCategoryIcon(category) {
+    let div = document.createElement("div");
+    div.className = "profile-icon";
+    div.style.background = "#2a3647";
+    div.textContent = getCategoryInitials(category);
+    return div;
+}
+
+/**
+ * Gets the trimmed value from an input field by id.
+ * @param {string} id - The DOM element id.
+ * @returns {string} The input value or empty string.
+ */
+function getInputValue(id) {
+    let el = document.getElementById(id);
+    return el ? el.value.trim() : "";
+}
+
+/**
+ * Returns only valid contact names that exist in the contacts array.
+ * @param {Array<string>} selectedContacts - Array of selected contact names.
+ * @param {Array<Object>} contacts - All available contact objects.
+ * @returns {Array<string>} Array of valid contact names.
+ */
+function getValidContacts(selectedContacts, contacts) {
+    return selectedContacts.filter(name => contacts.find(c => c.name === name));
+}
+
+/**
+ * Gets or creates the wrapper element for assigned circles.
+ * @param {HTMLElement} assignedListContainer
+ * @returns {HTMLElement} The wrapper element.
+ */
+function getOrCreateCirclesWrapper(assignedListContainer) {
+    let wrapper = document.getElementById('assigned-selected-circles');
+    if (!wrapper) {
+        wrapper = document.createElement('div');
+        wrapper.id = 'assigned-selected-circles';
+        wrapper.className = 'selected-initials-wrapper';
+        assignedListContainer.appendChild(wrapper);
+    }
+    return wrapper;
+}
+
+/**
+ * Renders up to four visible contact circles into the wrapper.
+ * @param {HTMLElement} wrapper - The wrapper element to append circles to.
+ * @param {Array<string>} visibleContacts - Array of up to four contact names.
+ */
+function renderVisibleContacts(wrapper, visibleContacts) {
+    visibleContacts.forEach(name => {
+        let contact = getContactByName(name);
+        if (!contact) return;
+        wrapper.appendChild(createInitialCircle(contact));
+    });
+}
+
+/**
+ * Renders a "+N" circle if contacts are hidden.
+ * @param {HTMLElement} wrapper - The wrapper element to append the indicator to.
+ * @param {number} hiddenCount - The number of hidden contacts.
+ */
+function renderHiddenCount(wrapper, hiddenCount) {
+    if (hiddenCount > 0) {
+        let moreDiv = document.createElement('div');
+        moreDiv.className = 'initial-circle';
+        moreDiv.style.backgroundColor = '#ccc';
+        moreDiv.textContent = `+${hiddenCount}`;
+        wrapper.appendChild(moreDiv);
+    }
+}
+
+/**
+ * Creates a colored initial circle for a given contact.
+ * @param {Object} contact - The contact object.
+ * @returns {HTMLDivElement} The circle element.
+ */
+function createInitialCircle(contact) {
+    let div = document.createElement('div');
+    div.className = 'initial-circle';
+    div.style.backgroundColor = contact.color || '#ccc';
+    div.textContent = getInitials(contact.name);
+    return div;
+}
