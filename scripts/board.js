@@ -101,87 +101,6 @@ function createSubtaskInput() {
 }
 
 /**
- * Creates the button element for adding a subtask.
- * @returns {HTMLButtonElement} The add button element.
- */
-function createAddSubtaskButton() {
-  let addBtn = document.createElement('button');
-  addBtn.type = 'button';
-  addBtn.id = 'add-subtask-btn';
-  addBtn.textContent = '+';
-  addBtn.className = 'add-subtask-btn';
-  return addBtn;
-}
-
-/**
- * Creates the input element for editing a subtask row.
- * @param {Object|string} sub - The subtask object or string.
- * @param {number} idx - The index of the subtask in the array.
- * @param {Array<Object>} subtaskArr - The array of subtasks.
- * @returns {HTMLInputElement} The input element.
- */
-function createSubtaskRowInput(sub, idx, subtaskArr) {
-  let input = document.createElement('input');
-  input.type = 'text';
-  input.value = typeof sub === 'string' ? sub : sub.title;
-  input.className = 'subtask-list-editinput';
-  input.readOnly = true;
-  input.activateEdit = () => { input.readOnly = false; input.focus(); input.setSelectionRange(0, input.value.length); };
-  input.onblur = () => { if (input.value.trim() !== '') subtaskArr[idx].title = input.value.trim(); input.readOnly = true; };
-  input.onkeydown = (e) => { if (e.key === 'Enter') input.blur(); };
-  return input;
-}
-
-/**
- * Creates the edit button for a subtask row.
- * @param {HTMLInputElement} input - The input element to activate edit on.
- * @returns {HTMLButtonElement} The edit button element.
- */
-function createSubtaskRowEditButton(input) {
-  let editBtn = document.createElement('button');
-  editBtn.type = 'button';
-  editBtn.className = 'subtask-edit-btn';
-  editBtn.innerHTML = `<img src="assets/icons/board/board-edit-icon.svg">`;
-  editBtn.title = 'Bearbeiten';
-  editBtn.onclick = (e) => {
-    e.preventDefault();
-    input.activateEdit();
-  };
-  return editBtn;
-}
-
-/**
- * Creates the remove button for a subtask row.
- * @param {number} idx - The index of the subtask.
- * @param {Array<Object>} subtaskArr - The array of subtasks.
- * @param {Function} rerender - The rerender callback.
- * @returns {HTMLButtonElement} The remove button element.
- */
-function createSubtaskRowRemoveButton(idx, subtaskArr, rerender) {
-  let removeBtn = document.createElement('button');
-  removeBtn.type = 'button';
-  removeBtn.className = 'subtask-remove-btn';
-  removeBtn.innerHTML = `<img src="assets/icons/board/board-delete-icon.svg">`;
-  removeBtn.onclick = (e) => {
-    e.preventDefault();
-    subtaskArr.splice(idx, 1);
-    rerender();
-  };
-  return removeBtn;
-}
-
-/**
- * Creates the dot element for a subtask row.
- * @returns {HTMLElement} The dot span element.
- */
-function createSubtaskRowDot() {
-  let dot = document.createElement('span');
-  dot.className = 'subtask-dot';
-  dot.textContent = '•';
-  return dot;
-}
-
-/**
  * Saves the edited task data back to Firebase and refreshes the UI.
  *
  * @param {string} taskKey - The Firebase key of the task being edited.
@@ -514,135 +433,6 @@ function handleCategoryClick(category, content) {
 }
 
 /**
- * Adds a new subtask from the input field, validates, appends to the list, and resets UI.
- */
-function addSubtask() {
-  let input = document.getElementById("subtask-input");
-  let subtaskIcons = document.getElementById("subtask-icons");
-  let text = input.value.trim();
-  if (!validateSubtaskInput(text, subtaskIcons, input)) return;
-  subtasks.push(text);
-  let li = createSubtaskListItem(text);
-  document.getElementById("subtask-list").appendChild(li);
-  finalizeSubtaskInput(input, subtaskIcons);
-}
-
-/**
- * Creates a list item DOM element for a subtask, including edit/remove actions.
- * @param {string} text - The subtask text.
- * @returns {HTMLLIElement} The subtask list item element.
- */
-function createSubtaskListItem(text) {
-  let li = document.createElement("li");
-  li.className = "subtask-list-item";
-  li.appendChild(createSubtaskDot());
-  let input = createSubtaskInputElem(text, li);
-  li.appendChild(input);
-  li.appendChild(createEditBtn(input));
-  li.appendChild(createRemoveBtn(li));
-  li.ondblclick = () => input.activateEdit();
-  return li;
-}
-
-/**
- * Creates the dot element for a subtask.
- * @returns {HTMLSpanElement} The dot element.
- */
-function createSubtaskDot() {
-  let dot = document.createElement("span");
-  dot.className = "subtask-dot";
-  dot.textContent = "•";
-  return dot;
-}
-
-/**
- * Creates an input element for a subtask and attaches all logic.
- * @param {string} text - The subtask text.
- * @param {HTMLLIElement} li - The parent list item element.
- * @returns {HTMLInputElement} The configured input element.
- */
-function createSubtaskInputElem(text, li) {
-  let input = document.createElement("input");
-  input.type = "text";
-  input.value = text;
-  input.className = "subtask-list-editinput";
-  input.readOnly = true;
-  addSubtaskInputElemEvents(input, li);
-  return input;
-}
-
-/**
- * Attaches editing, blur, and keydown logic to a subtask input element.
- * @param {HTMLInputElement} input - The input element.
- * @param {HTMLLIElement} li - The parent list item element.
- */
-function addSubtaskInputElemEvents(input, li) {
-  input.activateEdit = () => {
-    input.readOnly = false;
-    input.focus();
-    input.setSelectionRange(0, input.value.length);
-  };
-  input.onblur = () => {
-    if (input.value.trim() === "") {
-      li.remove();
-      return;
-    }
-    input.readOnly = true;
-  };
-  input.onkeydown = (e) => {
-    if (e.key === "Enter") input.blur();
-  };
-}
-
-/**
- * Creates the edit button for a subtask.
- * @param {HTMLInputElement} input - The input to activate editing.
- * @returns {HTMLButtonElement} The edit button.
- */
-function createEditBtn(input) {
-  let editBtn = document.createElement("button");
-  editBtn.type = "button";
-  editBtn.className = "subtask-edit-btn";
-  editBtn.innerHTML = `<img src="assets/icons/board/board-edit-icon.svg">`;
-  editBtn.title = "Bearbeiten";
-  editBtn.onclick = (e) => {
-    e.preventDefault();
-    input.activateEdit();
-  };
-  return editBtn;
-}
-
-/**
- * Creates the remove button for a subtask.
- * @param {HTMLLIElement} li - The list item to remove.
- * @returns {HTMLButtonElement} The remove button.
- */
-function createRemoveBtn(li) {
-  let removeBtn = document.createElement("button");
-  removeBtn.type = "button";
-  removeBtn.className = "subtask-remove-btn";
-  removeBtn.innerHTML = `<img src="assets/icons/board/board-delete-icon.svg">`;
-  removeBtn.onclick = (e) => {
-    e.preventDefault();
-    li.remove();
-  };
-  return removeBtn;
-}
-
-/**
- * Finalizes the subtask input field: resets, hides icons, updates submit state.
- * @param {HTMLInputElement} input - The subtask input element.
- * @param {HTMLElement} subtaskIcons - The icons wrapper element.
- */
-function finalizeSubtaskInput(input, subtaskIcons) {
-  updateSubmitState();
-  input.value = "";
-  subtaskIcons.classList.add("hidden");
-  let subtaskPlus = document.getElementById("subtask-plus");
-  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
-}
-
-/**
  * Handles pressing Enter in the subtask input, triggers addSubtask if icons visible.
  * @param {KeyboardEvent} e - The keydown event.
  */
@@ -654,32 +444,6 @@ function handleSubtaskEnter(e) {
       addSubtask();
     }
   }
-}
-
-/**
- * Shows or hides the subtask action icons depending on input focus and value.
- */
-function toggleSubtaskIcons() {
-  let input = document.getElementById("subtask-input");
-  let confirmIcon = document.getElementById("subtask-confirm");
-  let defaultIcon = document.getElementById("subtask-plus");
-  let cancelIcon = document.getElementById("subtask-cancel");
-  let isActive = document.activeElement === input;
-  confirmIcon?.classList.toggle("hidden", !isActive);
-  cancelIcon?.classList.toggle("hidden", !isActive);
-  defaultIcon?.classList.toggle("hidden", isActive);
-}
-
-/**
- * Clears the subtask input, hides icons, shows the add ("plus") icon.
- */
-function clearSubtaskInput() {
-  let subtaskInput = document.getElementById("subtask-input");
-  let subtaskIcons = document.getElementById("subtask-icons");
-  let subtaskPlus = document.getElementById("subtask-plus");
-  if (subtaskInput) subtaskInput.value = "";
-  if (subtaskIcons) subtaskIcons.classList.add("hidden");
-  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
 }
 
 /**
@@ -1025,20 +789,6 @@ function setupSubtaskInputListeners() {
   if (!subtaskInput) return;
   subtaskInput.addEventListener("input", showOrHideSubtaskIcons);
   subtaskInput.addEventListener("keydown", handleSubtaskEnter);
-}
-
-/**
- * Shows or hides the subtask action icons depending on input value.
- */
-function showOrHideSubtaskIcons() {
-  let input = document.getElementById("subtask-input");
-  let iconWrapper = document.getElementById("subtask-icons");
-  if (!input || !iconWrapper) return;
-  if (input.value.trim().length > 0) {
-    iconWrapper.classList.remove("hidden");
-  } else {
-    iconWrapper.classList.add("hidden");
-  }
 }
 
 /**
