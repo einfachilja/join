@@ -115,6 +115,35 @@ function getInitials(name) {
   }
 }
 
+/**
+ * Validates an input field against a regex pattern and updates UI accordingly.
+ * @param {string} inputId - The ID of the input field.
+ * @param {string} errorId - The ID of the associated error element.
+ * @param {RegExp} pattern - The regular expression to validate against.
+ * @param {string} errorMsg - The message to show when invalid.
+ * @returns {boolean} - True if input is valid, false otherwise.
+ */
+function validateInputPattern(inputId, errorId, pattern, errorMsg) {
+  const input = document.getElementById(inputId);
+  const error = document.getElementById(errorId);
+  const value = input.value.trim();
+
+  if (!value) {
+    input.classList.remove("invalid");
+    error.classList.remove("visible");
+    error.textContent = "";
+    return false;
+  }
+
+  const isValid = pattern.test(value);
+  input.value = value;
+  input.classList.toggle("invalid", !isValid);
+  error.textContent = isValid ? "" : errorMsg;
+  error.classList.toggle("visible", !isValid);
+
+  return isValid;
+}
+
 
 /**
  * Sends contact to Firebase and reloads
@@ -159,7 +188,7 @@ function findFullContact(contact) {
  */
 async function addNewContact(event) {
   event.preventDefault();
-  const { name, email, phone } = getNewContactInput();
+  const { name, email, phone } = getContactFormInput("new_contact");
   if (!validateContactForm(false)) return;
 
   const contact = createContactObject(name, email, phone);
@@ -175,11 +204,11 @@ async function addNewContact(event) {
  * Gets new contact input values.
  * @returns {{name: string, email: string, phone: string}} - Trimmed input values.
  */
-function getNewContactInput() {
+function getContactFormInput(prefix) {
   return {
-    name: new_contact_name.value.trim(),
-    email: new_contact_email.value.trim(),
-    phone: new_contact_phone.value.trim(),
+    name: document.getElementById(`${prefix}_name`).value.trim(),
+    email: document.getElementById(`${prefix}_email`).value.trim(),
+    phone: document.getElementById(`${prefix}_phone`).value.trim(),
   };
 }
 
@@ -204,7 +233,6 @@ function openOverlayForRecentlyAdded(contact) {
     showAddedContactMessage();
   }
 }
-
 
 
 /**
@@ -307,19 +335,6 @@ function appendMessageContent(target, temp) {
 
 
 /**
- * Gets trimmed input values from edit contact form.
- * @returns {{name: string, email: string, phone: string}} - Trimmed values.
- */
-function getTrimmedContactInput() {
-  return {
-    name: document.getElementById("edit_contact_name").value.trim(),
-    email: document.getElementById("edit_contact_email").value.trim(),
-    phone: document.getElementById("edit_contact_phone").value.trim(),
-  };
-}
-
-
-/**
  * Validates name, email, and phone inputs.
  * @param {string} name - Contact name.
  * @param {string} email - Contact email.
@@ -385,15 +400,6 @@ async function updateContactInFirebase(contactKey, updatedContact) {
 function updateLocalContact(original, updated) {
   if (!original) return;
   Object.assign(original, updated);
-}
-
-
-/**
- * Gets edit form input values.
- * @returns {{name: string, email: string, phone: string}} - Trimmed values.
- */
-function getEditFormData() {
-  return getTrimmedContactInput();
 }
 
 
@@ -474,7 +480,7 @@ function handleCloseEditOverlay() {
 async function saveEditContact(event, contactKey) {
   event.preventDefault();
 
-  const { name, email, phone } = getEditFormData();
+  const { name, email, phone } = getContactFormInput("edit_contact");
   if (!validateContactForm(true)) return;
 
   const originalContact = contacts.find(c => c.firebaseKey === contactKey);
@@ -665,7 +671,7 @@ async function deleteContact(contactKey) {
     await loadContacts();
   } catch (error) {
     console.error("Error deleting contact:", error);
-    alert("Failed to delete contact. Please try again."); // Optional user feedback
+    alert("Failed to delete contact. Please try again.");
   }
 }
 
@@ -692,26 +698,12 @@ function clearContactUIElements() {
  * @returns {boolean} - True if valid.
  */
 function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
-  const emailInput = document.getElementById(inputId);
-  const error = document.getElementById(errorId);
-
-  if (!emailInput || !error) {
-    console.warn(`Element not found: ${!emailInput ? inputId : errorId}`);
-    return false;
-  }
-
-  const email = emailInput.value.trim();
-
-  if (email === "") {
-    error.classList.remove("visible");
-    emailInput.classList.remove("invalid");
-    return false;
-  }
-
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  error.classList.toggle("visible", !valid);
-  emailInput.classList.toggle("invalid", !valid);
-  return valid;
+  return validateInputPattern(
+    inputId,
+    errorId,
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    "Invalid email address"
+  );
 }
 
 
@@ -722,19 +714,30 @@ function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
  * @returns {boolean} - True if valid.
  */
 function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
-  const phoneInput = document.getElementById(inputId);
+  const input = document.getElementById(inputId);
   const error = document.getElementById(errorId);
-  const phone = phoneInput.value.trim();
-  phoneInput.value = phone.replace(/[^0-9\s-]/g, "").slice(0, 10);
-  if (phone === "") {
+  if (!input || !error) return false;
+
+  const rawValue = input.value;
+  const hasLetters = /[a-zA-Z]/.test(rawValue);
+  let cleanedValue = rawValue.replace(/[^0-9\s-\+]/g, "").slice(0, 10);
+  input.value = cleanedValue;
+
+  if (cleanedValue === "") {
     error.classList.remove("visible");
-    phoneInput.classList.remove("invalid");
+    input.classList.remove("invalid");
+    error.textContent = "";
     return false;
   }
-  const valid = /^\+?[0-9\s-]{7,10}$/.test(phone);
-  error.classList.toggle("visible", !valid);
-  phoneInput.classList.toggle("invalid", !valid);
-  return valid;
+
+  const pattern = /^\+?[0-9\s-]{7,13}$/;
+  const isValid = !hasLetters && pattern.test(cleanedValue);
+
+  input.classList.toggle("invalid", !isValid);
+  error.textContent = isValid ? "" : "Invalid phone number";
+  error.classList.toggle("visible", !isValid);
+
+  return isValid;
 }
 
 

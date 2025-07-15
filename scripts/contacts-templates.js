@@ -46,12 +46,12 @@ function overlayTemplate() {
                       </div>
                       <small id="name-error" class="error-message"></small>
                       <div class="input-group">
-                        <input id="new_contact_email" type="email" placeholder="Email" />
+                        <input id="new_contact_email" type="email" placeholder="Email" onblur="isEmailValid('new_contact_email', 'email-error')"  />
                         <img src="./assets/icons/contacts/mail.svg" alt="Email Icon" />
                       </div>
                       <small id="email-error" class="error-message"></small>
                       <div class="input-group">
-                        <input id="new_contact_phone" type="tel" maxlength="10" placeholder="Phone" />
+                        <input id="new_contact_phone" type="tel" maxlength="13" placeholder="Phone" oninput="isPhoneValid('new_contact_phone', 'phone-error')" />
                         <img src="./assets/icons/contacts/call.svg" alt="Phone Icon" />
                       </div>
                       <small id="phone-error" class="error-message"></small>
@@ -131,12 +131,12 @@ function overlayEditTemplate(name, email, phone, firebaseKey) {
                 </div>
                 <small id="edit-name-error" class="error-message"></small>
                 <div class="input-group">
-                  <input id="edit_contact_email" type="email" placeholder="Email" value="${email}" />
+                  <input id="edit_contact_email" type="email" placeholder="Email" value="${email}" onblur="isEmailValid('new_contact_email', 'email-error')" />
                   <img src="./assets/icons/contacts/mail.svg" alt="Email Icon" />
                 </div>
                 <small id="edit-email-error" class="error-message"></small>
                 <div class="input-group">
-                  <input id="edit_contact_phone" value="${phone}" type="tel" maxlength="10" placeholder="Phone" />
+                  <input id="edit_contact_phone" value="${phone}" type="tel" maxlength="13" placeholder="Phone" oninput="isPhoneValid('new_contact_phone', 'phone-error')"/>
                   <img src="./assets/icons/contacts/call.svg" alt="Phone Icon" />
                 </div>
                 <small id="edit-phone-error" class="error-message"></small>
