@@ -329,3 +329,29 @@ function handleSubtaskEnter(e) {
     }
   }
 }
+
+/**
+ * Generates HTML for a subtask progress bar.
+ *
+ * @param {Array<Object>} subtasksArr - Array of subtasks with completion status.
+ * @returns {string} HTML string for the progress bar.
+ */
+function generateSubtaskProgress(subtasksArr) {
+  let total = subtasksArr.length;
+  let completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
+  let percent = total > 0 ? (completed / total) * 100 : 0;
+  if (total === 0) return "";
+  return getSubtaskProgressHTML(completed, total, percent);
+}
+
+/**
+ * Toggles the completion status of a subtask at a given index.
+ *
+ * @param {Array<Object>} subtasks - The array of subtasks.
+ * @param {number} index - The index of the subtask to toggle.
+ */
+function toggleSubtaskCompleted(subtasks, index) {
+  if (Array.isArray(subtasks) && subtasks[index]) {
+    subtasks[index].completed = !subtasks[index].completed;
+  }
+}

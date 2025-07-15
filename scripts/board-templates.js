@@ -373,3 +373,17 @@ function getPriorityButtonsHTML(currentPriority) {
   ];
   return priorities.map(p => getPriorityButtonHTML(p, currentPriority)).join('');
 }
+
+/**
+ * Creates a category icon DOM element with the given category initials.
+ * @param {string} category - The category name.
+ * @returns {HTMLDivElement} The icon element.
+ */
+function createCategoryIcon(category) {
+    let div = document.createElement("div");
+    div.className = "profile-icon";
+    div.style.background = "#2a3647";
+    div.textContent = getCategoryInitials(category);
+    return div;
+}
+

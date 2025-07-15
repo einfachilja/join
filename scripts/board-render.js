@@ -272,4 +272,3 @@ function handleMoveTaskOptionClick(taskKey, statusKey) {
  * Runs automatically when the DOM is ready.
  */
 window.addEventListener('DOMContentLoaded', addDragHighlightListeners);
-
