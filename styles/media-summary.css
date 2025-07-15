@@ -40,7 +40,6 @@
 @media(max-width: 1040px) {
     .summary-container {
         margin-left: 0px;
-        margin-top: 60px;
     }
 
     .mobile-welcome-overlay {
@@ -251,9 +250,5 @@
 
     .card-box-bottom {
         gap: 8px;
-    }
-
-    .summary-container {
-        margin-top: 0;
     }
 }

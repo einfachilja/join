@@ -1,398 +1,324 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Join | Add Task</title>
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./styles/add-task-core.css" />
-    <link rel="stylesheet" href="./styles/add-task-dropdowns.css" />
-    <link rel="stylesheet" href="./styles/add-task-subtasks.css" />
-    <link rel="stylesheet" href="./styles/add-task-utilities.css" />
-    <link rel="stylesheet" href="./styles/media-add-task.css" />
-    <link rel="stylesheet" href="./styles/fonts.css" />
-    <link
-      rel="shortcut icon"
-      href="./assets/icons/favicon.svg"
-      type="image/x-icon"
-    />
-  </head>
 
-  <body onclick="closeSubMenuIfOpen(event)" onload="setUserInitials()">
-    <div class="body">
-      <div class="desktop-menu">
-        <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
-        <div class="menu">
-          <a href="./summary.html"
-            ><button>
-              <img src="./assets/icons/summary.svg" alt="" />
-              <p>Summary</p>
-            </button></a
-          >
-          <a href="./add-task.html"
-            ><button class="active">
-              <img src="./assets/icons/add-task.svg" alt="" />
-              <p>Add Task</p>
-            </button></a
-          >
-          <a href="./board.html"
-            ><button>
-              <img src="./assets/icons/board.svg" alt="" />
-              <p>Board</p>
-            </button></a
-          >
-          <a href="./contacts.html"
-            ><button>
-              <img src="./assets/icons/contacts.svg" alt="" />
-              <p>Contacts</p>
-            </button></a
-          >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join | Add Task</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./media-style.css" />
+  <link rel="stylesheet" href="./styles/add-task-core.css" />
+  <link rel="stylesheet" href="./styles/add-task-dropdowns.css" />
+  <link rel="stylesheet" href="./styles/add-task-subtasks.css" />
+  <link rel="stylesheet" href="./styles/add-task-utilities.css" />
+  <link rel="stylesheet" href="./styles/media-add-task.css" />
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="shortcut icon" href="./assets/icons/favicon.svg" type="image/x-icon" />
+</head>
+
+<body onclick="closeSubMenuIfOpen(event)" onload="setUserInitials()">
+  <div class="body">
+    <div class="desktop-menu">
+      <img class="logo" src="./assets/icons/logo.svg" alt="logo" />
+      <div class="menu">
+        <a href="./summary.html"><button>
+            <img src="./assets/icons/summary.svg" alt="" />
+            <p>Summary</p>
+          </button></a>
+        <a href="./add-task.html"><button class="active">
+            <img src="./assets/icons/add-task.svg" alt="" />
+            <p>Add Task</p>
+          </button></a>
+        <a href="./board.html"><button>
+            <img src="./assets/icons/board.svg" alt="" />
+            <p>Board</p>
+          </button></a>
+        <a href="./contacts.html"><button>
+            <img src="./assets/icons/contacts.svg" alt="" />
+            <p>Contacts</p>
+          </button></a>
+      </div>
+      <div class="desktop-footer">
+        <div class="desktop-footer-content">
+          <a href="./privacy-policy.html"><button>
+              <p>Privacy Policy</p>
+            </button></a>
+          <a href="./legal-notice.html"><button>
+              <p>Legal notice</p>
+            </button></a>
         </div>
-        <div class="desktop-footer">
-          <div class="desktop-footer-content">
-            <a href="./privacy-policy.html"
-              ><button>
-                <p>Privacy Policy</p>
-              </button></a
-            >
-            <a href="./legal-notice.html"
-              ><button>
-                <p>Legal notice</p>
-              </button></a
-            >
+      </div>
+    </div>
+
+    <div class="body-right">
+      <div class="header">
+        <div class="header-nav">
+          <div class="header-left">
+            <span class="header-title">Kanban Project Management Tool</span>
+            <img class="logo-mobile" src="./assets/icons/favicon.svg" alt="logo" />
+          </div>
+
+          <div class="header-right">
+            <a class="help-img" href="./help.html">
+              <img src="./assets/icons/help.svg" alt="" />
+            </a>
+            <div onclick="openSubMenu(event)" class="user-profile">
+              <b id="user-initials"></b>
+            </div>
+            <div id="sub_menu" class="d_none sub_menu">
+              <a href="./legal-notice.html">
+                <p class="sub-menu-content">Legal Notice</p>
+              </a>
+              <a href="./privacy-policy.html">
+                <p class="sub-menu-content">Privacy Policy</p>
+              </a>
+              <a href="./index.html">
+                <p class="sub-menu-content">Log out</p>
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="body-right">
-        <div class="header">
-          <div class="header-nav">
-            <div class="header-left">
-              <span class="header-title">Kanban Project Management Tool</span>
-              <img
-                class="logo-mobile"
-                src="./assets/icons/favicon.svg"
-                alt="logo"
-              />
-            </div>
-
-            <div class="header-right">
-              <a class="help-img" href="./help.html">
-                <img src="./assets/icons/help.svg" alt="" />
-              </a>
-              <div onclick="openSubMenu(event)" class="user-profile">
-                <b id="user-initials"></b>
-              </div>
-              <div id="sub_menu" class="d_none sub_menu">
-                <a href="./legal-notice.html">
-                  <p class="sub-menu-content">Legal Notice</p>
-                </a>
-                <a href="./privacy-policy.html">
-                  <p class="sub-menu-content">Privacy Policy</p>
-                </a>
-                <a href="./index.html">
-                  <p class="sub-menu-content">Log out</p>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <main class="main">
-          <!-- 
+      <main class="main">
+        <!-- 
             @section Add Task Modal
             @description Container for the add task form and related UI elements
           -->
-          <div class="add-task-modal">
-            <!-- 
+        <div class="add-task-modal">
+          <!-- 
               @section Add Task Header
               @description Title header for the add task modal
             -->
-            <h1 class="add-task-header">Add Task</h1>
-            <!-- 
+          <h1 class="add-task-header">Add Task</h1>
+          <!-- 
               @section Task Form
               @description Form for entering task details
             -->
-            <form id="task-form" onsubmit="return false;">
-              <!-- 
+          <form id="task-form" onsubmit="return false;">
+            <!-- 
                 @section Form Columns
                 @description Wrapper for left and right form sections with a divider
               -->
-              <div class="form-cols">
-                <!-- 
+            <div class="form-cols">
+              <!-- 
                   @section Left Form Section
                   @description Contains title, description, and due date inputs
                 -->
-                <div class="form-section-left">
-                  <!-- 
+              <div class="form-section-left">
+                <!-- 
                     @section Title Input
                     @description Input field for task title with validation
                   -->
-                  <label for="title">
-                    Title <span class="red_star">*</span>
-                  </label>
-                  <input id="title" type="text" placeholder="Enter a title" />
-                  <div class="error-message" id="error-title">
-                    This field is required
-                  </div>
+                <label for="title">
+                  Title <span class="red_star">*</span>
+                </label>
+                <input id="title" type="text" placeholder="Enter a title" />
+                <div class="error-message" id="error-title">
+                  This field is required
+                </div>
 
-                  <!-- 
+                <!-- 
                     @section Description Input
                     @description Textarea for task description
                   -->
-                  <label for="description">Description</label>
-                  <textarea
-                    id="description"
-                    placeholder="Enter a description"
-                  ></textarea>
+                <label for="description">Description</label>
+                <textarea id="description" placeholder="Enter a description"></textarea>
 
-                  <!-- 
+                <!-- 
                     @section Due Date Input
                     @description Input field for due date with date picker and validation
                   -->
-                  <label for="dueDate">
-                    Due Date <span class="red_star">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="dueDate"
-                    class="date-input"
-                    placeholder="dd/mm/yyyy"
-                    pattern="\d{2}/\d{2}/\d{4}"
-                    onfocus="showDatePicker(this)"
-                  />
-                  <input
-                    type="hidden"
-                    id="dueDateISO"
-                    name="dueDateISO"
-                    required
-                  />
-                  <div class="error-message" id="error-dueDate">
-                    Please select a valid future date.
-                  </div>
+                <label for="dueDate">
+                  Due Date <span class="red_star">*</span>
+                </label>
+                <input type="text" id="dueDate" class="date-input" placeholder="dd/mm/yyyy" pattern="\d{2}/\d{2}/\d{4}"
+                  onfocus="showDatePicker(this)" />
+                <input type="hidden" id="dueDateISO" name="dueDateISO" required />
+                <div class="error-message" id="error-dueDate">
+                  Please select a valid future date.
                 </div>
+              </div>
 
-                <!-- 
+              <!-- 
                   @section Form Divider
                   @description Visual separator between left and right form sections
                 -->
-                <div class="form-divider"></div>
+              <div class="form-divider"></div>
 
-                <!-- 
+              <!-- 
                   @section Right Form Section
                   @description Contains priority, assigned to, category, and subtasks inputs
                 -->
-                <div class="form-section-right">
-                  <!-- 
+              <div class="form-section-right">
+                <!-- 
                     @section Priority Selection
                     @description Buttons to select task priority with validation
                   -->
-                  <label>Priority</label>
-                  <div id="buttons-prio" class="priority-buttons">
-                    <button type="button" data-prio="urgent">
-                      Urgent
-                      <img
-                        src="./assets/icons/add-task/add-task-urgent.svg"
-                        alt=""
-                      />
-                    </button>
-                    <button type="button" data-prio="medium" class="selected">
-                      Medium
-                      <img
-                        src="./assets/icons/add-task/add-task-medium.svg"
-                        alt=""
-                      />
-                    </button>
-                    <button type="button" data-prio="low">
-                      Low
-                      <img
-                        src="./assets/icons/add-task/add-task-low.svg"
-                        alt=""
-                      />
-                    </button>
-                  </div>
-                  <div class="error-message" id="error-priority">
-                    This field is required
-                  </div>
+                <label>Priority</label>
+                <div id="buttons-prio" class="priority-buttons">
+                  <button type="button" data-prio="urgent">
+                    Urgent
+                    <img src="./assets/icons/add-task/add-task-urgent.svg" alt="" />
+                  </button>
+                  <button type="button" data-prio="medium" class="selected">
+                    Medium
+                    <img src="./assets/icons/add-task/add-task-medium.svg" alt="" />
+                  </button>
+                  <button type="button" data-prio="low">
+                    Low
+                    <img src="./assets/icons/add-task/add-task-low.svg" alt="" />
+                  </button>
+                </div>
+                <div class="error-message" id="error-priority">
+                  This field is required
+                </div>
 
-                  <!-- 
+                <!-- 
                     @section Assigned To Selection
                     @description Dropdown to select contacts assigned to the task with validation
                   -->
-                  <label for="assigned-to-input">Assigned to</label>
-                  <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
-                    <div id="dropdown-toggle" tabindex="0" role="button">
-                      <input
-                        id="assigned-to-input"
-                        type="text"
-                        placeholder="Select contacts"
-                        readonly
-                      />
-                      <div class="dropdown-arrow"></div>
-                    </div>
-                    <div id="dropdown-content" class="dropdown-content"></div>
+                <label for="assigned-to-input">Assigned to</label>
+                <div class="custom-dropdown-wrapper" id="dropdown-wrapper">
+                  <div id="dropdown-toggle" tabindex="0" role="button">
+                    <input id="assigned-to-input" type="text" placeholder="Select contacts" readonly />
+                    <div class="dropdown-arrow"></div>
                   </div>
-                  <div id="selected-contacts" class="selected-contacts"></div>
-                  <div class="error-message" id="error-assignedTo">
-                    This field is required
-                  </div>
+                  <div id="dropdown-content" class="dropdown-content"></div>
+                </div>
+                <div id="selected-contacts" class="selected-contacts"></div>
+                <div class="error-message" id="error-assignedTo">
+                  This field is required
+                </div>
 
-                  <!-- 
+                <!-- 
                     @section Category Selection
                     @description Dropdown to select task category with validation
                   -->
-                  <label>Category <span class="red_star">*</span></label>
-                  <div class="custom-dropdown-wrapper" id="category-wrapper">
-                    <div id="category-toggle" tabindex="0">
-                      <span id="selected-category-placeholder"
-                        >Select category</span
-                      >
-                      <div id="category-arrow" class="dropdown-arrow"></div>
-                    </div>
-                    <div id="category-content"></div>
+                <label>Category <span class="red_star">*</span></label>
+                <div class="custom-dropdown-wrapper" id="category-wrapper">
+                  <div id="category-toggle" tabindex="0">
+                    <span id="selected-category-placeholder">Select category</span>
+                    <div id="category-arrow" class="dropdown-arrow"></div>
                   </div>
-                  <input type="hidden" id="category" value="" />
-                  <div class="error-message" id="error-category">
-                    This field is required
-                  </div>
+                  <div id="category-content"></div>
+                </div>
+                <input type="hidden" id="category" value="" />
+                <div class="error-message" id="error-category">
+                  This field is required
+                </div>
 
-                  <!-- 
+                <!-- 
                     @section Subtasks Input
                     @description Input field and list container for adding subtasks
                   -->
-                  <label>Subtasks</label>
-                  <div class="subtask-input-container">
-                    <!-- 
+                <label>Subtasks</label>
+                <div class="subtask-input-container">
+                  <!-- 
                       @section Subtasks Container
                       @description Contains subtask input field and list of added subtasks
                     -->
-                    <div class="subtasks-container">
-                      <!-- 
+                  <div class="subtasks-container">
+                    <!-- 
                         @section Subtask Input Area
                         @description Input field for adding new subtasks
                       -->
-                      <div class="subtask-input-wrapper">
-                        <div class="subtask-input-field">
-                          <input
-                            id="subtask-input"
-                            type="text"
-                            placeholder="Add new subtask"
-                          />
-                          <!-- 
+                    <div class="subtask-input-wrapper">
+                      <div class="subtask-input-field">
+                        <input id="subtask-input" type="text" placeholder="Add new subtask" />
+                        <!-- 
                             @section Subtask Controls
                             @description Icons to cancel or confirm subtask input
                           -->
-                          <div id="subtask-icons" class="subtask-icons hidden">
-                            <img
-                              id="subtask-cancel"
-                              src="./assets/icons/closeXSymbol.svg"
-                              alt="Cancel"
-                            />
-                            <img
-                              src="./assets/icons/add-task/add-task-divider.svg"
-                              alt=""
-                            />
-                            <img
-                              id="subtask-confirm"
-                              src="./assets/icons/add-task/add-task-check.svg"
-                              alt="Confirm"
-                            />
-                          </div>
-                          <img
-                            id="subtask-plus"
-                            class="subtask-plus"
-                            src="./assets/icons/add-task/add-task-add+symbol.svg"
-                            alt="Add"
-                          />
+                        <div id="subtask-icons" class="subtask-icons hidden">
+                          <img id="subtask-cancel" src="./assets/icons/closeXSymbol.svg" alt="Cancel" />
+                          <img src="./assets/icons/add-task/add-task-divider.svg" alt="" />
+                          <img id="subtask-confirm" src="./assets/icons/add-task/add-task-check.svg" alt="Confirm" />
                         </div>
+                        <img id="subtask-plus" class="subtask-plus"
+                          src="./assets/icons/add-task/add-task-add+symbol.svg" alt="Add" />
                       </div>
+                    </div>
 
-                      <!-- 
+                    <!-- 
                         @section Subtask List
                         @description List displaying all added subtasks
                       -->
-                      <ul id="subtask-list" class="subtask-list-add"></ul>
-                    </div>
+                    <ul id="subtask-list" class="subtask-list-add"></ul>
                   </div>
                 </div>
               </div>
-            </form>
-            <!-- 
+            </div>
+          </form>
+          <!-- 
               @section Form Actions
               @description Contains legend for required fields and action buttons
             -->
-            <div class="form-actions">
-              <p class="legend-required">
-                <span class="red_star">*</span>This field is required
-              </p>
-              <button id="cancel-task-btn" type="button">
-                <span class="clear-text">Clear</span>
-                <div class="icon-wrapper">
-                  <img
-                    class="add-task-vector-icon"
-                    src="./assets/icons/add-task/add-task-vector.svg"
-                    alt=""
-                  />
-                </div>
-              </button>
-              <button id="submit-task-btn" type="button">
-                Create Task
-                <img
-                  class="add-task-icon"
-                  src="./assets/icons/add-task/add-task-check.svg"
-                  alt=""
-                />
-              </button>
-            </div>
-          </div>
-        </main>
-
-        <footer>
-          <div class="mobile-menu">
-            <button>
-              <a href="./summary.html">
-                <img src="./assets/icons/summary.svg" alt="" />
-                <p>Summary</p>
-              </a>
+          <div class="form-actions">
+            <p class="legend-required">
+              <span class="red_star">*</span>This field is required
+            </p>
+            <button id="cancel-task-btn" type="button">
+              <span class="clear-text">Clear</span>
+              <div class="icon-wrapper">
+                <img class="add-task-vector-icon" src="./assets/icons/add-task/add-task-vector.svg" alt="" />
+              </div>
             </button>
-
-            <button>
-              <a href="./add-task.html" class="active">
-                <img src="./assets/icons/add-task.svg" alt="" />
-                <p>Add Task</p>
-              </a>
-            </button>
-
-            <button>
-              <a href="./board.html">
-                <img src="./assets/icons/board.svg" alt="" />
-                <p>Board</p>
-              </a>
-            </button>
-
-            <button>
-              <a href="./contacts.html">
-                <img src="./assets/icons/contacts.svg" alt="" />
-                <p>Contacts</p>
-              </a>
+            <button id="submit-task-btn" type="button">
+              Create Task
+              <img class="add-task-icon" src="./assets/icons/add-task/add-task-check.svg" alt="" />
             </button>
           </div>
-        </footer>
-      </div>
-    </div>
+        </div>
+      </main>
 
-    <div class="landscape-mode">
-      <h2>Please hold your device upright</h2>
-      <p>This view is optimized for portrait orientation only.</p>
-    </div>
+      <footer>
+        <div class="mobile-menu">
+          <button>
+            <a href="./summary.html">
+              <img src="./assets/icons/summary.svg" alt="" />
+              <p>Summary</p>
+            </a>
+          </button>
 
-    <script src="./scripts/desktop-template.js"></script>
-    <script type="module" src="./scripts/add-task-utils.js"></script>
-    <script type="module" src="./scripts/add-task-dropdowns.js"></script>
-    <script type="module" src="./scripts/add-task-subtasks.js"></script>
-    <script type="module" src="./scripts/add-task-firebase.js"></script>
-    <script type="module" src="./scripts/add-task-core.js"></script>
-    <script type="module" src="./scripts/add-task-index.js"></script>
-    <script src="./scripts/help.js"></script>
-  </body>
+          <button>
+            <a href="./add-task.html" class="active">
+              <img src="./assets/icons/add-task.svg" alt="" />
+              <p>Add Task</p>
+            </a>
+          </button>
+
+          <button>
+            <a href="./board.html">
+              <img src="./assets/icons/board.svg" alt="" />
+              <p>Board</p>
+            </a>
+          </button>
+
+          <button>
+            <a href="./contacts.html">
+              <img src="./assets/icons/contacts.svg" alt="" />
+              <p>Contacts</p>
+            </a>
+          </button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div class="landscape-mode">
+    <h2>Please hold your device upright</h2>
+    <p>This view is optimized for portrait orientation only.</p>
+  </div>
+
+  <script src="./scripts/desktop-template.js"></script>
+  <script type="module" src="./scripts/add-task-utils.js"></script>
+  <script type="module" src="./scripts/add-task-dropdowns.js"></script>
+  <script type="module" src="./scripts/add-task-subtasks.js"></script>
+  <script type="module" src="./scripts/add-task-firebase.js"></script>
+  <script type="module" src="./scripts/add-task-core.js"></script>
+  <script type="module" src="./scripts/add-task-index.js"></script>
+  <script src="./scripts/help.js"></script>
+</body>
+
 </html>
