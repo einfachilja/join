@@ -10,15 +10,23 @@ let firebaseKey = localStorage.getItem("firebaseKey");
 
 
 /**
- * @file contacts.js
- * This script handles the contacts functionality including adding, editing, deleting,
- * and displaying contacts. It interacts with Firebase for data storage.
+ * Starts the app by setting user initials and loading contacts.
  */
 function init() {
   setUserInitials();
   loadContacts();
 }
 
+
+/**
+ * Validates a form field for required input, email, or phone format.
+ * @param {HTMLInputElement} input - The input field element.
+ * @param {HTMLElement} error - Element to show error messages.
+ * @param {string} fieldName - Name of the field for the error message.
+ * @param {boolean} isEmail - If true, validates as email.
+ * @param {boolean} isPhone - If true, validates as phone number.
+ * @returns {boolean} - True if valid, false if invalid.
+ */
 function validateField(input, error, fieldName, isEmail, isPhone) {
   const value = input.value.trim();
   let msg = "";
@@ -44,6 +52,11 @@ function validateField(input, error, fieldName, isEmail, isPhone) {
 }
 
 
+/**
+ * Validates all contact form fields (add or edit mode).
+ * @param {boolean} isEdit - True if validating edit form, false for new form.
+ * @returns {boolean} - True if all fields are valid.
+ */
 function validateContactForm(isEdit) {
   const prefix = isEdit ? "edit_contact_" : "new_contact_";
   const validName = validateField(
@@ -116,11 +129,23 @@ async function getFirebaseKeyAndLoadContacts(contact) {
 }
 
 
+/**
+ * Creates a contact object from input data.
+ * @param {string} name - Contact name.
+ * @param {string} email - Contact email.
+ * @param {string} phone - Contact phone number.
+ * @returns {{name: string, email: string, phone: string, color: string}} - Contact object.
+ */
 function createContactObject(name, email, phone) {
   return { name, email, phone, color: getRandomColor() };
 }
 
 
+/**
+ * Finds the full contact object that matches given info.
+ * @param {Object} contact - Contact to search for.
+ * @returns {Object|undefined} - Found contact or undefined.
+ */
 function findFullContact(contact) {
   return contacts.find(
     (c) => c.name === contact.name && c.email === contact.email && c.phone === contact.phone
@@ -128,6 +153,10 @@ function findFullContact(contact) {
 }
 
 
+/**
+ * Adds a new contact after validation.
+ * @param {Event} event - The form submit event.
+ */
 async function addNewContact(event) {
   event.preventDefault();
   const { name, email, phone } = getNewContactInput();
@@ -141,6 +170,11 @@ async function addNewContact(event) {
   openOverlayForRecentlyAdded(contact);
 }
 
+
+/**
+ * Gets new contact input values.
+ * @returns {{name: string, email: string, phone: string}} - Trimmed input values.
+ */
 function getNewContactInput() {
   return {
     name: new_contact_name.value.trim(),
@@ -149,11 +183,20 @@ function getNewContactInput() {
   };
 }
 
+
+/**
+ * Closes overlays after a contact is added.
+ */
 function closeOverlaysAfterAdd() {
   toggleOff();
   toggleOffMobile();
 }
 
+
+/**
+ * Opens overlay showing details of the newly added contact.
+ * @param {Object} contact - The contact to show.
+ */
 function openOverlayForRecentlyAdded(contact) {
   const fullContact = findFullContact(contact);
   if (fullContact) {
@@ -161,6 +204,8 @@ function openOverlayForRecentlyAdded(contact) {
     showAddedContactMessage();
   }
 }
+
+
 
 /**
  * Opens contact details for mobile or desktop
@@ -180,18 +225,32 @@ function openContactOverlay(contact) {
 }
 
 
+/**
+ * Fades in an element and removes it after a delay.
+ * @param {HTMLElement} element - Inner element to fade in.
+ * @param {HTMLElement} parent - Parent to remove after delay.
+ * @param {number} [delay=3000] - Time to wait before removing (ms).
+ */
 function fadeInAndRemove(element, parent, delay = 3000) {
   setTimeout(() => element.classList.add('visible'), 10);
   setTimeout(() => parent.remove(), delay);
 }
 
 
+/**
+ * Shows message after a contact is added.
+ */
 function showAddedContactMessage() {
   const messageDiv = createContactMessageElement();
   document.body.appendChild(messageDiv.outer);
   fadeInAndRemove(messageDiv.inner, messageDiv.outer);
 }
 
+
+/**
+ * Creates the success message HTML element.
+ * @returns {{inner: HTMLElement, outer: HTMLElement}} - Message elements.
+ */
 function createContactMessageElement() {
   const outerDiv = document.createElement('div');
   outerDiv.className = 'created-contact-message-div';
@@ -207,18 +266,34 @@ function createContactMessageElement() {
 }
 
 
+/**
+ * Adds message HTML to the inner message div.
+ * @param {HTMLElement} innerDiv - Message container.
+ */
 function appendContactMessageContent(innerDiv) {
   const messageHTML = getCreatedContactSuccessfullyMessage();
   const temp = parseHTMLToTempContainer(messageHTML);
   appendMessageContent(innerDiv, temp);
 }
 
+
+/**
+ * Converts HTML string to a temporary container.
+ * @param {string} html - HTML string.
+ * @returns {HTMLElement} - Container with parsed HTML.
+ */
 function parseHTMLToTempContainer(html) {
   const container = document.createElement('div');
   container.innerHTML = html;
   return container;
 }
 
+
+/**
+ * Appends parsed message content to the target element.
+ * @param {HTMLElement} target - Element to add content to.
+ * @param {HTMLElement} temp - Temp container with content.
+ */
 function appendMessageContent(target, temp) {
   const child = temp.firstElementChild;
   if (child) {
@@ -232,8 +307,8 @@ function appendMessageContent(target, temp) {
 
 
 /**
- * Gets trimmed input values from contact form
- * @returns {{name: string, email: string, phone: string}}
+ * Gets trimmed input values from edit contact form.
+ * @returns {{name: string, email: string, phone: string}} - Trimmed values.
  */
 function getTrimmedContactInput() {
   return {
@@ -245,7 +320,15 @@ function getTrimmedContactInput() {
 
 
 /**
- * Validates contact inputs
+ * Validates name, email, and phone inputs.
+ * @param {string} name - Contact name.
+ * @param {string} email - Contact email.
+ * @param {string} phone - Contact phone number.
+ * @param {string} phoneId - ID of phone input.
+ * @param {string} phoneErrorId - ID of phone error element.
+ * @param {string} emailId - ID of email input.
+ * @param {string} emailErrorId - ID of email error element.
+ * @returns {boolean} - True if all inputs are valid.
  */
 function isValidContactInput(
   name,
@@ -281,7 +364,9 @@ function buildUpdatedContact(name, email, phone, originalContact) {
 
 
 /**
- * Saves updated contact to Firebase
+ * Updates contact in Firebase database.
+ * @param {string} contactKey - Firebase key for contact.
+ * @param {Object} updatedContact - Updated contact data.
  */
 async function updateContactInFirebase(contactKey, updatedContact) {
   await fetch(`${BASE_URL}users/${firebaseKey}/contacts/${contactKey}.json`, {
@@ -293,9 +378,9 @@ async function updateContactInFirebase(contactKey, updatedContact) {
 
 
 /**
- * Updates local contact object with new data
- * @param {Object} original - Original contact object
- * @param {Object} updated - Updated contact data
+ * Updates a contact in the local list.
+ * @param {Object} original - Original contact.
+ * @param {Object} updated - Updated contact data.
  */
 function updateLocalContact(original, updated) {
   if (!original) return;
@@ -304,8 +389,8 @@ function updateLocalContact(original, updated) {
 
 
 /**
- * Gets trimmed input values from edit form
- * @returns {{name: string, email: string, phone: string}}
+ * Gets edit form input values.
+ * @returns {{name: string, email: string, phone: string}} - Trimmed values.
  */
 function getEditFormData() {
   return getTrimmedContactInput();
@@ -313,11 +398,11 @@ function getEditFormData() {
 
 
 /**
- * Checks if the edit form inputs are valid
- * @param {string} name
- * @param {string} email
- * @param {string} phone
- * @returns {boolean}
+ * Checks if edit form data is valid.
+ * @param {string} name - Name input.
+ * @param {string} email - Email input.
+ * @param {string} phone - Phone input.
+ * @returns {boolean} - True if valid.
  */
 function isEditFormValid(name, email, phone) {
   return isValidContactInput(
@@ -333,9 +418,9 @@ function isEditFormValid(name, email, phone) {
 
 
 /**
- * Updates contact data in Firebase and reloads contacts list
- * @param {string} key
- * @param {Object} updatedContact
+ * Updates contact and reloads list.
+ * @param {string} key - Firebase contact key.
+ * @param {Object} updatedContact - Updated contact data.
  */
 async function updateContactAndReload(key, updatedContact) {
   await updateContactInFirebase(key, updatedContact);
@@ -344,8 +429,8 @@ async function updateContactAndReload(key, updatedContact) {
 
 
 /**
- * Refreshes the contact details on desktop and mobile views
- * @param {Object} contact
+ * Refreshes the UI with updated contact info.
+ * @param {Object} contact - Contact to refresh.
  */
 function refreshContactDetails(contact) {
   const initials = getInitials(contact.name);
@@ -357,6 +442,11 @@ function refreshContactDetails(contact) {
 }
 
 
+/**
+ * Saves and refreshes contact with new data.
+ * @param {string} contactKey - Firebase contact key.
+ * @param {Object} updatedContact - Updated contact object.
+ */
 async function saveAndRefreshContact(contactKey, updatedContact) {
   await updateContactAndReload(contactKey, updatedContact);
   const refreshedContact = contacts.find(c => c.firebaseKey === contactKey);
@@ -364,6 +454,9 @@ async function saveAndRefreshContact(contactKey, updatedContact) {
 }
 
 
+/**
+ * Closes edit overlay (mobile or desktop).
+ */
 function handleCloseEditOverlay() {
   if (window.innerWidth <= 800) {
     toggleOffMobile();
@@ -373,6 +466,11 @@ function handleCloseEditOverlay() {
 }
 
 
+/**
+ * Saves the edited contact and closes overlay.
+ * @param {Event} event - Submit event.
+ * @param {string} contactKey - Firebase key.
+ */
 async function saveEditContact(event, contactKey) {
   event.preventDefault();
 
@@ -393,7 +491,7 @@ async function saveEditContact(event, contactKey) {
 
 
 /**
- * Loads all contacts from Firebase
+ * Loads contacts from Firebase and displays them.
  */
 async function loadContacts() {
   try {
@@ -417,9 +515,9 @@ async function loadContacts() {
 
 
 /**
- * Sorts contacts alphabetically by name
- * @param {Array} list - Array of contact objects
- * @returns {Array} - Sorted array of contacts
+ * Sorts contact list alphabetically.
+ * @param {Array} list - List of contacts.
+ * @returns {Array} - Sorted list.
  */
 function sortContacts(list) {
   return list
@@ -428,18 +526,20 @@ function sortContacts(list) {
 }
 
 
-/** * Gets the first letter of a name
- * @param {string} name
- * @returns {string} - First letter in uppercase
+/**
+ * Gets first letter of a name.
+ * @param {string} name - Full name.
+ * @returns {string} - Uppercase first letter.
  */
 function getFirstLetter(name) {
   return name.trim()[0].toUpperCase();
 }
 
 
-/** * Checks if the contact is the one recently added
- * @param {Object} contact - Contact object to check
- * @returns {boolean} - True if the contact matches the recently added one
+/**
+ * Checks if contact is the one just added.
+ * @param {Object} contact - Contact to check.
+ * @returns {boolean} - True if recently added.
  */
 function isRecentlyAdded(contact) {
   return (
@@ -451,8 +551,9 @@ function isRecentlyAdded(contact) {
 }
 
 
-/** * Clears the highlight from the recently added contact after a delay
- */ 
+/**
+ * Removes highlight after a short delay.
+ */
 function clearHighlightAfterDelay() {
   setTimeout(() => {
     let highlighted = document.querySelector(".contact.highlight");
@@ -462,6 +563,12 @@ function clearHighlightAfterDelay() {
 }
 
 
+/**
+ * Appends contact to list with initial heading if needed.
+ * @param {HTMLElement} contactListRef - Element to append to.
+ * @param {Object} contact - Contact to add.
+ * @param {Object} currentInitialRef - Tracks current letter.
+ */
 function appendContactToList(contactListRef, contact, currentInitialRef) {
   const firstInitial = getFirstLetter(contact.name);
   if (firstInitial !== currentInitialRef.value) {
@@ -475,6 +582,9 @@ function appendContactToList(contactListRef, contact, currentInitialRef) {
 }
 
 
+/**
+ * Renders all contacts in the UI.
+ */
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
   contactListRef.innerHTML = "";
@@ -488,10 +598,11 @@ function renderContacts() {
   clearHighlightAfterDelay();
 }
 
+
 /**
- * Styles the contact element on click
- * @param {HTMLElement} element - The contact element clicked
- * @param {string} initials - Initials of the contact
+ * Styles and opens contact when clicked.
+ * @param {HTMLElement} element - Clicked element.
+ * @param {string} initials - Initials of contact.
  */
 function styleContactOnclick(element, initials) {
   document
@@ -511,9 +622,10 @@ function styleContactOnclick(element, initials) {
 }
 
 
-/** * Toggles the contact info overlay for mobile view
- * @param {Object} contact - Contact  object to display
- * @param {string} initials - Initials of the contact
+/**
+ * Shows contact info in mobile overlay.
+ * @param {Object} contact - Contact to show.
+ * @param {string} initials - Contact initials.
  */
 function toggleContactInfoOverlay(contact, initials) {
   const overlayRef = document.getElementById("overlay");
@@ -523,9 +635,9 @@ function toggleContactInfoOverlay(contact, initials) {
 
 
 /**
- * Displays contact information in the desktop view
- * @param {Object} contact - Contact object to display
- * @param {string} initials - Initials of the contact
+ * Shows contact info in desktop view.
+ * @param {Object} contact - Contact to show.
+ * @param {string} initials - Contact initials.
  */
 function showContactInfo(contact, initials) {
   let contactInfoRef = document.getElementById("open_contact_Template");
@@ -534,7 +646,8 @@ function showContactInfo(contact, initials) {
 
 
 /**
- * Deletes contact from Firebase and reloads
+ * Deletes a contact from Firebase.
+ * @param {string} contactKey - Firebase key to delete.
  */
 async function deleteContact(contactKey) {
   try {
@@ -556,6 +669,10 @@ async function deleteContact(contactKey) {
   }
 }
 
+
+/**
+ * Clears contact details from the UI.
+ */
 function clearContactUIElements() {
   const contactInfoRef = document.getElementById("open_contact_Template");
   if (contactInfoRef) contactInfoRef.innerHTML = "";
@@ -568,10 +685,11 @@ function clearContactUIElements() {
 }
 
 
-/** * Validates email input
- * @param {string} inputId - ID of the email input
- * @param {string} errorId - ID of the error message element
- * @returns {boolean} - True if valid, false otherwise
+/**
+ * Validates the email input field.
+ * @param {string} [inputId="new_contact_email"] - ID of email input.
+ * @param {string} [errorId="email-error"] - ID of error element.
+ * @returns {boolean} - True if valid.
  */
 function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
   const emailInput = document.getElementById(inputId);
@@ -597,10 +715,11 @@ function isEmailValid(inputId = "new_contact_email", errorId = "email-error") {
 }
 
 
-/** * Validates phone input
- * @param {string} inputId - ID of the phone input
- * @param {string} errorId - ID of the error message element
- * @returns {boolean} - True if valid, false otherwise
+/**
+ * Validates the phone input field.
+ * @param {string} [inputId="new_contact_phone"] - ID of phone input.
+ * @param {string} [errorId="phone-error"] - ID of error element.
+ * @returns {boolean} - True if valid.
  */
 function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
   const phoneInput = document.getElementById(inputId);
@@ -619,7 +738,8 @@ function isPhoneValid(inputId = "new_contact_phone", errorId = "phone-error") {
 }
 
 
-/** * Toggles the overlay for adding a new contact
+/**
+ * Opens the overlay to add a contact.
  */
 function toggleOverlay() {
   const overlayRef = document.getElementById("overlay");
@@ -638,8 +758,8 @@ function toggleOverlay() {
 
 
 /**
- * Opens the edit/delete menu for a contact
- * @param {Object} contact - Contact object to edit or delete
+ * Opens menu for editing or deleting a contact.
+ * @param {Object} contact - Contact for the menu.
  */
 function openEditDeleteMenu(contact) {
   document.getElementById("edit_delete_menu").innerHTML =
@@ -648,8 +768,8 @@ function openEditDeleteMenu(contact) {
 
 
 /**
- * Toggles the edit overlay for a contact
- * @param {Object} contact - Contact object to edit
+ * Opens overlay for editing contact (desktop).
+ * @param {Object} contact - Contact to edit.
  */
 function toggleEditOverlay(contact) {
   const overlayRef = document.getElementById("overlay");
@@ -673,7 +793,7 @@ function toggleEditOverlay(contact) {
 
 
 /**
- * Closes the edit/delete menu
+ * Closes the edit/delete menu.
  */
 function closeEditDeleteMenu() {
   const menuRef = document.getElementById("edit_delete_menu");
@@ -682,8 +802,8 @@ function closeEditDeleteMenu() {
 
 
 /**
- * Toggles the mobile edit overlay for a contact
- * @param {Object} contact - Contact object to edit
+ * Opens overlay for editing contact (mobile).
+ * @param {Object} contact - Contact to edit.
  */
 function toggleMobileEditOverlay(contact) {
   closeEditDeleteMenu();
@@ -708,15 +828,16 @@ function toggleMobileEditOverlay(contact) {
 
 
 /**
- * Prevents dialog propagation to avoid closing the overlay
- * @param {Event} event - The event object
+ * Prevents closing overlay when clicking inside.
+ * @param {Event} event - The click event.
  */
 function dialogPrevention(event) {
   event.stopPropagation();
 }
 
 
-/** * Closes the overlay and removes the modal
+/**
+ * Closes the desktop overlay.
  */
 function toggleOff() {
   const overlayRef = document.getElementById("overlay");
@@ -730,7 +851,8 @@ function toggleOff() {
 }
 
 
-/** * Closes the mobile overlay and removes the modal
+/**
+ * Closes the mobile overlay.
  */
 function toggleOffMobile() {
   const overlayRef = document.getElementById("overlay_mobile");
@@ -745,8 +867,8 @@ function toggleOffMobile() {
 
 
 /**
- * Opens the contact templates for displaying contact details
- * @param {Object} contact - Contact object to display
+ * Opens contact details using templates.
+ * @param {Object} contact - Contact to show.
  */
 function OpenContactTemplates(contact) {
   const initials = getInitials(contact.name);
