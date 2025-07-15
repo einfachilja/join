@@ -11,37 +11,6 @@ function setupAssignedDropdown() {
 }
 
 /**
- * Initializes the state for the overlay assigned-to dropdown.
- * @returns {{contacts: Array, selectedContacts: Object}}
- */
-function initAssignedDropdownState() {
-    let contacts = fetchAssignedContacts();
-    let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
-    let selectedContacts = { value: getInitialAssignedContacts(taskKey) };
-    return { contacts, selectedContacts };
-}
-
-/**
- * Fetches assigned contacts for the current user from localStorage.
- * @returns {Array<Object>} The array of contact objects.
- */
-function fetchAssignedContacts() {
-    let userKey = localStorage.getItem('firebaseKey');
-    let usersData = JSON.parse(localStorage.getItem('firebaseUsers')) || {};
-    return Object.values(usersData[userKey]?.contacts || {});
-}
-
-/**
- * Gets the initial assigned contacts for a given task key.
- * @param {string} taskKey - The Firebase key of the task.
- * @returns {Array<string>} Array of assigned contact names.
- */
-function getInitialAssignedContacts(taskKey) {
-    let task = arrayTasks.find(t => t.firebaseKey === taskKey);
-    return [...(task?.assignedTo || [])];
-}
-
-/**
  * Creates and appends all necessary elements for the assigned-to dropdown.
  * @param {HTMLElement} assignedListContainer - The container for the assigned-to list.
  * @returns {Object} Elements of the dropdown: dropdown, list, toggle, placeholder, arrow.
@@ -74,15 +43,6 @@ function setupAssignedDropdownEvents(toggle, list) {
 }
 
 /**
- * Closes all open assigned-to dropdown lists.
- */
-function closeAllAssignedDropdowns() {
-    document.querySelectorAll('.assigned-dropdown-list.open').forEach(el => {
-        el.classList.remove('open');
-    });
-}
-
-/**
  * Sets up events and renders the assigned dropdown list and circles.
  * @param {Array} contacts
  * @param {Object} selectedContacts
@@ -101,20 +61,6 @@ function renderAndSetupAssignedDropdown(contacts, selectedContacts, list, assign
     );
     renderAssignedSelectedCircles(selectedContacts.value, contacts, assignedListContainer);
     window.getAssignedOverlaySelection = () => selectedContacts.value;
-}
-
-/**
- * Toggles the selection of a contact in the assigned-to list.
- * @param {string} name - The name of the contact.
- * @param {Array<string>} selectedContacts - The current selected contacts.
- * @returns {Array<string>} The updated array of selected contacts.
- */
-function toggleContactSelection(name, selectedContacts) {
-    if (selectedContacts.includes(name)) {
-        return selectedContacts.filter(n => n !== name);
-    } else {
-        return [...selectedContacts, name];
-    }
 }
 
 /**
@@ -182,153 +128,6 @@ function updateCirclesContent(wrapper, selectedContacts, contacts) {
     let hiddenCount = validContacts.length - visibleContacts.length;
     renderVisibleContacts(wrapper, visibleContacts);
     renderHiddenCount(wrapper, hiddenCount);
-}
-
-/**
- * Creates and returns the assigned-to dropdown container element.
- * @returns {HTMLElement} The dropdown element.
- */
-function createDropdown() {
-    let dropdown = document.createElement('div');
-    dropdown.id = 'assigned-dropdown';
-    dropdown.className = 'assigned-dropdown';
-    return dropdown;
-}
-
-/**
- * Creates and returns the dropdown list element for assigned contacts.
- * @returns {HTMLElement} The list element.
- */
-function createList() {
-    let list = document.createElement('div');
-    list.id = 'assigned-dropdown-list';
-    list.className = 'assigned-dropdown-list';
-    list.classList.remove('open');
-    return list;
-}
-
-/**
- * Creates and returns the toggle element for the assigned-to dropdown.
- * @returns {HTMLElement} The toggle element.
- */
-function createToggle() {
-    let toggle = document.createElement('div');
-    toggle.className = 'assigned-dropdown-toggle';
-    return toggle;
-}
-
-/**
- * Creates and returns the placeholder element for the assigned-to dropdown.
- * @returns {HTMLElement} The placeholder element.
- */
-function createPlaceholder() {
-    let placeholder = document.createElement('span');
-    placeholder.id = 'assigned-placeholder';
-    placeholder.textContent = 'Select contacts to assign';
-    return placeholder;
-}
-
-/**
- * Creates and returns the arrow element for the assigned-to dropdown.
- * @returns {HTMLElement} The arrow element.
- */
-function createArrow() {
-    let arrow = document.createElement('span');
-    arrow.className = 'dropdown-arrow';
-    return arrow;
-}
-
-/**
- * Adds a click handler to the toggle to open/close the dropdown list.
- * @param {HTMLElement} toggle - The dropdown toggle element.
- * @param {HTMLElement} list - The dropdown list element.
- */
-function addToggleClickHandler(toggle, list) {
-    if (!toggle._dropdownClickHandlerAdded) {
-        toggle.addEventListener('click', function (event) {
-            event.stopPropagation();
-            let isOpen = list.classList.contains('open');
-            closeAllAssignedDropdowns();
-            if (!isOpen) {
-                list.classList.add('open');
-            }
-        });
-        toggle._dropdownClickHandlerAdded = true;
-    }
-}
-
-/**
- * Adds a global click handler to close dropdowns when clicking outside.
- */
-function addGlobalDropdownCloseHandler() {
-    if (!window._assignedDropdownClickHandler) {
-        document.addEventListener('click', function (event) {
-            document.querySelectorAll('.assigned-dropdown').forEach(dropdown => {
-                let list = dropdown.querySelector('.assigned-dropdown-list');
-                if (list && list.classList.contains('open') && !dropdown.contains(event.target)) {
-                    list.classList.remove('open');
-                }
-            });
-        });
-        window._assignedDropdownClickHandler = true;
-    }
-}
-
-/**
- * Creates a dropdown item for an assigned contact.
- * @param {Object} contact - The contact object.
- * @param {Array<string>} selectedContacts - Currently selected contact names.
- * @param {Function} toggleContact - Function to toggle contact selection.
- * @returns {HTMLElement} The dropdown item element.
- */
-function createAssignedItem(contact, selectedContacts, toggleContact) {
-    let initials = getInitials(contact.name);
-    let isChecked = selectedContacts.includes(contact.name);
-    let item = document.createElement('div');
-    item.className = 'assigned-item' + (isChecked ? ' selected' : '');
-    item.onclick = () => toggleContact(contact.name);
-    let circle = createAssignedCircle(initials, contact.color);
-    let name = document.createElement('span');
-    name.className = 'assigned-name';
-    name.textContent = contact.name;
-    let checkbox = createAssignedCheckbox(isChecked, toggleContact, contact.name);
-    item.appendChild(circle);
-    item.appendChild(name);
-    item.appendChild(checkbox);
-    return item;
-}
-
-/**
- * Creates a colored circle for an assigned contact.
- * @param {string} initials - The initials of the contact.
- * @param {string} color - The color for the circle.
- * @returns {HTMLElement} The circle element.
- */
-function createAssignedCircle(initials, color) {
-    let circle = document.createElement('span');
-    circle.className = 'assigned-circle';
-    circle.style.backgroundColor = color || '#ccc';
-    circle.textContent = initials;
-    return circle;
-}
-
-/**
- * Creates a checkbox for an assigned contact.
- * @param {boolean} isChecked - Whether the checkbox is checked.
- * @param {Function} toggleContact - Function to toggle contact selection.
- * @param {string} name - The contact name.
- * @returns {HTMLElement} The checkbox input element.
- */
-function createAssignedCheckbox(isChecked, toggleContact, name) {
-    let checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'assigned-checkbox';
-    checkbox.checked = isChecked;
-    checkbox.onclick = (e) => {
-        e.stopPropagation();
-        toggleContact(name);
-    };
-    return checkbox;
 }
 
 /**
