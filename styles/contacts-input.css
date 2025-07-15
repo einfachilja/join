@@ -1,0 +1,36 @@
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid hsla(0, 0%, 82%, 1);
+  border-radius: 10px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  padding-left: 21px;
+  padding-right: 21px;
+  gap: 10px;
+  height: 20px;
+  width: 360px;
+}
+
+.input-group:hover {
+  border: 1px solid hsla(198, 76%, 52%, 1);
+}
+
+.input-group img {
+  width: 20px;
+  height: 20px;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 18px;
+}
+
+input.invalid {
+  border-color: red;
+}
