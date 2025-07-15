@@ -313,6 +313,7 @@ export const AddTaskCore = {
     // Reset assigned contacts
     DropdownController.selectedContacts = [];
     DropdownController.updateSelectedContactsUI();
+    DropdownController.renderAssignOptions();
 
     // Reset priority to medium
     this.selectPriority("medium");
