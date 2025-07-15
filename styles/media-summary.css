@@ -252,4 +252,8 @@
     .card-box-bottom {
         gap: 8px;
     }
+
+    .summary-container {
+        margin-top: 0;
+    }
 }
