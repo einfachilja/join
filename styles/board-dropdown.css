@@ -1,0 +1,146 @@
+.assigned-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.assigned-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #D1D1D1;
+    border-radius: 8px;
+    background: #fff;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.assigned-dropdown-list {
+    display: none;
+    position: static;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.09);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 20;
+}
+
+.assigned-dropdown-list.open {
+    display: block;
+}
+
+.move-task-dropdown-menu {
+    background-color: #2A3647;
+    position: absolute;
+    z-index: 1000;
+    min-width: 140px;
+    color: #a8a8a8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 0 20px 20px 20px;
+    padding: 8px 0;
+    font-size: 16px;
+    user-select: none;
+}
+
+.move-task-dropdown-option {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.move-task-dropdown-option:hover {
+    color: white
+}
+
+.assigned-container {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.assigned-circle {
+    position: relative;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #ccc;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 1px solid white;
+    margin-left: -8px;
+    transition: z-index 0.2s;
+}
+
+.assigned-circle:first-child {
+    margin-left: 0;
+}
+
+.assigned-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.2s;
+    margin-bottom: 2px;
+    width: 93%;
+}
+
+.assigned-item:hover {
+    background-color: #2A3647;
+    color: #ffffff;
+}
+
+.assigned-item.selected {
+    background: #242424;
+    color: #fff;
+}
+
+.assigned-name {
+    flex: 1;
+    font-size: 20px;
+}
+
+.assigned-checkbox {
+    content: url("/assets/icons/board/board-check-icon.svg");
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.assigned-checkbox:checked {
+    content: url("/assets/icons/board/board-assigned-check-icon-checked.svg");
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.assigned-list-area {
+    overflow-y: auto;
+    max-height: 115px;
+}
+
+.assigned-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+    padding-left: 12px;
+}
+
+.assigned-to-headline {
+    display: block;
+    margin-bottom: 8px;
+}

@@ -68,37 +68,6 @@ function renderBoardOverlay(task) {
 }
 
 /**
- * Adds the 'open' animation class to the overlay card after a short delay.
- */
-function animateOverlayCard() {
-    let cardRef = document.querySelector('.board-overlay-card');
-    if (cardRef) setTimeout(() => cardRef.classList.add('open'), 10);
-}
-
-/**
- * Locks HTML scrolling (overflow hidden).
- */
-function lockHtmlScroll() {
-    document.getElementById("html").style.overflow = "hidden";
-}
-
-/**
- * Shows the board overlay and resets its scroll position.
- * @param {HTMLElement} overlay - The overlay element.
- */
-function showBoardOverlay(overlay) {
-    overlay.classList.remove("d-none");
-    overlay.scrollTop = 0;
-}
-
-/**
- * Hides the board overlay from view.
- */
-function hideBoardOverlay() {
-    document.getElementById("board_overlay").classList.add("d-none");
-}
-
-/**
  * Closes the currently open board card, either with or without animation.
  */
 function closeBoardCard() {
@@ -110,64 +79,6 @@ function closeBoardCard() {
     } else {
         closeOverlayImmediately();
     }
-}
-
-/**
- * Removes the opening animation class from the overlay card.
- *
- * @param {HTMLElement} card - The overlay card element.
- */
-function removeOverlayAnimation(card) {
-    card.classList.remove('open');
-}
-
-/**
- * Closes the overlay after a delay and updates the board UI.
- *
- * @param {number} ms - The delay in milliseconds before closing.
- */
-function closeOverlayWithDelay(ms) {
-    setTimeout(() => {
-        hideBoardOverlay();
-        resetHtmlOverflow();
-        removeOverlayLabels();
-        updateHTML();
-    }, ms);
-}
-
-/**
- * Immediately closes the overlay without delay and updates the board UI.
- */
-function closeOverlayImmediately() {
-    hideBoardOverlay();
-    resetHtmlOverflow();
-    removeOverlayLabels();
-    updateHTML();
-}
-
-/**
- * Resets the document overflow style to default.
- */
-function resetHtmlOverflow() {
-    document.getElementById("html").style.overflow = "";
-}
-
-/**
- * Removes title and description labels from the overlay card.
- */
-function removeOverlayLabels() {
-    let titleLabel = document.getElementById("overlay_card_title_label");
-    if (titleLabel) titleLabel.remove();
-    let descLabel = document.getElementById("overlay_card_description_label");
-    if (descLabel) descLabel.remove();
-}
-
-/**
- * Prevents event propagation for click events.
- * @param {Event} event - The click event to stop propagation for.
- */
-function onclickProtection(event) {
-    event.stopPropagation();
 }
 
 /**

@@ -185,20 +185,6 @@ function getCardDescription(element) {
 }
 
 /**
- * Generates HTML for a subtask progress bar.
- *
- * @param {Array<Object>} subtasksArr - Array of subtasks with completion status.
- * @returns {string} HTML string for the progress bar.
- */
-function generateSubtaskProgress(subtasksArr) {
-    let total = subtasksArr.length;
-    let completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
-    let percent = total > 0 ? (completed / total) * 100 : 0;
-    if (total === 0) return "";
-    return getSubtaskProgressHTML(completed, total, percent);
-}
-
-/**
  * Generates HTML for assigned user circles (up to 3 visible).
  * @param {Array<string>} assignedList - List of assigned user names.
  * @returns {string} HTML string for the assigned circles.
@@ -237,18 +223,6 @@ function renderAssignedList(assignedTo) {
         let color = contact.color || "#ccc";
         return getAssignedEntryHTML(name, color);
     }).join("");
-}
-
-/**
- * Toggles the completion status of a subtask at a given index.
- *
- * @param {Array<Object>} subtasks - The array of subtasks.
- * @param {number} index - The index of the subtask to toggle.
- */
-function toggleSubtaskCompleted(subtasks, index) {
-    if (Array.isArray(subtasks) && subtasks[index]) {
-        subtasks[index].completed = !subtasks[index].completed;
-    }
 }
 
 /**
@@ -308,43 +282,6 @@ function isInputFilled(inputEl) {
  */
 function isCategorySelected() {
     return selectedCategory && selectedCategory.trim() !== "";
-}
-
-/**
- * Clears all content from the category dropdown.
- * @param {HTMLElement} content - The dropdown content element.
- */
-function clearCategoryContent(content) {
-    content.innerHTML = "";
-}
-
-/**
- * Returns a list of all available categories.
- * @returns {Array<string>}
- */
-function getCategoryList() {
-    return ["Technical Task", "User Story"];
-}
-
-/**
- * Clears the category display box.
- * @param {HTMLElement} box - The container for the category icon.
- */
-function clearCategoryBox(box) {
-    box.innerHTML = "";
-}
-
-/**
- * Creates a category icon DOM element with the given category initials.
- * @param {string} category - The category name.
- * @returns {HTMLDivElement} The icon element.
- */
-function createCategoryIcon(category) {
-    let div = document.createElement("div");
-    div.className = "profile-icon";
-    div.style.background = "#2a3647";
-    div.textContent = getCategoryInitials(category);
-    return div;
 }
 
 /**

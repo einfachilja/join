@@ -71,3 +71,27 @@ function setupCategoryListeners() {
         categoryToggle.addEventListener("click", toggleCategoryDropdown);
     }
 }
+
+/**
+ * Clears all content from the category dropdown.
+ * @param {HTMLElement} content - The dropdown content element.
+ */
+function clearCategoryContent(content) {
+    content.innerHTML = "";
+}
+
+/**
+ * Returns a list of all available categories.
+ * @returns {Array<string>}
+ */
+function getCategoryList() {
+    return ["Technical Task", "User Story"];
+}
+
+/**
+ * Clears the category display box.
+ * @param {HTMLElement} box - The container for the category icon.
+ */
+function clearCategoryBox(box) {
+    box.innerHTML = "";
+}

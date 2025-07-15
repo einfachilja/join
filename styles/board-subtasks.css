@@ -1,0 +1,224 @@
+.subtask-input-wrapper {
+    position: relative;
+    width: 100%;
+    box-shadow: none;
+}
+
+.add-subtask-input {
+    flex: 1;
+    border: 1px solid #D1D1D1;
+    border-radius: 12px;
+    padding: 10px 48px 10px 16px;
+    font-size: 16px;
+    color: #1d2b3a;
+    background: #fff;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.add-subtask-input::placeholder {
+    color: #d1d1d1;
+    font-size: 18px;
+    font-family: inherit;
+}
+
+.add-subtask-input:focus {
+    border-color: #5bb6fa;
+}
+
+.add-subtask-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #2a3647;
+    font-size: 28px;
+    font-weight: 400;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    width: 32px;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.add-subtask-btn:hover {
+    color: #29abe2;
+}
+
+.subtask-edit-btn {
+    background: none;
+    border: none;
+    color: #b2b2b2;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 2px 6px;
+    align-items: center;
+}
+
+.subtask-edit-btn img {
+    width: 24px;
+}
+
+.subtask-remove-btn:hover {
+    color: #ff4d4d;
+}
+
+.subtask-remove-btn img {
+    width: 24px;
+}
+
+.subtask-remove-btn {
+    border: none;
+    background: none;
+}
+
+.subtask-list-row {
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    margin: 4px;
+
+}
+
+.subtask-list-row:hover {
+    background-color: #F0F0F0;
+    cursor: pointer;
+}
+
+.subtask-list-editinput {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    height: 24px;
+    cursor: pointer;
+}
+
+.subtask-list-editinput:focus {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background: none;
+    border-radius: 0;
+    border-bottom: 1px solid #29ABE2;
+}
+
+.subtask-dot {
+    color: #222f3e;
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.card-subtask-progress {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+    margin: 8px 0 2px 0;
+}
+
+.subtask-progress-bar-bg {
+    background: #eaeaea;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+    flex: 1;
+    min-width: 45px;
+    max-width: 100%;
+    margin-right: 8px;
+}
+
+.subtask-progress-bar-fill {
+    background: #497cff;
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.subtask-progress-text {
+    font-size: 12px;
+    color: #555;
+    white-space: nowrap;
+}
+
+.subtask-item {
+    display: flex;
+    font-size: 16px;
+    gap: 12px;
+    padding: 4px;
+    padding-left: 12px;
+}
+
+.subtask-item:hover {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    cursor: pointer;
+
+    width: fit-content;
+}
+
+.subtask-item label:hover {
+    cursor: pointer;
+}
+
+.overlay-subtasks-label {
+    color: #000000;
+}
+
+.subtask-item input[type="checkbox"] {
+    content: url("/assets/icons/board/board-check-icon.svg");
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.subtask-item input[type="checkbox"]:checked {
+    content: url("/assets/icons/board/board-check-icon-checked.svg");
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+#subtask-list-edit,
+.subtask-list-not-edit {
+    overflow-y: auto;
+    max-height: 110px;
+}
+
+.subtask-list-row .subtask-edit-btn,
+.subtask-list-row .subtask-remove-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.subtask-list-item .subtask-edit-btn,
+.subtask-list-item .subtask-remove-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.subtask-list-item:hover .subtask-edit-btn,
+.subtask-list-item:hover .subtask-remove-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.subtask-list-row:hover .subtask-edit-btn,
+.subtask-list-row:hover .subtask-remove-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
