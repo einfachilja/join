@@ -8,19 +8,16 @@ body {
 }
 
 .help-frame {
-    width: 138px;
-    height: 73px;
-    margin-top: 60px;
-    margin-left: 328px;
+    margin-top: 20px;
+    margin-left: 275px;
     gap: 30px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 
-.legal-notice-frame {
-    width: 371px ;
-}
-
-.privacy-policy-frame {
-    width: 419px ;
+.help-frame img {
+    margin-right: 24px;
 }
 
 .p-legal-notice {
@@ -42,7 +39,7 @@ body {
     display: flex;
     flex-direction: column;
     width: auto;
-    margin-left: 328px;
+    margin-left: 275px;
 
 }
 
