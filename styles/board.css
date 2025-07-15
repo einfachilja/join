@@ -332,9 +332,7 @@
     overflow-y: auto;
 }
 
-.d-none {
-    display: none;
-}
+
 
 #due_date_input {
     background-color: white;
