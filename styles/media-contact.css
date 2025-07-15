@@ -180,10 +180,6 @@
     display: none;
   }
 
-  .contacts-list-header {
-    display: none;
-  }
-
   .add-new-contact-button {
     display: flex;
   }
@@ -377,14 +373,6 @@
   .input-group {
     width: 200px;
   }
-
-  /*     .contact {
-      padding: 10px 10px;
-      gap: 25px;
-      font-size: 16px;
-      width: 260px;
-      margin-left: 0px;
-    } */
 
   .alphabet {
     font-size: 18px;

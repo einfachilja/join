@@ -1,0 +1,155 @@
+.contacts-list-header button {
+  background-color: hsla(215, 26%, 22%, 1);
+  width: 352px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid hsla(215, 26%, 22%, 1);
+  padding-top: 12px;
+  padding-bottom: 12px;
+  gap: 16px;
+  color: hsla(0, 0%, 100%, 1);
+  font-weight: 700px;
+  font-size: 21px;
+  line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.add-new-contact-button {
+  display: none;
+  position: absolute;
+  bottom: 60px;
+  right: 30px;
+}
+
+.add-new-contact-button button {
+  background-color: hsla(215, 26%, 22%, 1);
+  width: 56px;
+  height: 56px;
+  border: none;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 46px;
+  border: 1px solid hsla(215, 26%, 22%, 1);
+  box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
+}
+
+.form-buttons {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 364px;
+  height: 57px;
+}
+
+.form-buttons button img {
+  width: 24px;
+  height: 24px;
+}
+
+.cancel-btn {
+  display: flex;
+  align-items: center;
+  width: 126px;
+  height: 56px;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid hsla(215, 26%, 22%, 1);
+  gap: 4px;
+  font-size: 20px;
+  font-weight: 400;
+  color: hsla(215, 26%, 22%, 1);
+  line-height: 120%;
+  letter-spacing: 0%;
+  background-color: hsl(0, 0%, 100%);
+}
+
+.cancel-btn:hover {
+  border: 2px solid hsla(198, 76%, 52%, 1);
+  color: hsla(198, 76%, 52%, 1);
+  box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
+}
+
+.cancel-btn img.icon-hover {
+  display: none;
+}
+
+.cancel-btn:hover img.icon-default {
+  display: none;
+}
+
+.cancel-btn:hover img.icon-hover {
+  display: inline;
+}
+
+.create-btn {
+  display: flex;
+  align-items: center;
+  width: 214px;
+  height: 57px;
+  border-radius: 10px;
+  padding: 16px;
+  gap: 4px;
+  background-color: hsla(215, 26%, 22%, 1);
+  color: hsla(0, 0%, 100%, 1);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.create-btn:hover {
+  background-color: hsla(198, 76%, 52%, 1);
+  box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
+  border: none;
+}
+
+.save-btn {
+  display: flex;
+  align-items: center;
+  width: 110px;
+  height: 50px;
+  border-radius: 10px;
+  padding: 16px;
+  gap: 4px;
+  background-color: hsla(215, 26%, 22%, 1);
+  color: hsla(0, 0%, 100%, 1);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 120%;
+  letter-spacing: 0%;
+  border: none;
+}
+
+.save-btn:hover {
+  background-color: hsla(198, 76%, 52%, 1);
+  box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
+  border: none;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  width: 100px;
+  height: 50px;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid hsla(215, 26%, 22%, 1);
+  gap: 4px;
+  font-size: 20px;
+  font-weight: 400;
+  color: hsla(215, 26%, 22%, 1);
+  line-height: 120%;
+  letter-spacing: 0%;
+  background-color: hsl(0, 0%, 100%);
+}
+
+.delete-btn:hover {
+  border: 2px solid hsla(198, 76%, 52%, 1);
+  color: hsla(198, 76%, 52%, 1);
+  box-shadow: 0px 4px 4px hsla(0, 0%, 0%, 0.25);
+}
