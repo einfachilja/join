@@ -19,41 +19,50 @@ function init() {
   loadContacts();
 }
 
+function validateField(input, error, fieldName, isEmail, isPhone) {
+  const value = input.value.trim();
+  let msg = "";
+  if (!value) {
+    msg = `${fieldName} cannot be empty`;
+  } else if (isEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    msg = "Invalid email address";
+  } else if (isPhone && !/^\+?[0-9\s-]{7,10}$/.test(value)) {
+    msg = "Invalid phone number";
+  }
 
-/**
- * Validate Add/Edit Contact form
- * @param {boolean} isEdit - true for edit form, false for new contact form
- */
+  if (msg) {
+    error.textContent = msg;
+    error.classList.add("visible");
+    input.classList.add("invalid");
+    return false;
+  } else {
+    error.textContent = "";
+    error.classList.remove("visible");
+    input.classList.remove("invalid");
+    return true;
+  }
+}
+
+
 function validateContactForm(isEdit) {
   const prefix = isEdit ? "edit_contact_" : "new_contact_";
-  const fields = ["name", "email", "phone"];
-  let valid = true;
-  fields.forEach((field) => {
-    const input = document.getElementById(prefix + field);
-    const error = document.getElementById(
-      (isEdit ? "edit-" : "") + field + "-error"
-    );
-    const value = input.value.trim();
-    let msg = "";
-    if (!value) {
-      msg = field.charAt(0).toUpperCase() + field.slice(1) + " cannot be empty";
-    } else if (field === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      msg = "Invalid email address";
-    } else if (field === "phone" && !/^\+?[0-9\s-]{7,10}$/.test(value)) {
-      msg = "Invalid phone number";
-    }
-    if (msg) {
-      error.textContent = msg;
-      error.classList.add("visible");
-      input.classList.add("invalid");
-      valid = false;
-    } else {
-      error.textContent = "";
-      error.classList.remove("visible");
-      input.classList.remove("invalid");
-    }
-  });
-  return valid;
+  const validName = validateField(
+    document.getElementById(prefix + "name"),
+    document.getElementById((isEdit ? "edit-" : "") + "name-error"),
+    "Name", false, false
+  );
+  const validEmail = validateField(
+    document.getElementById(prefix + "email"),
+    document.getElementById((isEdit ? "edit-" : "") + "email-error"),
+    "Email", true, false
+  );
+  const validPhone = validateField(
+    document.getElementById(prefix + "phone"),
+    document.getElementById((isEdit ? "edit-" : "") + "phone-error"),
+    "Phone", false, true
+  );
+
+  return validName && validEmail && validPhone;
 }
 
 
@@ -107,39 +116,51 @@ async function getFirebaseKeyAndLoadContacts(contact) {
 }
 
 
-/**
- * Adds new contact and opens details
- * @param {Event} event
- */
+function createContactObject(name, email, phone) {
+  return { name, email, phone, color: getRandomColor() };
+}
+
+
+function findFullContact(contact) {
+  return contacts.find(
+    (c) => c.name === contact.name && c.email === contact.email && c.phone === contact.phone
+  );
+}
+
+
 async function addNewContact(event) {
   event.preventDefault();
-  const name = new_contact_name.value.trim();
-  const email = new_contact_email.value.trim();
-  const phone = new_contact_phone.value.trim();
+  const { name, email, phone } = getNewContactInput();
   if (!validateContactForm(false)) return;
 
-  const contact = { name, email, phone, color: getRandomColor() };
+  const contact = createContactObject(name, email, phone);
   recentlyAddedContact = contact;
 
   await getFirebaseKeyAndLoadContacts(contact);
+  closeOverlaysAfterAdd();
+  openOverlayForRecentlyAdded(contact);
+}
 
+function getNewContactInput() {
+  return {
+    name: new_contact_name.value.trim(),
+    email: new_contact_email.value.trim(),
+    phone: new_contact_phone.value.trim(),
+  };
+}
+
+function closeOverlaysAfterAdd() {
   toggleOff();
   toggleOffMobile();
+}
 
-  const fullContact = contacts.find(
-    (c) =>
-      c.name === contact.name &&
-      c.email === contact.email &&
-      c.phone === contact.phone
-  );
-
+function openOverlayForRecentlyAdded(contact) {
+  const fullContact = findFullContact(contact);
   if (fullContact) {
-    const initials = getInitials(fullContact.name);
     openContactOverlay(fullContact);
     showAddedContactMessage();
   }
 }
-
 
 /**
  * Opens contact details for mobile or desktop
@@ -159,35 +180,53 @@ function openContactOverlay(contact) {
 }
 
 
-/**
- * Shows success message when contact is added
- */
+function fadeInAndRemove(element, parent, delay = 3000) {
+  setTimeout(() => element.classList.add('visible'), 10);
+  setTimeout(() => parent.remove(), delay);
+}
+
+
 function showAddedContactMessage() {
+  const messageDiv = createContactMessageElement();
+  document.body.appendChild(messageDiv.outer);
+  fadeInAndRemove(messageDiv.inner, messageDiv.outer);
+}
+
+function createContactMessageElement() {
   const outerDiv = document.createElement('div');
   outerDiv.className = 'created-contact-message-div';
+
   const innerDiv = document.createElement('div');
   innerDiv.className = 'created-contact-message';
   innerDiv.id = 'created_contact_message';
+
   appendContactMessageContent(innerDiv);
   outerDiv.appendChild(innerDiv);
-  document.body.appendChild(outerDiv);
-  setTimeout(() => innerDiv.classList.add('visible'), 10);
-  setTimeout(() => outerDiv.remove(), 3000);
+
+  return { inner: innerDiv, outer: outerDiv };
 }
 
-/**
- * Appends the contact message content to the given element
- * @param {HTMLElement} innerDiv
- */
+
 function appendContactMessageContent(innerDiv) {
-  const temp = document.createElement('div');
-  temp.innerHTML = getCreatedContactSuccessfullyMessage();
-  if (temp.firstElementChild) {
-    while (temp.firstElementChild.firstChild) {
-      innerDiv.appendChild(temp.firstElementChild.firstChild);
+  const messageHTML = getCreatedContactSuccessfullyMessage();
+  const temp = parseHTMLToTempContainer(messageHTML);
+  appendMessageContent(innerDiv, temp);
+}
+
+function parseHTMLToTempContainer(html) {
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  return container;
+}
+
+function appendMessageContent(target, temp) {
+  const child = temp.firstElementChild;
+  if (child) {
+    while (child.firstChild) {
+      target.appendChild(child.firstChild);
     }
   } else {
-    innerDiv.innerHTML = getCreatedContactSuccessfullyMessage();
+    target.innerHTML = temp.innerHTML;
   }
 }
 
@@ -318,41 +357,38 @@ function refreshContactDetails(contact) {
 }
 
 
-/**
- * Saves edited contact after validation
- * @param {Event} event
- * @param {string} contactKey
- */
-async function saveEditContact(event, contactKey) {
-  event.preventDefault();
+async function saveAndRefreshContact(contactKey, updatedContact) {
+  await updateContactAndReload(contactKey, updatedContact);
+  const refreshedContact = contacts.find(c => c.firebaseKey === contactKey);
+  refreshContactDetails(refreshedContact);
+}
 
-  const { name, email, phone } = getEditFormData();
 
-  if (!validateContactForm(true)) return;
-
-  const originalContact = contacts.find((c) => c.firebaseKey === contactKey);
-  const updatedContact = buildUpdatedContact(
-    name,
-    email,
-    phone,
-    originalContact
-  );
-
-  try {
-    await updateContactAndReload(contactKey, updatedContact);
-
-    const refreshedContact = contacts.find((c) => c.firebaseKey === contactKey);
-
-    refreshContactDetails(refreshedContact);
-  } catch (error) {
-    console.error("Failed to save contact:", error);
-  }
-
+function handleCloseEditOverlay() {
   if (window.innerWidth <= 800) {
     toggleOffMobile();
   } else {
     toggleOff();
   }
+}
+
+
+async function saveEditContact(event, contactKey) {
+  event.preventDefault();
+
+  const { name, email, phone } = getEditFormData();
+  if (!validateContactForm(true)) return;
+
+  const originalContact = contacts.find(c => c.firebaseKey === contactKey);
+  const updatedContact = buildUpdatedContact(name, email, phone, originalContact);
+
+  try {
+    await saveAndRefreshContact(contactKey, updatedContact);
+  } catch (error) {
+    console.error("Failed to save contact:", error);
+  }
+
+  handleCloseEditOverlay();
 }
 
 
@@ -426,34 +462,31 @@ function clearHighlightAfterDelay() {
 }
 
 
-/**
- * Renders all contacts and highlights the new one
- */
+function appendContactToList(contactListRef, contact, currentInitialRef) {
+  const firstInitial = getFirstLetter(contact.name);
+  if (firstInitial !== currentInitialRef.value) {
+    currentInitialRef.value = firstInitial;
+    contactListRef.innerHTML += getFirstInitialAndDevider(firstInitial);
+  }
+
+  const initials = getInitials(contact.name);
+  const highlight = isRecentlyAdded(contact) ? "highlight" : "";
+  contactListRef.innerHTML += getContactBasicTemplate(contact, initials, highlight);
+}
+
+
 function renderContacts() {
   let contactListRef = document.getElementById("all_contacts");
   contactListRef.innerHTML = "";
-
   let sortedContacts = sortContacts(contacts);
-  let currentInitial = null;
+  let currentInitial = { value: null };
 
-  sortedContacts.forEach((contact) => {
-    let firstInitial = getFirstLetter(contact.name);
-    if (firstInitial !== currentInitial) {
-      currentInitial = firstInitial;
-      contactListRef.innerHTML += getFirstInitialAndDevider(currentInitial);
-    }
-    let initials = getInitials(contact.name);
-    let highlight = isRecentlyAdded(contact) ? "highlight" : "";
-    contactListRef.innerHTML += getContactBasicTemplate(
-      contact,
-      initials,
-      highlight
-    );
-  });
+  sortedContacts.forEach((contact) =>
+    appendContactToList(contactListRef, contact, currentInitial)
+  );
 
   clearHighlightAfterDelay();
 }
-
 
 /**
  * Styles the contact element on click
@@ -513,26 +546,25 @@ async function deleteContact(contactKey) {
 
     contacts = contacts.filter((c) => c.firebaseKey !== contactKey);
 
-    const contactInfoRef = document.getElementById("open_contact_Template");
-    if (contactInfoRef) contactInfoRef.innerHTML = "";
-
-    const mobileOverlay = document.getElementById(
-      "user_contact_information_section_mobile"
-    );
-    if (mobileOverlay) {
-      mobileOverlay.remove();
-    }
-
-    const mobileMenu = document.getElementById("edit_delete_menu");
-    if (mobileMenu) {
-      mobileMenu.innerHTML = "";
-    }
+    clearContactUIElements();
 
     toggleOff();
     await loadContacts();
   } catch (error) {
     console.error("Error deleting contact:", error);
+    alert("Failed to delete contact. Please try again."); // Optional user feedback
   }
+}
+
+function clearContactUIElements() {
+  const contactInfoRef = document.getElementById("open_contact_Template");
+  if (contactInfoRef) contactInfoRef.innerHTML = "";
+
+  const mobileOverlay = document.getElementById("user_contact_information_section_mobile");
+  if (mobileOverlay) mobileOverlay.remove();
+
+  const mobileMenu = document.getElementById("edit_delete_menu");
+  if (mobileMenu) mobileMenu.innerHTML = "";
 }
 
 
