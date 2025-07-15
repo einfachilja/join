@@ -135,7 +135,6 @@ async function addNewContact(event) {
 
   if (fullContact) {
     const initials = getInitials(fullContact.name);
-    showContactInfo(fullContact, initials);
     openContactOverlay(fullContact);
     showAddedContactMessage();
   }
@@ -164,29 +163,32 @@ function openContactOverlay(contact) {
  * Shows success message when contact is added
  */
 function showAddedContactMessage() {
-  let container = document.getElementById("user_contact_information_section_mobile");
+  const outerDiv = document.createElement('div');
+  outerDiv.className = 'created-contact-message-div';
+  const innerDiv = document.createElement('div');
+  innerDiv.className = 'created-contact-message';
+  innerDiv.id = 'created_contact_message';
+  appendContactMessageContent(innerDiv);
+  outerDiv.appendChild(innerDiv);
+  document.body.appendChild(outerDiv);
+  setTimeout(() => innerDiv.classList.add('visible'), 10);
+  setTimeout(() => outerDiv.remove(), 3000);
+}
 
-  if (!container) {
-    container = document.createElement("div");
-    container.id = "user_contact_information_section_mobile";
-    document.body.appendChild(container); 
+/**
+ * Appends the contact message content to the given element
+ * @param {HTMLElement} innerDiv
+ */
+function appendContactMessageContent(innerDiv) {
+  const temp = document.createElement('div');
+  temp.innerHTML = getCreatedContactSuccessfullyMessage();
+  if (temp.firstElementChild) {
+    while (temp.firstElementChild.firstChild) {
+      innerDiv.appendChild(temp.firstElementChild.firstChild);
+    }
+  } else {
+    innerDiv.innerHTML = getCreatedContactSuccessfullyMessage();
   }
-
-  container.innerHTML = getCreatedContactSuccessfullyMessage();
-
-  const message = document.getElementById("created_contact_message");
-
-  setTimeout(() => {
-    message.classList.add("visible");
-  }, 10);
-
-  setTimeout(() => {
-    message.classList.remove("visible");
-  }, 2500);
-
-  setTimeout(() => {
-    message.remove();
-  }, 3000);
 }
 
 

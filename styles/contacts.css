@@ -1,3 +1,9 @@
+.created-contact-message {
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 40px;
+}
 .main {
   display: flex;
   flex-direction: row;
