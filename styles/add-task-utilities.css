@@ -1,0 +1,67 @@
+input.error-border,
+textarea.error-border,
+select.error-border,
+#dropdown-toggle.error-border,
+#category-toggle.error-border,
+#dueDate.error-border,
+#title.error-border,
+.error {
+  border: 1px solid #e74c3c;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.08);
+  transition: border 0.1s linear, box-shadow 0.1s linear;
+}
+
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: #b3b3b3;
+  font-family: inherit;
+}
+
+.red_star {
+  color: red;
+}
+
+.legend-required {
+  padding-left: 0;
+  font-size: 14px;
+  color: #6e6e6e;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-grow: 1;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: -24px;
+  margin-left: 4px;
+  display: none;
+}
+
+.error-message.visible {
+  display: block;
+}
+
+.field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Für Utility im Kontext von "Assigned"-Dropdown */
+.assigned-circle.overflow-indicator {
+  background-color: #d3d3d3 !important;
+  color: white !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 45px;
+  width: 42px;
+  height: 42px;
+  user-select: none;
+}

@@ -1,3 +1,7 @@
+/**
+ * Returns the HTML string for the Add Task overlay modal.
+ * @returns {string} HTML string for the Add Task overlay.
+ */
 function getAddTaskOverlay() {
   return `          <div class="board-add-task-modal">
             <div class="board-add-task-header">
@@ -173,6 +177,19 @@ function getAddTaskOverlay() {
           </div>`;
 }
 
+/**
+ * Builds the HTML string for a task card in the board.
+ * @param {string} firebaseKey - The unique key of the task in Firebase.
+ * @param {string} category - The category name of the task.
+ * @param {string} categoryClass - The CSS class for the category.
+ * @param {string} priority - The priority level of the task.
+ * @param {string} priorityIcon - The icon URL for the priority.
+ * @param {Array} assignedList - List of assigned users.
+ * @param {string} subtaskProgressHTML - HTML string for subtask progress bar.
+ * @param {string} title - The title of the task.
+ * @param {string} description - The description of the task.
+ * @returns {string} HTML string for the task card.
+ */
 function buildCardHTML(firebaseKey, category, categoryClass, priority, priorityIcon, assignedList, subtaskProgressHTML, title, description) {
   return `
     <div draggable="true" ondragstart="startDragging('${firebaseKey}')" ondragend="stopDragging('${firebaseKey}')">
@@ -196,6 +213,15 @@ function buildCardHTML(firebaseKey, category, categoryClass, priority, priorityI
     </div>`;
 }
 
+/**
+ * Generates the HTML string for the open board card overlay.
+ * @param {Object} task - The task object containing task details.
+ * @param {string} categoryClass - The CSS class for the category.
+ * @param {string} priorityIcon - The icon URL for the priority.
+ * @param {string} assignedHTML - The HTML string for assigned users.
+ * @param {string} subtaskHTML - The HTML string for subtasks.
+ * @returns {string} HTML string for the open board card overlay.
+ */
 function getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML) {
   return `
     <div id="board_overlay_card" class="board-overlay-card" data-firebase-key="${task.firebaseKey}" onclick="onclickProtection(event)">
@@ -234,6 +260,12 @@ function getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, s
     </div>`;
 }
 
+/**
+ * Returns the HTML string for a single priority button in the overlay.
+ * @param {Object} priorityObj - Object containing priority value, label, and icon.
+ * @param {string} currentPriority - The currently selected priority.
+ * @returns {string} HTML string for a priority button.
+ */
 function getPriorityButtonHTML(priorityObj, currentPriority) {
   return `
     <button 
@@ -246,6 +278,12 @@ function getPriorityButtonHTML(priorityObj, currentPriority) {
   `;
 }
 
+/**
+ * Returns the HTML string for an assigned entry in the assigned list.
+ * @param {string} name - The name of the assigned user.
+ * @param {string} color - The color associated with the user.
+ * @returns {string} HTML string for an assigned entry.
+ */
 function getAssignedEntryHTML(name, color) {
   return `
     <div class="assigned-entry">
@@ -254,6 +292,15 @@ function getAssignedEntryHTML(name, color) {
     </div>`;
 }
 
+/**
+ * Returns the HTML string for a single subtask item.
+ * @param {string} title - The title of the subtask.
+ * @param {string} checked - The checked attribute for the checkbox.
+ * @param {string} id - The ID for the checkbox input.
+ * @param {string} firebaseKey - The Firebase key of the parent task.
+ * @param {number} idx - The index of the subtask.
+ * @returns {string} HTML string for a subtask item.
+ */
 function getSubtaskItemHTML(title, checked, id, firebaseKey, idx) {
   return `
     <div class="subtask-item">
@@ -262,10 +309,23 @@ function getSubtaskItemHTML(title, checked, id, firebaseKey, idx) {
     </div>`;
 }
 
+/**
+ * Returns the HTML string for a single assigned circle.
+ * @param {string} name - The name of the assigned user.
+ * @param {string} color - The color associated with the user.
+ * @returns {string} HTML string for an assigned circle.
+ */
 function getAssignedCircleHTML(name, color) {
   return `<span class="assigned-circle" style="background-color: ${color};">${getInitials(name)}</span>`;
 }
 
+/**
+ * Returns the HTML string for the subtask progress bar.
+ * @param {number} completed - Number of completed subtasks.
+ * @param {number} total - Total number of subtasks.
+ * @param {number} percent - Percentage of subtasks completed.
+ * @returns {string} HTML string for the subtask progress bar.
+ */
 function getSubtaskProgressHTML(completed, total, percent) {
   return `
     <div class="card-subtask-progress">
@@ -274,4 +334,42 @@ function getSubtaskProgressHTML(completed, total, percent) {
       </div>
       <span class="subtask-progress-text">${completed}/${total} Subtasks</span>
     </div>`;
+}
+
+/**
+ * Generates the full HTML for a task card in the board.
+ * @param {Object} element - The task object.
+ * @returns {string} HTML string of the task card.
+ */
+function generateTodoHTML(element) {
+  let props = extractCardProps(element);
+  return buildCardHTML(
+    props.firebaseKey, props.category, props.categoryClass, props.priority, props.priorityIcon, props.assignedList, props.subtaskProgressHTML, props.title, props.description);
+}
+
+/**
+ * Returns the complete HTML string for the open board card overlay.
+ * @param {string} categoryClass - The CSS class for the category.
+ * @param {Object} task - The task object.
+ * @returns {string} HTML string for the board card overlay.
+ */
+function getOpenBoardCardTemplate(categoryClass, task) {
+  let priorityIcon = getPriorityIcon(task.priority);
+  let assignedHTML = renderAssignedList(task.assignedTo);
+  let subtaskHTML = renderSubtasks(task);
+  return getOpenBoardCardHTML(task, categoryClass, priorityIcon, assignedHTML, subtaskHTML);
+}
+
+/**
+ * Returns the HTML string for the priority selection buttons.
+ * @param {string} currentPriority - The currently selected priority ("urgent", "medium", "low").
+ * @returns {string} HTML string for the priority buttons.
+ */
+function getPriorityButtonsHTML(currentPriority) {
+  let priorities = [
+    { value: 'urgent', label: 'Urgent', icon: './assets/icons/board/board-priority-urgent.svg' },
+    { value: 'medium', label: 'Medium', icon: './assets/icons/board/board-priority-medium.svg' },
+    { value: 'low', label: 'Low', icon: './assets/icons/board/board-priority-low.svg' }
+  ];
+  return priorities.map(p => getPriorityButtonHTML(p, currentPriority)).join('');
 }
