@@ -1,0 +1,10 @@
+let arrayTasks = [];
+let addTaskDefaultStatus = "todo";
+let firebaseKey = localStorage.getItem("firebaseKey");
+let lastCreatedTaskKey = null;
+let currentDraggedElement;
+let selectedPriority = "medium";
+let subtasks = [];
+let contacts = [];
+let selectedContacts = [];
+let selectedCategory = "";

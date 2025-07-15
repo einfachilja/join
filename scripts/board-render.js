@@ -257,7 +257,19 @@ function removeAllHighlights() {
 }
 
 /**
+ * Handles the click on a move task menu option: moves task and closes menu.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {string} statusKey - The new status to move to.
+ */
+function handleMoveTaskOptionClick(taskKey, statusKey) {
+    currentDraggedElement = taskKey;
+    moveTo(statusKey);
+    closeMoveTaskMenu();
+}
+
+/**
  * Adds drag & drop highlight listeners to all board columns for visual feedback after DOM load.
  * Runs automatically when the DOM is ready.
  */
 window.addEventListener('DOMContentLoaded', addDragHighlightListeners);
+

@@ -676,3 +676,143 @@ function closeDropdown() {
     document.getElementById("dropdown-content")?.classList.remove("visible");
     document.getElementById("dropdown-toggle")?.classList.remove("open");
 }
+
+/**
+ * Creates and returns a label element for the assigned-to dropdown.
+ * @returns {HTMLElement} The label element.
+ */
+function createLabel() {
+    let label = document.createElement('span');
+    label.textContent = 'Assigned to';
+    label.className = 'overlay-card-label';
+    return label;
+}
+
+/**
+ * Positions the assigned circles wrapper after the dropdown.
+ * @param {HTMLElement} wrapper
+ * @param {HTMLElement} assignedListContainer
+ */
+function positionCirclesWrapper(wrapper, assignedListContainer) {
+    let dropdown = document.getElementById('assigned-dropdown');
+    if (dropdown && wrapper.previousSibling !== dropdown) {
+        assignedListContainer.insertBefore(wrapper, dropdown.nextSibling);
+    }
+}
+
+/**
+ * Updates the visibility of the assigned circles wrapper.
+ * @param {HTMLElement} wrapper
+ * @param {Array<string>} selectedContacts
+ */
+function updateCirclesVisibility(wrapper, selectedContacts) {
+    wrapper.style.display = selectedContacts.length === 0 ? "none" : "flex";
+}
+
+/**
+ * Updates the content of the assigned circles wrapper with selected contacts.
+ * Renders up to four visible contact circles, and a "+N" circle if more are hidden.
+ * @param {HTMLElement} wrapper - The wrapper element to update.
+ * @param {Array<string>} selectedContacts - Array of selected contact names.
+ * @param {Array<Object>} contacts - All available contact objects.
+ */
+function updateCirclesContent(wrapper, selectedContacts, contacts) {
+    wrapper.innerHTML = '';
+    let validContacts = getValidContacts(selectedContacts, contacts);
+    let visibleContacts = validContacts.slice(0, 4);
+    let hiddenCount = validContacts.length - visibleContacts.length;
+    renderVisibleContacts(wrapper, visibleContacts);
+    renderHiddenCount(wrapper, hiddenCount);
+}
+
+/**
+ * Closes a dropdown if a click was outside its content or toggle element.
+ * @param {string} contentId - The content DOM id.
+ * @param {string} toggleId - The toggle DOM id.
+ * @param {string} visibleClass - The CSS class indicating visibility.
+ * @param {string} openClass - The CSS class for an open toggle.
+ * @param {Event} event - The mousedown event.
+ */
+function closeDropdownIfClickedOutside(contentId, toggleId, visibleClass, openClass, event) {
+    let content = document.getElementById(contentId);
+    let toggle = document.getElementById(toggleId);
+    if (content && toggle && content.classList.contains(visibleClass)) {
+        if (!content.contains(event.target) && !toggle.contains(event.target)) {
+            content.classList.remove(visibleClass);
+            toggle.classList.remove(openClass);
+        }
+    }
+}
+
+/**
+ * Handles outside clicks to close dropdowns for contacts and category.
+ * @param {Event} event - The mousedown event.
+ */
+document.addEventListener("mousedown", function (event) {
+    closeDropdownIfClickedOutside(
+        "dropdown-content",
+        "dropdown-toggle",
+        "visible",
+        "open",
+        event
+    );
+    closeDropdownIfClickedOutside(
+        "category-content",
+        "category-toggle",
+        "visible",
+        "open",
+        event
+    );
+});
+
+/**
+ * Sets up event listeners for the assigned-to dropdown (open/close and stop propagation).
+ */
+function setupDropdownListeners() {
+    let dropdownToggle = document.getElementById("dropdown-toggle");
+    if (dropdownToggle) {
+        dropdownToggle.addEventListener("click", toggleAssignDropdown);
+    }
+    let dropdownContent = document.getElementById("dropdown-content");
+    if (dropdownContent) {
+        dropdownContent.addEventListener("click", e => e.stopPropagation());
+    }
+}
+
+/**
+ * Sets up event listeners for the category dropdown.
+ */
+function setupCategoryListeners() {
+    let categoryToggle = document.getElementById("category-toggle");
+    if (categoryToggle) {
+        categoryToggle.addEventListener("click", toggleCategoryDropdown);
+    }
+}
+
+/**
+ * Creates a dropdown item for a category and click handler.
+ * @param {string} category - The category name.
+ * @param {HTMLElement} content - The dropdown content element.
+ * @returns {HTMLElement}
+ */
+function createCategoryDropdownItem(category, content) {
+    let item = document.createElement("div");
+    item.className = "dropdown-item category-item";
+    item.innerHTML = `<span class="category-name">${category}</span>`;
+    item.onclick = () => {
+        handleCategoryClick(category, content);
+    };
+    return item;
+}
+
+/**
+ * Handles click on a category dropdown item.
+ * @param {string} category - The category name.
+ * @param {HTMLElement} content - The dropdown content element.
+ */
+function handleCategoryClick(category, content) {
+    selectCategory(category);
+    content.classList.remove("visible");
+    document.getElementById("category-toggle").classList.remove("open");
+    updateSubmitState();
+}

@@ -432,3 +432,15 @@ function reloadUIAfterEdit(taskKey, options = {}) {
     updateHTML();
     openBoardCard(taskKey, options);
 }
+
+/**
+ * Selects the given priority, updates UI, and submit button state.
+ * @param {string} prio - The selected priority.
+ */
+function selectPriority(prio) {
+    selectedPriority = prio;
+    document.querySelectorAll("#buttons-prio button").forEach((b) => {
+        b.classList.toggle("selected", b.dataset.prio === prio);
+    });
+    updateSubmitState();
+}

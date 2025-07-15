@@ -423,3 +423,24 @@ function createInitialCircle(contact) {
     div.textContent = getInitials(contact.name);
     return div;
 }
+
+/**
+ * Sets the minimum date of the date input to today.
+ * @param {HTMLInputElement} dateInput - The date input element.
+ */
+function setMinDateToday(dateInput) {
+    let today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+}
+
+/**
+ * Adds an input event listener to the date input to clear errors when user changes date.
+ * @param {HTMLInputElement} dateInput - The date input element.
+ * @param {HTMLElement} errorText - The error message element.
+ */
+function addDateInputListener(dateInput, errorText) {
+    dateInput.addEventListener("input", () => {
+        dateInput.classList.remove("error-border");
+        errorText.classList.remove("visible");
+    });
+} 

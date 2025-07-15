@@ -5,13 +5,13 @@
  * @returns {string} HTML string of rendered subtasks.
  */
 function renderSubtasks(task) {
-    if (!Array.isArray(task.subtask)) return "";
-    return task.subtask.map((sub, idx) => {
-        let title = typeof sub === 'string' ? sub : sub.title;
-        let checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
-        let id = `subtask-${task.firebaseKey}-${idx}`;
-        return getSubtaskItemHTML(title, checked, id, task.firebaseKey, idx);
-    }).join("");
+  if (!Array.isArray(task.subtask)) return "";
+  return task.subtask.map((sub, idx) => {
+    let title = typeof sub === 'string' ? sub : sub.title;
+    let checked = typeof sub === 'object' && sub.completed ? 'checked' : '';
+    let id = `subtask-${task.firebaseKey}-${idx}`;
+    return getSubtaskItemHTML(title, checked, id, task.firebaseKey, idx);
+  }).join("");
 }
 
 /**
@@ -20,20 +20,20 @@ function renderSubtasks(task) {
  * @param {Object} task - The task object to update the overlay for.
  */
 function updateOverlaySubtasks(task) {
-    let subtaskList = document.querySelector('.subtask-list ul');
-    if (subtaskList) {
-        subtaskList.classList.add('subtask-list-not-edit');
-        subtaskList.innerHTML = renderSubtasks(task);
-    }
-    let progressBar = document.querySelector('.subtask-progress-bar');
-    if (progressBar) {
-        let subtasksArr = Array.isArray(task.subtask) ? task.subtask : [];
-        let total = subtasksArr.length;
-        let completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
-        let percent = total > 0 ? (completed / total) * 100 : 0;
-        progressBar.style.width = percent + "%";
-        progressBar.textContent = `${completed}/${total} Done`;
-    }
+  let subtaskList = document.querySelector('.subtask-list ul');
+  if (subtaskList) {
+    subtaskList.classList.add('subtask-list-not-edit');
+    subtaskList.innerHTML = renderSubtasks(task);
+  }
+  let progressBar = document.querySelector('.subtask-progress-bar');
+  if (progressBar) {
+    let subtasksArr = Array.isArray(task.subtask) ? task.subtask : [];
+    let total = subtasksArr.length;
+    let completed = subtasksArr.filter(sub => typeof sub === "object" && sub.completed).length;
+    let percent = total > 0 ? (completed / total) * 100 : 0;
+    progressBar.style.width = percent + "%";
+    progressBar.textContent = `${completed}/${total} Done`;
+  }
 }
 
 /**
@@ -43,7 +43,7 @@ function updateOverlaySubtasks(task) {
  * @returns {Array<Object>} An array of subtask objects with title and completed status.
  */
 function convertSubtasksToObjects(subtasks) {
-    return subtasks.map(sub => typeof sub === 'string' ? { title: sub, completed: false } : sub);
+  return subtasks.map(sub => typeof sub === 'string' ? { title: sub, completed: false } : sub);
 }
 
 /**
@@ -53,18 +53,18 @@ function convertSubtasksToObjects(subtasks) {
  * @param {number} index - The index of the subtask.
  */
 async function toggleSubtask(taskKey, index) {
-    let task = arrayTasks.find(t => t.firebaseKey === taskKey);
-    if (!task || !Array.isArray(task.subtask)) return;
-    task.subtask = convertSubtasksToObjects(task.subtask);
-    toggleSubtaskCompleted(task.subtask, index);
-    try {
-        await saveSubtasksToFirebase(taskKey, task.subtask);
-        updateHTML();
-        updateOverlaySubtasks(task);
-        blurCheckbox(taskKey, index);
-    } catch (error) {
-        console.error("Fehler beim Aktualisieren des Subtasks:", error);
-    }
+  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  if (!task || !Array.isArray(task.subtask)) return;
+  task.subtask = convertSubtasksToObjects(task.subtask);
+  toggleSubtaskCompleted(task.subtask, index);
+  try {
+    await saveSubtasksToFirebase(taskKey, task.subtask);
+    updateHTML();
+    updateOverlaySubtasks(task);
+    blurCheckbox(taskKey, index);
+  } catch (error) {
+    console.error("Fehler beim Aktualisieren des Subtasks:", error);
+  }
 }
 
 /**
@@ -74,29 +74,29 @@ async function toggleSubtask(taskKey, index) {
  * @param {number} index - The index of the subtask.
  */
 function blurCheckbox(taskKey, index) {
-    setTimeout(() => {
-        let checkboxId = `subtask-${taskKey}-${index}`;
-        let checkbox = document.getElementById(checkboxId);
-        if (checkbox) checkbox.blur();
-    }, 0);
+  setTimeout(() => {
+    let checkboxId = `subtask-${taskKey}-${index}`;
+    let checkbox = document.getElementById(checkboxId);
+    if (checkbox) checkbox.blur();
+  }, 0);
 }
 
 /**
  * Initializes the editable subtask list inside the overlay card.
  */
 function setupSubtasksEdit() {
-    let subtaskList = document.querySelector('.subtask-list ul');
-    if (!subtaskList || document.getElementById('subtasks-edit-container')) return;
-    let { container, input, addBtn } = createSubtasksEditContainer();
-    let subtasks = getSubtasksOfCurrentTask();
-    function rerender() {
-        renderSubtasksList(subtasks, container, rerender);
-    }
-    addBtn.onclick = () => handleAddSubtask(subtasks, input, container, rerender);
-    rerender();
-    subtaskList.innerHTML = '';
-    subtaskList.appendChild(container);
-    window.getEditedSubtasks = () => subtasks;
+  let subtaskList = document.querySelector('.subtask-list ul');
+  if (!subtaskList || document.getElementById('subtasks-edit-container')) return;
+  let { container, input, addBtn } = createSubtasksEditContainer();
+  let subtasks = getSubtasksOfCurrentTask();
+  function rerender() {
+    renderSubtasksList(subtasks, container, rerender);
+  }
+  addBtn.onclick = () => handleAddSubtask(subtasks, input, container, rerender);
+  rerender();
+  subtaskList.innerHTML = '';
+  subtaskList.appendChild(container);
+  window.getEditedSubtasks = () => subtasks;
 }
 
 /**
@@ -104,9 +104,9 @@ function setupSubtasksEdit() {
  * @returns {Array<Object>} The array of subtask objects.
  */
 function getSubtasksOfCurrentTask() {
-    let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
-    let task = arrayTasks.find(t => t.firebaseKey === taskKey);
-    return Array.isArray(task.subtask) ? task.subtask : [];
+  let taskKey = document.getElementById('board_overlay_card').dataset.firebaseKey;
+  let task = arrayTasks.find(t => t.firebaseKey === taskKey);
+  return Array.isArray(task.subtask) ? task.subtask : [];
 }
 
 /**
@@ -114,17 +114,17 @@ function getSubtasksOfCurrentTask() {
  * @returns {Object} The created elements: container, input, addBtn.
  */
 function createSubtasksEditContainer() {
-    let container = document.createElement('div');
-    container.id = 'subtasks-edit-container';
-    container.className = 'subtasks-edit-container';
-    let inputWrapper = document.createElement('div');
-    inputWrapper.className = 'subtask-input-wrapper';
-    let input = createSubtaskInput();
-    let addBtn = createAddSubtaskButton();
-    inputWrapper.appendChild(input);
-    inputWrapper.appendChild(addBtn);
-    container.appendChild(inputWrapper);
-    return { container, input, addBtn };
+  let container = document.createElement('div');
+  container.id = 'subtasks-edit-container';
+  container.className = 'subtasks-edit-container';
+  let inputWrapper = document.createElement('div');
+  inputWrapper.className = 'subtask-input-wrapper';
+  let input = createSubtaskInput();
+  let addBtn = createAddSubtaskButton();
+  inputWrapper.appendChild(input);
+  inputWrapper.appendChild(addBtn);
+  container.appendChild(inputWrapper);
+  return { container, input, addBtn };
 }
 
 /**
@@ -134,17 +134,17 @@ function createSubtasksEditContainer() {
  * @param {Function} rerender - The function to rerender the list.
  */
 function renderSubtasksList(subtaskArr, container, rerender) {
-    let listDiv = document.getElementById('subtask-list-edit');
-    if (!listDiv) {
-        listDiv = document.createElement('div');
-        listDiv.id = 'subtask-list-edit';
-        container.appendChild(listDiv);
-    }
-    listDiv.innerHTML = '';
-    subtaskArr.forEach((sub, idx) => {
-        let row = createSubtaskRow(sub, idx, subtaskArr, rerender, container);
-        listDiv.appendChild(row);
-    });
+  let listDiv = document.getElementById('subtask-list-edit');
+  if (!listDiv) {
+    listDiv = document.createElement('div');
+    listDiv.id = 'subtask-list-edit';
+    container.appendChild(listDiv);
+  }
+  listDiv.innerHTML = '';
+  subtaskArr.forEach((sub, idx) => {
+    let row = createSubtaskRow(sub, idx, subtaskArr, rerender, container);
+    listDiv.appendChild(row);
+  });
 }
 
 /**
@@ -157,20 +157,20 @@ function renderSubtasksList(subtaskArr, container, rerender) {
  * @returns {HTMLElement} The subtask row element.
  */
 function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
-    let row = document.createElement('div');
-    row.className = 'subtask-list-row';
-    let input = createSubtaskRowInput(sub, idx, subtaskArr);
-    let editBtn = createSubtaskRowEditButton(input);
-    let removeBtn = createSubtaskRowRemoveButton(idx, subtaskArr, rerender);
-    let dot = createSubtaskRowDot();
-    row.appendChild(dot);
-    row.appendChild(input);
-    row.appendChild(editBtn);
-    row.appendChild(removeBtn);
-    row.ondblclick = () => {
-        input.activateEdit();
-    };
-    return row;
+  let row = document.createElement('div');
+  row.className = 'subtask-list-row';
+  let input = createSubtaskRowInput(sub, idx, subtaskArr);
+  let editBtn = createSubtaskRowEditButton(input);
+  let removeBtn = createSubtaskRowRemoveButton(idx, subtaskArr, rerender);
+  let dot = createSubtaskRowDot();
+  row.appendChild(dot);
+  row.appendChild(input);
+  row.appendChild(editBtn);
+  row.appendChild(removeBtn);
+  row.ondblclick = () => {
+    input.activateEdit();
+  };
+  return row;
 }
 
 /**
@@ -181,12 +181,12 @@ function createSubtaskRow(sub, idx, subtaskArr, rerender, container) {
  * @param {Function} rerender - The rerender callback.
  */
 function handleAddSubtask(subtasks, input, container, rerender) {
-    let val = input.value.trim();
-    if (val) {
-        subtasks.push({ title: val, completed: false });
-        rerender();
-        input.value = '';
-    }
+  let val = input.value.trim();
+  if (val) {
+    subtasks.push({ title: val, completed: false });
+    rerender();
+    input.value = '';
+  }
 }
 
 /**
@@ -436,5 +436,84 @@ function showOrHideSubtaskIcons() {
     iconWrapper.classList.remove("hidden");
   } else {
     iconWrapper.classList.add("hidden");
+  }
+}
+
+/**
+ * Creates the text input for adding a new subtask.
+ * @returns {HTMLInputElement} The input element.
+ */
+function createSubtaskInput() {
+  let input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'Add new subtask';
+  input.id = 'add-subtask-input';
+  input.className = 'add-subtask-input';
+  return input;
+}
+
+/**
+ * Clears all subtasks and resets the subtask input and list.
+ */
+function resetSubtasks() {
+  clearSubtasksArray();
+  clearSubtasksList();
+  clearSubtaskInput();
+  hideSubtaskIcons();
+  showSubtaskPlus();
+}
+
+/**
+ * Empties the subtasks array.
+ */
+function clearSubtasksArray() {
+  subtasks.length = 0;
+}
+
+/**
+ * Clears the subtask list display.
+ */
+function clearSubtasksList() {
+  let subtaskList = document.getElementById("subtask-list");
+  if (subtaskList) subtaskList.innerHTML = "";
+}
+
+/**
+ * Hides the subtask action icons.
+ */
+function hideSubtaskIcons() {
+  let subtaskIcons = document.getElementById("subtask-icons");
+  if (subtaskIcons) subtaskIcons.classList.add("hidden");
+}
+
+/**
+ * Shows the subtask "plus" (add) icon.
+ */
+function showSubtaskPlus() {
+  let subtaskPlus = document.getElementById("subtask-plus");
+  if (subtaskPlus) subtaskPlus.classList.remove("hidden");
+}
+
+/**
+ * Sets up event listeners for the subtask input field (show/hide icons, handle Enter key).
+ */
+function setupSubtaskInputListeners() {
+  let subtaskInput = document.getElementById("subtask-input");
+  if (!subtaskInput) return;
+  subtaskInput.addEventListener("input", showOrHideSubtaskIcons);
+  subtaskInput.addEventListener("keydown", handleSubtaskEnter);
+}
+
+/**
+ * Handles pressing Enter in the subtask input, triggers addSubtask if icons visible.
+ * @param {KeyboardEvent} e - The keydown event.
+ */
+function handleSubtaskEnter(e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    let subtaskIcons = document.getElementById("subtask-icons");
+    if (subtaskIcons && !subtaskIcons.classList.contains("hidden")) {
+      addSubtask();
+    }
   }
 }
