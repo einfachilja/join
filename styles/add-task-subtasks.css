@@ -68,7 +68,7 @@
   cursor: pointer;
   border-radius: 10px;
   width: 100%;
-  
+  cursor: pointer;
   box-sizing: border-box;
   margin-left: 0;
   display: flex;
@@ -271,6 +271,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
+  border: none;
 }
 
 .subtask-list-item:hover .subtask-edit-btn,
