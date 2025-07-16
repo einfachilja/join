@@ -351,3 +351,24 @@ function highlightLastCreatedTask() {
         }, 2000);
     }
 }
+
+/**
+ * Handles Add Task button click:
+ * - On screens ≤ 1040px: redirects to 'add-task.html' (mobile view)
+ * - Otherwise: opens Add Task overlay (desktop)
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const addTaskBtn = document.getElementById('add-task-btn');
+    if (addTaskBtn) {
+        addTaskBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (window.innerWidth <= 1040) {
+                window.location.href = 'add-task.html';
+            } else {
+                if (typeof openAddTaskOverlay === 'function') {
+                    openAddTaskOverlay();
+                }
+            }
+        });
+    }
+});
