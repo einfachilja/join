@@ -88,19 +88,11 @@ export const AddTaskCore = {
   },
 
   /**
-   * Set up date picker input behavior.
-   * Changes type from text to date on focus, restricts past dates.
+   * Datepicker logic handled via Flatpickr.
    * @function
    */
   setupDatePicker() {
-    const input = document.getElementById("dueDate");
-    if (!input) return;
-
-    input.placeholder = "dd/mm/yyyy";
-    input.type = "text";
-
-    input.onfocus = () => this.handleDateFocus(input);
-    input.onblur = () => this.resetDatePlaceholder(input);
+    // handled externally via Flatpickr
   },
 
   /**

@@ -316,3 +316,25 @@ select:focus,
 textarea {
   padding-top: 12px;
 }
+
+.input-with-icon {
+  position: relative;
+  width: 100%;
+}
+
+.input-with-icon .date-input {
+  width: 100%;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.input-with-icon .calendar-inside-input {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  pointer-events: all;
+}
