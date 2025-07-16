@@ -186,12 +186,14 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 0; margin: 0;
+    padding: 0;
+    margin: 0;
   }
 
   .add-new-contact-left-section {
     height: 40%;
-    border-top-left-radius: 30px; border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
     border-bottom-left-radius: 0px;
     padding-left: 40px;
   }
@@ -301,7 +303,8 @@
   }
 
   .form-buttons button img {
-    width: 22px; height: 22px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -332,7 +335,7 @@
   }
 
   .alphabet-devider {
-    width: 280px;
+    width: 250px;
   }
 
   .user-name {
@@ -369,32 +372,28 @@
   .better-with-a-team-span {
     font-size: 16px;
   }
-}
 
-@media (max-width: 480px) {
   .all-contacts {
     height: calc(100vh - 100px - 56px);
     overflow-y: auto;
+    margin: 0 8px;
+    width: calc(100% - 16px);
   }
 
   .contact {
-    width: 215px;
+    width: 230px;
+    gap: 25px;
+    padding: 10px 15px;
+    margin-left: -25px;
   }
-}
 
-@media (max-width: 365px) {
   .contacts-list {
-    left: 8px; right: 8px;
+    left: 8px;
+    right: 8px;
     width: auto;
   }
 
   .contacts-list-header button {
     margin: 0 8px;
-  }
-
-  .all-contacts {
-    margin: 0 8px;
-    width: calc(100% - 16px);
-    overflow-y: auto;
   }
 }

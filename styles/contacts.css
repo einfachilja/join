@@ -103,11 +103,18 @@
 
 .name-and-email a {
   display: inline-block;
-  max-width: 200px;
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   vertical-align: bottom;
+}
+
+.email-and-phone-sub-section a {
+  display: inline-block;
+  min-width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .contact-name {

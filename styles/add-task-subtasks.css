@@ -23,6 +23,7 @@
   gap: 8px;
   width: 100%;
   padding: 0;
+  box-sizing: border-box;
 }
 
 .subtask-edit input {
@@ -45,22 +46,32 @@
 }
 
 .subtask-list-add {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
   max-height: 80px;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  scrollbar-gutter: stable both-edges;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .subtask-list-item {
   list-style-type: disc;
-  margin-left: 20px;
   background: none;
   border: none;
   font-size: 16px;
   color: #000;
   cursor: pointer;
   border-radius: 10px;
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+  margin-left: 0;
 }
 
 .subtask-list-item:hover {
@@ -156,17 +167,22 @@
 
 .subtask-list-item.subtask-edit-mode {
   background-color: #ffffff;
-  border: 1px solid #29abe2;
-  border-radius: 10px;
-  padding: 0 12px;
+  border-left: 2px solid #29abe2;
+  border-right: 2px solid #29abe2;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  padding: 0 16px;
   list-style-type: none;
   margin-left: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 16px;
   line-height: 1;
   height: 48px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .subtask-list-item.subtask-edit-mode span {
@@ -179,9 +195,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #29abe2;
-  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid #29abe2;
   background-color: #ffffff;
+  width: 100%;
+  border-radius: 0;
+  overflow: hidden;
+  height: 40px;
+  scrollbar-gutter: stable;
+  box-sizing: border-box;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .subtask-input-edit-wrapper {
@@ -200,6 +227,7 @@
   box-sizing: border-box;
   height: 100%;
   padding: 0;
+  padding-left: 0;
   display: flex;
   align-items: center;
   line-height: 1;
@@ -209,14 +237,12 @@
 }
 
 .subtask-edit-container img {
-  width: 20px;
   height: 20px;
-  padding: 4px;
   cursor: pointer;
-  border-radius: 4px;
   background-color: transparent;
   filter: brightness(0);
   transition: background-color 0.2s ease;
+  margin-left: 0px;
 }
 
 .subtask-edit-container img:hover {
@@ -233,8 +259,10 @@
 }
 
 .subtask-edit-icons {
-  display: flex;
-  gap: 8px;
+  display: flex-end;
+  gap: 0px;
+  align-items: center;
+  padding-right: 0;
   margin-left: auto;
 }
 

@@ -352,3 +352,19 @@ select:focus {
 #dropdown-toggle input::placeholder {
   color: #000000;
 }
+
+.subtask-edit-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #29abe2;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  padding: 0 16px;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  overflow: hidden;
+  height: 48px;
+  scrollbar-gutter: stable;
+}
