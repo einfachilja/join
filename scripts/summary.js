@@ -3,16 +3,16 @@ let arrayTasks = [];
 let firebaseKey = localStorage.getItem("firebaseKey");
 
 function showWelcomeMessage() {
-  const name = sessionStorage.getItem("userName");
-  const isGuest = name === "Guest";
-  const displayName = isGuest ? "" : name;
-
-  const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)";
-  const hour = new Date().getHours();
+  const name = sessionStorage.getItem("userName") || "Guest",
+    displayName = name === "Guest" ? "" : name;
+  const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)",
+    hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-
   if (window.innerWidth <= 1040) {
-    showMobileWelcomeOverlay(greeting, displayName, color);
+    if (!localStorage.getItem("mobileWelcomeShown")) {
+      showMobileWelcomeOverlay(greeting, displayName, color);
+      localStorage.setItem("mobileWelcomeShown", "true");
+    }
   } else {
     showDesktopWelcomeMessage(greeting, displayName, color);
   }
@@ -40,7 +40,7 @@ function showMobileWelcomeOverlay(greeting, name, color) {
   setTimeout(() => {
     overlay.classList.add("d_none");
     main.style.display = "";
-  }, 1500);
+  }, 4000);
 }
 
 /**
@@ -124,7 +124,7 @@ function getRelevantPriorityTasks(tasks) {
 
   if (high.length > 0) return { priority: "urgent", tasks: high };
   if (medium.length > 0) return { priority: "medium", tasks: medium };
-  if (low.length > 0) return { priority: "low", tasks: low }; 
+  if (low.length > 0) return { priority: "low", tasks: low };
   return { priority: null, tasks: [] };
 }
 
