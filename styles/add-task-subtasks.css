@@ -60,8 +60,6 @@
   font-size: 16px;
   color: #000;
   cursor: pointer;
-  display: flex;
-  align-items: center;
   border-radius: 10px;
 }
 
@@ -207,6 +205,7 @@
   line-height: 1;
   padding-top: 0;
   padding-bottom: 0;
+  padding-left: 8px
 }
 
 .subtask-edit-container img {
