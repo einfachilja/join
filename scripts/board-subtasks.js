@@ -121,6 +121,13 @@ function createSubtasksEditContainer() {
   inputWrapper.className = 'subtask-input-wrapper';
   let input = createSubtaskInput();
   let addBtn = createAddSubtaskButton();
+  // Add Enter key event to add subtask
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addBtn.click();
+    }
+  });
   inputWrapper.appendChild(input);
   inputWrapper.appendChild(addBtn);
   container.appendChild(inputWrapper);
