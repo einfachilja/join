@@ -134,7 +134,10 @@ function removeAddTaskOverlayEventListener() {
 function handleAddTaskOverlayClickOutside(event) {
     let modal = document.querySelector('.board-add-task-modal');
     if (!modal) return;
-    if (!modal.contains(event.target)) {
+    if (
+        !modal.contains(event.target) &&
+        !event.target.closest('.flatpickr-calendar')
+    ) {
         closeAddTaskOverlay();
     }
 }
@@ -396,3 +399,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// HTML aktualisieren
+let overlay = document.getElementById("add_task_overlay");
+overlay.innerHTML = getAddTaskOverlay();
+
+// Jetzt Flatpickr initialisieren!
+flatpickr("#dueDate", {
+    dateFormat: "d/m/Y",
+    minDate: "today",
+    locale: "en"
+});
+
+function openAddTaskOverlay() {
+    showAddTaskOverlay();
+    renderAddTaskModal();
+    // Nach dem Rendern Flatpickr initialisieren!
+    flatpickr("#dueDate", {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        locale: "en"
+    });
+    addAddTaskOverlayEventListeners();
+    initAddTaskOverlayLogic();
+}

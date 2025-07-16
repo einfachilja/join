@@ -31,18 +31,25 @@ function getAddTaskOverlay() {
                     placeholder="Enter a description"
                   ></textarea>
 
-                  <label for="dueDate"
-                    >Due Date <span class="red_star">*</span></label
-                  >
-                  <div class="date-input-wrapper">
-                    <input
-                      id="dueDate"
-                      class="overlay-card-date-input"
-                      type="date"
-                      placeholder="dd/mm/yyyy"
-                    />
-                    
-                  </div>
+<label for="dueDate">
+  Due Date <span class="red_star">*</span>
+</label>
+<div class="input-with-icon">
+  <input
+    type="text"
+    id="dueDate"
+    class="date-input"
+    placeholder="dd/mm/yyyy"
+    pattern="\d{2}/\d{2}/\d{4}"
+    autocomplete="off"
+  />
+  <img
+    src="./assets/icons/add-task/add-task-calendar.svg"
+    alt="Calendar"
+    class="calendar-inside-input"
+    onclick="setTimeout(() => document.getElementById('dueDate')._flatpickr?.open(), 0)"
+  />
+</div>
                   <div class="error-message" id="error-dueDate">
                     This field is required
                   </div>
@@ -380,10 +387,10 @@ function getPriorityButtonsHTML(currentPriority) {
  * @returns {HTMLDivElement} The icon element.
  */
 function createCategoryIcon(category) {
-    let div = document.createElement("div");
-    div.className = "profile-icon";
-    div.style.background = "#2a3647";
-    div.textContent = getCategoryInitials(category);
-    return div;
+  let div = document.createElement("div");
+  div.className = "profile-icon";
+  div.style.background = "#2a3647";
+  div.textContent = getCategoryInitials(category);
+  return div;
 }
 
