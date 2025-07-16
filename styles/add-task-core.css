@@ -142,8 +142,6 @@ label {
   align-items: flex-start;
   gap: 16px;
   margin-top: 32px;
-  padding-right: 32px;
-  width: 100%;
 }
 
 .form-actions button {
