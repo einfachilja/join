@@ -396,4 +396,8 @@
   .contacts-list-header button {
     margin: 0 8px;
   }
+
+  .email-and-phone-sub-section {
+    max-width: 280px;
+  }
 }

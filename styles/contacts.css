@@ -112,7 +112,7 @@
 
 .email-and-phone-sub-section a {
   display: inline-block;
-  min-width: 350px;
+  min-width: 280px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
