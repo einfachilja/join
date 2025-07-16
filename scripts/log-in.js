@@ -146,6 +146,8 @@ function loginUser(user, firebaseKey) {
   sessionStorage.setItem("userColor", user.color);
   localStorage.setItem("firebaseKey", firebaseKey);
 
+  sessionStorage.setItem("showWelcomeOnLogin", "true");
+
   showMessage("Login successful!", true);
   setTimeout(() => {
     window.location.href = LOGIN_SUCCESSFUL;
@@ -160,6 +162,8 @@ function guestLogin() {
   sessionStorage.setItem("userColor", "rgb(41, 171, 226)");
   sessionStorage.setItem("email", "guest@join-test.de");
   localStorage.setItem("firebaseKey", "guest");
+
+  sessionStorage.setItem("showWelcomeOnLogin", "true");
 
   showMessage("You are logged in as a guest!", true);
   setTimeout(() => {
