@@ -221,16 +221,27 @@ export const AddTaskCore = {
 
   /**
    * Handle Create Task button click and trigger form validation + Firebase submit.
+   * Uses the status from URL (if present), else the current addTaskDefaultStatus, else 'todo'.
    * @function
    */
   setupSubmit() {
     const btn = document.getElementById("submit-task-btn");
     if (!btn) return;
     btn.disabled = false;
+
+    // Helper: Get status from URL
+    function getStatusFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("status");
+    }
+
     btn.onclick = (e) => {
       e.preventDefault();
       if (this.validateForm()) {
-        FirebaseService.submitTaskToFirebase().then(() => {
+        // Priority: URL param > global > fallback
+        const urlStatus = getStatusFromUrl();
+        const taskStatus = urlStatus || window.addTaskDefaultStatus || "todo";
+        FirebaseService.submitTaskToFirebase(taskStatus).then(() => {
           FirebaseService.showTaskAddedPopup();
           setTimeout(() => (window.location.href = "./board.html"), 2000);
         });

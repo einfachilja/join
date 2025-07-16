@@ -68,9 +68,10 @@ export const FirebaseService = {
    * Send created task to Firebase database.
    * @async
    * @function
+   * @param {string} status - Task status ('todo', 'progress', 'feedback')
    */
-  async submitTaskToFirebase() {
-    const task = this.createTaskObject();
+  async submitTaskToFirebase(status) {
+    const task = this.createTaskObject(status);
     try {
       await fetch(
         `https://join467-e19d8-default-rtdb.europe-west1.firebasedatabase.app/users/${this.firebaseKey}/tasks.json`,
@@ -82,6 +83,26 @@ export const FirebaseService = {
     } catch (err) {
       console.error("Error saving task", err);
     }
+  },
+
+  /**
+   * Create a task object from form data.
+   * @param {string} status - Task status ('todo', 'progress', 'feedback')
+   * @returns {Object} Task data object
+   * @function
+   */
+  createTaskObject(status) {
+    return {
+      title: document.getElementById("title").value.trim(),
+      description: document.getElementById("description").value.trim(),
+      dueDate: document.getElementById("dueDate").value,
+      priority: this.getSelectedPriority(),
+      assignedTo: DropdownController.selectedContacts.map((c) => c.name),
+      category: DropdownController.selectedCategory,
+      subtask: SubtaskManager.getSubtasks(),
+      createdAt: new Date().toISOString(),
+      status: status || "todo",
+    };
   },
 
   /**

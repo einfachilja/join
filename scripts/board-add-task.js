@@ -372,3 +372,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+/**
+ * Handles Plus (+) button click in each board column:
+ * - On screens ≤ 1040px: redirects to 'add-task.html?status=todo' (or relevant status)
+ * - Otherwise: opens Add Task overlay with preselected status
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    // ... dein bisheriger add-task-btn code ...
+
+    // Plus-Buttons für jede Spalte (data-status nutzen)
+    document.querySelectorAll('.board-plus-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const status = btn.getAttribute('data-status') || 'todo';
+            if (window.innerWidth <= 1040) {
+                window.location.href = `add-task.html?status=${encodeURIComponent(status)}`;
+            } else {
+                if (typeof openAddTaskForStatus === 'function') {
+                    openAddTaskForStatus(status);
+                }
+            }
+        });
+    });
+});

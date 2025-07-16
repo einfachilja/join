@@ -130,7 +130,7 @@
           <div class="board-main">
             <div class="board-main-box">
               <span class="board-main-box-title">To do
-                <img onclick="openAddTaskForStatus('todo')" src="./assets/icons/board/board-plus-button.svg" alt="">
+                <img class="board-plus-btn" data-status="todo" src="assets/icons/board/board-plus-button.svg" alt="">
               </span>
               <div class="drag-area" id="todo" ondrop="moveTo('todo')" ondragleave="removeHighlight('todo')"
                 ondragover="allowDrop(event); highlight('todo')">
@@ -139,7 +139,8 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">In progress
-                <img onclick="openAddTaskForStatus('progress')" src="./assets/icons/board/board-plus-button.svg" alt="">
+                <img class="board-plus-btn" data-status="progress" src="assets/icons/board/board-plus-button.svg"
+                  alt="">
               </span>
               <div class="drag-area" id="progress" ondrop="moveTo('progress')" ondragleave="removeHighlight('progress')"
                 ondragover="allowDrop(event); highlight('progress')">
@@ -148,7 +149,8 @@
 
             <div class="board-main-box">
               <span class="board-main-box-title">Await feedback
-                <img onclick="openAddTaskForStatus('feedback')" src="./assets/icons/board/board-plus-button.svg" alt="">
+                <img class="board-plus-btn" data-status="feedback" src="assets/icons/board/board-plus-button.svg"
+                  alt="">
               </span>
               <div class="drag-area" id="feedback" ondrop="moveTo('feedback')" ondragleave="removeHighlight('feedback')"
                 ondragover="allowDrop(event); highlight('feedback')">
