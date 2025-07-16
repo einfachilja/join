@@ -394,3 +394,35 @@ function createCategoryIcon(category) {
   return div;
 }
 
+/**
+ * Inserts a due date input with calendar icon into the given container and initializes Flatpickr.
+ * @param {HTMLElement} dueDateSpan - The container element where the due date input is rendered.
+ * @param {string} formattedDate - The prefilled date as a string (format: dd/mm/yyyy or yyyy-mm-dd).
+ * Flatpickr is initialized after rendering the input for date selection and calendar icon activation.
+ */
+function addDueDateInput(dueDateSpan, formattedDate) {
+  dueDateSpan.innerHTML = `
+      <div class="input-with-icon">
+        <input
+          type="text"
+          id="due_date_input"
+          class="overlay-card-date-input date-input"
+          placeholder="dd/mm/yyyy"
+          value="${formatDateForFlatpickr(formattedDate)}"
+          autocomplete="off"
+        />
+        <img
+          src="./assets/icons/add-task/add-task-calendar.svg"
+          alt="Calendar"
+          class="calendar-inside-input"
+          onclick="setTimeout(() => document.getElementById('due_date_input')._flatpickr?.open(), 0)"
+        />
+      </div>
+    `;
+
+  flatpickr("#due_date_input", {
+    dateFormat: "d/m/Y",
+    minDate: "today",
+    locale: "en"
+  });
+}

@@ -186,21 +186,19 @@ function addDueDateLabel(dueDateSpan) {
     }
 }
 
-/**
- * Adds a date input field to the due date span for editing.
- * @param {HTMLElement} dueDateSpan - The due date span element.
- * @param {string} formattedDate - The date value for the input field.
- */
-function addDueDateInput(dueDateSpan, formattedDate) {
-    let input = document.createElement("input");
-    input.type = "date";
-    input.id = "due_date_input";
-    input.className = "overlay-card-date-input";
-    input.value = formattedDate;
-    let today = new Date().toISOString().split("T")[0];
-    input.min = today;
-    dueDateSpan.innerHTML = "";
-    dueDateSpan.appendChild(input);
+
+function formatDateForFlatpickr(isoDateStr) {
+    if (!isoDateStr) return '';
+    if (isoDateStr.match(/\d{4}-\d{2}-\d{2}/)) {
+        // yyyy-mm-dd → dd/mm/yyyy
+        const [y, m, d] = isoDateStr.split("-");
+        return `${d}/${m}/${y}`;
+    }
+    if (isoDateStr.match(/\d{2}\/\d{2}\/\d{4}/)) {
+        // schon dd/mm/yyyy
+        return isoDateStr;
+    }
+    return '';
 }
 
 /**
@@ -317,8 +315,14 @@ function getEditedSubtasks(defaultSubtasks) {
 function getNewDueDate() {
     let dueDateInput = document.getElementById("due_date_input");
     if (dueDateInput) {
-        let [y, m, d] = dueDateInput.value.split("-");
-        if (y && m && d) return `${d}/${m}/${y}`;
+        let val = dueDateInput.value;
+        if (val.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+            return val;
+        }
+        if (val.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            let [y, m, d] = val.split("-");
+            return `${d}/${m}/${y}`;
+        }
     }
     let rawDueDate = document.getElementById("due_date").innerHTML;
     let match = rawDueDate.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);

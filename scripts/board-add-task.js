@@ -143,6 +143,20 @@ function handleAddTaskOverlayClickOutside(event) {
 }
 
 /**
+ * Toggles error styling and visibility for a form field.
+ * @param {HTMLElement} inputEl - The input element to style.
+ * @param {string} errorElId - The ID of the error message element.
+ * @param {boolean} isValid - Whether the field is valid.
+ * @param {string} [errorClass='error-border'] - CSS class for error border.
+ * @param {string} [errorVisibleClass='visible'] - CSS class for error message visibility.
+ */
+function showFieldError(inputEl, errorElId, isValid, errorClass = 'error-border', errorVisibleClass = 'visible') {
+    let errorEl = document.getElementById(errorElId);
+    if (inputEl) inputEl.classList.toggle(errorClass, !isValid);
+    if (errorEl) errorEl.classList.toggle(errorVisibleClass, !isValid);
+}
+
+/**
  * Validates all main form fields: title, due date, and category.
  * @returns {boolean} True if valid, false otherwise.
  */
@@ -155,44 +169,11 @@ function validateForm() {
     let dueDateValid = isInputFilled(dueDateEl);
     let categoryValid = isCategorySelected();
 
-    showTitleError(titleEl, titleValid);
-    showDueDateError(dueDateEl, dueDateValid);
-    showCategoryError(categoryToggle, categoryValid);
+    showFieldError(titleEl, "error-title", titleValid, "error", "visible");
+    showFieldError(dueDateEl, "error-dueDate", dueDateValid, "error-border", "visible");
+    showFieldError(categoryToggle, "error-category", categoryValid, "error-border", "visible");
 
     return titleValid && dueDateValid && categoryValid;
-}
-
-/**
- * Shows or hides the title error state and error message.
- * @param {HTMLElement} titleEl - The title input element.
- * @param {boolean} isValid - Whether the title is valid.
- */
-function showTitleError(titleEl, isValid) {
-    let titleError = document.getElementById("error-title");
-    titleEl.classList.toggle("error", !isValid);
-    if (titleError) titleError.classList.toggle("visible", !isValid);
-}
-
-/**
- * Shows or hides the due date error state and error message.
- * @param {HTMLElement} dueDateEl - The due date input element.
- * @param {boolean} isValid - Whether the due date is valid.
- */
-function showDueDateError(dueDateEl, isValid) {
-    let dueDateError = document.getElementById("error-dueDate");
-    dueDateEl.classList.toggle("error-border", !isValid);
-    if (dueDateError) dueDateError.classList.toggle("visible", !isValid);
-}
-
-/**
- * Shows or hides the category error state and error message.
- * @param {HTMLElement} categoryToggle - The category toggle element.
- * @param {boolean} isValid - Whether the category is valid.
- */
-function showCategoryError(categoryToggle, isValid) {
-    let categoryError = document.getElementById("error-category");
-    categoryToggle.classList.toggle("error-border", !isValid);
-    if (categoryError) categoryError.classList.toggle("visible", !isValid);
 }
 
 /**
@@ -356,9 +337,7 @@ function highlightLastCreatedTask() {
 }
 
 /**
- * Handles Add Task button click:
- * - On screens ≤ 1040px: redirects to 'add-task.html' (mobile view)
- * - Otherwise: opens Add Task overlay (desktop)
+ * Handles Add Task button click for mobile and desktop views.
  */
 document.addEventListener('DOMContentLoaded', function () {
     const addTaskBtn = document.getElementById('add-task-btn');
@@ -377,14 +356,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /**
- * Handles Plus (+) button click in each board column:
- * - On screens ≤ 1040px: redirects to 'add-task.html?status=todo' (or relevant status)
- * - Otherwise: opens Add Task overlay with preselected status
+ * Adds click listeners to all board plus buttons for task creation.
  */
 document.addEventListener('DOMContentLoaded', function () {
-    // ... dein bisheriger add-task-btn code ...
-
-    // Plus-Buttons für jede Spalte (data-status nutzen)
     document.querySelectorAll('.board-plus-btn').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -400,21 +374,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// HTML aktualisieren
+
+/**
+ * Injects the Add Task overlay HTML into the overlay container.
+ */
 let overlay = document.getElementById("add_task_overlay");
 overlay.innerHTML = getAddTaskOverlay();
 
-// Jetzt Flatpickr initialisieren!
-flatpickr("#dueDate", {
-    dateFormat: "d/m/Y",
-    minDate: "today",
-    locale: "en"
-});
-
+/**
+ * Renders the Add Task overlay, then initializes Flatpickr for the due date input.
+ * This ensures Flatpickr is always attached to the dynamically generated input field.
+ */
 function openAddTaskOverlay() {
     showAddTaskOverlay();
     renderAddTaskModal();
-    // Nach dem Rendern Flatpickr initialisieren!
     flatpickr("#dueDate", {
         dateFormat: "d/m/Y",
         minDate: "today",
