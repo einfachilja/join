@@ -73,70 +73,83 @@ export const SubtaskManager = {
     document.getElementById("subtask-plus")?.classList.remove("hidden");
   },
 
-  
   /**
    * Create list item element for a subtask.
    * @param {string|object} data - Subtask title or object with title
    * @returns {HTMLLIElement} Subtask list item
    * @function
    */
-createSubtaskItem(data) {
-  const li = document.createElement("li");
-  li.className = "subtask-list-item";
+  createSubtaskItem(data) {
+    const li = document.createElement("li");
+    li.className = "subtask-list-item";
 
-  // 1) Bullet links
-  const dot = document.createElement("span");
-  dot.className = "subtask-dot";
-  dot.textContent = "•";
+    const dot = this.createDot();
+    const label = this.createLabel(data);
+    const editBtn = this.createEditButton(li);
+    const removeBtn = this.createRemoveButton(data, li);
+    const iconWrapper = this.buildIconWrapper(editBtn, removeBtn);
 
-  // 2) Text-Label
-  const label = document.createElement("span");
-  label.className = "subtask-label";
-  label.textContent = data.title || data;
+    li.append(dot, label, iconWrapper);
 
-  // 3) Icon-Wrapper für List‑Item‑Icons
-  const iconWrapper = document.createElement("div");
-  iconWrapper.className = "subtask-list-icons";
+    // schon vorhandene Klick‑Logik (z. B. Doppelklick oder Enter) bleibt erhalten
+    this.setupClickToEdit(li);
 
-  // 3a) Edit‑Button (Stift)
-  const editBtn = document.createElement("button");
-  editBtn.type = "button";
-  editBtn.className = "subtask-edit-btn";
-  editBtn.innerHTML = `<img src="./assets/icons/board/board-edit-icon.svg" alt="Edit">`;
-  // ← Klick auf das Stift ruft den Edit‑Mode auf
-  editBtn.onclick = e => {
-    e.stopPropagation();
-    this.enterEditMode(li);
-  };
+    return li;
+  },
 
-  // 3b) Remove‑Button (Mülleimer)
-  const removeBtn = document.createElement("button");
-  removeBtn.type = "button";
-  removeBtn.className = "subtask-remove-btn";
-  removeBtn.innerHTML = `<img src="./assets/icons/board/board-delete-icon.svg" alt="Delete">`;
-  // (optional) Klick auf den Mülleimer entfernt das Item
-  removeBtn.onclick = e => {
-    e.stopPropagation();
-    // aus Array löschen
-    const title = data.title || data;
-    const idx = this.subtasks.findIndex(s => s.title === title);
-    if (idx > -1) this.subtasks.splice(idx, 1);
-    // aus DOM löschen
-    li.remove();
-    // Plus‑Icon wieder einblenden
-    document.getElementById("subtask-plus")?.classList.remove("hidden");
-  };
+  createDot() {
+    const dot = document.createElement("span");
+    dot.className = "subtask-dot";
+    dot.textContent = "•";
+    return dot;
+  },
 
-  iconWrapper.append(editBtn, removeBtn);
+  createLabel(data) {
+    const label = document.createElement("span");
+    label.className = "subtask-label";
+    label.textContent = data.title || data;
+    return label;
+  },
 
-  // 4) Alles zusammensetzen
-  li.append(dot, label, iconWrapper);
+  createEditButton(li) {
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "subtask-edit-btn";
+    editBtn.innerHTML = `<img src="./assets/icons/board/board-edit-icon.svg" alt="Edit">`;
+    // ← Klick auf das Stift ruft den Edit‑Mode auf
+    editBtn.onclick = (e) => {
+      e.stopPropagation();
+      this.enterEditMode(li);
+    };
+    return editBtn;
+  },
 
-  // schon vorhandene Klick‑Logik (z. B. Doppelklick oder Enter) bleibt erhalten
-  this.setupClickToEdit(li);
+  createRemoveButton(data, li) {
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "subtask-remove-btn";
+    removeBtn.innerHTML = `<img src="./assets/icons/board/board-delete-icon.svg" alt="Delete">`;
+    // (optional) Klick auf den Mülleimer entfernt das Item
+    removeBtn.onclick = (e) => {
+      e.stopPropagation();
+      // aus Array löschen
+      const title = data.title || data;
+      const idx = this.subtasks.findIndex((s) => s.title === title);
+      if (idx > -1) this.subtasks.splice(idx, 1);
+      // aus DOM löschen
+      li.remove();
+      // Plus‑Icon wieder einblenden
+      document.getElementById("subtask-plus")?.classList.remove("hidden");
+    };
+    return removeBtn;
+  },
 
-  return li;
-},
+  buildIconWrapper(editBtn, removeBtn) {
+    const iconWrapper = document.createElement("div");
+    iconWrapper.className = "subtask-list-icons";
+    iconWrapper.append(editBtn, removeBtn);
+    return iconWrapper;
+  },
 
   /**
    * Add click listener on label to enter edit mode.
@@ -285,17 +298,20 @@ createSubtaskItem(data) {
    * @param {string} newVal - New title
    * @function
    */
-updateLabel(li, newVal) {
-  // 1) Datenquelle updaten
-  const idx = this.subtasks.findIndex(s => s.title === li._dataOriginal);
-  if (idx > -1) this.subtasks[idx].title = newVal;
+  updateLabel(li, newVal) {
+    this.updateSubtaskData(li, newVal);
+    this.replaceListItem(li, newVal);
+  },
 
-  // 2) Komplettes neues LI erzeugen
-  const newLi = this.createSubtaskItem({ title: newVal });
+  updateSubtaskData(li, newVal) {
+    const idx = this.subtasks.findIndex((s) => s.title === li._dataOriginal);
+    if (idx > -1) this.subtasks[idx].title = newVal;
+  },
 
-  // 3) Alten LI im DOM damit ersetzen
-  li.replaceWith(newLi);
-},
+  replaceListItem(li, newVal) {
+    const newLi = this.createSubtaskItem({ title: newVal });
+    li.replaceWith(newLi);
+  },
 
   /**
    * Insert editable UI for subtask editing.
@@ -306,16 +322,34 @@ updateLabel(li, newVal) {
    * @function
    */
   assembleEditUI(li, input, cancel, confirm) {
+    const wrapper = this.createEditContainer();
+    const inputWrap = this.createInputWrapper(input);
+    const btns = this.createEditButtonsWrapper(cancel, confirm);
+
+    this.setupCancelClick(cancel, li);
+
+    wrapper.appendChild(inputWrap);
+    wrapper.appendChild(btns);
+    li.appendChild(wrapper);
+  },
+
+  createEditContainer() {
     const wrapper = document.createElement("div");
     wrapper.className = "subtask-edit-container";
+    return wrapper;
+  },
 
+  createInputWrapper(input) {
     const inputWrap = document.createElement("div");
     inputWrap.className = "subtask-input-edit-wrapper";
     inputWrap.appendChild(input);
+    return inputWrap;
+  },
 
+  createEditButtonsWrapper(cancel, confirm) {
     const btns = document.createElement("div");
     btns.className = "subtask-edit-buttons";
-    // New order and explicit event binding
+
     btns.appendChild(cancel);
     const divider = document.createElement("img");
     divider.src = "./assets/icons/add-task/add-task-divider.svg";
@@ -323,6 +357,10 @@ updateLabel(li, newVal) {
     btns.appendChild(divider);
     btns.appendChild(confirm);
 
+    return btns;
+  },
+
+  setupCancelClick(cancel, li) {
     cancel.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -338,10 +376,6 @@ updateLabel(li, newVal) {
       li.remove();
       li.classList.remove("editing");
     };
-
-    wrapper.appendChild(inputWrap);
-    wrapper.appendChild(btns);
-    li.appendChild(wrapper);
   },
 
   /**
