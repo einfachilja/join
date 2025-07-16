@@ -73,25 +73,70 @@ export const SubtaskManager = {
     document.getElementById("subtask-plus")?.classList.remove("hidden");
   },
 
+  
   /**
    * Create list item element for a subtask.
    * @param {string|object} data - Subtask title or object with title
    * @returns {HTMLLIElement} Subtask list item
    * @function
    */
-  createSubtaskItem(data) {
-    const li = document.createElement("li");
-    li.className = "subtask-list-item";
-    const label = document.createElement("span");
-    label.textContent = data.title || data;
-    label.className = "subtask-label";
-    const iconWrapper = document.createElement("div");
-    iconWrapper.className = "subtask-icons";
-    li.appendChild(label);
-    li.appendChild(iconWrapper);
-    this.setupClickToEdit(li);
-    return li;
-  },
+createSubtaskItem(data) {
+  const li = document.createElement("li");
+  li.className = "subtask-list-item";
+
+  // 1) Bullet links
+  const dot = document.createElement("span");
+  dot.className = "subtask-dot";
+  dot.textContent = "•";
+
+  // 2) Text-Label
+  const label = document.createElement("span");
+  label.className = "subtask-label";
+  label.textContent = data.title || data;
+
+  // 3) Icon-Wrapper für List‑Item‑Icons
+  const iconWrapper = document.createElement("div");
+  iconWrapper.className = "subtask-list-icons";
+
+  // 3a) Edit‑Button (Stift)
+  const editBtn = document.createElement("button");
+  editBtn.type = "button";
+  editBtn.className = "subtask-edit-btn";
+  editBtn.innerHTML = `<img src="./assets/icons/board/board-edit-icon.svg" alt="Edit">`;
+  // ← Klick auf das Stift ruft den Edit‑Mode auf
+  editBtn.onclick = e => {
+    e.stopPropagation();
+    this.enterEditMode(li);
+  };
+
+  // 3b) Remove‑Button (Mülleimer)
+  const removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.className = "subtask-remove-btn";
+  removeBtn.innerHTML = `<img src="./assets/icons/board/board-delete-icon.svg" alt="Delete">`;
+  // (optional) Klick auf den Mülleimer entfernt das Item
+  removeBtn.onclick = e => {
+    e.stopPropagation();
+    // aus Array löschen
+    const title = data.title || data;
+    const idx = this.subtasks.findIndex(s => s.title === title);
+    if (idx > -1) this.subtasks.splice(idx, 1);
+    // aus DOM löschen
+    li.remove();
+    // Plus‑Icon wieder einblenden
+    document.getElementById("subtask-plus")?.classList.remove("hidden");
+  };
+
+  iconWrapper.append(editBtn, removeBtn);
+
+  // 4) Alles zusammensetzen
+  li.append(dot, label, iconWrapper);
+
+  // schon vorhandene Klick‑Logik (z. B. Doppelklick oder Enter) bleibt erhalten
+  this.setupClickToEdit(li);
+
+  return li;
+},
 
   /**
    * Add click listener on label to enter edit mode.
@@ -240,16 +285,17 @@ export const SubtaskManager = {
    * @param {string} newVal - New title
    * @function
    */
-  updateLabel(li, newVal) {
-    li.innerHTML = "";
-    li.classList.remove("editing");
-    const label = document.createElement("span");
-    label.textContent = newVal;
-    label.className = "subtask-label";
-    li.appendChild(label);
+updateLabel(li, newVal) {
+  // 1) Datenquelle updaten
+  const idx = this.subtasks.findIndex(s => s.title === li._dataOriginal);
+  if (idx > -1) this.subtasks[idx].title = newVal;
 
-    this.setupClickToEdit(li);
-  },
+  // 2) Komplettes neues LI erzeugen
+  const newLi = this.createSubtaskItem({ title: newVal });
+
+  // 3) Alten LI im DOM damit ersetzen
+  li.replaceWith(newLi);
+},
 
   /**
    * Insert editable UI for subtask editing.
