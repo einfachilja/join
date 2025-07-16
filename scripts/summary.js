@@ -40,7 +40,7 @@ function showMobileWelcomeOverlay(greeting, name, color) {
   setTimeout(() => {
     overlay.classList.add("d_none");
     main.style.display = "";
-  }, 4000);
+  }, 2000);
 }
 
 /**
