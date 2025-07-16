@@ -68,6 +68,7 @@
   cursor: pointer;
   border-radius: 10px;
   width: 100%;
+  cursor: pointer;
   box-sizing: border-box;
   margin-left: 0;
   display: flex;
@@ -79,9 +80,6 @@
   cursor: pointer;
 }
 
-.subtask-list-item span {
-  flex: 1;
-}
 
 .subtask-input-wrapper {
   position: relative;
@@ -266,4 +264,50 @@
 
 .subtask-edit-buttons img[src$="add-task-divider.svg"] {
   margin: 0 6px;
+}
+
+.subtask-list-item .subtask-edit-btn,
+.subtask-list-item .subtask-remove-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  border: none;
+}
+
+.subtask-list-item:hover .subtask-edit-btn,
+.subtask-list-item:hover .subtask-remove-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Icons standardmäßig versteckt */
+.subtask-list-item .subtask-icons {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Stift‑ und Mülleimer‑Buttons nur beim Hover einblenden */
+.subtask-list-item:hover .subtask-icons {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Punkt links wie im Board */
+.subtask-dot {
+  flex: 0 0 auto;      /* Punkt bleibt so schmal wie sein Inhalt */
+  margin-right: 12px;  /* Abstand zwischen Punkt und Text */
+}
+
+/* Icons ans rechte Ende schieben */
+.subtask-list-icons {
+  margin-left: auto;   /* schiebt den Icon‑Wrapper ganz nach rechts */
 }
