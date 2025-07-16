@@ -4,14 +4,19 @@ let firebaseKey = localStorage.getItem("firebaseKey");
 
 function showWelcomeMessage() {
   const name = sessionStorage.getItem("userName") || "Guest",
-    displayName = name === "Guest" ? "" : name;
+        displayName = name === "Guest" ? "" : name;
   const color = sessionStorage.getItem("userColor") || "rgb(41, 171, 226)",
-    hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+        hour = new Date().getHours();
+  const greeting = hour < 12
+    ? "Good morning"
+    : hour < 18
+      ? "Good afternoon"
+      : "Good evening";
+
   if (window.innerWidth <= 1040) {
-    if (!localStorage.getItem("mobileWelcomeShown")) {
+    if (sessionStorage.getItem("showWelcomeOnLogin") === "true") {
       showMobileWelcomeOverlay(greeting, displayName, color);
-      localStorage.setItem("mobileWelcomeShown", "true");
+      sessionStorage.removeItem("showWelcomeOnLogin");
     }
   } else {
     showDesktopWelcomeMessage(greeting, displayName, color);
