@@ -165,13 +165,47 @@
     .board-overlay-card {
         padding: 24px;
         font-size: 16px;
+        gap: 12px;
+    }
+
+    .overlay-card-category {
+        font-size: 20px;
     }
 
     .overlay-card-title {
-        font-size: 32px;
+        font-size: 20px;
     }
 
     .priority-buttons {
         flex-direction: column;
     }
+
+    .overlay-card-date-input {
+        font-size: 16px;
+        height: 24px;
+    }
+
+    .priority-edit-btn {
+        font-size: 16px;
+        height: 24px;
+    }
+
+    .assigned-dropdown-toggle {
+        height: 16px;
+    }
+
+    .initial-circle {
+        width: 32px;
+        height: 32px;
+    }
+
+    .add-subtask-input {
+        height: 24px;
+    }
+
+    .ok-btn {
+    padding: 6px;
+   font-size: 16px;
+    line-height: 0;
+}
 }
