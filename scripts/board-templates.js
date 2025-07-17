@@ -28,28 +28,28 @@ function getAddTaskOverlay() {
                   <label for="description">Description</label>
                   <textarea
                     id="description"
-                    placeholder="Enter a description"
-                  ></textarea>
+                    placeholder="Enter a description">
+                  </textarea>
 
-<label for="dueDate">
-  Due Date <span class="red_star">*</span>
-</label>
-<div class="input-with-icon">
-  <input
-    type="text"
-    id="dueDate"
-    class="date-input"
-    placeholder="dd/mm/yyyy"
-    pattern="\d{2}/\d{2}/\d{4}"
-    autocomplete="off"
-  />
-  <img
-    src="./assets/icons/add-task/add-task-calendar.svg"
-    alt="Calendar"
-    class="calendar-inside-input"
-    onclick="setTimeout(() => document.getElementById('dueDate')._flatpickr?.open(), 0)"
-  />
-</div>
+                  <label for="dueDate">
+                    Due Date <span class="red_star">*</span>
+                  </label>
+                <div class="input-with-icon">
+                  <input
+                    type="text"
+                    id="dueDate"
+                    class="date-input"
+                    placeholder="dd/mm/yyyy"
+                    pattern="\d{2}/\d{2}/\d{4}"
+                    autocomplete="off"
+                  />
+                  <img
+                    src="./assets/icons/add-task/add-task-calendar.svg"
+                    alt="Calendar"
+                    class="calendar-inside-input"
+                    onclick="setTimeout(() => document.getElementById('dueDate')._flatpickr?.open(), 0)"
+                  />
+                  </div>
                   <div class="error-message" id="error-dueDate">
                     This field is required
                   </div>

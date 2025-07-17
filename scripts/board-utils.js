@@ -1,6 +1,5 @@
 /**
  * Finds a contact by name from the local contacts array.
- *
  * @param {string} name - The name of the contact.
  * @returns {Object|null} The contact object or null if not found.
  */
@@ -10,7 +9,6 @@ function getContactByName(name) {
 
 /**
  * Returns the initials of a given name string.
- *
  * @param {string} name - The full name of a contact.
  * @returns {string} The uppercase initials extracted from the name.
  */
@@ -40,7 +38,6 @@ function filterValidContacts(list) {
 
 /**
  * Returns the CSS class name for a given category.
- *
  * @param {string} category - The task category.
  * @returns {string} The corresponding CSS class.
  */
@@ -87,7 +84,6 @@ function findTaskByKey(firebaseKey) {
 
 /**
  * Returns the path to the icon associated with the given priority.
- *
  * @param {string} priority - The task priority ("low", "medium", "urgent").
  * @returns {string} The icon path.
  */
@@ -121,7 +117,6 @@ function extractCardProps(element) {
 
 /**
  * Extracts the category from a task object.
- *
  * @param {Object} element - The task object.
  * @returns {string} The task category or an empty string.
  */
@@ -131,7 +126,6 @@ function getCardCategory(element) {
 
 /**
  * Extracts the priority from a task object.
- *
  * @param {Object} element - The task object.
  * @returns {string} The task priority or 'low' as default.
  */
@@ -141,7 +135,6 @@ function getCardPriority(element) {
 
 /**
  * Extracts and formats the assigned user list from a task object.
- *
  * @param {Object} element - The task object.
  * @returns {Array<string>} An array of assigned user names.
  */
@@ -156,7 +149,6 @@ function getAssignedList(element) {
 
 /**
  * Extracts the subtasks array from a task object.
- *
  * @param {Object} element - The task object.
  * @returns {Array<Object>} An array of subtask objects.
  */
@@ -166,7 +158,6 @@ function getSubtasksArray(element) {
 
 /**
  * Extracts the title from a task object.
- *
  * @param {Object} element - The task object.
  * @returns {string} The task title or an empty string.
  */
@@ -176,7 +167,6 @@ function getCardTitle(element) {
 
 /**
  * Extracts the description from a task object.
- *
  * @param {Object} element - The task object.
  * @returns {string} The task description or an empty string.
  */
@@ -211,7 +201,6 @@ function assignedCircleHTML(name) {
 
 /**
  * Renders the assigned contacts as HTML elements.
- *
  * @param {Array<string>} assignedTo - The names of assigned contacts.
  * @returns {string} HTML string for the assigned contact list.
  */

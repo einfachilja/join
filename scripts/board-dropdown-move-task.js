@@ -6,17 +6,13 @@
 function openMoveTaskMenu(taskKey, event) {
     event.stopPropagation();
     closeMoveTaskMenu();
-
     let btn = event.currentTarget;
     let card = btn.closest('.card');
     if (!card) return;
-
     let dropdown = createMoveTaskDropdownMenu(taskKey);
     positionMoveTaskDropdown(dropdown, btn, card);
-
     document.body.appendChild(dropdown);
     window._moveTaskDropdown = dropdown;
-
     addMoveTaskDropdownCleanup(dropdown);
 }
 
@@ -37,19 +33,28 @@ function createMoveTaskDropdownMenu(taskKey) {
     let currentTask = arrayTasks.find(t => t.firebaseKey === taskKey);
     let currentStatus = currentTask ? currentTask.status : null;
 
-    statuses.forEach(s => {
-        if (s.key === currentStatus) return;
-        let option = document.createElement('div');
-        option.className = 'move-task-dropdown-option';
-        option.textContent = s.label;
-        option.onclick = function (e) {
-            e.stopPropagation();
-            handleMoveTaskOptionClick(taskKey, s.key);
-        };
-        dropdown.appendChild(option);
-    });
+    statuses.forEach(s => appendMoveTaskDropdownOption(dropdown, taskKey, s, currentStatus));
 
     return dropdown;
+}
+
+/**
+ * Appends a status option to the move task dropdown menu if it's not the current status.
+ * @param {HTMLElement} dropdown - The dropdown menu element.
+ * @param {string} taskKey - The Firebase key of the task.
+ * @param {Object} statusObj - The status object with key and label.
+ * @param {string|null} currentStatus - The current status of the task.
+ */
+function appendMoveTaskDropdownOption(dropdown, taskKey, statusObj, currentStatus) {
+    if (statusObj.key === currentStatus) return;
+    let option = document.createElement('div');
+    option.className = 'move-task-dropdown-option';
+    option.textContent = statusObj.label;
+    option.onclick = function (e) {
+        e.stopPropagation();
+        handleMoveTaskOptionClick(taskKey, statusObj.key);
+    };
+    dropdown.appendChild(option);
 }
 
 /**

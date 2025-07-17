@@ -1,12 +1,5 @@
 /**
  * Opens a task card in an overlay based on its Firebase key.
- *
- * @param {string} firebaseKey - The Firebase key of the task.
- * @param {Object} [options={}] - Additional options for rendering the card.
- */
-/**
- * Opens a task card in an overlay based on its Firebase key.
- *
  * @param {string} firebaseKey - The Firebase key of the task.
  * @param {Object} [options={}] - Additional options for rendering the card.
  */
@@ -48,11 +41,6 @@ function handleOverlayAnimation(options = {}) {
     }
 }
 
-/**
- * Renders the task details in an overlay card based on the given task object.
- *
- * @param {Object} task - The task object to render.
- */
 /**
  * Renders the board overlay with the given task.
  * @param {Object} task - The task object to render.
@@ -186,7 +174,11 @@ function addDueDateLabel(dueDateSpan) {
     }
 }
 
-
+/**
+ * Formats a date string (ISO or dd/mm/yyyy) for display in Flatpickr date picker.
+ * @param {string} isoDateStr - The date string in ISO format (yyyy-mm-dd) or dd/mm/yyyy.
+ * @returns {string} The formatted date string in dd/mm/yyyy format, or an empty string if input is invalid.
+ */
 function formatDateForFlatpickr(isoDateStr) {
     if (!isoDateStr) return '';
     if (isoDateStr.match(/\d{4}-\d{2}-\d{2}/)) {
@@ -203,7 +195,6 @@ function formatDateForFlatpickr(isoDateStr) {
 
 /**
  * Saves the edited task data back to Firebase and refreshes the UI.
- *
  * @param {string} taskKey - The Firebase key of the task being edited.
  */
 async function saveEditTask(taskKey) {

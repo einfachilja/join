@@ -11,7 +11,6 @@ function updateHTML() {
 
 /**
  * Renders a section of the board with tasks or an empty message.
- *
  * @param {string} sectionId - The DOM ID of the section.
  * @param {Array<Object>} tasks - The list of tasks to render.
  * @param {string} emptyMessage - The message to show when no tasks are present.
@@ -80,7 +79,6 @@ function clearBoardSections() {
 
 /**
  * Marks a task element as currently being dragged.
- *
  * @param {string} firebaseKey - The key of the dragged task.
  */
 function startDragging(firebaseKey) {
@@ -91,7 +89,6 @@ function startDragging(firebaseKey) {
 
 /**
  * Removes the dragging CSS class from a task element.
- *
  * @param {string} firebaseKey - The key of the task.
  */
 function stopDragging(firebaseKey) {
@@ -103,7 +100,6 @@ function stopDragging(firebaseKey) {
 
 /**
  * Handles the drop target behavior and appends the dragged element if valid.
- *
  * @param {DragEvent} ev - The drop event.
  */
 function allowDrop(ev) {
@@ -117,7 +113,6 @@ function allowDrop(ev) {
 
 /**
  * Adds a highlight class to a task column.
- *
  * @param {string} status - The status column ID.
  */
 function highlight(status) {
@@ -133,7 +128,6 @@ function removeHighlight(status) {
 
 /**
  * Moves the currently dragged task to the specified status and updates it in Firebase.
- *
  * @param {string} status - The new status to assign to the dragged task (e.g., "todo", "progress").
  * @returns {Promise<void>} A promise that resolves after the task status has been updated.
  */

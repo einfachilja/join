@@ -1,6 +1,5 @@
 /**
  * Renders the subtasks of a task as HTML list items.
- *
  * @param {Object} task - The task object containing subtasks.
  * @returns {string} HTML string of rendered subtasks.
  */
@@ -16,7 +15,6 @@ function renderSubtasks(task) {
 
 /**
  * Updates the subtask list and progress bar in the overlay for a given task.
- *
  * @param {Object} task - The task object to update the overlay for.
  */
 function updateOverlaySubtasks(task) {
@@ -38,7 +36,6 @@ function updateOverlaySubtasks(task) {
 
 /**
  * Converts an array of strings or objects into valid subtask objects.
- *
  * @param {Array<string|Object>} subtasks - An array of subtasks.
  * @returns {Array<Object>} An array of subtask objects with title and completed status.
  */
@@ -48,7 +45,6 @@ function convertSubtasksToObjects(subtasks) {
 
 /**
  * Toggles a subtask's completion state and updates Firebase and UI accordingly.
- *
  * @param {string} taskKey - The Firebase key of the task.
  * @param {number} index - The index of the subtask.
  */
@@ -69,7 +65,6 @@ async function toggleSubtask(taskKey, index) {
 
 /**
  * Blurs the checkbox input element of a subtask after toggling.
- *
  * @param {string} taskKey - The Firebase key of the task.
  * @param {number} index - The index of the subtask.
  */
