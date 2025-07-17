@@ -1,7 +1,6 @@
 /**
  * Utility functions used across the Add Task module.
  */
-
 export const Utils = {
   /**
    * Format a date string from 'YYYY-MM-DD' to 'DD/MM/YYYY'.
@@ -16,7 +15,6 @@ export const Utils = {
     if (year && month && day) return `${day}/${month}/${year}`;
     return dateString;
   },
-
   /**
    * Stop event propagation for the given event.
    * @param {Event} [e=window.event] - Event to stop

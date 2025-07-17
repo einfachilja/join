@@ -3,7 +3,6 @@
  * Loads user initials and starts the Add Task logic.
  * @file
  */
-
 import { DropdownController } from "./add-task-dropdowns.js";
 
 /**
@@ -13,7 +12,6 @@ import { DropdownController } from "./add-task-dropdowns.js";
 document.addEventListener("DOMContentLoaded", () => {
   DropdownController.setupDropdownEvents();
 });
-
 import { AddTaskCore } from "./add-task-core.js";
 
 /**
@@ -22,7 +20,7 @@ import { AddTaskCore } from "./add-task-core.js";
  */
 window.onload = () => {
   if (typeof setUserInitials === "function") {
-    setUserInitials(); // Set user initials in the header (from desktop-template.js)
+    setUserInitials();
   }
-  AddTaskCore.init(); // Initialize all Add Task logic and events
+  AddTaskCore.init();
 };

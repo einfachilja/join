@@ -1,22 +1,20 @@
 /**
- * Handles all Firebase-related operations for Add Task.
+ * Firebase operations for Add Task.
  * @namespace FirebaseService
  */
-
 import { DropdownController } from "./add-task-dropdowns.js";
 import { SubtaskManager } from "./add-task-subtasks.js";
 
 export const FirebaseService = {
   /**
-   * Firebase authentication key fetched from local storage.
+   * Firebase auth key from local storage.
    * @type {string}
    */
-  firebaseKey: localStorage.getItem("firebaseKey"),
 
+  firebaseKey: localStorage.getItem("firebaseKey"),
   /**
-   * Fetch contacts from Firebase and update dropdown list.
+   * Fetch contacts from Firebase and update dropdown.
    * @async
-   * @function
    */
   async fetchContacts() {
     try {
@@ -36,11 +34,11 @@ export const FirebaseService = {
   },
 
   /**
-   * Create a task object from form data.
-   * @returns {Object} Task data object
-   * @function
+   * Create task object from form data.
+   * @param {string} [status] - Task status
+   * @returns {Object} Task data
    */
-  createTaskObject() {
+  createTaskObject(status) {
     return {
       title: document.getElementById("title").value.trim(),
       description: document.getElementById("description").value.trim(),
@@ -50,14 +48,13 @@ export const FirebaseService = {
       category: DropdownController.selectedCategory,
       subtask: SubtaskManager.getSubtasks(),
       createdAt: new Date().toISOString(),
-      status: "todo",
+      status: status || "todo",
     };
   },
 
   /**
    * Get selected priority from UI.
-   * @returns {string} Priority value ('low', 'medium', 'urgent')
-   * @function
+   * @returns {string} Priority ('low', 'medium', 'urgent')
    */
   getSelectedPriority() {
     const selected = document.querySelector("#buttons-prio .selected");
@@ -65,10 +62,9 @@ export const FirebaseService = {
   },
 
   /**
-   * Send created task to Firebase database.
+   * Send task to Firebase.
    * @async
-   * @function
-   * @param {string} status - Task status ('todo', 'progress', 'feedback')
+   * @param {string} status - Task status
    */
   async submitTaskToFirebase(status) {
     const task = this.createTaskObject(status);
@@ -86,28 +82,7 @@ export const FirebaseService = {
   },
 
   /**
-   * Create a task object from form data.
-   * @param {string} status - Task status ('todo', 'progress', 'feedback')
-   * @returns {Object} Task data object
-   * @function
-   */
-  createTaskObject(status) {
-    return {
-      title: document.getElementById("title").value.trim(),
-      description: document.getElementById("description").value.trim(),
-      dueDate: document.getElementById("dueDate").value,
-      priority: this.getSelectedPriority(),
-      assignedTo: DropdownController.selectedContacts.map((c) => c.name),
-      category: DropdownController.selectedCategory,
-      subtask: SubtaskManager.getSubtasks(),
-      createdAt: new Date().toISOString(),
-      status: status || "todo",
-    };
-  },
-
-  /**
-   * Show confirmation popup after task is created.
-   * @function
+   * Show confirmation popup after task creation.
    */
   showTaskAddedPopup() {
     const popup = document.createElement("div");
