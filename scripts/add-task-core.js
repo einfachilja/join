@@ -6,12 +6,10 @@
 import { DropdownController } from "./add-task-dropdowns.js";
 import { SubtaskManager } from "./add-task-subtasks.js";
 import { FirebaseService } from "./add-task-firebase.js";
-
 export const AddTaskCore = {
+
   /**
-   * Initialize the Add Task page.
-   * Sets up event listeners, dropdowns, date picker, and form submission.
-   * @function
+   * Initializes the Add Task page and all required event handlers.
    */
   init() {
     this.setupDOMDefaults();
@@ -28,6 +26,9 @@ export const AddTaskCore = {
     this.setupCancelButton();
   },
 
+  /**
+   * Adds input listeners for title and due date fields to remove error states.
+   */
   setupInputListeners() {
     const titleInput = document.getElementById("title");
     if (titleInput) {
@@ -45,6 +46,9 @@ export const AddTaskCore = {
     }
   },
 
+  /**
+   * Adds event listeners for category, priority, and subtask controls.
+   */
   setupDropdownListeners() {
     const catToggle = document.getElementById("category-toggle");
     if (catToggle) {
@@ -68,6 +72,9 @@ export const AddTaskCore = {
     }
   },
 
+  /**
+   * Adds cancel button handler to reset the form.
+   */
   setupCancelButton() {
     const cancelBtn = document.getElementById("cancel-task-btn");
     if (cancelBtn) {
@@ -76,8 +83,7 @@ export const AddTaskCore = {
   },
 
   /**
-   * Set default placeholder and empty state for due date input.
-   * @function
+   * Sets default placeholder and empty state for the due date input.
    */
   setupDOMDefaults() {
     const dueDate = document.getElementById("due-date");
@@ -88,17 +94,14 @@ export const AddTaskCore = {
   },
 
   /**
-   * Datepicker logic handled via Flatpickr.
-   * @function
+   * Initializes the datepicker using Flatpickr.
    */
   setupDatePicker() {
-    // handled externally via Flatpickr
   },
 
   /**
    * Handle focus event on due date input.
    * @param {HTMLInputElement} input The due date input element.
-   * @function
    */
   handleDateFocus(input) {
     input.type = "date";
@@ -108,25 +111,20 @@ export const AddTaskCore = {
   },
 
   /**
-   * Validate and format date after change.
-   * Prevents past dates.
+   * Validate and format date after change.Prevents past dates.
    * @param {HTMLInputElement} input The due date input element.
-   * @function
    */
   handleDateChange(input) {
     const selectedDate = new Date(input.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     if (selectedDate.setHours(0, 0, 0, 0) < today.getTime()) {
       return this.rejectPastDate(input);
     }
-
     const [y, m, d] = input.value?.split("-") ?? [];
     if (!d || !m || !y) {
       return this.rejectPastDate(input);
     }
-
     const formatted = `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
     setTimeout(() => {
       input.type = "text";
@@ -137,7 +135,6 @@ export const AddTaskCore = {
   /**
    * Reset date input on invalid past date.
    * @param {HTMLInputElement} input The due date input element.
-   * @function
    */
   rejectPastDate(input) {
     input.type = "text";
@@ -150,7 +147,6 @@ export const AddTaskCore = {
   /**
    * Reset placeholder if date input is empty.
    * @param {HTMLInputElement} input The due date input element.
-   * @function
    */
   resetDatePlaceholder(input) {
     if (!input.value) {
@@ -161,7 +157,6 @@ export const AddTaskCore = {
 
   /**
    * Set the default priority button selection to medium.
-   * @function
    */
   setDefaultPriority() {
     const prioGroup = document.getElementById("buttons-prio");
@@ -173,7 +168,6 @@ export const AddTaskCore = {
 
   /**
    * Add blue outline when assigned-to input is focused.
-   * @function
    */
   setupAssignedFocus() {
     const input = document.getElementById("assigned-to-input");
@@ -188,20 +182,17 @@ export const AddTaskCore = {
 
   /**
    * Close dropdowns when clicking outside their containers.
-   * @function
    */
   setupOutsideClickEvents() {
     document.onclick = (e) => {
       const catWrap = document.getElementById("category-wrapper");
       const assWrap = document.getElementById("dropdown-wrapper");
-
       if (catWrap && !catWrap.contains(e.target)) {
         document.getElementById("category-toggle")?.classList.remove("open");
         document
           .getElementById("category-content")
           ?.classList.remove("visible");
       }
-
       if (assWrap && !assWrap.contains(e.target)) {
         document.getElementById("dropdown-toggle")?.classList.remove("open");
         document
@@ -212,25 +203,19 @@ export const AddTaskCore = {
   },
 
   /**
-   * Handle Create Task button click and trigger form validation + Firebase submit.
-   * Uses the status from URL (if present), else the current addTaskDefaultStatus, else 'todo'.
-   * @function
+   * Handles task creation, validation, and submission.
    */
   setupSubmit() {
     const btn = document.getElementById("submit-task-btn");
     if (!btn) return;
     btn.disabled = false;
-
-    // Helper: Get status from URL
     function getStatusFromUrl() {
       const params = new URLSearchParams(window.location.search);
       return params.get("status");
     }
-
     btn.onclick = (e) => {
       e.preventDefault();
       if (this.validateForm()) {
-        // Priority: URL param > global > fallback
         const urlStatus = getStatusFromUrl();
         const taskStatus = urlStatus || window.addTaskDefaultStatus || "todo";
         FirebaseService.submitTaskToFirebase(taskStatus).then(() => {
@@ -244,37 +229,29 @@ export const AddTaskCore = {
   /**
    * Validate required fields before task submission.
    * @returns {boolean} True if form is valid, else false.
-   * @function
    */
   validateForm() {
     const title = document.getElementById("title");
     const dueDate = document.getElementById("dueDate");
     const catToggle = document.getElementById("category-toggle");
-
     const titleError = document.getElementById("error-title");
     const dateError = document.getElementById("error-dueDate");
     const catError = document.getElementById("error-category");
-
     const validTitle = title.value.trim() !== "";
     const validDate = dueDate.value.trim() !== "";
     const validCat = DropdownController.selectedCategory !== "";
-
     title.classList.toggle("error", !validTitle);
     titleError.classList.toggle("visible", !validTitle);
-
     dueDate.classList.toggle("error-border", !validDate);
     dateError.classList.toggle("visible", !validDate);
-
     catToggle.classList.toggle("error-border", !validCat);
     catError.classList.toggle("visible", !validCat);
-
     return validTitle && validDate && validCat;
   },
 
   /**
    * Highlight selected priority button.
    * @param {string} prio - Priority level ('low', 'medium', 'urgent')
-   * @function
    */
   selectPriority(prio) {
     const prioButtons = document.querySelectorAll("#buttons-prio button");
@@ -284,59 +261,81 @@ export const AddTaskCore = {
   },
 
   /**
-   * Reset all form fields, dropdowns and subtasks to default state.
-   * @function
+   * Resets the form and all input fields to default.
    */
   resetForm() {
-    // Clear text inputs
+    this.clearTextFields();
+    this.hideErrorMessages();
+    this.resetCategory();
+    this.resetContacts();
+    this.resetPriority();
+    this.clearSubtasks();
+  },
+
+  /**
+   * Clears all main text fields.
+   */
+  clearTextFields() {
     const title = document.getElementById("title");
     const description = document.getElementById("description");
     const dueDate = document.getElementById("dueDate");
-
     if (title) title.value = "";
     if (description) description.value = "";
     if (dueDate) dueDate.value = "";
-
-    // Remove error messages and classes
-    document.getElementById("error-title")?.classList.remove("visible");
-    document.getElementById("error-dueDate")?.classList.remove("visible");
-    document.getElementById("error-category")?.classList.remove("visible");
-
-    title?.classList.remove("error");
-    dueDate?.classList.remove("error-border");
-    document
-      .getElementById("category-toggle")
-      ?.classList.remove("error-border");
-
-    // Reset category dropdown
-    DropdownController.selectedCategory = "";
-    const catPlaceholder = document.querySelector("#category-toggle span");
-    if (catPlaceholder) catPlaceholder.textContent = "Select category";
-
-    // Reset assigned contacts
-    DropdownController.selectedContacts = [];
-    DropdownController.updateSelectedContactsUI();
-    DropdownController.renderAssignOptions();
-
-    // Reset priority to medium
-    this.selectPriority("medium");
-
-    // Reset subtasks and related UI
-    SubtaskManager.subtasks = [];
-
-    const subtaskList = document.getElementById("subtask-list");
-    if (subtaskList) {
-      subtaskList.innerHTML = "";
-    }
-
+    if (title) title.classList.remove("error");
+    if (dueDate) dueDate.classList.remove("error-border");
     const subtaskInput = document.getElementById("subtask-input");
     if (subtaskInput) {
       subtaskInput.value = "";
+      subtaskInput.classList.remove("error-border");
     }
+  },
+
+  /**
+   * Hides all visible error messages.
+   */
+  hideErrorMessages() {
+    document.getElementById("error-title")?.classList.remove("visible");
+    document.getElementById("error-dueDate")?.classList.remove("visible");
+    document.getElementById("error-category")?.classList.remove("visible");
+    document.getElementById("category-toggle")?.classList.remove("error-border");
+  },
+
+  /**
+   * Resets category dropdown to the default value.
+   */
+  resetCategory() {
+    DropdownController.selectedCategory = "";
+    const catPlaceholder = document.querySelector("#category-toggle span");
+    if (catPlaceholder) catPlaceholder.textContent = "Select category";
+  },
+
+  /**
+   * Clears all selected contacts.
+   */
+  resetContacts() {
+    DropdownController.selectedContacts = [];
+    DropdownController.updateSelectedContactsUI();
+    DropdownController.renderAssignOptions();
+  },
+
+  /**
+   * Sets the priority to medium.
+   */
+  resetPriority() {
+    this.selectPriority("medium");
+  },
+
+  /**
+   * Clears all subtasks and subtask UI elements.
+   */
+  clearSubtasks() {
+    SubtaskManager.subtasks = [];
+    const subtaskList = document.getElementById("subtask-list");
+    if (subtaskList) subtaskList.innerHTML = "";
     const subtaskIcons = document.getElementById("subtask-icons");
     const subtaskPlus = document.getElementById("subtask-plus");
     if (subtaskIcons) subtaskIcons.classList.add("hidden");
     if (subtaskPlus) subtaskPlus.classList.remove("hidden");
-    if (subtaskInput) subtaskInput.classList.remove("error-border");
   },
 };
